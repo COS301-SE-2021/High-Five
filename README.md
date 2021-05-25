@@ -127,11 +127,11 @@ master ( build )
 </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− development ( build )
 </br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− module−develop ( build )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− module−development ( build )
 </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− module−feature−name
 
-The integration team works as the git branch masters for the develop and master branch. Each
+The integration team works as the git branch masters for the development and master branch. Each
 team is forced to comply with the branching flow of the project. Only pull requests directly from
 a module develop branch to the develop branch are considered for merging. Each team takes responsibility
 over their own module develop branch by creating feature branches to integrate.
