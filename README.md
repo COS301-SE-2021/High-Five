@@ -14,7 +14,7 @@
 <br />
 
 <p align="center">
-  <a href="https://github.com/COS301-SE-2021/CrowdBook_Gamma">
+  <a href="https://github.com/COS301-SE-2021/High-Five">
     <img src="https://www.agilebridge.co.za/wp-content/uploads/2019/04/logo-head.png" alt="Logo" width="150" height="80">
   </a>
 
