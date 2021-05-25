@@ -119,9 +119,9 @@
 
 ---
 
-##GitHub Structure
+## GitHub Structure
 
-##Branching Strategy
+## Branching Strategy
 
 master ( build )
 </br>
@@ -136,7 +136,7 @@ team is forced to comply with the branching flow of the project. Only pull reque
 a module develop branch to the develop branch are considered for merging. Each team takes responsibility
 over their own module develop branch by creating feature branches to integrate.
 
-##Code Quality Badges
+## Code Quality Badges
 -TODO: Add stuff here
 
 <!-- MARKDOWN LINKS & IMAGES -->
