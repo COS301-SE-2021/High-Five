@@ -84,7 +84,7 @@
 ### Project Links
 -TODO: update links
 * []()[BDP Solutions - Demo1](https://hibernate.org/)
-* []()[Functional Requirements Document (SRS)](https://www.overleaf.com/9933879569jqwxmfqkbjcx)
+* []()[Software Requirements Specification (SRS)](https://www.overleaf.com/9933879569jqwxmfqkbjcx)
 * []()[GitHub Project Board](https://hibernate.org/)
 
 ### Technology Stack
