@@ -95,7 +95,7 @@
 * []()[Web services framework - Spring REST](https://spring.io/guides/tutorials/rest/)
 * []()[Web and Mobile application server - Ionic Angular](https://ionicframework.com/docs/angular/your-first-app)
 
-# Subsystems
+### Subsystems
 -TODO: Update subsystems here
 * User
 * Book
@@ -107,7 +107,7 @@
 * Integration
 
 
-# Team Members
+## Team Members
 
 | **Team Member** | **Profiles** | **Skills/Interest**
 | :-----: | :-----: | :-----: |
@@ -119,8 +119,9 @@
 
 ---
 
+##GitHub Structure
 
-# Branching Structure
+##Branching Strategy
 
 master ( build )
 </br>
@@ -134,6 +135,9 @@ The integration team works as the git branch masters for the develop and master 
 team is forced to comply with the branching flow of the project. Only pull requests directly from
 a module develop branch to the develop branch are considered for merging. Each team takes responsibility
 over their own module develop branch by creating feature branches to integrate.
+
+##Code Quality Badges
+-TODO: Add stuff here
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
