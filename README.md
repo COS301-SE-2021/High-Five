@@ -12,14 +12,15 @@
 
 
 <br />
-
+<div style="background: #ffffff">
 <p align="center">
   <a href="https://github.com/COS301-SE-2021/High-Five">
     <img src="https://www.agilebridge.co.za/wp-content/uploads/2019/04/logo-head.png" alt="Logo" width="150" height="80">
   </a>
+</div>
+<h1 align="center">High Five</h1>
+<h2 align="center">BDP Solutions</h2>
 
-<h3 align="center">High Five</h3>
-<h4 align="center">BDP Solutions</h4>
 
 
 
@@ -109,8 +110,8 @@
 
 ## Team Members
 
-| **Team Member** | **Profiles** | **Skills/Interest**
-| :-----: | :-----: | :-----: |
+| **Team Member** | **Profiles** | **Skills/Interest** 
+| :-----: | :-----: | :-----: |  
 | ![Firstname Lastname](https://pbs.twimg.com/profile_images/1370182726222020610/HYRxODnM_400x400.jpg "Ruan Bieldt") <br/> Ruan Bieldt <br/> u13145992 | [GitHub](https://github.com/CalebJohnstone) <br/> [Profile Page](https://gitusername.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/caleb-johnstone-94368a132/) <br/> | List interests here |
 | ![Firstname Lastname](https://pbs.twimg.com/profile_images/1370182726222020610/HYRxODnM_400x400.jpg "Hannes Kirsten") <br/> Hannes Kirsten <br/> u19049014 | [GitHub](https://github.com/Adrian-Rae-19004029) <br/> [Profile Page](https://Adrian-Rae-19004029.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/adrian-rae-5796b31bb/) <br/> | List interests here |
 | ![Firstname Lastname](https://pbs.twimg.com/profile_images/1370182726222020610/HYRxODnM_400x400.jpg "Kyle Barry") <br/> Kyle Barry <br/> u19232510 | [GitHub](https://github.com/simrxn-r) <br/> [Profile Page](https://simrxn-r.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/simran-rathilal-a26a7b20b/) <br/> | List interests here |
