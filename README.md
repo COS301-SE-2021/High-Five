@@ -114,7 +114,7 @@
 | ![Firstname Lastname](https://pbs.twimg.com/profile_images/1370182726222020610/HYRxODnM_400x400.jpg "Ruan Bieldt") <br/> Ruan Bieldt <br/> u13145992 | [GitHub](https://github.com/CalebJohnstone) <br/> [Profile Page](https://gitusername.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/caleb-johnstone-94368a132/) <br/> | List interests here |
 | ![Firstname Lastname](https://pbs.twimg.com/profile_images/1370182726222020610/HYRxODnM_400x400.jpg "Hannes Kirsten") <br/> Hannes Kirsten <br/> u19049014 | [GitHub](https://github.com/Adrian-Rae-19004029) <br/> [Profile Page](https://Adrian-Rae-19004029.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/adrian-rae-5796b31bb/) <br/> | List interests here |
 | ![Firstname Lastname](https://pbs.twimg.com/profile_images/1370182726222020610/HYRxODnM_400x400.jpg "Kyle Barry") <br/> Kyle Barry <br/> u19232510 | [GitHub](https://github.com/simrxn-r) <br/> [Profile Page](https://simrxn-r.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/simran-rathilal-a26a7b20b/) <br/> | List interests here |
-| ![Firstname Lastname](https://pbs.twimg.com/profile_images/1370182726222020610/HYRxODnM_400x400.jpg "Jeanré du Plessis") <br/> Jeanré du Plessis <br/> u19017970 | [GitHub](https://github.com/glithcy) <br/> [Profile Page](https://glithcy.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/michaela-schormann/) <br/> | List interests here |
+| ![Jeanré du Plessis](https://scontent.fjnb5-1.fna.fbcdn.net/v/t1.6435-1/c0.27.160.160a/p160x160/173781932_2908365312748123_6396003146555632035_n.jpg?_nc_cat=101&ccb=1-3&_nc_sid=7206a8&_nc_eui2=AeHxF0pEo_JOZ-sqhE3nobiErlpxN0aVhfiuWnE3RpWF-HLK0lQBWJl3LsuMxFbsZ2o2iV09xw3ShzKqT5HnomWa&_nc_ohc=wTh76RpZm1AAX905r1V&_nc_ht=scontent.fjnb5-1.fna&tp=27&oh=e3f7cf409442b56ff17aec7772308a6c&oe=60CB7BF0 "Jeanré du Plessis") <br/> Jeanré du Plessis <br/> u19017970 <br/>| [GitHub](https://github.com/JayXD-2K) <br/> [Profile Page](https://jayxd-2k.github.io/)  <br/> [LinkedIn](https://www.linkedin.com/in/jdp2k/) <br/> | - MTB <br/> - Road Cycling <br/> - Playing Around With Django <br/> - Golfing <br/> |
 | ![Firstname Lastname](https://media-exp1.licdn.com/dms/image/C4D03AQGC-ldtLJjoow/profile-displayphoto-shrink_200_200/0/1618479763493?e=1623888000&v=beta&t=WVhTWbYzzf_wrM30LllQCd7zzSq-_wekgdbfFQIfCcQ "Marco Oosthuizen") <br/> Marco Oosthuizen <br/> u19012013 | [GitHub](https://github.com/Marco-Oosthuizen) <br/> [Profile Page](https://github.com/Marco-Oosthuizen.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/marco-oosthuizen-369b9320b/) <br/> | Artificial Intelligence, Theoretical Computer Science |
 
 ---
@@ -125,11 +125,11 @@
 
 master ( build )
 </br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− develop ( build )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− development ( build )
 </br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− Module−develop ( build )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− module−develop ( build )
 </br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− feature−module−name
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− module−feature−name
 
 The integration team works as the git branch masters for the develop and master branch. Each
 team is forced to comply with the branching flow of the project. Only pull requests directly from
