@@ -86,7 +86,7 @@
 -TODO: update links
 * []()[BDP Solutions - Demo1](https://hibernate.org/)
 * []()[Software Requirements Specification (SRS)](https://www.overleaf.com/9933879569jqwxmfqkbjcx)
-* []()[GitHub Project Board](https://hibernate.org/)
+* []()[GitHub Project Board](https://github.com/COS301-SE-2021/High-Five/projects/1)
 
 ### Technology Stack
 -TODO: update this accordingly
@@ -96,7 +96,7 @@
 * []()[Web services framework - Spring REST](https://spring.io/guides/tutorials/rest/)
 * []()[Web and Mobile application server - Ionic Angular](https://ionicframework.com/docs/angular/your-first-app)
 
-### Subsystems
+### Modules
 -TODO: Update subsystems here
 * User
 * Book
