@@ -80,32 +80,28 @@
 <!-- ABOUT THE PROJECT -->
 ## About
 
--TODO: Provide High Five description here
+High Five is a real-time image analysis platform for images and videos taken by drone cameras. Users can add and customize the platform with the type of analysis that must be performed. Examples include counting cars in a parking lot, property surveillance or mapping, and color depth analysis for agricultural purposes - to name a few.
 
 ### Project Links
--TODO: update links
+-TODO: update demo link
 * []()[BDP Solutions - Demo1](https://hibernate.org/)
 * []()[Software Requirements Specification (SRS)](https://www.overleaf.com/9933879569jqwxmfqkbjcx)
 * []()[GitHub Project Board](https://github.com/COS301-SE-2021/High-Five/projects/1)
 
 ### Technology Stack
--TODO: update this accordingly
-* []()[Application server - Spring](https://spring.io/projects/spring-boot)
-* []()[Persistence - Hibernate](https://hibernate.org/)
-* []()[Database - PostgreSQL](https://www.postgresql.org/)
-* []()[Web services framework - Spring REST](https://spring.io/guides/tutorials/rest/)
-* []()[Web and Mobile application server - Ionic Angular](https://ionicframework.com/docs/angular/your-first-app)
+* []()Backend
+    * []()[.NET Core](https://dotnet.microsoft.com/download)
+* []()Web and Mobile Application
+  * []()[Angular](https://angular.io/)
+  * []()[Ionic](https://ionicframework.com/)
+* []()Deployment
+  * []()[Microsoft Azure](https://azure.microsoft.com/en-us/)
+* []()Database
+    * []()[MongoDB](https://www.mongodb.com/)
+    * []()[MicrosoftSQL](https://www.microsoft.com/en-us/sql-server/sql-server-2019)
 
 ### Modules
--TODO: Update subsystems here
 * User
-* Book
-* Payment
-* Notification
-* Shipping
-* Recommender
-* Reporter
-* Integration
 
 
 ## Team Members
@@ -128,14 +124,19 @@ master ( build )
 </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− development ( build )
 </br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− module−development ( build )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− backend−development ( build )
 </br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− module−feature−name
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− module-develop ( build )
+</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− feature-module-feature_name
+</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− mobile−development ( build )
 
-The integration team works as the git branch masters for the development and master branch. Each
-team is forced to comply with the branching flow of the project. Only pull requests directly from
-a module develop branch to the develop branch are considered for merging. Each team takes responsibility
-over their own module develop branch by creating feature branches to integrate.
+Development of the back-end and front-end has been divided into seperate branches for separation
+of concerns. For every module(subsystem) a seperate branch has been created, and every feature per module has its own branch as well. Before merging, all branches
+must go through a mandatory Pull Request procedure in which the branch will be reviewed by
+another team member, who did not make the pull request, and - if approved - merged
+into the branch immediately above the requested branch in the hierarchy as defined above.
 
 ### Code Quality Badges
 -TODO: Add stuff here <br>
