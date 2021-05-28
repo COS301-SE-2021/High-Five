@@ -5,29 +5,5 @@
 </ion-header>
 
 <ion-content>
-  <ion-row>
-    <ion-col></ion-col>
-    <ion-col size="{{adjustSize(6)}}">
-      <ion-item>
-        <ion-label position="floating" color="primary">{{constants.labels.email_address}}</ion-label>
-        <ion-input type="email"></ion-input>
-        <ion-button slot="end" color="success" style="height: 80%" (click)="showVerify=true">{{constants.labels.verify_email}}</ion-button>
-      </ion-item>
-    </ion-col>
-    <ion-col></ion-col>
-  </ion-row>
-  <div *ngIf="showVerify">
-    <ion-row>
-      <ion-col></ion-col>
-      <ion-col size="{{adjustSize(3)}}">
-        <ion-item id="verifyCode">
-          <ion-label position="floating" color="primary">{{constants.labels.enter_code}}</ion-label>
-          <ion-input></ion-input>
-        </ion-item>
-      </ion-col>
-      <ion-col></ion-col>
-    </ion-row>
-  </div>
-
-
+  <app-register-card></app-register-card>
 </ion-content>
