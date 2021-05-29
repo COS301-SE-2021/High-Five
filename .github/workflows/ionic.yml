@@ -28,7 +28,7 @@ jobs:
         run: npm install -i -D -E @angular/cli
         
       - name: Setup Ionic
-        uses: coturiv/setup-ioni@v1.0.4
+        uses: coturiv/setup-ionic@v1.0.4
         with:
           ionic-version: 6.16.1
       - name: Build App
