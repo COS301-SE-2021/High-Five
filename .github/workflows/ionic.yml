@@ -23,6 +23,9 @@ jobs:
       - name: checkout development
         uses: actions/checkout@v2
 
+      - name: use mobile directory
+        uses: ./mobile
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.5
         with:
@@ -33,9 +36,6 @@ jobs:
         
       - name: install ionic
         run: npm install -g @ionic/cli
-
-      - name: change directories
-        run: cd mobile/
 
       - name: install npm dependencies
         run: npm install
