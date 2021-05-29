@@ -1,0 +1,39 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Ionic Tests
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ development ]
+  pull_request:
+    branches: [ development ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14.17.0
+          
+      - name: install @angular/cli
+        run: npm install -i -D -E @angular/cli
+        
+      - name: Setup Ionic
+        uses: coturiv/setup-ioni@v1.0.4
+        with:
+          ionic-version: 6.16.1
+      - name: Build App
+      - run: |
+          cd mobile/
+          ionic build
+
+ 
