@@ -39,7 +39,6 @@ jobs:
         run: npm install
 
       - name: Build App
-        uses: ./mobile
         run: ionic build
 
  
