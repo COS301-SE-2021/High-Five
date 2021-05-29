@@ -1384,4 +1384,7 @@ ehthumbs_vista.db
 # Windows shortcuts
 *.lnk
 
+# Database settings
+apsettings.json
+
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains+all,node,angular,ionic3,csharp,dotnetcore,java,linux,windows,macos,emacs,vim,visualstudiocode,python,adobe,netbeans,maven,git,android,latex,tortoisegit
