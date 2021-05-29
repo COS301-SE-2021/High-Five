@@ -8,7 +8,7 @@ namespace src.Resources
         public HighFiveContext(DbContextOptions<HighFiveContext> options): base(options) 
         { }
         
-        public DbSet<User> Users { get; set; }
+        private DbSet<User> Users { get; set; }
         
     }
 }
