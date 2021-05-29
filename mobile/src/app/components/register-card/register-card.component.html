@@ -1,0 +1,86 @@
+<ion-row>
+  <ion-col></ion-col>
+  <ion-col size="{{adjustSize(6)}}">
+    <ion-card style="max-width: 100%">
+      <ion-grid id="grid">
+        <ion-row>
+          <ion-col></ion-col>
+          <ion-col size="12">
+            <ion-item>
+              <ion-label position="floating">{{constants.labels.first_name}}</ion-label>
+              <ion-input type="email"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col></ion-col>
+          <ion-col size="12">
+            <ion-item>
+              <ion-label position="floating">{{constants.labels.last_name}}</ion-label>
+              <ion-input type="email"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col></ion-col>
+          <ion-col size="12">
+            <ion-item>
+              <ion-label position="floating">{{constants.labels.email_address}}</ion-label>
+              <ion-input type="text" autocorrect="on" placeholder="example@example.com">
+                <ion-icon name="mail-outline" slot="start" ></ion-icon>
+              </ion-input>
+              <ion-button style="height: 80%;" slot="end" color="primary" (click)="showVerify= true">{{constants.labels.verify_email}}</ion-button>
+
+            </ion-item>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <div *ngIf="showVerify">
+          <ion-row>
+            <ion-col></ion-col>
+            <ion-col size="{{adjustSize(8)}}">
+              <ion-item id="verifyCode">
+                <ion-label position="floating">{{constants.labels.enter_code}}</ion-label>
+                <ion-input></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col></ion-col>
+          </ion-row>
+        </div>
+        <ion-row>
+          <ion-col></ion-col>
+          <ion-col size="12">
+            <div style="display: table; width: 100%">
+              <div style="display: table-cell; vertical-align: middle; width: 100%">
+                <ion-item style="float: left; width: 80%">
+                  <ion-label position="floating">{{constants.labels.password}}</ion-label>
+                  <ion-input type="password" placeholder="">
+                    <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+                  </ion-input>
+                </ion-item>
+                <ion-button style="float: right" fill="clear"><ion-icon name="eye-outline"></ion-icon></ion-button>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col></ion-col>
+          <ion-col size="12">
+            <ion-item style="width: 80%">
+              <ion-label position="floating">{{constants.labels.password_confirm}}</ion-label>
+              <ion-input type="password" placeholder="">
+                <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+              </ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </ion-col>
+  <ion-col></ion-col>
+</ion-row>
+
