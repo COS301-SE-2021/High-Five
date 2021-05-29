@@ -1,0 +1,67 @@
+﻿openapi: 3.0.0
+
+info:
+  version: 0.0.1
+  title: High Five
+  description: The OpenAPI specification for High Five's controllers
+
+tags:
+  - name: "User"
+
+  #==========================================================
+  #     PATHS 
+  #==========================================================
+paths:
+
+  #==========================================================
+  #     USER SUBSYSTEM PATHING
+  #==========================================================
+
+  /user/registerAccount:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Register Account use case
+      operationId: RegisterAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/registerAccountRequest'
+      responses:
+        "200":
+          description: Register details have been processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+components:
+  schemas:
+
+    #==========================================================
+    #     USER COMPONENTS
+    #==========================================================
+
+    registerAccountRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+
+    #==========================================================
+    #     GENERIC COMPONENTS
+    #==========================================================
+
+    emptyObject:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
