@@ -139,12 +139,14 @@ another team member, who did not make the pull request, and - if approved - merg
 into the branch immediately above the requested branch in the hierarchy as defined above.
 
 ### Code Quality Badges
--TODO: Add stuff here <br>
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+[![Issues][issues-shield]][issues-url]<br>
+[![Build Status](https://travis-ci.org/{ORG-or-USERNAME}/{REPO-NAME}.png?branch=master)](https://travis-ci.org/{ORG-or-USERNAME}/{REPO-NAME})
+<br>
+[![Coverage Status](https://coveralls.io/repos/github/badges/shields/badge.svg?branch=master)](https://coveralls.io/github/badges/shields?branch=master)
+
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/COS301-SE-2021/High-Five.svg?style=for-the-badge
