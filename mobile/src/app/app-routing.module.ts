@@ -19,7 +19,15 @@ const routes: Routes = [
   {
     path: 'welcome',
     loadChildren: () => import('./pages/welcome/welcome.module').then( m => m.WelcomePageModule)
+  },  {
+    path: 'landing',
+    loadChildren: () => import('./pages/landing/landing.module').then( m => m.LandingPageModule)
   },
+  {
+    path: 'controls',
+    loadChildren: () => import('./pages/controls/controls.module').then( m => m.ControlsPageModule)
+  },
+
 ];
 
 @NgModule({
