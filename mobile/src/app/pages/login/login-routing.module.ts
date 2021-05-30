@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { LoginPage } from './login.page';
 import {WelcomePage} from '../welcome/welcome.page';
-import {LandingPage} from '../landing/landing.page';
+import {NavbarPage} from '../navbar/navbar.page';
 
 const routes: Routes = [
   {
@@ -15,9 +15,9 @@ const routes: Routes = [
     component: WelcomePage
   },
   {
-    path: 'landing',
-    component: LandingPage
-  }
+    path: 'navbar',
+    component: NavbarPage
+  },
 ];
 
 @NgModule({
