@@ -1,0 +1,28 @@
+<ion-card> <!--button (click)="viewDetails()"-->
+  <table><tr>
+    <td class="imageBox">
+      <img src="{{data.getImageUrl()}}">
+    </td>
+    <td class="contentBox">
+      <ion-card-header class="header">
+        <div class="details">
+          <ion-card-title>{{data.getTitle()}}</ion-card-title>
+<!--          <ion-card-subtitle>-->
+<!--        <span *ngFor="let author of data.authors; let j=index">-->
+<!--          {{author.name}}<ng-template [ngIf]="j < data.authors.length-1">, </ng-template>-->
+<!--        </span>-->
+<!--          </ion-card-subtitle>-->
+        </div>
+<!--        <ng-template [ngIf]="showRejectButton == true">-->
+<!--          <ion-button size="small" color="danger" (click)="rejectRecommendation($event)">-->
+<!--            <ion-icon name="heart-dislike-outline"></ion-icon>-->
+<!--          </ion-button>-->
+<!--        </ng-template>-->
+      </ion-card-header>
+
+      <ion-card-content>
+        {{data.getRecordedDate()}}
+      </ion-card-content>
+    </td>
+  </tr></table>
+</ion-card>
