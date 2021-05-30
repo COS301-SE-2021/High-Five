@@ -5,7 +5,7 @@ import { NavbarPage } from './navbar.page';
 
 const routes: Routes = [
   {
-    path: 'navbar',
+    path: '',
     component: NavbarPage,
     children: [
       {
@@ -21,13 +21,13 @@ const routes: Routes = [
         loadChildren:() => import('../analytics/analytics.module').then(m => m.AnalyticsPageModule)
       },
       {
-        path:'navbar',
-        redirectTo : 'navbar/landing',
+        path:'',
+        redirectTo : 'landing',
         pathMatch:'full'
       },
       {
         path:'',
-        redirectTo : 'navbar/landing',
+        redirectTo : 'landing',
         pathMatch:'full'
       },
     ]
