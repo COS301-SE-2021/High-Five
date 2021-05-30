@@ -9,7 +9,16 @@
   <div class="ion-padding">
     <h1>Infinite scroll</h1>
     <ion-list>
-      <ion-item *ngFor="let item of items"><app-videostore-card [data]=item></app-videostore-card></ion-item>
+      <ion-grid>
+        <ion-row *ngFor="let item of items; let i=index;">
+          <ion-col size-xl="6" size-lg="6" size-md="6" size="6">
+            <app-videostore-card [data]=item[0]></app-videostore-card>
+          </ion-col>
+          <ion-col size-xl="6" size-lg="6" size-md="6" size="6">
+            <app-videostore-card [data]=item[1]></app-videostore-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-list>
 
     <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">

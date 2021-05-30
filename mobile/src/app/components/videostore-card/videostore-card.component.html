@@ -1,9 +1,12 @@
+<div (window:resize)="onResize($event)"></div>
+<div (window:(load))="onResize($event)"></div>
 <ion-card> <!--button (click)="viewDetails()"-->
   <table><tr>
     <td class="imageBox">
-      <img src="{{data.getImageUrl()}}">
+      <img src="{{data.getImageUrl()}}" *ngIf="this.platform.width() >= 700">
     </td>
     <td class="contentBox">
+      <img src="{{data.getImageUrl()}}" *ngIf="this.platform.width() < 700">
       <ion-card-header class="header">
         <div class="details">
           <ion-card-title>{{data.getTitle()}}</ion-card-title>
@@ -26,3 +29,13 @@
     </td>
   </tr></table>
 </ion-card>
+<!--<ion-card>-->
+<!--  <img src="{{data.getImageUrl()}}" />-->
+<!--  <ion-card-header>-->
+<!--    <ion-card-subtitle>{{data.getRecordedDate()}}</ion-card-subtitle>-->
+<!--    <ion-card-title>{{data.getTitle()}}</ion-card-title>-->
+<!--  </ion-card-header>-->
+<!--  <ion-card-content>-->
+<!--    Founded in 1829 on an isthmus between Lake Monona and Lake Mendota, Madison was named the capital of the Wisconsin Territory in 1836.-->
+<!--  </ion-card-content>-->
+<!--</ion-card>-->

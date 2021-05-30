@@ -14,7 +14,7 @@ export class VideostorePage implements OnInit {
     this.loadMoreData();
   }
 
-  items = []
+  items : VideoPreviewData[][] = []
 
   ngOnInit() {
   }
@@ -29,11 +29,10 @@ export class VideostorePage implements OnInit {
 
   loadMoreData() {
     for (let i = 0; i < 10; i++) {
-      this.items.push({
-        'title': 'Test',
-        'imageurl': 'https://source.unsplash.com/random/200x200?sig=1',
-        'description': 'Tester'
-      })
+      this.items.push([
+        new VideoPreviewData('Test Title', new Date('2021-01-01'), 'https://source.unsplash.com/random/200x200?sig=' + i),
+        new VideoPreviewData('Test Title', new Date('2021-01-01'), 'https://source.unsplash.com/random/200x200?sig=' + (i+1))
+      ])
     }
   }
 
