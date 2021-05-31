@@ -1,6 +1,7 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {VideoPreviewData} from "../../pages/videostore/videostore.page";
-import {Platform} from "@ionic/angular";
+import {ModalController, Platform} from "@ionic/angular";
+import {VideostreamCardComponent} from "../videostream-card/videostream-card.component";
 
 @Component({
   selector: 'app-videostore-card',
@@ -14,7 +15,7 @@ export class VideostoreCardComponent implements OnInit {
 
   private mobile : boolean;
 
-  constructor(public platform: Platform) { }
+  constructor(public platform: Platform, private modal: ModalController) { }
 
   ngOnInit() {
   }
@@ -48,5 +49,14 @@ export class VideostoreCardComponent implements OnInit {
         this.mobileImage.style.display = "none";
       }
     }
+  }
+
+  async playVideo() {
+    console.log("playing video")
+    const videoModal = await this.modal.create({
+      component: VideostreamCardComponent
+    })
+
+    await videoModal.present();
   }
 }

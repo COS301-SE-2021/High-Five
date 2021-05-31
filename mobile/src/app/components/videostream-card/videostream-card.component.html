@@ -1,7 +1,7 @@
 <vg-player>
   <vg-controls>
-    <vg-play-pause></vg-play-pause>
-    <vg-playback-button></vg-playback-button>
+    <vg-play-pause>Play</vg-play-pause>
+    <vg-playback-button>T</vg-playback-button>
 
     <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
 
@@ -18,7 +18,7 @@
     <vg-fullscreen></vg-fullscreen>
   </vg-controls>
 
-  <video #media [vgMedia]="media" id="singleVideo" preload="auto" crossorigin>
+  <video width="100%" height="100%" #media [vgMedia]="media" id="singleVideo" preload="auto" crossorigin>
     <source src="http://static.videogular.com/assets/videos/videogular.mp4" type="video/mp4">
   </video>
 </vg-player>
