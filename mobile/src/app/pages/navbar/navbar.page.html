@@ -27,7 +27,7 @@
           <div class="desktop-navbar" class="ion-text-left">
             <ion-button (click)="navigateTo('navbar/landing', 'homeNav')" #homeNav fill="clear" [class]="homeLink[0]">Home</ion-button>
             <ion-button (click)="navigateTo('navbar/analytics', 'analyticsNav')" #analyticsNav fill="clear" [class]="analyticsLink[0]">Analytics</ion-button>
-            <ion-button #videoNav routerLinkActive="active-link"  fill="clear" class="link">Videos</ion-button>
+            <ion-button (click)="navigateTo('navbar/videos', 'videoNav')" #videoNav fill="clear" class="link">Videos</ion-button>
           </div>
         </ion-col>
       </ion-row>
