@@ -29,6 +29,7 @@
     "@ionic-native/streaming-media": "^5.33.1",
     "@ionic/angular": "^5.5.2",
     "cordova-plugin-streaming-media": "^2.3.0",
+    "dji-tello": "^1.0.15",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
