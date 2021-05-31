@@ -1,7 +1,7 @@
 <vg-player vg-theme="controller.config.theme.url">
   <vg-controls>
-    <ion-button *ngIf="!isPaused" fill="clear" (click)="playVideo()"><ion-icon name="play-circle-outline"></ion-icon></ion-button>
-    <ion-button *ngIf="isPaused" fill="clear" (click)="pauseVideo()"><ion-icon name="pause-circle-outline"></ion-icon></ion-button>
+    <ion-button #videoPlay style="display: block" fill="clear" (click)="playVideo()"><ion-icon name="play-circle-outline"></ion-icon></ion-button>
+    <ion-button #videoPause style="display: none" fill="clear" (click)="pauseVideo()"><ion-icon name="pause-circle-outline"></ion-icon></ion-button>
     <vg-playback-button></vg-playback-button>
 
     <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
