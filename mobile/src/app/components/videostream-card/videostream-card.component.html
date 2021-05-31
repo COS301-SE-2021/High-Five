@@ -1,7 +1,8 @@
-<vg-player>
+<vg-player vg-theme="controller.config.theme.url">
   <vg-controls>
-    <vg-play-pause>Play</vg-play-pause>
-    <vg-playback-button>T</vg-playback-button>
+    <ion-button *ngIf="!isPaused" fill="clear" (click)="playVideo()"><ion-icon name="play-circle-outline"></ion-icon></ion-button>
+    <ion-button *ngIf="isPaused" fill="clear" (click)="pauseVideo()"><ion-icon name="pause-circle-outline"></ion-icon></ion-button>
+    <vg-playback-button></vg-playback-button>
 
     <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
 
@@ -18,7 +19,7 @@
     <vg-fullscreen></vg-fullscreen>
   </vg-controls>
 
-  <video width="100%" height="100%" #media [vgMedia]="media" id="singleVideo" preload="auto" crossorigin>
+  <video width="100%" height="100%" #playMedia [vgMedia]="playMedia" id="singleVideo" preload="auto" crossorigin>
     <source src="http://static.videogular.com/assets/videos/videogular.mp4" type="video/mp4">
   </video>
 </vg-player>
