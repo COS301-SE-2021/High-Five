@@ -20,6 +20,10 @@ const routes: Routes = [
     path: 'welcome',
     loadChildren: () => import('./pages/welcome/welcome.module').then( m => m.WelcomePageModule)
   },
+  {
+    path: 'videostore',
+    loadChildren: () => import('./pages/videostore/videostore.module').then( m => m.VideostorePageModule)
+  },
 ];
 
 @NgModule({
