@@ -24,7 +24,9 @@
     "@capacitor/haptics": "1.0.0",
     "@capacitor/keyboard": "1.0.0",
     "@ionic-native/screen-orientation": "^5.33.1",
+    "@ionic-native/streaming-media": "^5.33.1",
     "@ionic/angular": "^5.5.2",
+    "cordova-plugin-streaming-media": "^2.3.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
