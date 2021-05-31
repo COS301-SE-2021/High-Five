@@ -21,6 +21,10 @@ const routes: Routes = [
         loadChildren:() => import('../analytics/analytics.module').then(m => m.AnalyticsPageModule)
       },
       {
+        path: 'videos',
+        loadChildren: () => import('../videostore/videostore.module').then( m => m.VideostorePageModule)
+      },
+      {
         path:'',
         redirectTo : 'landing',
         pathMatch:'full'

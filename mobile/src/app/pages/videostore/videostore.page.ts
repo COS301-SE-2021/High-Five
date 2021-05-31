@@ -20,8 +20,7 @@ export class VideostorePage implements OnInit {
   }
 
   loadData(event) {
-    setTimeout(() => {
-      console.log('Done');
+    setTimeout(async () => {
       this.loadMoreData();
       event.target.complete();
     }, 500);

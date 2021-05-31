@@ -25,10 +25,6 @@ const routes: Routes = [
     path:'navbar',
     loadChildren: () => import('./pages/navbar/navbar.module').then(m => m.NavbarPageModule)
   },
-  {
-    path: 'videostore',
-    loadChildren: () => import('./pages/videostore/videostore.module').then( m => m.VideostorePageModule)
-  },
 
 ];
 
