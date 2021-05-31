@@ -80,32 +80,28 @@
 <!-- ABOUT THE PROJECT -->
 ## About
 
--TODO: Provide High Five description here
+High Five is a real-time image analysis platform for images and videos taken by drone cameras. Users can add and customize the platform with the type of analysis that must be performed. Examples include counting cars in a parking lot, property surveillance or mapping, and color depth analysis for agricultural purposes - to name a few.
 
 ### Project Links
--TODO: update links
+-TODO: update demo link
 * []()[BDP Solutions - Demo1](https://hibernate.org/)
 * []()[Software Requirements Specification (SRS)](https://www.overleaf.com/9933879569jqwxmfqkbjcx)
 * []()[GitHub Project Board](https://github.com/COS301-SE-2021/High-Five/projects/1)
 
 ### Technology Stack
--TODO: update this accordingly
-* []()[Application server - Spring](https://spring.io/projects/spring-boot)
-* []()[Persistence - Hibernate](https://hibernate.org/)
-* []()[Database - PostgreSQL](https://www.postgresql.org/)
-* []()[Web services framework - Spring REST](https://spring.io/guides/tutorials/rest/)
-* []()[Web and Mobile application server - Ionic Angular](https://ionicframework.com/docs/angular/your-first-app)
+* []()Backend
+    * []()[.NET Core](https://dotnet.microsoft.com/download)
+* []()Web and Mobile Application
+  * []()[Angular](https://angular.io/)
+  * []()[Ionic](https://ionicframework.com/)
+* []()Deployment
+  * []()[Microsoft Azure](https://azure.microsoft.com/en-us/)
+* []()Database
+    * []()[MongoDB](https://www.mongodb.com/)
+    * []()[MicrosoftSQL](https://www.microsoft.com/en-us/sql-server/sql-server-2019)
 
 ### Modules
--TODO: Update subsystems here
 * User
-* Book
-* Payment
-* Notification
-* Shipping
-* Recommender
-* Reporter
-* Integration
 
 
 ## Team Members
@@ -116,7 +112,7 @@
 | ![Firstname Lastname](https://pbs.twimg.com/profile_images/1370182726222020610/HYRxODnM_400x400.jpg "Hannes Kirsten") <br/> Hannes Kirsten <br/> u19049014 | [GitHub](https://github.com/Adrian-Rae-19004029) <br/> [Profile Page](https://Adrian-Rae-19004029.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/adrian-rae-5796b31bb/) <br/> | List interests here |
 | ![Firstname Lastname](https://pbs.twimg.com/profile_images/1370182726222020610/HYRxODnM_400x400.jpg "Kyle Barry") <br/> Kyle Barry <br/> u19232510 | [GitHub](https://github.com/simrxn-r) <br/> [Profile Page](https://simrxn-r.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/simran-rathilal-a26a7b20b/) <br/> | List interests here |
 | ![Jeanré du Plessis](https://scontent.fjnb5-1.fna.fbcdn.net/v/t1.6435-1/c0.27.160.160a/p160x160/173781932_2908365312748123_6396003146555632035_n.jpg?_nc_cat=101&ccb=1-3&_nc_sid=7206a8&_nc_eui2=AeHxF0pEo_JOZ-sqhE3nobiErlpxN0aVhfiuWnE3RpWF-HLK0lQBWJl3LsuMxFbsZ2o2iV09xw3ShzKqT5HnomWa&_nc_ohc=wTh76RpZm1AAX905r1V&_nc_ht=scontent.fjnb5-1.fna&tp=27&oh=e3f7cf409442b56ff17aec7772308a6c&oe=60CB7BF0 "Jeanré du Plessis") <br/> Jeanré du Plessis <br/> u19017970 <br/>| [GitHub](https://github.com/JayXD-2K) <br/> [Profile Page](https://jayxd-2k.github.io/)  <br/> [LinkedIn](https://www.linkedin.com/in/jdp2k/) <br/> | - MTB <br/> - Road Cycling <br/> - Playing Around With Django <br/> - Golfing <br/> |
-| ![Firstname Lastname](https://media-exp1.licdn.com/dms/image/C4D03AQGC-ldtLJjoow/profile-displayphoto-shrink_200_200/0/1618479763493?e=1623888000&v=beta&t=WVhTWbYzzf_wrM30LllQCd7zzSq-_wekgdbfFQIfCcQ "Marco Oosthuizen") <br/> Marco Oosthuizen <br/> u19012013 | [GitHub](https://github.com/Marco-Oosthuizen) <br/> [Profile Page](https://marco-oosthuizen.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/marco-oosthuizen-369b9320b/) <br/> | Artificial Intelligence, Theoretical Computer Science |
+| ![Firstname Lastname](https://media-exp1.licdn.com/dms/image/C4D03AQGC-ldtLJjoow/profile-displayphoto-shrink_200_200/0/1618479763493?e=1623888000&v=beta&t=WVhTWbYzzf_wrM30LllQCd7zzSq-_wekgdbfFQIfCcQ "Marco Oosthuizen") <br/> Marco Oosthuizen <br/> u19012013 | [GitHub](https://github.com/Marco-Oosthuizen) <br/> [Profile Page](https://marco-oosthuizen.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/marco-oosthuizen-369b9320b/) <br/> | Artificial Intelligence, Theoretical Computer Science, Complexity Theory, Discrete Mathematics |
 
 ---
 
@@ -128,22 +124,29 @@ master ( build )
 </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− development ( build )
 </br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− module−development ( build )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− backend−development ( build )
 </br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− module−feature−name
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− module-develop ( build )
+</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− feature-module-feature_name
+</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− mobile−development ( build )
 
-The integration team works as the git branch masters for the development and master branch. Each
-team is forced to comply with the branching flow of the project. Only pull requests directly from
-a module develop branch to the develop branch are considered for merging. Each team takes responsibility
-over their own module develop branch by creating feature branches to integrate.
+Development of the back-end and front-end has been divided into seperate branches for separation
+of concerns. For every module(subsystem) a seperate branch has been created, and every feature per module has its own branch as well. Before merging, all branches
+must go through a mandatory Pull Request procedure in which the branch will be reviewed by
+another team member, who did not make the pull request, and - if approved - merged
+into the branch immediately above the requested branch in the hierarchy as defined above.
 
 ### Code Quality Badges
--TODO: Add stuff here <br>
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+[![Issues][issues-shield]][issues-url]<br>
+[![Build Status](https://travis-ci.org/{ORG-or-USERNAME}/{REPO-NAME}.png?branch=master)](https://travis-ci.org/{ORG-or-USERNAME}/{REPO-NAME})
+<br>
+[![Coverage Status](https://coveralls.io/repos/github/badges/shields/badge.svg?branch=master)](https://coveralls.io/github/badges/shields?branch=master)
+
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/COS301-SE-2021/High-Five.svg?style=for-the-badge
