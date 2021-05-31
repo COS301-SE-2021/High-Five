@@ -6,7 +6,7 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'welcome',
-    pathMatch: 'full'
+    pathMatch:'full'
   },
   {
     path: 'register',
@@ -21,9 +21,15 @@ const routes: Routes = [
     loadChildren: () => import('./pages/welcome/welcome.module').then( m => m.WelcomePageModule)
   },
   {
+
+    path:'navbar',
+    loadChildren: () => import('./pages/navbar/navbar.module').then(m => m.NavbarPageModule)
+  },
+  {
     path: 'videostore',
     loadChildren: () => import('./pages/videostore/videostore.module').then( m => m.VideostorePageModule)
   },
+
 ];
 
 @NgModule({
