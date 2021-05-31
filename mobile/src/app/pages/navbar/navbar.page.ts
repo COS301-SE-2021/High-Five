@@ -15,38 +15,34 @@ export class NavbarPage implements OnInit {
   @ViewChild('videoNav') videoNav : HTMLIonButtonElement;
 
   private navPages;
-  homeLink = "active-link";
-  analyticsLink = "link";
-  videoLink = "link";
+  homeLink = ["active-link"];
+  analyticsLink = ["link"];
+  videoLink = ["link"];
 
   isDesktop: boolean;
   constructor(private screenSizeService: ScreenSizeServiceService, private nav : Router) {
     this.screenSizeService.isDesktopView().subscribe(isDesktop=>{
       this.isDesktop = isDesktop;
     });
+    this.navPages = {
+      'homeNav' : this.homeLink,
+      'analyticsNav' : this.analyticsLink,
+      'videoNav' : this.videoLink
+    }
   }
   ngOnInit() {
-    this.navPages = {
-      'homeNav' : this.homeNav,
-      'analyticsNav' : this.analyticsNav,
-      'videoNav' : this.videoNav
-    }
-    console.log(this.homeNav)
   }
 
   navigateTo(url : String, tab : String) {
-    this.nav.navigate([url]);
-
-
     for (let key in this.navPages) {
-      console.log(this.navPages[key])
       let value = this.navPages[key];
       if (key !== tab) {
-        value.setAttribute('class', 'link');
+        value[0] = 'link';
       } else {
-        value.setAttribute('class', 'active-link');
+        value[0] = 'active-link';
       }
     }
+    this.nav.navigate([url]);
   }
 
 }
