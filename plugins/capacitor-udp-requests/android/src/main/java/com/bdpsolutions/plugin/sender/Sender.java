@@ -53,6 +53,20 @@ public class Sender{
     }
 
     /**
+     * This function receives a payload string as a parameter, converts the string to a bytes array and sends the payload bytes to the udp socket
+     * @param payload The string payload to send to the udp socket
+     */
+    public void sendMessageVoid(String payload){
+        try {
+            byte[] payloadBytes = stringToBytesASCII(payload);
+            udpSocket.send(new DatagramPacket(payloadBytes,payloadBytes.length,InetAddress.getByName(address),port));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      *
      * @param str
      * @return
