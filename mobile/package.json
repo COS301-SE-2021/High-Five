@@ -30,7 +30,6 @@
     "@ionic/angular": "^5.5.2",
     "capacitor-udp-requests": "file:../plugins/capacitor-udp-requests",
     "cordova-plugin-streaming-media": "^2.3.0",
-    "cordova-plugin-streaming-media": "^2.3.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
