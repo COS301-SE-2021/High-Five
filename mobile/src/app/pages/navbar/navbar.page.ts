@@ -15,6 +15,8 @@ export class NavbarPage implements OnInit {
   @ViewChild('videoNav') videoNav : HTMLIonButtonElement;
 
   private navPages;
+
+  //These links are arrays so that when the content is changed, it is shown in the HTML
   homeLink = ["active-link"];
   analyticsLink = ["link"];
   videoLink = ["link"];
@@ -33,6 +35,12 @@ export class NavbarPage implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * This function will navigate the application to the provided url, as well as change the styling of the
+   * navigation buttons to communicate to the user that they are at that url.
+   * @param url The url to navigate to
+   * @param tab The navigation button to set to be active
+   */
   navigateTo(url : String, tab : String) {
     for (let key in this.navPages) {
       let value = this.navPages[key];
