@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {DroneControlService} from '../../services/drone/drone-control.service';
 
 @Component({
   selector: 'app-controls',
@@ -6,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./controls.page.scss'],
 })
 export class ControlsPage implements OnInit {
-  constructor() {
+
+  constructor(private controls: DroneControlService) {
 
   }
 
@@ -14,19 +16,16 @@ export class ControlsPage implements OnInit {
 
   }
 
-  demo(){
-
-  }
+  // demo(){
+  //
+  // }
 
   takeoff(){
-
+    this.controls.takeoff();
   }
 
   land(){
-
-  }
-
-  connect() {
+    this.controls.land();
   }
 
 }
