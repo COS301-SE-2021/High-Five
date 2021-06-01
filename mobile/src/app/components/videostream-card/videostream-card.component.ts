@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {VideoPreviewData} from "../../pages/videostore/videostore.page";
 import {ModalController} from "@ionic/angular";
-
+import {VideoPlayer} from "@ionic-native/video-player/ngx";
 @Component({
   selector: 'app-videostream-card',
   templateUrl: './videostream-card.component.html',
@@ -9,7 +9,7 @@ import {ModalController} from "@ionic/angular";
 })
 export class VideostreamCardComponent implements OnInit {
   @Input() modal: ModalController;
-  constructor() { }
+  constructor( private vPlayer : VideoPlayer) { }
 
   ngOnInit() {}
 
