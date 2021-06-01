@@ -13,9 +13,13 @@ import java.nio.charset.StandardCharsets;
  */
 public class Sender{
     DatagramSocket udpSocket;
+    String address;
+    int port;
     byte[] payloadBytes;
     public Sender(String address, String port){
         try{
+            this.address = address;
+            this.port = Integer.parseInt(port);
             udpSocket = new DatagramSocket();
             udpSocket.connect(InetAddress.getByName(address),Integer.parseInt(port));
         }catch(Exception e){
@@ -26,7 +30,7 @@ public class Sender{
     public void sendMessage(String payload){
         try {
             payloadBytes = stringToBytesASCII(payload);
-            udpSocket.send(new DatagramPacket(payloadBytes,payloadBytes.length,InetAddress.getByName("192.168.10.1"),8889));
+            udpSocket.send(new DatagramPacket(payloadBytes,payloadBytes.length,InetAddress.getByName(address),port));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,6 +44,9 @@ public class Sender{
         return b;
     }
 
+    public void close(){
+        udpSocket.close();
+    }
 }
 
 
