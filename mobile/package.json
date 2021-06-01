@@ -30,8 +30,6 @@
     "@ionic-native/video-player": "^5.33.1",
     "@ionic/angular": "^5.5.2",
     "@videogular/ngx-videogular": "^3.0.1",
-    "cordova-plugin-ionic-webview": "^5.0.0",
-    "cordova-plugin-video-player": "git+https://github.com/moust/cordova-plugin-videoplayer.git",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
