@@ -6,7 +6,7 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'welcome',
-    pathMatch: 'full'
+    pathMatch:'full'
   },
   {
     path: 'register',
@@ -20,6 +20,12 @@ const routes: Routes = [
     path: 'welcome',
     loadChildren: () => import('./pages/welcome/welcome.module').then( m => m.WelcomePageModule)
   },
+  {
+
+    path:'navbar',
+    loadChildren: () => import('./pages/navbar/navbar.module').then(m => m.NavbarPageModule)
+  },
+
 ];
 
 @NgModule({
