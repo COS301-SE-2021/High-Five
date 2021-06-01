@@ -27,12 +27,17 @@ public class Sender{
         }
     }
 
-    public void sendMessage(String payload){
+    public String sendMessage(String payload){
         try {
             payloadBytes = stringToBytesASCII(payload);
             udpSocket.send(new DatagramPacket(payloadBytes,payloadBytes.length,InetAddress.getByName(address),port));
+            byte[] receivePayload = new byte[64];
+            DatagramPacket response = new DatagramPacket(receivePayload, receivePayload.length);
+            udpSocket.receive(response);
+            return new String(response.getData(),0,response.getLength(), StandardCharsets.US_ASCII);
         } catch (IOException e) {
             e.printStackTrace();
+            return "error";
         }
     }
 
