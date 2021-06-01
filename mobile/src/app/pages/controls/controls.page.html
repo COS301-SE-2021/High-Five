@@ -3,5 +3,21 @@
   <ion-header>
     <ion-title size="large">Controls</ion-title>
   </ion-header>
-  <ion-button (click)="startVideo()">Start Video</ion-button>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="4">
+        <ion-button (click)="demo();">Demo</ion-button>
+      </ion-col>
+      <ion-col size="4">
+        <ion-button (click)="takeoff();">Takeoff</ion-button>
+      </ion-col>
+      <ion-col size="4">
+        <ion-button (click)="land();">Land</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-card>
+    <div style="position: relative; left: 0; top: 0; min-height: 200px; background-color: #dddddd" id="zone_joystick"></div>
+  </ion-card>
 </ion-content>
