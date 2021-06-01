@@ -21,9 +21,11 @@ export class VideostoreCardComponent implements OnInit {
    * replayed to the user.
    */
   async playVideo() {
-    console.log("playing video")
     const videoModal = await this.modal.create({
-      component: VideostreamCardComponent
+      component: VideostreamCardComponent,
+      componentProps: {
+        modal: this.modal
+      }
     })
 
     videoModal.style.backgroundColor = "rgba(0,0,0,0.85)" //make the background for the modal darker.
