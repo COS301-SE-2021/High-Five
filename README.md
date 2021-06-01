@@ -145,7 +145,7 @@ into the branch immediately above the requested branch in the hierarchy as defin
 [![Issues][issues-shield]][issues-url]<br>
 [![Coverage Status](https://coveralls.io/repos/github/badges/shields/badge.svg?branch=master)](https://coveralls.io/github/badges/shields?branch=master)
 <br>
-[![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Ionic%20Tests/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions)
+[![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Ionic%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions)
 <br>
 
 
