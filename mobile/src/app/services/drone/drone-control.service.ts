@@ -13,7 +13,7 @@ export class DroneControlService {
     const landOptions: SendUdpRequestOptions = {
       port: '8889',
       address: '192.168.10.1',
-      payload: 'Command'
+      payload: 'command'
     };
     udp.sendUdpRequest(landOptions);
   }

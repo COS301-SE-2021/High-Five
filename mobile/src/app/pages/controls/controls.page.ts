@@ -9,6 +9,10 @@ import {DroneControlService} from '../../services/drone/drone-control.service';
 export class ControlsPage implements OnInit {
 
   constructor(private controls: DroneControlService) {
+
+  }
+
+  connect(){
     this.controls.connect();
   }
 
