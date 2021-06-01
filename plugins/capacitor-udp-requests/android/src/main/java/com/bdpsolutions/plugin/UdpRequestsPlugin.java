@@ -52,7 +52,7 @@ public class UdpRequestsPlugin extends Plugin {
         String port = call.getString("port");
         String payload = call.getString("payload");
         if(payload!=null && port != null && address != null){
-            Sender sender = new Sender(address,port,payload.length());
+            Sender sender = new Sender(address,port);
             sender.sendMessage(payload);
             sender.close();
             JSObject ret = new JSObject();
