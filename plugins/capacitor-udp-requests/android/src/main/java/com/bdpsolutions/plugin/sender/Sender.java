@@ -68,8 +68,8 @@ public class Sender{
 
     /**
      *
-     * @param str
-     * @return
+     * @param str The string to convert to a byte array
+     * @return Returns a byte array of the string
      */
     public static byte[] stringToBytesASCII(String str) {
         byte[] b = new byte[str.length()];
