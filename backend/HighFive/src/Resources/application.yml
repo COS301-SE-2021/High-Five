@@ -6,7 +6,7 @@ info:
   description: The OpenAPI specification for High Five's controllers
 
 tags:
-  - name: "User"
+  - name: "VideoStorage"
 
   #==========================================================
   #     PATHS 
@@ -14,15 +14,15 @@ tags:
 paths:
 
   #==========================================================
-  #     USER SUBSYSTEM PATHING
+  #     VIDEO STORAGE SUBSYSTEM PATHING
   #==========================================================
 
-  /user/registerAccount:
+  /video/uploadVideo:
     post:
       tags:
-        - "User"
-      description: Endpoint for Register Account use case
-      operationId: RegisterAccount
+        - "VideoStorage"
+      description: Endpoint for uploading videos (might not be used in the actual program)
+      operationId: UploadVideo
       requestBody:
         required: true
         content:
@@ -41,7 +41,7 @@ components:
   schemas:
 
     #==========================================================
-    #     USER COMPONENTS
+    #     VIDEO STORAGE COMPONENTS
     #==========================================================
 
     registerAccountRequest:
