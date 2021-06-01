@@ -150,7 +150,7 @@ into the branch immediately above the requested branch in the hierarchy as defin
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Ionic%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions)
 <br>
 Monitoring</br>
-[![Website](https://img.shields.io/website?url=https%3A%2F%2Fdiscord.com%2Fchannels%2F841566124087705620%2F841566124087705625%2F848982894759641118)]()
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fdiscord.com%2Fchannels%2F841566124087705620%2F841566124087705625%2F848982894759641118)](https://high5app.azurewebsites.net/)
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
