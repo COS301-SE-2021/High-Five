@@ -32,4 +32,25 @@ export class ControlsPage implements OnInit {
     this.controls.land();
   }
 
+  up(){
+    this.controls.up(50);
+  }
+  down()
+  {
+    this.controls.down(50);
+  }
+  forward(){
+    this.controls.forward(50);
+  }
+  backward(){
+    this.controls.backward(50);
+  }
+  left(){
+    this.controls.left(50);
+  }
+  right(){
+    this.controls.right(50);
+  }
+
+
 }

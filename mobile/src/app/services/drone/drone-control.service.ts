@@ -35,4 +35,58 @@ export class DroneControlService {
     };
     udp.sendUdpRequest(landOptions);
   }
+
+  forward(distance){
+    const landOptions: SendUdpRequestOptions = {
+      port: '8889',
+      address: '192.168.10.1',
+      payload: 'forward ' + distance.toString()
+    };
+    udp.sendUdpRequest(landOptions);
+  }
+
+  backward(distance){
+    const landOptions: SendUdpRequestOptions = {
+      port: '8889',
+      address: '192.168.10.1',
+      payload: 'back ' + distance.toString()
+    };
+    udp.sendUdpRequest(landOptions);
+  }
+
+  up(distance){
+    const landOptions: SendUdpRequestOptions = {
+      port: '8889',
+      address: '192.168.10.1',
+      payload: 'up ' + distance.toString()
+    };
+    udp.sendUdpRequest(landOptions);
+  }
+
+  down(distance){
+    const landOptions: SendUdpRequestOptions = {
+      port: '8889',
+      address: '192.168.10.1',
+      payload: 'down ' + distance.toString()
+    };
+    udp.sendUdpRequest(landOptions);
+  }
+
+  left(distance){
+    const landOptions: SendUdpRequestOptions = {
+      port: '8889',
+      address: '192.168.10.1',
+      payload: 'left ' + distance.toString()
+    };
+    udp.sendUdpRequest(landOptions);
+  }
+
+  right(distance){
+    const landOptions: SendUdpRequestOptions = {
+      port: '8889',
+      address: '192.168.10.1',
+      payload: 'right ' + distance.toString()
+    };
+    udp.sendUdpRequest(landOptions);
+  }
 }
