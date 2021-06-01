@@ -1,25 +1,26 @@
-<vg-player vg-theme="controller.config.theme.url">
-  <vg-controls>
-    <ion-button #videoPlay style="display: block" fill="clear" (click)="playVideo()"><ion-icon name="play-circle-outline"></ion-icon></ion-button>
-    <ion-button #videoPause style="display: none" fill="clear" (click)="pauseVideo()"><ion-icon name="pause-circle-outline"></ion-icon></ion-button>
-    <vg-playback-button></vg-playback-button>
+<ion-content>
+  <vg-player>
+    <vg-controls>
+      <vg-play-pause></vg-play-pause>
+      <vg-playback-button></vg-playback-button>
 
-    <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+      <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
 
-    <vg-scrub-bar>
-      <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-      <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-    </vg-scrub-bar>
+        <vg-scrub-bar>
+          <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+          <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+        </vg-scrub-bar>
 
-    <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+      <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
 
-    <vg-mute></vg-mute>
-    <vg-volume></vg-volume>
+      <vg-mute></vg-mute>
+      <vg-volume></vg-volume>
 
-    <vg-fullscreen></vg-fullscreen>
-  </vg-controls>
+      <vg-fullscreen></vg-fullscreen>
+    </vg-controls>
 
-  <video width="100%" height="100%" #playMedia [vgMedia]="playMedia" id="singleVideo" preload="auto" crossorigin>
-    <source src="http://static.videogular.com/assets/videos/videogular.mp4" type="video/mp4">
-  </video>
-</vg-player>
+    <video width="100%" height="100%" #playMedia [vgMedia]="playMedia" id="singleVideo" preload="auto" crossorigin>
+      <source src="http://static.videogular.com/assets/videos/videogular.mp4" type="video/mp4">
+    </video>
+  </vg-player>
+</ion-content>

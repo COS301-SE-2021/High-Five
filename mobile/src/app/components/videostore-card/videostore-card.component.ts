@@ -57,6 +57,8 @@ export class VideostoreCardComponent implements OnInit {
       component: VideostreamCardComponent
     })
 
+    videoModal.style.backgroundColor = "rgba(0,0,0,0.85)"
+
     await videoModal.present();
   }
 }
