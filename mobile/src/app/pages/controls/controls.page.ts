@@ -20,10 +20,6 @@ export class ControlsPage implements OnInit {
 
   }
 
-  // demo(){
-  //
-  // }
-
   takeoff(){
     this.controls.takeoff();
   }
@@ -54,11 +50,11 @@ export class ControlsPage implements OnInit {
 
   //Rotate left
   rtl(){
-
+    this.controls.rotateLeft(90);
   }
   //Rotate right
   rtr(){
-
+    this.controls.rotateRight(90);
   }
 
 

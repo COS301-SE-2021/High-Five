@@ -89,4 +89,22 @@ export class DroneControlService {
     };
     udp.sendUdpRequest(landOptions);
   }
+
+  rotateLeft(angle){
+    const landOptions: SendUdpRequestOptions = {
+      port: '8889',
+      address: '192.168.10.1',
+      payload: 'ccw ' + angle.toString()
+    };
+    udp.sendUdpRequest(landOptions);
+  }
+
+  rotateRight(angle){
+    const landOptions: SendUdpRequestOptions = {
+      port: '8889',
+      address: '192.168.10.1',
+      payload: 'cw ' + angle.toString()
+    };
+    udp.sendUdpRequest(landOptions);
+  }
 }
