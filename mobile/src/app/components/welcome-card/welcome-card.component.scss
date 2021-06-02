@@ -1,5 +1,5 @@
 ion-card{
-  max-width: 300px;
+  max-width: 400px;
   justify-content: center;
   align-items: center;
   align-content: center;
@@ -23,4 +23,13 @@ ion-card-subtitle{
 ion-row
 {
   margin-bottom: 10%;
+}
+
+ion-button:first-of-type{
+  margin-top: 5%;
+}
+
+ion-button{
+  margin-left: 5%;
+  margin-right: 5%;
 }

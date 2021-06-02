@@ -1,9 +1,12 @@
 app-welcome{
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+  //padding: 0;
+  //margin: 0;
+  //box-sizing: border-box;
 }
+ion-content{
+  --background : url('../../../assets/images/welcome_landscape.svg') no-repeat center center / cover;
 
+}
 
 
 //#layer0 {
