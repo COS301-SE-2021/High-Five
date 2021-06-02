@@ -1,19 +1,19 @@
 <ion-card>
   <table><tr>
     <td class="imageBox">
-      <img src="{{data.getImageUrl()}}" *ngIf="this.platform.width() >= 700">
+      <img name="desktopImage" src="{{data.getImageUrl()}}" *ngIf="this.platform.width() >= 700">
     </td>
     <td class="contentBox">
-      <img src="{{data.getImageUrl()}}" *ngIf="this.platform.width() < 700">
+      <img name="mobileImage" src="{{data.getImageUrl()}}" *ngIf="this.platform.width() < 700">
       <ion-card-header class="header">
         <div class="details">
-          <ion-card-title>{{data.getTitle()}}</ion-card-title>
+          <ion-card-title name="videoTitle">{{data.getTitle()}}</ion-card-title>
           <ion-button (click)="playVideo()"><ion-icon slot="start" name="play-circle-outline"></ion-icon>Play</ion-button>
 <!--          <ion-card-subtitle></ion-card-subtitle>-->
         </div>
       </ion-card-header>
 
-      <ion-card-content>
+      <ion-card-content name="recordedDate">
         {{data.getRecordedDate()}}
       </ion-card-content>
     </td>
