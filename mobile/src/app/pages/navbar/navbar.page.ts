@@ -13,6 +13,7 @@ export class NavbarPage implements OnInit {
   @ViewChild('homeNav') homeNav : HTMLIonButtonElement;
   @ViewChild('analyticsNav') analyticsNav : HTMLIonButtonElement;
   @ViewChild('videoNav') videoNav : HTMLIonButtonElement;
+  @ViewChild('controlsNav') controlsNav : HTMLIonButtonElement;
 
   private navPages;
 
@@ -20,6 +21,7 @@ export class NavbarPage implements OnInit {
   homeLink = ["active-link"];
   analyticsLink = ["link"];
   videoLink = ["link"];
+  controlsLink = ["link"];
 
   isDesktop: boolean;
   constructor(private screenSizeService: ScreenSizeServiceService, private nav : Router) {
@@ -29,7 +31,8 @@ export class NavbarPage implements OnInit {
     this.navPages = {
       'homeNav' : this.homeLink,
       'analyticsNav' : this.analyticsLink,
-      'videoNav' : this.videoLink
+      'videoNav' : this.videoLink,
+      'controlsNav' : this.controlsLink
     }
   }
   ngOnInit() {
