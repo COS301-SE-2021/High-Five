@@ -40,7 +40,7 @@ public class UdpVideoServer implements Runnable{
             System.out.println("Starting server");
             socket = new DatagramSocket(serverPort);
             while(running){
-                byte[] buffer = new byte[70000];
+                byte[] buffer = new byte[1460];
                 DatagramPacket packet = new DatagramPacket(buffer,buffer.length);
                 System.out.println("Waiting for packet");
                 socket.receive(packet);

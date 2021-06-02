@@ -48,8 +48,19 @@
         <ion-button size="6" style="width: 100%;" (click)="rtr()">Rotate Right</ion-button>
       </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button size="6" style="width: 100%;"  (click)="enableVideo()">Start Video Steam</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button size="6" style="width: 100%;" (click)="disableVideo()">Stop Video Steam</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-button (click)="startStream()">Stream</ion-button>
+    </ion-row>
   </ion-grid>
-  <ion-card>
-    <div style="position: relative; left: 0; top: 0; min-height: 200px; background-color: #dddddd" id="zone_joystick"></div>
-  </ion-card>
+<!--  <ion-card>-->
+<!--    <div style="position: relative; left: 0; top: 0; min-height: 200px; background-color: #dddddd" id="zone_joystick"></div>-->
+<!--  </ion-card>-->
 </ion-content>
