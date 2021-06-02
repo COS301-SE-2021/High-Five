@@ -9,7 +9,7 @@ import { ControlsPageRoutingModule } from './controls-routing.module';
 import { ControlsPage } from './controls.page';
 import {DesktopNavbarComponent} from '../../components/desktop-navbar/desktop-navbar.component';
 import {MobileNavbarComponent} from '../../components/mobile-navbar/mobile-navbar.component';
-import {NgxJoystickModule} from 'ngx-joystick';
+import {NgxJoystickModule} from '../../../../../plugins/ngx-joystick';
 
 @NgModule({
   imports: [
