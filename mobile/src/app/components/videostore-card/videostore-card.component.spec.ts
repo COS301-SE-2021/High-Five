@@ -145,6 +145,10 @@ describe('VideostoreCardComponent', () => {
     mockPlatform.width.and.callFake(function () {
       return 699;
     });
+
+    /**
+     * does it WANT me to put this in a function...
+     */
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [ VideostoreCardComponent ],
