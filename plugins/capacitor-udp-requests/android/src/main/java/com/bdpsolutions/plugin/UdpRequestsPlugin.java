@@ -56,6 +56,14 @@ public class UdpRequestsPlugin extends Plugin {
         }
     }
 
+    @PluginMethod
+    public void stopVideoStream(PluginCall call){
+        if(getPermissionState("requests")!= PermissionState.GRANTED){
+            requestPermissionForAlias("requests", call , "requestsPermissionCallback");
+        }else{
+            stopVideoStreamServer();
+        }
+    }
 
     private void startVideoStreamServer(){
 
