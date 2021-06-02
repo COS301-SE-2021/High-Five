@@ -11,7 +11,7 @@ import { VideoPlayer } from '@ionic-native/video-player/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  imports: [BrowserModule, NgxJoystickModule, IonicModule.forRoot(), AppRoutingModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, VideoPlayer],
   bootstrap: [AppComponent],
 })
