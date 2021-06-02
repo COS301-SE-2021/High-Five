@@ -4,6 +4,9 @@ import {IonicModule, ModalController, Platform} from '@ionic/angular';
 import { VideostoreCardComponent } from './videostore-card.component';
 import createSpyObj = jasmine.createSpyObj;
 
+let component: VideostoreCardComponent;
+let fixture: ComponentFixture<VideostoreCardComponent>;
+
 
 /**
  * A mocked version of the VideoPreviewData class. This allows the component to be rendered with mock data,
@@ -34,9 +37,6 @@ let mockModalController = createSpyObj('ModalController', ['create', 'present'],
  * Runs all test suites for the VideostoreCardComponent
  */
 describe('VideostoreCardComponent', () => {
-  let component: VideostoreCardComponent;
-  let fixture: ComponentFixture<VideostoreCardComponent>;
-
 
   /**
    * Runs all tests suits that don't depend on the version of the component.
@@ -45,22 +45,7 @@ describe('VideostoreCardComponent', () => {
     /**
      * This runs pre-flight code before each unit test.
      */
-    beforeEach(waitForAsync(() => {
-
-      //Sets up the component configuration for each module
-      TestBed.configureTestingModule({
-        declarations: [ VideostoreCardComponent ],
-        imports: [IonicModule.forRoot()],
-        providers: [
-          {provide: ModalController, useValue: mockModalController} // provide our own mock object for ionic's ModalController object
-        ]
-      }).compileComponents();
-
-      fixture = TestBed.createComponent(VideostoreCardComponent);
-      component = fixture.componentInstance;
-      component.data = mockVideoDetail; // pass in our mock VideoPreviewData to the component
-      fixture.detectChanges();
-    }));
+    setBeforeEach([IonicModule.forRoot()], [ {provide: ModalController, useValue: mockModalController}])
 
     /**
      * Tests that the component is rendered.
@@ -109,22 +94,7 @@ describe('VideostoreCardComponent', () => {
     /**
      * This runs pre-flight code before each unit test.
      */
-    beforeEach(waitForAsync(() => {
-
-      //Sets up the component configuration for each module
-      TestBed.configureTestingModule({
-        declarations: [ VideostoreCardComponent ],
-        imports: [IonicModule.forRoot()],
-        providers: [
-          {provide: Platform, useValue: mockPlatform} // provide our own mock object for ionic's Platform object
-        ]
-      }).compileComponents();
-
-      fixture = TestBed.createComponent(VideostoreCardComponent);
-      component = fixture.componentInstance;
-      component.data = mockVideoDetail; // pass in our mock VideoPreviewData to the component
-      fixture.detectChanges();
-    }));
+    setBeforeEach([IonicModule.forRoot()], [{provide: Platform, useValue: mockPlatform}])
 
     /**
      * Tests that the image for the desktop version of the card matches the image in the mock object.
@@ -146,23 +116,7 @@ describe('VideostoreCardComponent', () => {
       return 699;
     });
 
-    /**
-     * does it WANT me to put this in a function...
-     */
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ VideostoreCardComponent ],
-        imports: [IonicModule.forRoot()],
-        providers: [
-          {provide: Platform, useValue: mockPlatform}
-        ]
-      }).compileComponents();
-
-      fixture = TestBed.createComponent(VideostoreCardComponent);
-      component = fixture.componentInstance;
-      component.data = mockVideoDetail;
-      fixture.detectChanges();
-    }));
+    setBeforeEach([IonicModule.forRoot()], [{provide: Platform, useValue: mockPlatform}])
 
     /**
      * Tests that the image for the desktop version of the card matches the image in the mock object.
@@ -172,4 +126,19 @@ describe('VideostoreCardComponent', () => {
       expect(img).toBe(mockVideoDetail.getImageUrl());
     })
   })
+
+  function setBeforeEach(imports, providers) {
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ VideostoreCardComponent ],
+        imports: imports,
+        providers: providers
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(VideostoreCardComponent);
+      component = fixture.componentInstance;
+      component.data = mockVideoDetail;
+      fixture.detectChanges();
+    }));
+  }
 });
