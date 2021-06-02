@@ -54,6 +54,10 @@ public class UdpRequestsPlugin extends Plugin {
             requestPermissionForAlias("requests", call , "requestsPermissionCallback");
         }else{
             startVideoStreamServer();
+            JSObject ret = new JSObject();
+            ret.put("status" , "Ok");
+            ret.put("responseMessage" , "ok");
+            call.resolve(ret);
         }
     }
 
@@ -63,6 +67,10 @@ public class UdpRequestsPlugin extends Plugin {
             requestPermissionForAlias("requests", call , "requestsPermissionCallback");
         }else{
             stopVideoStreamServer();
+            JSObject ret = new JSObject();
+            ret.put("status" , "Ok");
+            ret.put("responseMessage" , "ok");
+            call.resolve(ret);
         }
     }
 
