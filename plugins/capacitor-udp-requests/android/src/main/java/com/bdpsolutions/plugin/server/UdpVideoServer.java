@@ -5,11 +5,18 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+/**
+ *
+ */
 public class UdpVideoServer implements Runnable{
     private boolean running;
     Thread serverRunner;
     DatagramSocket socket;
     int serverPort;
+
+    /**
+     *
+     */
     public UdpVideoServer(){
         serverPort = 11111;
         running = true;
@@ -17,10 +24,16 @@ public class UdpVideoServer implements Runnable{
         serverRunner.start();
     }
 
+    /**
+     *
+     */
     public void stopServer(){
         running = false;
     }
 
+    /**
+     *
+     */
     @Override
     public void run() {
         try{
