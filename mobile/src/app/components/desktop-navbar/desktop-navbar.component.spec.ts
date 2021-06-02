@@ -10,7 +10,7 @@ describe('DesktopNavbarComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DesktopNavbarComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: []
     }).compileComponents();
 
     fixture = TestBed.createComponent(DesktopNavbarComponent);

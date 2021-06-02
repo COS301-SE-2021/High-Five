@@ -1,13 +1,13 @@
 .desktop{
   ion-router-outlet{
-    margin-top: 1vh;
+    margin-top: 4vh;
     margin-bottom: 1vh;
   }
   .logo{
     max-height: 4vh;
   }
   ion-toolbar{
-    --background : #e9e9e9;
+    --background : rgb(255,255,255);
   }
   .link{
     --color: var(--ion-color-light);
@@ -17,11 +17,10 @@
   }
   .footer{
     width: 100%;
-    color : #ffffff;
+    color : var(--ion-color-primary);
     font-weight: bold;
-    background: #de00ec;
-    height: 2vh;
-    line-height: 2vh;
+    height: 5vh;
+    line-height: 5vh;
     text-align: center;
     position: fixed;
     bottom: 0;
