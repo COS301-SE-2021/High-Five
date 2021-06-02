@@ -65,8 +65,12 @@ jobs:
         working-directory: ./mobile
         run: npm install
 
+      - name: link angular
+        working-directory: ./mobile
+        run: npm link @angular/cli
+
       - name: run tests
         working-directory: ./mobile
-        run: ng test
+        run: ng test --code-coverage
 
  
