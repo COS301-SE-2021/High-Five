@@ -73,7 +73,7 @@ describe('VideostoreCardComponent', () => {
      * Tests that the title of the card matches the returned value in the mock object
      */
     it('should show title', () => {
-      const title = fixture.debugElement.nativeElement.querySelector('ion-card-title[name="videoTitle"]').innerText
+      const title = fixture.debugElement.nativeElement.querySelector('ion-card-title[test="videoTitle"]').innerText
       expect(title).toBe(mockVideoDetail.getTitle());
     });
 
@@ -81,7 +81,7 @@ describe('VideostoreCardComponent', () => {
      * Tests that the date of the card matches the date in the mock object.
      */
     it('should show date', () => {
-      const date = fixture.debugElement.nativeElement.querySelector('ion-card-content[name="recordedDate"]').innerHTML.trim()
+      const date = fixture.debugElement.nativeElement.querySelector('ion-card-content[test="recordedDate"]').innerHTML.trim()
       expect(date).toBe(mockVideoDetail.getRecordedDate())
     });
 
@@ -90,7 +90,7 @@ describe('VideostoreCardComponent', () => {
      */
     it('should show modal', () => {
       spyOn(component, 'playVideo');
-      const btn = fixture.debugElement.nativeElement.querySelector('ion-button[name="playBtn"]');
+      const btn = fixture.debugElement.nativeElement.querySelector('ion-button[test="playBtn"]');
       btn.click();
       expect(component.playVideo).toHaveBeenCalled()
     })
@@ -130,7 +130,7 @@ describe('VideostoreCardComponent', () => {
      * Tests that the image for the desktop version of the card matches the image in the mock object.
      */
     it('should show desktop image', ()=>{
-      let img = fixture.debugElement.nativeElement.querySelector('img[name="desktopImage"]').src;
+      let img = fixture.debugElement.nativeElement.querySelector('img[test="desktopImage"]').src;
       expect(img).toBe(mockVideoDetail.getImageUrl());
     })
   });
@@ -164,7 +164,7 @@ describe('VideostoreCardComponent', () => {
      * Tests that the image for the desktop version of the card matches the image in the mock object.
      */
     it('should show mobile image', () => {
-      let img = fixture.debugElement.nativeElement.querySelector('img[name="mobileImage"]').src;
+      let img = fixture.debugElement.nativeElement.querySelector('img[test="mobileImage"]').src;
       expect(img).toBe(mockVideoDetail.getImageUrl());
     })
   })
