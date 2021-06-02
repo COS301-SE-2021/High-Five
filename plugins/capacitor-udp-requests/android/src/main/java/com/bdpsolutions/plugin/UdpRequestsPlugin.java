@@ -47,6 +47,26 @@ public class UdpRequestsPlugin extends Plugin {
         }
     }
 
+    @PluginMethod
+    public void getVideoStream(PluginCall call){
+        if(getPermissionState("requests")!= PermissionState.GRANTED){
+            requestPermissionForAlias("requests", call , "requestsPermissionCallback");
+        }else{
+            startVideoStreamServer();
+        }
+    }
+
+
+    private void startVideoStreamServer(){
+
+    }
+
+    private void stopVideoStreamServer(){
+
+    }
+
+
+
     private void handleUdpRequest(PluginCall call){
         String address = call.getString("address");
         String port = call.getString("port");
