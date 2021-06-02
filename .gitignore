@@ -585,7 +585,6 @@ hooks/
 
 # Ionic 3 plugins files
 platforms/
-plugins/
 plugins/android.json
 plugins/ios.json
 www/
