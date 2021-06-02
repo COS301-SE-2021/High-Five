@@ -52,5 +52,14 @@ export class ControlsPage implements OnInit {
     this.controls.right(50);
   }
 
+  //Rotate left
+  rtl(){
+
+  }
+  //Rotate right
+  rtr(){
+
+  }
+
 
 }
