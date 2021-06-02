@@ -31,7 +31,10 @@
                 "output": "./svg"
               }
             ],
-            "styles": ["src/theme/variables.scss", "src/global.scss"],
+            "styles": [
+              "src/theme/variables.scss",
+              "src/global.scss"
+            ,  "node_modules/@videogular/ngx-videogular/fonts/videogular.css"],
             "scripts": [],
             "aot": false,
             "vendorChunk": true,
