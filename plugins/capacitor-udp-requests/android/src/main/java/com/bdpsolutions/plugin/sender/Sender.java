@@ -1,82 +1,90 @@
 package com.bdpsolutions.plugin.sender;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.*;
+import java.nio.charset.StandardCharsets;
+
 /**
  *
- * @author Bieldt
+ * @author Ruan Bieldt
  */
-public class ESPConnection implements Runnable{
-    DatagramSocket espSock;
-    Thread runner = null;
-    Boolean running = false;
+public class Sender{
+    DatagramSocket udpSocket;
+    String address;
+    int port;
 
-    ByteBuffer buf;
-    byte[] bufferedChannels;
-    ESPConnection(){
+    /**
+     * Constructor for the sender class. Initialises the address and port and initialises the udp socket connection
+     * @param address The IP address that a udp connection will be opened to
+     * @param port The port that the udp connection will be opened to
+     */
+    public Sender(String address, String port){
         try{
-            espSock = new DatagramSocket();
-            espSock.connect(InetAddress.getByName("192.168.10.1"),8889);
-            runner = new Thread(this);
-            runner.start();
-            running = true;
-            buf = ByteBuffer.allocate(10);
+            this.address = address;
+            this.port = Integer.parseInt(port);
+            udpSocket = new DatagramSocket();
+            udpSocket.connect(InetAddress.getByName(address),Integer.parseInt(port));
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void run() {
-        while(running){
-            try{
-                Thread.sleep(1);
-
-                espSock.send(new DatagramPacket(bufferedChannels,10,InetAddress.getByName("192.168.10.1"),8889));
-                //send the array of bytes to the ip address entered as a datagrampacket
-            }catch(Exception e){
-                e.printStackTrace();
-            }
+    /**
+     * This function receives a payload string as a parameter, converts the string to a bytes array,
+     * sends the payload bytes to the udp socket and then waits to receive a response. The response is then returned as a string.
+     * @param payload The command the will be sent to the drone via udp datagram packet
+     * @return The response received from the drone
+     */
+    public String sendMessage(String payload){
+        try {
+            byte[] payloadBytes = stringToBytesASCII(payload);
+            udpSocket.send(new DatagramPacket(payloadBytes,payloadBytes.length,InetAddress.getByName(address),port));
+            byte[] receivePayload = new byte[64];
+            DatagramPacket response = new DatagramPacket(receivePayload, receivePayload.length);
+            udpSocket.receive(response);
+            return new String(response.getData(),0,response.getLength(), StandardCharsets.US_ASCII);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "error";
         }
+    }
+
+    /**
+     * This function receives a payload string as a parameter, converts the string to a bytes array and sends the payload bytes to the udp socket
+     * @param payload The string payload to send to the udp socket
+     */
+    public void sendMessageVoid(String payload){
+        try {
+            byte[] payloadBytes = stringToBytesASCII(payload);
+            udpSocket.send(new DatagramPacket(payloadBytes,payloadBytes.length,InetAddress.getByName(address),port));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param str The string to convert to a byte array
+     * @return Returns a byte array of the string
+     */
+    public static byte[] stringToBytesASCII(String str) {
+        byte[] b = new byte[str.length()];
+        for (int i = 0; i < b.length; i++) {
+            b[i] = (byte) str.charAt(i);
+        }
+        return b;
+    }
+
+    /**
+     *Closes the udp socket connection
+     */
+    public void close(){
+        udpSocket.close();
     }
 }
 
-//public class Sender {
-//    private DatagramSocket socket;
-//    private InetAddress address;
-//    private int port;
-//    private byte[] buffer;
-//
-//    public Sender(String address, String port) {
-//        try {
-//            this.socket = new DatagramSocket();
-//            this.address = InetAddress.getByName(address);
-//            this.port = Integer.parseInt(port);
-//        } catch (Exception e) {
-//            System.out.println(e.toString());
-//            this.socket.close();
-//        }
-//    }
-//
-//
-//    public String sendMessage(String message){
-//        buffer= message.getBytes();
-//        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, this.address,this.port);
-//        try{
-//            socket.send(packet);
-//            packet= new DatagramPacket(buffer, buffer.length);
-//            socket.receive(packet);
-//            String received = new String(packet.getData(), 0, packet.getLength());
-//            return received;
-//        }catch (Exception e){
-//
-//        }
-//        return "Error";
-//    }
-//
-//    public void close(){
-//        this.socket.close();
-//    }
-//}
+
