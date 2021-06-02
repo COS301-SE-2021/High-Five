@@ -1,0 +1,79 @@
+{
+  "_from": "ngx-joystick",
+  "_id": "ngx-joystick@1.0.2",
+  "_inBundle": false,
+  "_integrity": "sha512-NHj+ggBmEfz2BOBl46KGuTdzOAykXoJoOJVcKWjDPENhqsliN5NmZZUiaGI9ZV83FvwNwxfHE1/+RFabooef9Q==",
+  "_location": "/ngx-joystick",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "ngx-joystick",
+    "name": "ngx-joystick",
+    "escapedName": "ngx-joystick",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/ngx-joystick/-/ngx-joystick-1.0.2.tgz",
+  "_shasum": "9facc6ae39a3de12494d15e1fe97ee98cd6c7ddd",
+  "_spec": "ngx-joystick",
+  "_where": "C:\\Users\\hanne\\RiderProjects\\High-Five\\mobile",
+  "author": {
+    "name": "Wes Weitzel"
+  },
+  "bugs": {
+    "url": "https://github.com/wweitzel/ngx-joystick/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "nipplejs": "../nipplejs/",
+    "tslib": "^2.0.0"
+  },
+  "deprecated": false,
+  "description": "NgxJoystick is an angular joystick component. It is a wrapper around the nipplejs library providing virtual joystick functionality to your angular application.",
+  "es2015_ivy_ngcc": "__ivy_ngcc__/fesm2015/ngx-joystick.js",
+  "es2015": "fesm2015/ngx-joystick.js",
+  "esm2015": "esm2015/ngx-joystick.js",
+  "fesm2015_ivy_ngcc": "__ivy_ngcc__/fesm2015/ngx-joystick.js",
+  "fesm2015": "fesm2015/ngx-joystick.js",
+  "homepage": "https://github.com/wweitzel/ngx-joystick#readme",
+  "keywords": [
+    "angular",
+    "javascript",
+    "typescript",
+    "component",
+    "joystick",
+    "nipplejs"
+  ],
+  "license": "MIT",
+  "main": "bundles/ngx-joystick.umd.js",
+  "metadata": "ngx-joystick.metadata.json",
+  "module_ivy_ngcc": "__ivy_ngcc__/fesm2015/ngx-joystick.js",
+  "module": "fesm2015/ngx-joystick.js",
+  "name": "ngx-joystick",
+  "peerDependencies": {
+    "@angular/common": "^11.0.3",
+    "@angular/core": "^11.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wweitzel/ngx-joystick.git"
+  },
+  "sideEffects": false,
+  "typings": "ngx-joystick.d.ts",
+  "version": "1.0.2",
+  "__processed_by_ivy_ngcc__": {
+    "es2015": "12.0.2",
+    "fesm2015": "12.0.2",
+    "module": "12.0.2",
+    "typings": "12.0.2"
+  },
+  "scripts": {
+    "prepublishOnly": "node --eval \"console.error('ERROR: Trying to publish a package that has been compiled by NGCC. This is not allowed.\\nPlease delete and rebuild the package, without compiling with NGCC, before attempting to publish.\\nNote that NGCC may have been run by importing this package into another project that is being built with Ivy enabled.\\n')\" && exit 1"
+  }
+}

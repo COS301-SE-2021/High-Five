@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {DroneControlService} from '../../services/drone/drone-control.service';
-import { JoystickEvent, NgxJoystickComponent } from 'ngx-joystick';
-import { JoystickManagerOptions, JoystickOutputData } from 'nipplejs';
+import { JoystickEvent, NgxJoystickComponent } from '../../../../../plugins/ngx-joystick';
+import { JoystickManagerOptions, JoystickOutputData } from '../../../../../plugins/nipplejs';
 
 @Component({
   selector: 'app-controls',
@@ -14,8 +14,8 @@ export class ControlsPage implements OnInit {
   title = 'ngx-joystick-demo';
 
   dynamicJoystickOptions: JoystickManagerOptions = {
-    mode: 'dynamic',
-    color: 'blue',
+    mode: 'static',
+    color: 'white',
     multitouch: true
   };
 
