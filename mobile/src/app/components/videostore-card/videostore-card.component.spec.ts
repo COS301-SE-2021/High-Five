@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import {IonicModule, Platform} from '@ionic/angular';
+import {IonicModule, ModalController, Platform} from '@ionic/angular';
 
 import { VideostoreCardComponent } from './videostore-card.component';
-import {Router} from "@angular/router";
+import createSpyObj = jasmine.createSpyObj;
 
 
 /**
@@ -27,7 +27,8 @@ mockVideoDetail.getImageUrl.and.callFake(function() {
   return 'https://example.com/img.png';
 });
 
-let mockModalController = jasmine.createSpyObj('ModalController')
+
+let mockModalController = createSpyObj('ModalController', ['create', 'present'], ['style']);
 
 /**
  * Runs all test suites for the VideostoreCardComponent
@@ -36,16 +37,11 @@ describe('VideostoreCardComponent', () => {
   let component: VideostoreCardComponent;
   let fixture: ComponentFixture<VideostoreCardComponent>;
 
-  /**
-   * Runs all test suites for the desktop version of the VideostoreCardComponent.
-   * This suit uses a mocked Platform object that returns a width greater than 700.
-   */
-  describe('desktop', () => {
-    let mockPlatform = jasmine.createSpyObj('Platform', ['width']);
-    mockPlatform.width.and.callFake(function () {
-      return 701;
-    });
 
+  /**
+   * Runs all tests suits that don't depend on the version of the component.
+   */
+  describe('general', () => {
     /**
      * This runs pre-flight code before each unit test.
      */
@@ -56,7 +52,7 @@ describe('VideostoreCardComponent', () => {
         declarations: [ VideostoreCardComponent ],
         imports: [IonicModule.forRoot()],
         providers: [
-          {provide: Platform, useValue: mockPlatform} // provide our own mock object for ionic's Platform object
+          {provide: ModalController, useValue: mockModalController} // provide our own mock object for ionic's ModalController object
         ]
       }).compileComponents();
 
@@ -88,6 +84,47 @@ describe('VideostoreCardComponent', () => {
       const date = fixture.debugElement.nativeElement.querySelector('ion-card-content[name="recordedDate"]').innerHTML.trim()
       expect(date).toBe(mockVideoDetail.getRecordedDate())
     });
+
+    /**
+     * Tests that the click of the 'play' button calls the 'playVideo' function
+     */
+    it('should show modal', () => {
+      spyOn(component, 'playVideo');
+      const btn = fixture.debugElement.nativeElement.querySelector('ion-button[name="playBtn"]');
+      btn.click();
+      expect(component.playVideo).toHaveBeenCalled()
+    })
+  })
+
+  /**
+   * Runs all test suites for the desktop version of the VideostoreCardComponent.
+   * This suit uses a mocked Platform object that returns a width greater than 700.
+   */
+  describe('desktop', () => {
+    let mockPlatform = jasmine.createSpyObj('Platform', ['width']);
+    mockPlatform.width.and.callFake(function () {
+      return 701;
+    });
+
+    /**
+     * This runs pre-flight code before each unit test.
+     */
+    beforeEach(waitForAsync(() => {
+
+      //Sets up the component configuration for each module
+      TestBed.configureTestingModule({
+        declarations: [ VideostoreCardComponent ],
+        imports: [IonicModule.forRoot()],
+        providers: [
+          {provide: Platform, useValue: mockPlatform} // provide our own mock object for ionic's Platform object
+        ]
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(VideostoreCardComponent);
+      component = fixture.componentInstance;
+      component.data = mockVideoDetail; // pass in our mock VideoPreviewData to the component
+      fixture.detectChanges();
+    }));
 
     /**
      * Tests that the image for the desktop version of the card matches the image in the mock object.
