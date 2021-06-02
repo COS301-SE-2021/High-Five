@@ -71,6 +71,6 @@ jobs:
 
       - name: run tests
         working-directory: ./mobile
-        run: ng test --code-coverage
+        run: npm run test:prod
 
  
