@@ -65,7 +65,7 @@ jobs:
         working-directory: ./mobile
         run: npm install
 
-      - name: Build App
+      - name: run tests
         working-directory: ./mobile
         run: ng test
 
