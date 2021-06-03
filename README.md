@@ -83,9 +83,8 @@
 High Five is a real-time image analysis platform for images and videos taken by drone cameras. Users can add and customize the platform with the type of analysis that must be performed. Examples include counting cars in a parking lot, property surveillance or mapping, and color depth analysis for agricultural purposes - to name a few.
 
 ### Project Links
--TODO: update demo link
-* []()[BDP Solutions - Demo1](https://hibernate.org/)
-* []()[Software Requirements Specification (SRS)](https://drive.google.com/drive/u/4/folders/1V4vp62uHegeeINPAz2WpAIin2ktGwdUF)
+* []()[BDP Solutions - Demo1](https://drive.google.com/file/d/1eK1aoB-zd5L3d2GkG10BPtbhP_gGUUHX/view?usp=sharing)
+* []()[Software Requirements Specification (SRS)](https://drive.google.com/file/d/1BYFmZhJphzAOLJm7mU-x7vVI2vvxT8V4/view?usp=sharing)
 * []()[GitHub Project Board](https://github.com/COS301-SE-2021/High-Five/projects/1)
 
 ### Technology Stack
