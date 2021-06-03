@@ -99,10 +99,6 @@ High Five is a real-time image analysis platform for images and videos taken by 
     * []()[MongoDB](https://www.mongodb.com/)
     * []()[MicrosoftSQL](https://www.microsoft.com/en-us/sql-server/sql-server-2019)
 
-### Modules
-* User
-
-
 ## Team Members
 
 | **Team Member** | **Profiles** | **Skills/Interest** 
