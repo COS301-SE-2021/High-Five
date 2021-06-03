@@ -1,0 +1,47 @@
+<ion-card>
+  <ion-grid id="grid">
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col>
+        <ion-avatar style="margin: 0 auto;">
+          <ion-img src="../../../assets/images/defaultprofile.svg"></ion-img>
+        </ion-avatar>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+    <ion-row>
+
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input type="text" autocorrect="on" placeholder="example@example.com">  <ion-icon name="mail-outline" slot="start" ></ion-icon></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+
+        <ion-item>
+          <ion-label position="floating">Password</ion-label>
+          <ion-input type="password" required="true" autocorrect="on" placeholder="Password"> <ion-icon name="lock-closed-outline" slot="start"></ion-icon></ion-input>
+
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button style="width: 100%" [routerLink]="['/navbar']">Log In</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button [routerLink]="['/welcome']" style="width: 100%">Cancel</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <p><a href="localhost:4200/login" >Forgot Password ?</a></p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-card>

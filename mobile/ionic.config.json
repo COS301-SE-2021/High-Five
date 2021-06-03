@@ -1,0 +1,8 @@
+{
+  "name": "highfive",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}

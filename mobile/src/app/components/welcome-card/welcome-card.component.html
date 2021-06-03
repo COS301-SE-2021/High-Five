@@ -1,0 +1,17 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title >Please choose an action</ion-card-title>
+    <ion-card-subtitle>You can either login with an existing account, or you can create a new account with Register</ion-card-subtitle>
+  </ion-card-header>
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-button  [routerLink]="['/login']"  style="width: 100%">Sign In</ion-button>
+    </ion-row>
+    <ion-row class="ion-justify-content-center">
+      <ion-label>--- or ---</ion-label>
+    </ion-row>
+    <ion-row class="ion-justify-content-center" >
+      <ion-button [routerLink]="['/register']" style="width: 100%">Register</ion-button>
+    </ion-row>
+  </ion-grid>
+</ion-card>
