@@ -85,7 +85,7 @@ High Five is a real-time image analysis platform for images and videos taken by 
 ### Project Links
 -TODO: update demo link
 * []()[BDP Solutions - Demo1](https://hibernate.org/)
-* []()[Software Requirements Specification (SRS)](https://www.overleaf.com/9933879569jqwxmfqkbjcx)
+* []()[Software Requirements Specification (SRS)](https://drive.google.com/drive/u/4/folders/1V4vp62uHegeeINPAz2WpAIin2ktGwdUF)
 * []()[GitHub Project Board](https://github.com/COS301-SE-2021/High-Five/projects/1)
 
 ### Technology Stack
@@ -149,9 +149,9 @@ into the branch immediately above the requested branch in the hierarchy as defin
 <br>
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Ionic%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions)
 <br>
-Monitoring</br>
+<br>
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fdiscord.com%2Fchannels%2F841566124087705620%2F841566124087705625%2F848982894759641118)](https://high5app.azurewebsites.net/)
-
+</br>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
