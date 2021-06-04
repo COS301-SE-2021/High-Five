@@ -107,4 +107,28 @@ export class DroneControlService {
     };
     udp.sendUdpRequest(landOptions);
   }
+
+  enableStream(){
+    const landOptions: SendUdpRequestOptions = {
+      port: '8889',
+      address: '192.168.10.1',
+      payload: 'streamon'
+    };
+    udp.sendUdpRequest(landOptions);
+  }
+
+  disableStream(){
+    const landOptions: SendUdpRequestOptions = {
+      port: '8889',
+      address: '192.168.10.1',
+      payload: 'streamoff'
+    };
+    udp.sendUdpRequest(landOptions);
+  }
+
+
+  displayVideoStream(){
+    udp.getVideoStream();
+  }
+
 }
