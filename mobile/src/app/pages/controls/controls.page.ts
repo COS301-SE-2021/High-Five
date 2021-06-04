@@ -66,7 +66,7 @@ export class ControlsPage implements OnInit {
   }
 
   startStream(){
-    this.controls.displayVideoStream();
+    // this.controls.displayVideoStream();
   }
 
 
