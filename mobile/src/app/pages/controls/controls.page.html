@@ -48,5 +48,16 @@
         <ion-button size="6" style="width: 100%;" (click)="rtr()">Rotate Right</ion-button>
       </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button size="6" style="width: 100%;"  (click)="enableVideo()">Start Video Steam</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button size="6" style="width: 100%;" (click)="disableVideo()">Stop Video Steam</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-button (click)="startStream()">Stream</ion-button>
+    </ion-row>
   </ion-grid>
 </ion-content>

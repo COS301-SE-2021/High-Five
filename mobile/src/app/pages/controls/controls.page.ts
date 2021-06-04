@@ -57,5 +57,17 @@ export class ControlsPage implements OnInit {
     this.controls.rotateRight(90);
   }
 
+  enableVideo(){
+    this.controls.enableStream();
+  }
+
+  disableVideo(){
+    this.controls.disableStream();
+  }
+
+  startStream(){
+    this.controls.displayVideoStream();
+  }
+
 
 }
