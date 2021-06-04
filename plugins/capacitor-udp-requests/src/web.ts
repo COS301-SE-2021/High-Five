@@ -13,4 +13,10 @@ export class UdpRequestsWeb extends WebPlugin implements UdpRequestsPlugin {
       console.log("Options ",options);
       throw this.unavailable("The udp requests plugin is not supported on web");
   }
+    async getVideoStream(): Promise<{ status : string, responseMessage: string }> {
+        throw this.unavailable("The udp requests plugin is not supported on web");
+    }
+    async stopVideoStream(): Promise<{ status : string, responseMessage: string }> {
+        throw this.unavailable("The udp requests plugin is not supported on web");
+    }
 }

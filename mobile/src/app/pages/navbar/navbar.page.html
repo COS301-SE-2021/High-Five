@@ -2,16 +2,16 @@
 <ion-tabs *ngIf="!isDesktop">
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="landing">
-      <ion-icon name="flash"></ion-icon>
+      <ion-icon name="home-outline"></ion-icon>
     </ion-tab-button>
     <ion-tab-button tab="controls">
-      <ion-icon name="flash"></ion-icon>
+      <ion-icon name="game-controller-outline"></ion-icon>
     </ion-tab-button>
     <ion-tab-button tab="analytics">
-      <ion-icon name="flash"></ion-icon>
+      <ion-icon name="stats-chart-outline"></ion-icon>
     </ion-tab-button>
     <ion-tab-button tab="videos">
-      <ion-icon name="flash"></ion-icon>
+      <ion-icon name="videocam-outline"></ion-icon>
     </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>
@@ -21,24 +21,19 @@
     <ion-toolbar>
       <ion-row class="ion-align-items-center">
         <ion-col size="2">
-          <img alt="" src="https://www.agilebridge.co.za/wp-content/uploads/2019/04/logo-head.png" class="logo ion-text-left">
+          <img alt="" src="../../../assets/images/logo2.png" class="logo ion-text-left">
         </ion-col>
         <ion-col size="10">
           <div class="desktop-navbar" class="ion-text-left">
             <ion-button (click)="navigateTo('navbar/landing', 'homeNav')" #homeNav fill="clear" [class]="homeLink[0]">Home</ion-button>
             <ion-button (click)="navigateTo('navbar/analytics', 'analyticsNav')" #analyticsNav fill="clear" [class]="analyticsLink[0]">Analytics</ion-button>
             <ion-button (click)="navigateTo('navbar/videos', 'videosNav')" #videoNav fill="clear" [class]="videoLink[0]">Videos</ion-button>
-            <ion-button (click)="navigateTo('navbar/controls', 'controlsNav')" #controlsNav fill="clear" [class]="controlsLink[0]">Controls</ion-button>
+            <ion-button *ngIf="!isDesktop"  (click)="navigateTo('navbar/controls', 'controlsNav')" #controlsNav fill="clear" [class]="controlsLink[0]">Controls</ion-button>
           </div>
         </ion-col>
       </ion-row>
     </ion-toolbar>
   </ion-header>
   <ion-router-outlet class="desktop-wrapper" ></ion-router-outlet>
-  <div class="footer">
-    <span>
-      Some Coding Stuff
-    </span>
-  </div>
 </div>
 
