@@ -1,6 +1,7 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {VideoPreviewData} from "../../pages/videostore/videostore.page";
-import {Platform} from "@ionic/angular";
+import {ModalController, Platform} from "@ionic/angular";
+import {VideostreamCardComponent} from "../videostream-card/videostream-card.component";
 
 @Component({
   selector: 'app-videostore-card',
@@ -9,44 +10,25 @@ import {Platform} from "@ionic/angular";
 })
 export class VideostoreCardComponent implements OnInit {
   @Input() data: VideoPreviewData;  //be specific later
-  @ViewChild('desktopImage') desktopImage : HTMLImageElement;
-  @ViewChild('mobileImage') mobileImage : HTMLImageElement;
 
-  private mobile : boolean;
-
-  constructor(public platform: Platform) { }
+  constructor(public platform: Platform, private modal: ModalController) { }
 
   ngOnInit() {
   }
 
-  private isMobile() : boolean {
-    return this.platform.width() < 700;
-  }
+  /**
+   * This function creates a modal where the recorded drone footage can be
+   * replayed to the user.
+   */
+  async playVideo() {
+    const videoModal = await this.modal.create({
+      component: VideostreamCardComponent,
+      componentProps: {
+        modal: this.modal
+      }
+    })
+    videoModal.style.backgroundColor = "rgba(0,0,0,0.85)" //make the background for the modal darker.
 
-  onResize(event) {
-    if (this.isMobile()) {
-      if (this.desktopImage != undefined && this.mobileImage != undefined) {
-        this.desktopImage.style.display = "none";
-        this.mobileImage.style.display = "block";
-      }
-    } else {
-      if (this.desktopImage != undefined && this.mobileImage != undefined) {
-        this.desktopImage.style.display = "block";
-        this.mobileImage.style.display = "none";
-      }
-    }
-  }
-  onLoad(event) {
-    if (this.isMobile()) {
-      if (this.desktopImage != undefined && this.mobileImage != undefined) {
-        this.desktopImage.style.display = "none";
-        this.mobileImage.style.display = "block";
-      }
-    } else {
-      if (this.desktopImage != undefined && this.mobileImage != undefined) {
-        this.desktopImage.style.display = "block";
-        this.mobileImage.style.display = "none";
-      }
-    }
+    await videoModal.present();
   }
 }
