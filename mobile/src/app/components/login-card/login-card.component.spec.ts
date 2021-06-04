@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
 
 import { LoginCardComponent } from './login-card.component';
 
+/**
+ * Runs all test for the 'LoginCardComponent'
+ */
 describe('LoginCardComponent', () => {
   let component: LoginCardComponent;
   let fixture: ComponentFixture<LoginCardComponent>;
@@ -10,7 +12,7 @@ describe('LoginCardComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ LoginCardComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: []
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginCardComponent);
@@ -18,6 +20,9 @@ describe('LoginCardComponent', () => {
     fixture.detectChanges();
   }));
 
+  /**
+   * Tests that the creation of the component works.
+   */
   it('should create', () => {
     expect(component).toBeTruthy();
   });
