@@ -5,10 +5,70 @@ app-welcome{
 }
 ion-content{
   --background : url('../../../assets/images/welcome_landscape.svg') no-repeat center center / cover;
+  overflow: hidden;
 
+}
+#wholeDrone{
+  max-width: 10vw;
+  max-height: 10vh;
+  bottom: 0;
+  left: 50vw;
+  animation: droneFly 5s linear;
+  position: absolute;
+}
+
+#Rotor0{
+  animation: drone0 300ms linear infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+#Rotor1{
+  animation: drone1 300ms linear infinite;
+  transform-origin: center;
+  transform-box: fill-box;
 }
 
 
+#Rotor2{
+  animation: drone0 300ms linear infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+#Rotor3{
+  animation: drone1 300ms linear infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+@keyframes drone0 {
+  from{
+    transform: rotateZ(0deg);
+  }
+  to{
+    transform: rotateZ(360deg);
+  }
+}
+
+@keyframes droneFly  {
+  from {
+    bottom: 0 ;
+  }
+  to{
+    bottom: 600px;
+  }
+}
+
+
+@keyframes drone1 {
+  from {
+    transform: rotateZ(360deg);
+  }
+  to {
+    transform: rotateZ(0deg);
+  }
+}
 //#layer0 {
 //  animation: animation-layer0 1.1s ease-in-out infinite alternate ;
 //  transform-origin: top;

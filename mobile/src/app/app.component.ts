@@ -1,6 +1,7 @@
 import {Component, HostListener} from '@angular/core';
 import {Platform} from '@ionic/angular';
 import {ScreenSizeServiceService} from './services/screen-size-service.service';
+import {ThemeService} from './services/theme/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,7 @@ import {ScreenSizeServiceService} from './services/screen-size-service.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private platform: Platform, private screensizeservice: ScreenSizeServiceService) {
+  constructor(private platform: Platform, private screensizeservice: ScreenSizeServiceService, private themeService: ThemeService) {
     this.initializeApp();
   }
 
@@ -22,6 +23,7 @@ export class AppComponent {
     initializeApp(){
       this.platform.ready().then(()=>{
       this.screensizeservice.onPlatformChange(this.platform);
+      this.themeService.enableDarkMode();
     });
   }
 }

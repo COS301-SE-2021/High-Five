@@ -7,14 +7,16 @@
       <img alt="preview" test="mobileImage" src="{{data.getImageUrl()}}" *ngIf="this.platform.width() < 700">
       <ion-card-header class="header">
         <div class="details">
-          <ion-card-title test="videoTitle">{{data.getTitle()}}</ion-card-title>
+          <ion-card-title color="primary" test="videoTitle">{{data.getTitle()}}</ion-card-title>
           <ion-button test="playBtn" (click)="playVideo()"><ion-icon slot="start" name="play-circle-outline"></ion-icon>Play</ion-button>
 <!--          <ion-card-subtitle></ion-card-subtitle>-->
         </div>
       </ion-card-header>
 
       <ion-card-content test="recordedDate">
-        {{data.getRecordedDate()}}
+        <ion-text color="--ion-color-text">
+          {{data.getRecordedDate()}}
+        </ion-text>
       </ion-card-content>
     </td>
   </tr></table>
