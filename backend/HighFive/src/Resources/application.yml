@@ -1,0 +1,154 @@
+﻿openapi: 3.0.0
+
+info:
+  version: 0.0.1
+  title: High Five
+  description: The OpenAPI specification for High Five's controllers
+
+tags:
+  - name: "MediaStorage"
+  - name: "Test"
+
+  #==========================================================
+  #     PATHS 
+  #==========================================================
+paths:
+
+  #==========================================================
+  #     TEST SUBSYSTEM PATHING
+  #==========================================================
+  
+  /test/ping:
+    post:
+      tags:
+        - "Test"
+      description: Test if the server is online
+      operationId: Ping
+      responses:
+        "200":
+          description: Ping successful
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/pingResponse'
+
+  /test/echo:
+    post:
+      tags:
+        - "Test"
+      description: Test if the server is online
+      operationId: Echo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/echoRequest'
+      responses:
+        "200":
+          description: Ping successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pingResponse'
+  
+  #==========================================================
+  #     VIDEO STORAGE SUBSYSTEM PATHING
+  #==========================================================
+
+  /media/storeVideo:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Store Video use case
+      operationId: StoreVideo
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/storeVideoRequest'
+      responses:
+        "200":
+          description: Video has been stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/storeVideoResponse'
+                
+  /media/retrieveVideos:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Store Video use case
+      operationId: RetrieveVideos
+      responses:
+        "200":
+          description: Returns a list of videos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/retrieveVideosResponse'               
+
+  #==========================================================
+  #     SCHEMAS 
+  #==========================================================
+components:
+  schemas:
+
+    #==========================================================
+    #     TEST COMPONENTS
+    #==========================================================
+    
+    pingResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    
+    echoRequest:
+      type: object
+      properties:
+        message:
+          type: string
+    
+    #==========================================================
+    #     VIDEO STORAGE COMPONENTS
+    #==========================================================
+
+    storeVideoRequest:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+    
+    storeVideoResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+
+    retrieveVideosResponse:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+          
+    #==========================================================
+    #     GENERIC COMPONENTS
+    #==========================================================
+
+    emptyObject:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+  
