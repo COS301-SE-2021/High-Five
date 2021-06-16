@@ -35,12 +35,16 @@ export class VideostorePage implements OnInit {
     }
   }
 
+  uploadVideo() {
+
+  }
+
 }
 
 export class VideoPreviewData {
-  private title : string
-  private recordedDate : Date
-  private imageUrl : string
+  private readonly title : string
+  private readonly recordedDate : Date
+  private readonly imageUrl : string
 
   constructor(title : string, date: Date, imageUrl : string) {
     this.title = title;
