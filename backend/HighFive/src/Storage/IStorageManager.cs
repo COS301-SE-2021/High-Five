@@ -11,7 +11,7 @@ namespace src.Storage
         protected IConfiguration Configuration { get; }
         protected CloudStorageAccount CloudStorageAccount { get; }
 
-        public Task UploadVideo(IFormFile video);
+        public Task UploadFile(IFormFile file);
         public void RetrieveVideo(String videoName);
         public void GetVideoStrings();
     }

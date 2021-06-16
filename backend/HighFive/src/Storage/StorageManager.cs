@@ -22,7 +22,7 @@ namespace src.Storage
             _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
         }
 
-        public async Task UploadVideo(IFormFile video)
+        public async Task UploadFile(IFormFile file)
         {
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
             var cloudBlobContainer = cloudBlobClient.GetContainerReference("demo2videos");
@@ -33,11 +33,11 @@ namespace src.Storage
                     {PublicAccess = BlobContainerPublicAccessType.Off});
             }
 
-            var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(video.FileName);
+            var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(file.FileName);
             var ms = new MemoryStream();
-            await video.CopyToAsync(ms);
+            await file.CopyToAsync(ms);
             var fileBytes = ms.ToArray();
-            await cloudBlockBlob.UploadFromByteArrayAsync(fileBytes,0,(int)video.Length);
+            await cloudBlockBlob.UploadFromByteArrayAsync(fileBytes,0,(int)file.Length);
         }
 
         public void RetrieveVideo(string videoName)

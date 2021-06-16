@@ -24,7 +24,7 @@ namespace src.Subsystems.MediaStorage
             {
                 await video.CopyToAsync(stream);
             }*/
-            await _storageManager.UploadVideo(video);
+            await _storageManager.UploadFile(video);
         }
 
         public void RetrieveVideo(string videoName)
