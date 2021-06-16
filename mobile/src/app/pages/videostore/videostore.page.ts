@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { IonInfiniteScroll } from '@ionic/angular';
+import {IonInfiniteScroll, ModalController} from '@ionic/angular';
+import {VideostreamCardComponent} from "../../components/videostream-card/videostream-card.component";
 
 @Component({
   selector: 'app-videostore',
@@ -10,7 +11,7 @@ export class VideostorePage implements OnInit {
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
-  constructor() {
+  constructor(private modal: ModalController) {
     this.loadMoreData();
   }
 
@@ -35,8 +36,8 @@ export class VideostorePage implements OnInit {
     }
   }
 
-  uploadVideo() {
-
+  uploadVideo(fileData: any) {
+    console.log(fileData.target.files[0])
   }
 
 }
