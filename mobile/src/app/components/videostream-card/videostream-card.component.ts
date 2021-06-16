@@ -1,5 +1,5 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ModalController} from "@ionic/angular";
+import {Component, Input, OnInit} from '@angular/core';
+import {ModalController} from '@ionic/angular';
 @Component({
   selector: 'app-videostream-card',
   templateUrl: './videostream-card.component.html',
@@ -15,7 +15,7 @@ export class VideostreamCardComponent implements OnInit {
    * Dismisses the video playback modal.
    */
   async dismissModal() {
-    await this.modal.dismiss()
+    await this.modal.dismiss();
   }
 
 }

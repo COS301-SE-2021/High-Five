@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {IonInfiniteScroll, ModalController} from '@ionic/angular';
-import {VideostreamCardComponent} from "../../components/videostream-card/videostream-card.component";
 
 @Component({
   selector: 'app-videostore',
@@ -11,11 +10,11 @@ export class VideostorePage implements OnInit {
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
+  public items: VideoPreviewData[][] = [];
+
   constructor(private modal: ModalController) {
     this.loadMoreData();
   }
-
-  items : VideoPreviewData[][] = []
 
   ngOnInit() {
   }
@@ -32,36 +31,36 @@ export class VideostorePage implements OnInit {
       this.items.push([
         new VideoPreviewData('Test Title', new Date('2021-01-01'), 'https://source.unsplash.com/random/200x200?sig=' + i),
         new VideoPreviewData('Test Title', new Date('2021-01-01'), 'https://source.unsplash.com/random/200x200?sig=' + (i+1))
-      ])
+      ]);
     }
   }
 
   uploadVideo(fileData: any) {
-    console.log(fileData.target.files[0])
+    console.log(fileData.target.files[0]);
   }
 
 }
 
 export class VideoPreviewData {
-  private readonly title : string
-  private readonly recordedDate : Date
-  private readonly imageUrl : string
+  private readonly title: string;
+  private readonly recordedDate: Date;
+  private readonly imageUrl: string;
 
-  constructor(title : string, date: Date, imageUrl : string) {
+  constructor(title: string, date: Date, imageUrl: string) {
     this.title = title;
     this.recordedDate = date;
     this.imageUrl = imageUrl;
   }
 
-  getTitle() : string {
+  getTitle(): string {
     return this.title;
   }
 
-  getRecordedDate() : Date {
+  getRecordedDate(): Date {
     return this.recordedDate;
   }
 
-  getImageUrl() : string {
+  getImageUrl(): string {
     return this.imageUrl;
   }
 }
