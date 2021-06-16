@@ -75,14 +75,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/storeVideoResponse'
-        "500":
-          description: An error occurred in the backend code
+                
+  /media/retrieveVideos:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Store Video use case
+      operationId: RetrieveVideos
+      responses:
+        "200":
+          description: Returns a list of videos
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/emptyObject'
-                
-                
+                type: array
+                items:
+                  $ref: '#/components/schemas/retrieveVideosResponse'               
 
   #==========================================================
   #     SCHEMAS 
@@ -125,6 +133,13 @@ components:
         message:
           type: string
 
+    retrieveVideosResponse:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+          
     #==========================================================
     #     GENERIC COMPONENTS
     #==========================================================
