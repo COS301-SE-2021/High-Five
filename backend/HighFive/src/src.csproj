@@ -29,4 +29,10 @@
       <Folder Include="Subsystems\MediaStorage\Videos" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Resources\src\Org.OpenAPITools\appsettings.json" />
+      <_ContentIncludedByDefault Remove="Resources\src\Org.OpenAPITools\Properties\launchSettings.json" />
+      <_ContentIncludedByDefault Remove="Resources\src\Org.OpenAPITools\wwwroot\openapi-original.json" />
+    </ItemGroup>
+
 </Project>

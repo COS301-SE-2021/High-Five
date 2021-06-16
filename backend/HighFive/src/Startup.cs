@@ -37,17 +37,34 @@ namespace src
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "src v1"));
+            }
+            else
+            {
+                app.UseHsts();
             }
 
             app.UseHttpsRedirection();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseSwagger(c =>
+                {
+                    c.RouteTemplate = "openapi/{documentName}/openapi.json";
+                })
+                .UseSwaggerUI(c =>
+                {
+                    // set route prefix to openapi, e.g. http://localhost:8080/openapi/index.html
+                    c.RoutePrefix = "openapi";
+                    //TODO: Either use the SwaggerGen generated OpenAPI contract (generated from C# classes)
+                    c.SwaggerEndpoint("/openapi/0.0.1/openapi.json", "High Five");
 
+                    //TODO: Or alternatively use the original OpenAPI contract that's included in the static files
+                    // c.SwaggerEndpoint("/openapi-original.json", "High Five Original");
+                });
             app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

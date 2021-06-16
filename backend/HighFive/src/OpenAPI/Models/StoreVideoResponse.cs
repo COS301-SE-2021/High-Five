@@ -24,7 +24,7 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public partial class EmptyObject : IEquatable<EmptyObject>
+    public partial class StoreVideoResponse : IEquatable<StoreVideoResponse>
     {
         /// <summary>
         /// Gets or Sets Success
@@ -45,7 +45,7 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class EmptyObject {\n");
+            sb.Append("class StoreVideoResponse {\n");
             sb.Append("  Success: ").Append(Success).Append("\n");
             sb.Append("  Message: ").Append(Message).Append("\n");
             sb.Append("}\n");
@@ -70,15 +70,15 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((EmptyObject)obj);
+            return obj.GetType() == GetType() && Equals((StoreVideoResponse)obj);
         }
 
         /// <summary>
-        /// Returns true if EmptyObject instances are equal
+        /// Returns true if StoreVideoResponse instances are equal
         /// </summary>
-        /// <param name="other">Instance of EmptyObject to be compared</param>
+        /// <param name="other">Instance of StoreVideoResponse to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(EmptyObject other)
+        public bool Equals(StoreVideoResponse other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -117,12 +117,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(EmptyObject left, EmptyObject right)
+        public static bool operator ==(StoreVideoResponse left, StoreVideoResponse right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(EmptyObject left, EmptyObject right)
+        public static bool operator !=(StoreVideoResponse left, StoreVideoResponse right)
         {
             return !Equals(left, right);
         }

@@ -7,12 +7,51 @@ info:
 
 tags:
   - name: "MediaStorage"
+  - name: "Test"
 
   #==========================================================
   #     PATHS 
   #==========================================================
 paths:
 
+  #==========================================================
+  #     TEST SUBSYSTEM PATHING
+  #==========================================================
+  
+  /test/ping:
+    post:
+      tags:
+        - "Test"
+      description: Test if the server is online
+      operationId: Ping
+      responses:
+        "200":
+          description: Ping successful
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/pingResponse'
+
+  /test/echo:
+    post:
+      tags:
+        - "Test"
+      description: Test if the server is online
+      operationId: Echo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/echoRequest'
+      responses:
+        "200":
+          description: Ping successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pingResponse'
+  
   #==========================================================
   #     VIDEO STORAGE SUBSYSTEM PATHING
   #==========================================================
@@ -28,22 +67,22 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/videoObject'
+              $ref: '#/components/schemas/storeVideoRequest'
       responses:
         "200":
           description: Video has been stored
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/emptyObject'
+                $ref: '#/components/schemas/storeVideoResponse'
         "500":
           description: An error occurred in the backend code
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
-        
-
+                
+                
 
   #==========================================================
   #     SCHEMAS 
@@ -52,15 +91,39 @@ components:
   schemas:
 
     #==========================================================
+    #     TEST COMPONENTS
+    #==========================================================
+    
+    pingResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    
+    echoRequest:
+      type: object
+      properties:
+        message:
+          type: string
+    
+    #==========================================================
     #     VIDEO STORAGE COMPONENTS
     #==========================================================
 
-    videoObject:
+    storeVideoRequest:
       type: object
       properties:
         file:
           type: string
           format: binary
+    
+    storeVideoResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
 
     #==========================================================
     #     GENERIC COMPONENTS

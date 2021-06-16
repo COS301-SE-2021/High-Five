@@ -26,7 +26,7 @@ namespace Org.OpenAPITools.Controllers
     /// 
     /// </summary>
     [ApiController]
-    public class MediaStorageApiController : ControllerBase
+    public abstract class MediaStorageApiController : ControllerBase
     { 
         /// <summary>
         /// 
@@ -34,28 +34,14 @@ namespace Org.OpenAPITools.Controllers
         /// <remarks>Endpoint for Store Video use case</remarks>
         /// <param name="file"></param>
         /// <response code="200">Video has been stored</response>
-        /// <response code="500">An error occurred in the backend code</response>[HttpPost]
+        /// <response code="500">An error occurred in the backend code</response>
+        [HttpPost]
         [Route("/media/storeVideo")]
         [Consumes("multipart/form-data")]
         [ValidateModelState]
         [SwaggerOperation("StoreVideo")]
-        [SwaggerResponse(statusCode: 200, type: typeof(EmptyObject), description: "Video has been stored")]
+        [SwaggerResponse(statusCode: 200, type: typeof(StoreVideoResponse), description: "Video has been stored")]
         [SwaggerResponse(statusCode: 500, type: typeof(EmptyObject), description: "An error occurred in the backend code")]
-        public virtual IActionResult StoreVideo(IFormFile file)
-        { 
-
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(EmptyObject));
-            //TODO: Uncomment the next line to return response 500 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(500, default(EmptyObject));
-            string exampleJson = null;
-            exampleJson = "{\r\n  \"success\" : true,\r\n  \"message\" : \"message\"\r\n}";
-            
-            var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<EmptyObject>(exampleJson)
-            : default(EmptyObject);
-            //TODO: Change the data returned
-            return new ObjectResult(example);
-        }
+        public abstract IActionResult StoreVideo(IFormFile file);
     }
 }

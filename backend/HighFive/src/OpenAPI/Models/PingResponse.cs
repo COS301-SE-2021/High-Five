@@ -24,14 +24,8 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public partial class EmptyObject : IEquatable<EmptyObject>
+    public partial class PingResponse : IEquatable<PingResponse>
     {
-        /// <summary>
-        /// Gets or Sets Success
-        /// </summary>
-        [DataMember(Name="success", EmitDefaultValue=false)]
-        public bool Success { get; set; }
-
         /// <summary>
         /// Gets or Sets Message
         /// </summary>
@@ -45,8 +39,7 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class EmptyObject {\n");
-            sb.Append("  Success: ").Append(Success).Append("\n");
+            sb.Append("class PingResponse {\n");
             sb.Append("  Message: ").Append(Message).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -70,25 +63,20 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((EmptyObject)obj);
+            return obj.GetType() == GetType() && Equals((PingResponse)obj);
         }
 
         /// <summary>
-        /// Returns true if EmptyObject instances are equal
+        /// Returns true if PingResponse instances are equal
         /// </summary>
-        /// <param name="other">Instance of EmptyObject to be compared</param>
+        /// <param name="other">Instance of PingResponse to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(EmptyObject other)
+        public bool Equals(PingResponse other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
-                (
-                    Success == other.Success ||
-                    
-                    Success.Equals(other.Success)
-                ) && 
                 (
                     Message == other.Message ||
                     Message != null &&
@@ -106,8 +94,6 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    
-                    hashCode = hashCode * 59 + Success.GetHashCode();
                     if (Message != null)
                     hashCode = hashCode * 59 + Message.GetHashCode();
                 return hashCode;
@@ -117,12 +103,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(EmptyObject left, EmptyObject right)
+        public static bool operator ==(PingResponse left, PingResponse right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(EmptyObject left, EmptyObject right)
+        public static bool operator !=(PingResponse left, PingResponse right)
         {
             return !Equals(left, right);
         }
