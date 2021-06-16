@@ -6,7 +6,7 @@ info:
   description: The OpenAPI specification for High Five's controllers
 
 tags:
-  - name: "User"
+  - name: "VideoStorage"
 
   #==========================================================
   #     PATHS 
@@ -14,21 +14,21 @@ tags:
 paths:
 
   #==========================================================
-  #     USER SUBSYSTEM PATHING
+  #     VIDEO STORAGE SUBSYSTEM PATHING
   #==========================================================
 
-  /user/registerAccount:
+  /media/storeVideo:
     post:
       tags:
-        - "User"
+        - "VideoStorage"
       description: Endpoint for Register Account use case
       operationId: RegisterAccount
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/registerAccountRequest'
+              $ref: '#/components/schemas/videoObject'
       responses:
         "200":
           description: Register details have been processed
@@ -37,22 +37,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/emptyObject'
 
+
+  #==========================================================
+  #     SCHEMAS 
+  #==========================================================
 components:
   schemas:
 
     #==========================================================
-    #     USER COMPONENTS
+    #     VIDEO STORAGE COMPONENTS
     #==========================================================
 
-    registerAccountRequest:
+    videoObject:
       type: object
       properties:
-        username:
+        file:
           type: string
-        password:
-          type: string
-        email:
-          type: string
+          format: binary
 
     #==========================================================
     #     GENERIC COMPONENTS

@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <Folder Include="Migrations" />
+      <Folder Include="Subsystems\MediaStorage\Videos" />
     </ItemGroup>
 
 </Project>
