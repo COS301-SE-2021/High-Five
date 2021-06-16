@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using src.Subsystems.MediaStorage;
 
 namespace src
 {
@@ -29,6 +30,8 @@ namespace src
         {
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "src", Version = "v1"}); });
+            // Dependency Injections
+            services.Add(new ServiceDescriptor(typeof(IStorageManager), new StorageManager(Configuration)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

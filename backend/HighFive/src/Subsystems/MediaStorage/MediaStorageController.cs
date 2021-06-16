@@ -11,18 +11,19 @@ namespace src.Subsystems.MediaStorage
 {
     public class MediaStorageController : MediaStorageApiController
     {
+
         public override async Task<IActionResult> StoreVideo(IFormFile file)
         {
             StoreVideoResponse response = new StoreVideoResponse
             {
                 Message = "Video stored successfully", Success = true
             };
-            String filePath = Directory.GetCurrentDirectory() + "\\Subsystems\\MediaStorage\\Videos\\" + file.FileName;
+           /* String filePath = Directory.GetCurrentDirectory() + "\\Subsystems\\MediaStorage\\Videos\\" + file.FileName;
             await using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
-            }
-            return StatusCode(200, response);
+            }*/
+           return StatusCode(200, response);
         }
         
         public override IActionResult RetrieveVideos()
