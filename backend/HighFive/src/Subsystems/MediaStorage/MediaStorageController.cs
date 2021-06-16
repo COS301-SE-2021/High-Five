@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
@@ -8,12 +11,18 @@ namespace src.Subsystems.MediaStorage
 {
     public class MediaStorageController : MediaStorageApiController
     {
-        public override IActionResult StoreVideo(IFormFile file)
+        public override async Task<IActionResult> StoreVideo(IFormFile file)
         {
-            StoreVideoResponse Response = new StoreVideoResponse();
-            Response.Message = "Video stored successfully";
-            Response.Success = true;
-            return StatusCode(200, Response);
+            StoreVideoResponse response = new StoreVideoResponse
+            {
+                Message = "Video stored successfully", Success = true
+            };
+            String filePath = Directory.GetCurrentDirectory() + "\\Subsystems\\MediaStorage\\Videos\\" + file.FileName;
+            await using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            return StatusCode(200, response);
         }
         
         public override IActionResult RetrieveVideos()

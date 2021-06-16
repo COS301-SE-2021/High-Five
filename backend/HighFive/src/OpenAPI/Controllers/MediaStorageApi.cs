@@ -9,6 +9,7 @@
  */
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Org.OpenAPITools.Attributes;
@@ -47,6 +48,6 @@ namespace Org.OpenAPITools.Controllers
         [ValidateModelState]
         [SwaggerOperation("StoreVideo")]
         [SwaggerResponse(statusCode: 200, type: typeof(StoreVideoResponse), description: "Video has been stored")]
-        public abstract IActionResult StoreVideo(IFormFile file);
+        public abstract Task<IActionResult> StoreVideo(IFormFile file);
     }
 }
