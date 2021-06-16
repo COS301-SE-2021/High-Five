@@ -83,9 +83,8 @@
 High Five is a real-time image analysis platform for images and videos taken by drone cameras. Users can add and customize the platform with the type of analysis that must be performed. Examples include counting cars in a parking lot, property surveillance or mapping, and color depth analysis for agricultural purposes - to name a few.
 
 ### Project Links
--TODO: update demo link
-* []()[BDP Solutions - Demo1](https://hibernate.org/)
-* []()[Software Requirements Specification (SRS)](https://www.overleaf.com/9933879569jqwxmfqkbjcx)
+* []()[BDP Solutions - Demo1](https://drive.google.com/file/d/1eK1aoB-zd5L3d2GkG10BPtbhP_gGUUHX/view?usp=sharing)
+* []()[Software Requirements Specification (SRS)](https://drive.google.com/file/d/1BYFmZhJphzAOLJm7mU-x7vVI2vvxT8V4/view?usp=sharing)
 * []()[GitHub Project Board](https://github.com/COS301-SE-2021/High-Five/projects/1)
 
 ### Technology Stack
@@ -100,15 +99,11 @@ High Five is a real-time image analysis platform for images and videos taken by 
     * []()[MongoDB](https://www.mongodb.com/)
     * []()[MicrosoftSQL](https://www.microsoft.com/en-us/sql-server/sql-server-2019)
 
-### Modules
-* User
-
-
 ## Team Members
 
 | **Team Member** | **Profiles** | **Skills/Interest** 
 | :-----: | :-----: | :-----: |  
-| ![Firstname Lastname](https://pbs.twimg.com/profile_images/1370182726222020610/HYRxODnM_400x400.jpg "Ruan Bieldt") <br/> Ruan Bieldt <br/> u13145992 | [GitHub](https://github.com/CalebJohnstone) <br/> [Profile Page](https://gitusername.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/caleb-johnstone-94368a132/) <br/> | List interests here |
+| ![Ruan Bieldt](https://media-exp1.licdn.com/dms/image/C5603AQE9cfut8cq9Xw/profile-displayphoto-shrink_200_200/0/1617882468520?e=1624492800&v=beta&t=k51kjWqwab9nIQnd3AxnhpOTVN6gsYmDcTm2s-v7tBs "Ruan Bieldt") <br/> Ruan Bieldt <br/> u13145992 <br/> (Team Leader) | [GitHub](https://github.com/ruan-bieldt) <br/> [Profile Page](https://ruan-bieldt.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/ruan-bieldt-9473ab91/) <br/> | <ul>Electronics<li>IoT</li>DataStructures and Algorithms<li>Coding</li><li>Problem Solving</li><li>Swimming</li></ul> |
 | ![Hannes Kirsten](https://media-exp1.licdn.com/dms/image/C4D03AQHm-LyvastazQ/profile-displayphoto-shrink_200_200/0/1619127993907?e=1628121600&v=beta&t=vXTsVSzCSSZpE9wlICpK_5pSZu-vIxuu4Xg9Hn4i5hY "Hannes Kirsten") <br/> Hannes Kirsten <br/> u19049014 | [GitHub](https://github.com/NJHKirsten) <br/> [Profile Page](https://njhkirsten.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/nicolaas-kirsten-362a7020b/) <br/> | -Artificial Intelligence<br/>-Mathematics<br/>-System Design |
 | ![Firstname Lastname](https://media-exp1.licdn.com/dms/image/C5603AQE55Xwc59w5xg/profile-displayphoto-shrink_200_200/0/1548346645069?e=1628121600&v=beta&t=1XSvyk2OLGvT3qe10dRgh9RX-h3anHLf6pWSBm-5Doo "Kyle Barry") <br/> Kyle Barry <br/> u19232510 | [GitHub](https://github.com/darthcerellius) <br/> [Profile Page](https://newideassolutions.com) <br/> [LinkedIn](https://www.linkedin.com/in/kyle-barry-886237179/) <br/> | Python, Java and Javascript programming <br> Docker <br> Linux <br> Ionic frontend development|
 | ![Jeanré du Plessis](https://media-exp1.licdn.com/dms/image/C4D03AQH0JfygrUsB6A/profile-displayphoto-shrink_200_200/0/1571296535690?e=1628121600&v=beta&t=0hq_3qBvVLCF_5rVeMiHtJMzmJJjPeXghWa_66YD9Go "Jeanré du Plessis") <br/> Jeanré du Plessis <br/> u19017970 <br/>| [GitHub](https://github.com/JayXD-2K) <br/> [Profile Page](https://jayxd-2k.github.io/)  <br/> [LinkedIn](https://www.linkedin.com/in/jdp2k/) <br/> | - MTB <br/> - Road Cycling <br/> - Playing Around With Django <br/> - Golfing <br/> |
@@ -145,13 +140,11 @@ into the branch immediately above the requested branch in the hierarchy as defin
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]<br>
-[![Coverage Status](https://coveralls.io/repos/github/badges/shields/badge.svg?branch=master)](https://coveralls.io/github/badges/shields?branch=master)
-<br>
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Ionic%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions)
 <br>
-Monitoring</br>
+<br>
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fdiscord.com%2Fchannels%2F841566124087705620%2F841566124087705625%2F848982894759641118)](https://high5app.azurewebsites.net/)
-
+</br>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

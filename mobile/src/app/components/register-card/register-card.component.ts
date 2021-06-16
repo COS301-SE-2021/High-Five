@@ -28,6 +28,11 @@ export class RegisterCardComponent implements OnInit {
     if (tmp > 12) {
       tmp = 12;
     }
+
+    if (tmp < 1) {
+      tmp = 1;
+    }
+
     return String(tmp);
   }
 
