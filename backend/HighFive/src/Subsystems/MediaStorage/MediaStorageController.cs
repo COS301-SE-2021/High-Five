@@ -24,12 +24,7 @@ namespace src.Subsystems.MediaStorage
             {
                 Message = "Video stored successfully", Success = true
             };
-           /* String filePath = Directory.GetCurrentDirectory() + "\\Subsystems\\MediaStorage\\Videos\\" + file.FileName;
-            await using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }*/
-           _mediaStorageService.StoreVideo(file);
+            await _mediaStorageService.StoreVideo(file);
            return StatusCode(200, response);
         }
         

@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.IO;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,9 +17,14 @@ namespace src.Subsystems.MediaStorage
             _storageManager = storageManager;
         }
         
-        public void StoreVideo(IFormFile video)
+        public async Task StoreVideo(IFormFile video)
         {
-            _storageManager.UploadVideo(video);
+            /*var filePath = Directory.GetCurrentDirectory() + "\\Subsystems\\MediaStorage\\Videos\\" + video.FileName;
+            await using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await video.CopyToAsync(stream);
+            }*/
+            await _storageManager.UploadVideo(video);
         }
 
         public void RetrieveVideo(string videoName)

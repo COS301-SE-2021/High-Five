@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -33,9 +34,10 @@ namespace src.Storage
             }
 
             var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(video.FileName);
-            cloudBlockBlob.Properties.ContentType = video.ContentType;
-
-            await cloudBlockBlob.UploadFromStreamAsync(video.OpenReadStream());
+            var ms = new MemoryStream();
+            await video.CopyToAsync(ms);
+            var fileBytes = ms.ToArray();
+            await cloudBlockBlob.UploadFromByteArrayAsync(fileBytes,0,(int)video.Length);
         }
 
         public void RetrieveVideo(string videoName)
