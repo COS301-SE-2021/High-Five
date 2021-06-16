@@ -34,6 +34,7 @@
     "@videogular/ngx-videogular": "^3.0.1",
     "capacitor-udp-requests": "file:../plugins/capacitor-udp-requests",
     "rxjs": "~6.6.0",
+    "swiper": "^6.7.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
   },
