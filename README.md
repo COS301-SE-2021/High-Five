@@ -140,9 +140,9 @@ into the branch immediately above the requested branch in the hierarchy as defin
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]<br><br>
-[![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Ionic%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions)
+[![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Ionic%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/ionic.yml)
 <br>
-[![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/.NET%20Core%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions)
+[![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/.NET%20Core%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/aspnet.yml)
 <br>
 <br>
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fdiscord.com%2Fchannels%2F841566124087705620%2F841566124087705625%2F848982894759641118)](https://high5app.azurewebsites.net/)
