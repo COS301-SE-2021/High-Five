@@ -6,53 +6,139 @@ info:
   description: The OpenAPI specification for High Five's controllers
 
 tags:
-  - name: "VideoStorage"
+  - name: "MediaStorage"
+  - name: "Test"
 
   #==========================================================
-  #     PATHS 
+  #     PATHS
   #==========================================================
 paths:
 
   #==========================================================
-  #     VIDEO STORAGE SUBSYSTEM PATHING
+  #     TEST SUBSYSTEM PATHING
   #==========================================================
 
-  /video/uploadVideo:
+  /test/ping:
     post:
       tags:
-        - "VideoStorage"
-      description: Endpoint for uploading videos (might not be used in the actual program)
-      operationId: UploadVideo
+        - "Test"
+      description: Test if the server is online
+      operationId: Ping
+      responses:
+        "200":
+          description: Ping successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pingResponse'
+
+  /test/echo:
+    post:
+      tags:
+        - "Test"
+      description: Test if the server is online
+      operationId: Echo
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/registerAccountRequest'
+              $ref: '#/components/schemas/echoRequest'
       responses:
         "200":
-          description: Register details have been processed
+          description: Ping successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/emptyObject'
+                $ref: '#/components/schemas/pingResponse'
 
+  #==========================================================
+  #     VIDEO STORAGE SUBSYSTEM PATHING
+  #==========================================================
+
+  /media/storeVideo:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Store Video use case
+      operationId: StoreVideo
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/storeVideoRequest'
+      responses:
+        "200":
+          description: Video has been stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/storeVideoResponse'
+
+  /media/retrieveVideos:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Store Video use case
+      operationId: RetrieveVideos
+      responses:
+        "200":
+          description: Returns a list of videos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/retrieveVideosResponse'
+
+  #==========================================================
+  #     SCHEMAS
+  #==========================================================
 components:
   schemas:
+
+    #==========================================================
+    #     TEST COMPONENTS
+    #==========================================================
+
+    pingResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
+    echoRequest:
+      type: object
+      properties:
+        message:
+          type: string
 
     #==========================================================
     #     VIDEO STORAGE COMPONENTS
     #==========================================================
 
-    registerAccountRequest:
+    storeVideoRequest:
       type: object
       properties:
-        username:
+        file:
           type: string
-        password:
+          format: binary
+
+    storeVideoResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
           type: string
-        email:
+
+    retrieveVideosResponse:
+      type: object
+      properties:
+        file:
           type: string
+          format: binary
 
     #==========================================================
     #     GENERIC COMPONENTS
