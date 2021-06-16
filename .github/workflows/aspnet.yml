@@ -25,4 +25,4 @@ jobs:
           dotnet-version: 5.0.7
       - name: Build with dotnet
           run: dotnet build --configuration Release
-          working-directory: ./src
+          working-directory: ./src/api
