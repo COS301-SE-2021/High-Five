@@ -145,7 +145,8 @@ into the branch immediately above the requested branch in the hierarchy as defin
 <br>
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fdiscord.com%2Fchannels%2F841566124087705620%2F841566124087705625%2F848982894759641118)](https://high5app.azurewebsites.net/)
 </br>
-
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fdiscord.com%2Fchannels%2F841566124087705620%2F841566124087705625%2F848982894759641118)](https://high5app.azurewebsites.net/)
+<br>
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/COS301-SE-2021/High-Five.svg?style=for-the-badge
