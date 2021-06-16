@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace src.Subsystems.MediaStorage
+namespace src.Storage
 {
     public class StorageManager: IStorageManager
     {
@@ -43,7 +43,7 @@ namespace src.Subsystems.MediaStorage
             throw new NotImplementedException();
         }
 
-        public void GetAllVideos()
+        public void GetVideoStrings()
         {
             throw new NotImplementedException();
         }

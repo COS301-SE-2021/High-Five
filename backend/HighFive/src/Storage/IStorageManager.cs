@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 
-namespace src.Subsystems.MediaStorage
+namespace src.Storage
 {
     public interface IStorageManager
     {
@@ -13,6 +13,6 @@ namespace src.Subsystems.MediaStorage
 
         public Task UploadVideo(IFormFile video);
         public void RetrieveVideo(String videoName);
-        public void GetAllVideos();
+        public void GetVideoStrings();
     }
 }

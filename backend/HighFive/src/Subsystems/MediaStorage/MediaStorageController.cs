@@ -11,6 +11,12 @@ namespace src.Subsystems.MediaStorage
 {
     public class MediaStorageController : MediaStorageApiController
     {
+        private IMediaStorageService _mediaStorageService;
+        
+        public MediaStorageController(IMediaStorageService mediaStorageService)
+        {
+            _mediaStorageService = mediaStorageService;
+        }
 
         public override async Task<IActionResult> StoreVideo(IFormFile file)
         {
@@ -23,6 +29,7 @@ namespace src.Subsystems.MediaStorage
             {
                 await file.CopyToAsync(stream);
             }*/
+           _mediaStorageService.StoreVideo(file);
            return StatusCode(200, response);
         }
         
