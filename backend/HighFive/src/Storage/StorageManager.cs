@@ -43,6 +43,7 @@ namespace src.Storage
             var ms = new MemoryStream();
             await file.CopyToAsync(ms);
             var fileBytes = ms.ToArray();
+            
             var generatedName = HashMd5(file.FileName);
             var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(generatedName);
             var salt = "";
@@ -52,14 +53,15 @@ namespace src.Storage
                 generatedName = HashMd5(file.FileName+salt);
                 cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(generatedName);
             }
-            cloudBlockBlob.Properties.ContentType = file.ContentType;
+            
             cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("originalName", file.FileName));
+            cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("duration", "int"));
+            cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("thumbnail", "byte array"));
             if (!IsNullOrEmpty(salt))
             {
                 cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("salt", salt));
             }
-            cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("duration", "int"));
-            cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("thumbnail", "byte array"));
+            cloudBlockBlob.Properties.ContentType = file.ContentType;
             await cloudBlockBlob.UploadFromByteArrayAsync(fileBytes,0,(int)file.Length);
         }
 
@@ -111,7 +113,7 @@ namespace src.Storage
         {
             String str = "";
              
-            for(int i =0; i<_alphanumeric.Length; i++)
+            for(int i =0; i<5; i++)
             {
                 int a = _random.Next(_alphanumeric.Length);
                 str = str + _alphanumeric.ElementAt(a);
