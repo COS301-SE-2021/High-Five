@@ -1,20 +1,20 @@
 <ion-card>
   <table><tr>
     <td class="imageBox">
-      <img alt="preview" test="desktopImage" src="{{data.getImageUrl()}}" *ngIf="this.platform.width() >= 700">
+      <img alt="preview" test="desktopImage" src="data:image/jpeg;charset=utf-8;base64,{{data.thumbnail}}" *ngIf="this.platform.width() >= 700">
     </td>
     <td class="contentBox">
-      <img alt="preview" test="mobileImage" src="{{data.getImageUrl()}}" *ngIf="this.platform.width() < 700">
+      <img alt="preview" test="mobileImage" src="data:image/jpeg;charset=utf-8;base64,{{data.thumbnail}}" *ngIf="this.platform.width() < 700">
       <ion-card-header class="header">
         <div class="details">
-          <ion-card-title test="videoTitle">{{data.getTitle()}}</ion-card-title>
+          <ion-card-title test="videoTitle">{{data.name}}</ion-card-title>
           <ion-button test="playBtn" (click)="playVideo()"><ion-icon slot="start" name="play-circle-outline"></ion-icon>Play</ion-button>
 <!--          <ion-card-subtitle></ion-card-subtitle>-->
         </div>
       </ion-card-header>
 
       <ion-card-content test="recordedDate">
-        {{data.getRecordedDate()}}
+        {{data.dateStored}}
       </ion-card-content>
     </td>
   </tr></table>

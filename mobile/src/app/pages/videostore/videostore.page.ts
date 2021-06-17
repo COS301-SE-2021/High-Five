@@ -1,5 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {IonInfiniteScroll, ModalController} from '@ionic/angular';
+import {VideouploadService} from '../../services/videoupload/videoupload.service';
+import {GetAllVideosResponse} from '../../models/getAllVideosResponse';
+import {VideoMetaData} from '../../models/videoMetaData';
 
 @Component({
   selector: 'app-videostore',
@@ -10,9 +13,9 @@ export class VideostorePage implements OnInit {
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
-  public items: VideoPreviewData[][] = [];
+  public items: VideoMetaData[] = [];
 
-  constructor(private modal: ModalController) {
+  constructor(private modal: ModalController, private videoService: VideouploadService) {
     this.loadMoreData();
   }
 
@@ -27,40 +30,16 @@ export class VideostorePage implements OnInit {
   }
 
   loadMoreData() {
-    for (let i = 0; i < 10; i++) {
-      this.items.push([
-        new VideoPreviewData('Test Title', new Date('2021-01-01'), 'https://source.unsplash.com/random/200x200?sig=' + i),
-        new VideoPreviewData('Test Title', new Date('2021-01-01'), 'https://source.unsplash.com/random/200x200?sig=' + (i+1))
-      ]);
-    }
+    this.videoService.getAllVideos(data => {
+      // eslint-disable-next-line guard-for-in
+      for (const item of data) {
+        this.items.push(Object.assign(new VideoMetaData(), item));
+      }
+    });
   }
 
   uploadVideo(fileData: any) {
     console.log(fileData.target.files[0]);
   }
 
-}
-
-export class VideoPreviewData {
-  private readonly title: string;
-  private readonly recordedDate: Date;
-  private readonly imageUrl: string;
-
-  constructor(title: string, date: Date, imageUrl: string) {
-    this.title = title;
-    this.recordedDate = date;
-    this.imageUrl = imageUrl;
-  }
-
-  getTitle(): string {
-    return this.title;
-  }
-
-  getRecordedDate(): Date {
-    return this.recordedDate;
-  }
-
-  getImageUrl(): string {
-    return this.imageUrl;
-  }
 }
