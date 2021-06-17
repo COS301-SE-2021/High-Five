@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using MediaToolkit;
+using MediaToolkit.Model;
+using MediaToolkit.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
@@ -40,29 +44,60 @@ namespace src.Storage
                 await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions()
                     {PublicAccess = BlobContainerPublicAccessType.Off});
             }
-            var ms = new MemoryStream();
-            await file.CopyToAsync(ms);
-            var fileBytes = ms.ToArray();
             
+            //create storage name for file
             var generatedName = HashMd5(file.FileName);
-            var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(generatedName);
+            var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(generatedName + ".mp4");
             var salt = "";
             while (await cloudBlockBlob.ExistsAsync())
             {
                 salt += RandomString();
-                generatedName = HashMd5(file.FileName+salt);
+                generatedName = HashMd5(file.FileName+salt + ".mp4");
                 cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(generatedName);
             }
-            
             cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("originalName", file.FileName));
-            cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("duration", "int"));
-            cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("thumbnail", "byte array"));
             if (!IsNullOrEmpty(salt))
             {
                 cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("salt", salt));
             }
-            cloudBlockBlob.Properties.ContentType = file.ContentType;
-            await cloudBlockBlob.UploadFromByteArrayAsync(fileBytes,0,(int)file.Length);
+            
+            //create local temp copy of video file and thumbnail
+            var thumbnailPath = Directory.GetCurrentDirectory() + "\\Subsystems\\MediaStorage\\Videos\\thumbnail.jpg";
+            var videoPath = Directory.GetCurrentDirectory() + "\\Subsystems\\MediaStorage\\Videos\\" + file.FileName;
+            try
+            {
+                await using var stream = new FileStream(videoPath, FileMode.Create);
+                await file.CopyToAsync(stream);
+
+                //get video thumbnail and store as separate blob
+                var inputFile = new MediaFile {Filename = videoPath};
+                var thumbnail = new MediaFile {Filename = thumbnailPath};
+                using (var engine = new Engine())
+                {
+                    engine.GetMetadata(inputFile);
+                    var options = new ConversionOptions {Seek = TimeSpan.FromSeconds(1)};
+                    engine.GetThumbnail(inputFile, thumbnail, options);
+                }
+                var thumbnailBlockBlob = cloudBlobContainer.GetBlockBlobReference(generatedName + "-thumbnail.jpg");
+                thumbnailBlockBlob.Properties.ContentType = "image/jpg";
+                await thumbnailBlockBlob.UploadFromFileAsync(thumbnailPath);
+                
+                //get video duration in seconds
+                var seconds = Math.Truncate(inputFile.Metadata.Duration.TotalSeconds);
+                cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("duration", seconds.ToString()));
+
+                //upload to Azure Blob Storage
+                var ms = new MemoryStream();
+                await file.CopyToAsync(ms);
+                var fileBytes = ms.ToArray();
+                cloudBlockBlob.Properties.ContentType = file.ContentType;
+                await cloudBlockBlob.UploadFromByteArrayAsync(fileBytes, 0, (int) file.Length);
+            }
+            finally
+            {
+                File.Delete(videoPath);
+                File.Delete(thumbnailPath);
+            }
         }
 
         public void RetrieveVideo(string videoName)

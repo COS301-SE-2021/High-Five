@@ -21,11 +21,6 @@ namespace src.Subsystems.MediaStorage
         
         public async Task StoreVideo(IFormFile video)
         {
-            /*var filePath = Directory.GetCurrentDirectory() + "\\Subsystems\\MediaStorage\\Videos\\" + video.FileName;
-            await using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await video.CopyToAsync(stream);
-            }*/
             await _storageManager.UploadFile(video);
         }
 
