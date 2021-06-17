@@ -1,40 +1,96 @@
-<ion-card>
-  <ion-grid>
-    <ion-row >
-      <ion-col>
-        <ion-fab>
-          <ion-fab-button>
-            <ion-icon name="add-outline"></ion-icon>
-          </ion-fab-button>
-          <ion-fab-list side="end">
-            <ion-fab-button><ion-icon name="hash-outline"></ion-icon></ion-fab-button>
-            <ion-fab-button><ion-icon name="add-outline"></ion-icon></ion-fab-button>
-            <ion-fab-button><ion-icon name="add-outline"></ion-icon></ion-fab-button>
-          </ion-fab-list>
-        </ion-fab>
-      </ion-col>
-      <ion-col>
-        <ion-fab-button >
-          <ion-icon name="add-outline"></ion-icon>
-        </ion-fab-button>
-      </ion-col>
-      <ion-col>
-        <ion-fab-button>
-          <ion-icon name="add-outline"></ion-icon>
-        </ion-fab-button>
-      </ion-col>
-      <ion-col>
-        <ion-fab-button >
-          <ion-icon name="add-outline"></ion-icon>
-        </ion-fab-button>
-      </ion-col>
-      <ion-col>
-        <ion-fab-button>
-          <ion-icon name="add-outline"></ion-icon>
-        </ion-fab-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+<ion-card class="ion-justify-content-center ion-align-items-center">
+  <ion-card-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-card-title>
+            {{toolsetName}}
+          </ion-card-title>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-evenly">
+        <ion-col class="ion-align-items-center ion-justify-content-center">
+          <ion-card>
+            <ion-card-content>
+              <ion-grid>
+                <ion-row>
+                  <ion-col class="ion-align-items-center ion-justify-content-center">
+                    <ion-text>
+                      {{constants.labels.tool1}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col sizeXs="2">
+                    <ion-checkbox mode="ios" color="tertiary"></ion-checkbox>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col class="ion-align-items-center ion-justify-content-center">
+          <ion-card>
+            <ion-card-content>
+              <ion-grid>
+                <ion-row>
+                  <ion-col class="ion-align-items-center ion-justify-content-center">
+                    <ion-text>
+                      {{constants.labels.tool2}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col [sizeXs]="2">
+                    <ion-checkbox mode="ios" color="tertiary"></ion-checkbox>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col class="ion-align-items-center ion-justify-content-center">
+          <ion-card>
+            <ion-card-content>
+              <ion-grid>
+                <ion-row>
+                  <ion-col class="ion-align-items-center ion-justify-content-center">
+                    <ion-text>
+                      {{constants.labels.tool3}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col [sizeXs]="2">
+                    <ion-checkbox mode="ios" color="tertiary"></ion-checkbox>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col class="ion-align-items-center ion-justify-content-center">
+          <ion-card>
+            <ion-card-content>
+              <ion-grid>
+                <ion-row>
+                  <ion-col class="ion-align-items-center ion-justify-content-center">
+                    <ion-text>
+                      {{constants.labels.tool4}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col [sizeXs]="4">
+                    <ion-checkbox mode="ios" color="tertiary"></ion-checkbox>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col [sizeXs]="1">
+            <ion-fab-button>
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-fab-button>
+
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+
 </ion-card>
 
 

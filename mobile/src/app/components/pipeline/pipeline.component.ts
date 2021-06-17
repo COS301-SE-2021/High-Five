@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Optional} from '@angular/core';
+import {ToolsetConstants} from '../../../constants/toolset-constants';
 
 @Component({
   selector: 'app-pipeline',
@@ -7,7 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PipelineComponent implements OnInit {
 
-  constructor() { }
+  constructor(@Optional() public toolsetName: string, public constants: ToolsetConstants ) {
+    if (!toolsetName){
+      this.toolsetName='Default Toolset Name';
+    }
+  }
 
   ngOnInit() {}
 
