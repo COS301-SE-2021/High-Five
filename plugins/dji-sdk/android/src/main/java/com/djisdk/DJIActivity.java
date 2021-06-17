@@ -11,12 +11,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import dji.common.error.DJIError;
+import dji.common.error.DJISDKError;
+import dji.sdk.base.BaseComponent;
 import dji.sdk.base.BaseProduct;
+import dji.sdk.sdkmanager.DJISDKInitEvent;
+import dji.sdk.sdkmanager.DJISDKManager;
+import dji.thirdparty.afinal.core.AsyncTask;
 
 public class DJIActivity extends AppCompatActivity {
 
@@ -106,4 +113,73 @@ public class DJIActivity extends AppCompatActivity {
             showToast("Missing permissions!!!");
         }
     }
+
+    private void startSDKRegistration() {
+        if (isRegistrationInProgress.compareAndSet(false, true)) {
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    showToast("registering, pls wait...");
+                    DJISDKManager.getInstance().registerApp(DJIActivity.this.getApplicationContext(), new DJISDKManager.SDKManagerCallback() {
+                        @Override
+                        public void onRegister(DJIError djiError) {
+                            if (djiError == DJISDKError.REGISTRATION_SUCCESS) {
+                                showToast("Register Success");
+                                DJISDKManager.getInstance().startConnectionToProduct();
+                            } else {
+                                showToast("Register sdk fails, please check the bundle id and network connection!");
+                            }
+                            Log.v(TAG, djiError.getDescription());
+                        }
+
+                        @Override
+                        public void onProductDisconnect() {
+                            Log.d(TAG, "onProductDisconnect");
+                            showToast("Product Disconnected");
+                            notifyStatusChange();
+
+                        }
+                        @Override
+                        public void onProductConnect(BaseProduct baseProduct) {
+                            Log.d(TAG, String.format("onProductConnect newProduct:%s", baseProduct));
+                            showToast("Product Connected");
+                            notifyStatusChange();
+
+                        }
+                        @Override
+                        public void onComponentChange(BaseProduct.ComponentKey componentKey, BaseComponent oldComponent,
+                                                      BaseComponent newComponent) {
+
+                            if (newComponent != null) {
+                                newComponent.setComponentListener(new BaseComponent.ComponentListener() {
+
+                                    @Override
+                                    public void onConnectivityChange(boolean isConnected) {
+                                        Log.d(TAG, "onComponentConnectivityChanged: " + isConnected);
+                                        notifyStatusChange();
+                                    }
+                                });
+                            }
+                            Log.d(TAG,
+                                    String.format("onComponentChange key:%s, oldComponent:%s, newComponent:%s",
+                                            componentKey,
+                                            oldComponent,
+                                            newComponent));
+
+                        }
+                        @Override
+                        public void onInitProcess(DJISDKInitEvent djisdkInitEvent, int i) {
+
+                        }
+
+                        @Override
+                        public void onDatabaseDownloadProgress(long l, long l1) {
+
+                        }
+                    });
+                }
+            });
+        }
+    }
+
 }
