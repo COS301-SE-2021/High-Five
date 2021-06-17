@@ -76,7 +76,7 @@ namespace src.Storage
                 using (var engine = new Engine())
                 {
                     engine.GetMetadata(inputFile);
-                    var options = new ConversionOptions {Seek = TimeSpan.FromSeconds(1)};
+                    var options = new ConversionOptions {Seek = TimeSpan.FromSeconds(1), VideoSize = VideoSize.Hd480};
                     engine.GetThumbnail(inputFile, thumbnail, options);
                 }
                 var thumbnailBlockBlob = cloudBlobContainer.GetBlockBlobReference(generatedName + "-thumbnail.jpg");
