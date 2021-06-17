@@ -24,13 +24,13 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public partial class RetrieveVideosResponse : IEquatable<RetrieveVideosResponse>
+    public class RetrieveVideosResponse : IEquatable<RetrieveVideosResponse>
     {
         /// <summary>
-        /// Gets or Sets File
+        /// Gets or Sets FileName
         /// </summary>
-        [DataMember(Name="file", EmitDefaultValue=false)]
-        public System.IO.Stream File { get; set; }
+        [DataMember(Name="fileName", EmitDefaultValue=false)]
+        public string FileName { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -40,7 +40,7 @@ namespace Org.OpenAPITools.Models
         {
             var sb = new StringBuilder();
             sb.Append("class RetrieveVideosResponse {\n");
-            sb.Append("  File: ").Append(File).Append("\n");
+            sb.Append("  FileName: ").Append(FileName).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -78,9 +78,9 @@ namespace Org.OpenAPITools.Models
 
             return 
                 (
-                    File == other.File ||
-                    File != null &&
-                    File.Equals(other.File)
+                    FileName == other.FileName ||
+                    FileName != null &&
+                    FileName.Equals(other.FileName)
                 );
         }
 
@@ -94,8 +94,8 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (File != null)
-                    hashCode = hashCode * 59 + File.GetHashCode();
+                    if (FileName != null)
+                    hashCode = hashCode * 59 + FileName.GetHashCode();
                 return hashCode;
             }
         }

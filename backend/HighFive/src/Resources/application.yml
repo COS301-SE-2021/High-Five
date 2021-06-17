@@ -10,14 +10,14 @@ tags:
   - name: "Test"
 
   #==========================================================
-  #     PATHS 
+  #     PATHS
   #==========================================================
 paths:
 
   #==========================================================
   #     TEST SUBSYSTEM PATHING
   #==========================================================
-  
+
   /test/ping:
     post:
       tags:
@@ -29,7 +29,7 @@ paths:
           description: Ping successful
           content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/pingResponse'
 
   /test/echo:
@@ -51,7 +51,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/pingResponse'
-  
+
   #==========================================================
   #     VIDEO STORAGE SUBSYSTEM PATHING
   #==========================================================
@@ -75,25 +75,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/storeVideoResponse'
-                
-  /media/retrieveVideos:
+
+  /media/getAllVideos:
     post:
       tags:
         - "MediaStorage"
-      description: Endpoint for Store Video use case
-      operationId: RetrieveVideos
+      description: Endpoint for Get Video Names use case
+      operationId: GetAllVideos
       responses:
         "200":
-          description: Returns a list of videos
+          description: Returns a list of metadata objects of all the videos in the blob storage
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/retrieveVideosResponse'               
+                  $ref: '#/components/schemas/getAllVideosResponse'
+    
+  /media/getVideo:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Get Videos use case
+      operationId: GetVideo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/getVideoRequest'
+      responses:
+        "200":
+          description: Returns a list of the filenames of all videos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getVideoResponse'
+        "400":
+          description: Invalid video id provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
 
   #==========================================================
-  #     SCHEMAS 
+  #     SCHEMAS
   #==========================================================
 components:
   schemas:
@@ -101,19 +127,19 @@ components:
     #==========================================================
     #     TEST COMPONENTS
     #==========================================================
-    
+
     pingResponse:
       type: object
       properties:
         message:
           type: string
-    
+
     echoRequest:
       type: object
       properties:
         message:
           type: string
-    
+
     #==========================================================
     #     VIDEO STORAGE COMPONENTS
     #==========================================================
@@ -124,7 +150,7 @@ components:
         file:
           type: string
           format: binary
-    
+
     storeVideoResponse:
       type: object
       properties:
@@ -136,10 +162,49 @@ components:
     retrieveVideosResponse:
       type: object
       properties:
+        fileName:
+          type: string
+    
+    getAllVideosResponse:
+      type: object
+      properties:
+        videos:
+          type: array
+          items:
+            $ref: '#/components/schemas/videoMetaData'
+    
+    getVideoRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique id assossciated with a certain video stored on the blob storage
+    
+    getVideoResponse:
+      type: object
+      properties:
         file:
           type: string
-          format: binary
-          
+          format: byte
+
+    videoMetaData:
+      type: object
+      properties:
+        name:
+          type: string
+        duration:
+          type: integer
+          description: duration of the video in seconds
+        dateStored:
+          type: string
+          format: date-time
+          description: The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Z
+        id:
+          type: string
+        thumbnail:
+          type: string
+          format: byte
+
     #==========================================================
     #     GENERIC COMPONENTS
     #==========================================================
@@ -151,4 +216,3 @@ components:
           type: boolean
         message:
           type: string
-  

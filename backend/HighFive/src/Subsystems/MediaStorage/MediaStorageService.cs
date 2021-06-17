@@ -1,16 +1,18 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Org.OpenAPITools.Models;
 using src.Storage;
 
 namespace src.Subsystems.MediaStorage
 {
     public class MediaStorageService: IMediaStorageService
     {
-        private IStorageManager _storageManager;
+        private readonly IStorageManager _storageManager;
 
         public MediaStorageService(IStorageManager storageManager)
         {
@@ -19,22 +21,17 @@ namespace src.Subsystems.MediaStorage
         
         public async Task StoreVideo(IFormFile video)
         {
-            /*var filePath = Directory.GetCurrentDirectory() + "\\Subsystems\\MediaStorage\\Videos\\" + video.FileName;
-            await using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await video.CopyToAsync(stream);
-            }*/
             await _storageManager.UploadFile(video);
         }
 
-        public void RetrieveVideo(string videoName)
+        public Task<GetVideoResponse> GetVideo(string videoId)
         {
-            throw new System.NotImplementedException();
+            return _storageManager.GetVideo(videoId);
         }
 
-        public void GetVideoStrings()
+        public List<VideoMetaData> GetAllVideos()
         {
-            throw new System.NotImplementedException();
+            return _storageManager.GetAllVideos().Result;
         }
     }
 }
