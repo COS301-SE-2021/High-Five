@@ -1,6 +1,6 @@
 package com.djisdk;
 
-import android.app.AlertDialog;
+import android.content.Intent;
 
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -22,12 +22,13 @@ public class DjiSdkPlugin extends Plugin {
         call.resolve(ret);
     }
 
+    /**
+     * Plugin method that will start the main DJI activity to interface with the DJI SDK
+     * @param call Call method passed in by Capacitor
+     */
     @PluginMethod
     public void present(PluginCall call) {
-        String message = call.getString("message");
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.bridge.getWebView().getContext());
-        builder.setMessage(message).setTitle("Alert");
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        Intent startDJI = new Intent(getContext(), DJIActivity.class);
+        getContext().startActivity(startDJI);
     }
 }
