@@ -8,6 +8,7 @@ info:
 tags:
   - name: "MediaStorage"
   - name: "Test"
+  - name: "Pipelines"
 
   #==========================================================
   #     PATHS
@@ -80,7 +81,7 @@ paths:
     post:
       tags:
         - "MediaStorage"
-      description: Endpoint for Get Video Names use case
+      description: Endpoint for Get All Videos use case
       operationId: GetAllVideos
       responses:
         "200":
@@ -118,6 +119,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/emptyObject'
 
+  #==========================================================
+  #     PIPELINES SUBSYSTEM PATHING
+  #==========================================================
+
+  /pipelines/createPipeline:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Create Pipeline use case
+      operationId: CreatePipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createPipelineRequest'
+      responses:
+        "200":
+          description: Pipeline has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+  
   #==========================================================
   #     SCHEMAS
   #==========================================================
@@ -204,6 +229,18 @@ components:
         thumbnail:
           type: string
           format: byte
+
+    #==========================================================
+    #     GENERIC COMPONENTS
+    #==========================================================
+    
+    createPipelineRequest:
+      type: object
+      properties:
+        tools:
+          type: array
+          items:
+            type: string
 
     #==========================================================
     #     GENERIC COMPONENTS
