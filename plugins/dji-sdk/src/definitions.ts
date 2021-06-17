@@ -1,8 +1,4 @@
-declare module "@capacitor/core" {
-  interface PluginRegistry {
-    DjiSdk: DjiSdkPlugin;
-  }
-}
+
 
 export interface DjiSdkPlugin {
   echo(options: { value: string }): Promise<{ value: string }>;
