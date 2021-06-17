@@ -10,7 +10,8 @@ export class VideouploadService {
   constructor(private http: HttpClient, private endpoints: Endpoints) { }
 
   /**
-   * Retrieves a list of videos from the backend API
+   * Retrieves a list of videos from the backend API and runs a callback function, passing in the
+   * retrieved data.
    *
    * @param subscription A function to run once the request is completed
    */

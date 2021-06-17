@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {IonInfiniteScroll, ModalController} from '@ionic/angular';
 import {VideouploadService} from '../../services/videoupload/videoupload.service';
-import {GetAllVideosResponse} from '../../models/getAllVideosResponse';
 import {VideoMetaData} from '../../models/videoMetaData';
 
 @Component({
@@ -13,7 +12,7 @@ export class VideostorePage implements OnInit {
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
-  public items: VideoMetaData[] = [];
+  public items: VideoMetaData[][] = [];
 
   constructor(private modal: ModalController, private videoService: VideouploadService) {
     this.loadMoreData();
@@ -22,6 +21,11 @@ export class VideostorePage implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * Called when Ionic's infinite scroll wants to load more data.
+   *
+   * @param event
+   */
   loadData(event) {
     setTimeout(async () => {
       this.loadMoreData();
@@ -29,15 +33,35 @@ export class VideostorePage implements OnInit {
     }, 500);
   }
 
+  /**
+   * Fetches video metadata from the backend and adds the data to the 'item' list.
+   */
   loadMoreData() {
     this.videoService.getAllVideos(data => {
       // eslint-disable-next-line guard-for-in
+      let row = true;
+      let counter = 0;
       for (const item of data) {
-        this.items.push(Object.assign(new VideoMetaData(), item));
+        if (row) {
+          this.items.push([Object.assign(new VideoMetaData(), item)]);
+          row = false;
+        } else {
+          this.items[counter].push(Object.assign(new VideoMetaData(), item));
+          counter++;
+          row = true;
+        }
+      }
+      if (!row) {
+        this.items[counter].push(undefined);
       }
     });
   }
 
+  /**
+   * Sends an uploaded video to the backend.
+   *
+   * @param fileData
+   */
   uploadVideo(fileData: any) {
     console.log(fileData.target.files[0]);
   }
