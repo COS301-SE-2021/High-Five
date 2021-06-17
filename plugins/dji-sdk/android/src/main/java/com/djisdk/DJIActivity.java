@@ -25,6 +25,7 @@ import dji.sdk.base.BaseComponent;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.sdkmanager.DJISDKInitEvent;
 import dji.sdk.sdkmanager.DJISDKManager;
+import dji.sdk.sdkmanager.DJISDKManager.SDKManagerCallback;
 import dji.thirdparty.afinal.core.AsyncTask;
 
 public class DJIActivity extends AppCompatActivity {
@@ -123,6 +124,7 @@ public class DJIActivity extends AppCompatActivity {
                 public void run() {
                     showToast("registering, pls wait...");
                     DJISDKManager.getInstance().registerApp(DJIActivity.this.getApplicationContext(), new DJISDKManager.SDKManagerCallback() {
+
                         @Override
                         public void onRegister(DJIError djiError) {
                             if (djiError == DJISDKError.REGISTRATION_SUCCESS) {
@@ -139,20 +141,20 @@ public class DJIActivity extends AppCompatActivity {
                             Log.d(TAG, "onProductDisconnect");
                             showToast("Product Disconnected");
                             notifyStatusChange();
-
                         }
+
                         @Override
                         public void onProductConnect(BaseProduct baseProduct) {
                             Log.d(TAG, String.format("onProductConnect newProduct:%s", baseProduct));
                             showToast("Product Connected");
                             notifyStatusChange();
-
                         }
 
                         @Override
                         public void onProductChanged(BaseProduct baseProduct) {
 
                         }
+
 
                         @Override
                         public void onComponentChange(BaseProduct.ComponentKey componentKey, BaseComponent oldComponent,

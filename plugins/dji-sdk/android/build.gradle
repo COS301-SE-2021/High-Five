@@ -72,6 +72,6 @@ dependencies {
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
-    implementation ('com.dji:dji-sdk:4.14.1')
-    compileOnly ('com.dji:dji-sdk-provided:4.14.1')
+    implementation ('com.dji:dji-sdk:4.12')
+    compileOnly ('com.dji:dji-sdk-provided:4.12')
 }
