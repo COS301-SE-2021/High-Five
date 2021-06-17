@@ -1,79 +1,44 @@
-<ion-card class="ion-justify-content-center ion-align-items-center">
-  <ion-card-content>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-card-title>
-            {{toolsetName}}
-          </ion-card-title>
-        </ion-col>
-      </ion-row>
-      <ion-row >
-        <ion-col>
+<ion-grid>
+  <ion-row *ngFor="let pipelineModel of pipelineService.allPipelines; index as i;">
+    <ion-col size="12">
+      <ion-card class="ion-justify-content-center ion-align-items-center">
+        <ion-card-content>
           <ion-grid>
             <ion-row>
               <ion-col>
-                <ion-text>
-                  {{constants.labels.tool1}}
-                </ion-text>
-              </ion-col>
-              <ion-col>
-                <ion-checkbox mode="ios" color="tertiary"></ion-checkbox>
+                <ion-card-title>
+                  {{pipelineModel.pipelineName}}
+                </ion-card-title>
               </ion-col>
             </ion-row>
-          </ion-grid>
-        </ion-col>
-        <ion-col>
-          <ion-grid>
             <ion-row>
-              <ion-col>
-                <ion-text>
-                  {{constants.labels.tool2}}
-                </ion-text>
+              <ion-col *ngFor="let label of constants.labels.tools, index as x;" >
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      <ion-text>
+                        {{label}}
+                      </ion-text>
+                    </ion-col>
+                    <ion-col>
+                      <ion-checkbox [disabled]="true" [checked]="pipelineModel.selectedTools[x]" mode="ios" color="tertiary"></ion-checkbox>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
               </ion-col>
-              <ion-col>
-                <ion-checkbox mode="ios" color="tertiary"></ion-checkbox>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-col>
-        <ion-col>
-          <ion-grid>
-            <ion-row>
-              <ion-col>
-                <ion-text>
-                  {{constants.labels.tool3}}
-                </ion-text>
-              </ion-col>
-              <ion-col>
-                <ion-checkbox mode="ios" color="tertiary"></ion-checkbox>
+              <ion-col size="1">
+                <ion-button (click)="deletePipeline()">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </ion-button>
               </ion-col>
             </ion-row>
           </ion-grid>
-        </ion-col>
-        <ion-col>
-          <ion-grid>
-            <ion-row>
-              <ion-col>
-                <ion-text>
-                  {{constants.labels.tool4}}
-                </ion-text>
-              </ion-col>
-              <ion-col>
-                <ion-checkbox mode="ios" color="tertiary"></ion-checkbox>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-col>
-        <ion-col size="1">
-          <ion-button>
-            <ion-icon name="trash-outline"></ion-icon>
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-card-content>
+        </ion-card-content>
 
-</ion-card>
+      </ion-card>
+
+    </ion-col>
+  </ion-row>
+</ion-grid>
 
 
