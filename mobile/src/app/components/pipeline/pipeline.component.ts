@@ -14,7 +14,10 @@ export class PipelineComponent implements OnInit {
     const x = new PipelineModel('XD');
     x.selectedTools = [true,true,false];
     x.pipelineId= 123123;
-    pipelineService.addPipeline(x);
+    for (let i = 0; i < 10; i++) {
+      pipelineService.addPipeline(x);
+    }
+
   }
 
   ngOnInit() {}

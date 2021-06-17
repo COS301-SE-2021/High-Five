@@ -1,11 +1,23 @@
 
 
 <ion-content *ngIf="!isDesktop">
- <ion-list id="analysedVideosMobile">
-   <app-pipeline></app-pipeline>
- </ion-list>
+  <div class = "pipelinesMobile">
+    <app-pipeline></app-pipeline>
+  </div>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="secondary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
 
-<ion-content *ngIf="isDesktop">
-  <app-pipeline></app-pipeline>
+<ion-content *ngIf="isDesktop" >
+  <div class="pipelinesDesktop">
+    <app-pipeline></app-pipeline>
+  </div>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-right: 5vw; margin-bottom: 5vh;"  >
+    <ion-fab-button color="secondary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

@@ -10,6 +10,5 @@ import { Injectable } from '@angular/core';
 export class ToolsetConstants {
   public labels = {
     tools: ['Object Identification','Object Counting', 'Object Tracking']
-
   };
 }
