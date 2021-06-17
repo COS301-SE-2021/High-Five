@@ -24,7 +24,11 @@ namespace src
         {
             services.AddControllers();
             services.AddSwaggerGen();
-            
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            });
+
             // Dependency Injections
             services.Add(new ServiceDescriptor(typeof(IStorageManager), new StorageManager(Configuration)));//singleton
             services.AddScoped<IMediaStorageService, MediaStorageService>();
@@ -42,10 +46,11 @@ namespace src
             app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "High Five");
-                    c.RoutePrefix = String.Empty;
+                    //c.RoutePrefix = String.Empty;
                 });
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors("AllowOrigin");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
