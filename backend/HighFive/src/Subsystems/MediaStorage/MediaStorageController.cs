@@ -11,7 +11,7 @@ namespace src.Subsystems.MediaStorage
 {
     public class MediaStorageController : MediaStorageApiController
     {
-        private IMediaStorageService _mediaStorageService;
+        private readonly IMediaStorageService _mediaStorageService;
         
         public MediaStorageController(IMediaStorageService mediaStorageService)
         {
@@ -26,12 +26,19 @@ namespace src.Subsystems.MediaStorage
 
         public override IActionResult GetVideo(GetVideoRequest getVideoRequest)
         {
-            throw new NotImplementedException();
+            var response = _mediaStorageService.GetVideo(getVideoRequest.Id);
+            if (response.Result != null) return StatusCode(200, response.Result);
+            var fail = new EmptyObject
+            {
+                Success = false,
+                Message = "No video exists associated with video id: " + getVideoRequest.Id
+            };
+            return StatusCode(400, fail);
         }
 
         public override async Task<IActionResult> StoreVideo(IFormFile file)
         {
-            StoreVideoResponse response = new StoreVideoResponse
+            var response = new StoreVideoResponse
             {
                 Message = "Video stored successfully", Success = true
             };

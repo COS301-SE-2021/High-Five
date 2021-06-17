@@ -30,7 +30,7 @@ namespace Org.OpenAPITools.Models
         /// Gets or Sets File
         /// </summary>
         [DataMember(Name="file", EmitDefaultValue=false)]
-        public System.IO.Stream File { get; set; }
+        public byte[] File { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

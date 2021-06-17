@@ -56,7 +56,7 @@ namespace Org.OpenAPITools.Models
         /// Gets or Sets Thumbnail
         /// </summary>
         [DataMember(Name="thumbnail", EmitDefaultValue=false)]
-        public System.IO.Stream Thumbnail { get; set; }
+        public byte[] Thumbnail { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

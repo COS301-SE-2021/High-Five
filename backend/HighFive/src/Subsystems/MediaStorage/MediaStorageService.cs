@@ -12,7 +12,7 @@ namespace src.Subsystems.MediaStorage
 {
     public class MediaStorageService: IMediaStorageService
     {
-        private IStorageManager _storageManager;
+        private readonly IStorageManager _storageManager;
 
         public MediaStorageService(IStorageManager storageManager)
         {
@@ -24,9 +24,9 @@ namespace src.Subsystems.MediaStorage
             await _storageManager.UploadFile(video);
         }
 
-        public void RetrieveVideo(string videoName)
+        public Task<GetVideoResponse> GetVideo(string videoId)
         {
-            throw new System.NotImplementedException();
+            return _storageManager.GetVideo(videoId);
         }
 
         public List<VideoMetaData> GetAllVideos()

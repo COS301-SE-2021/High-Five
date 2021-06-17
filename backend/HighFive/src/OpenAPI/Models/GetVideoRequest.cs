@@ -27,10 +27,11 @@ namespace Org.OpenAPITools.Models
     public class GetVideoRequest : IEquatable<GetVideoRequest>
     {
         /// <summary>
-        /// Gets or Sets Id
+        /// unique id assossciated with a certain video stored on the blob storage
         /// </summary>
+        /// <value>unique id assossciated with a certain video stored on the blob storage</value>
         [DataMember(Name="id", EmitDefaultValue=false)]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

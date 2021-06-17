@@ -15,5 +15,6 @@ namespace src.Storage
 
         public Task UploadFile(IFormFile file);
         public Task<List<VideoMetaData>> GetAllVideos();
+        public Task<GetVideoResponse> GetVideo(string videoId);
     }
 }

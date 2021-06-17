@@ -111,6 +111,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getVideoResponse'
+        "400":
+          description: Invalid video id provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
 
   #==========================================================
   #     SCHEMAS
@@ -172,14 +178,14 @@ components:
       properties:
         id:
           type: string
-          format: uuid
+          description: unique id assossciated with a certain video stored on the blob storage
     
     getVideoResponse:
       type: object
       properties:
         file:
           type: string
-          format: binary
+          format: byte
 
     videoMetaData:
       type: object

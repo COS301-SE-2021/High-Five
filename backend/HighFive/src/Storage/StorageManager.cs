@@ -26,6 +26,7 @@ namespace src.Storage
         CloudStorageAccount IStorageManager.CloudStorageAccount => _cloudStorageAccount;
         private Random _random;
         private readonly string _alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
+        private string _container = "demo2videos";
 
         public StorageManager(IConfiguration config)
         {
@@ -38,7 +39,7 @@ namespace src.Storage
         public async Task UploadFile(IFormFile file)
         {
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
-            var cloudBlobContainer = cloudBlobClient.GetContainerReference("demo2videos");
+            var cloudBlobContainer = cloudBlobClient.GetContainerReference(_container);
             if (await cloudBlobContainer.CreateIfNotExistsAsync())
             {
                 await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions()
@@ -100,15 +101,37 @@ namespace src.Storage
             }
         }
 
-        public void RetrieveVideo(string videoName)
+        public async Task<GetVideoResponse> GetVideo(string videoId)
         {
-            throw new NotImplementedException();
+            videoId += ".mp4";
+            var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
+            var cloudBlobContainer = cloudBlobClient.GetContainerReference(_container);
+            if (await cloudBlobContainer.CreateIfNotExistsAsync())
+            {
+                await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions()
+                    {PublicAccess = BlobContainerPublicAccessType.Off});
+            }
+
+            var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(videoId);
+            if (await cloudBlockBlob.ExistsAsync())
+            {
+                var videoFile = new byte[cloudBlockBlob.Properties.Length];
+                for (int k = 0; k < cloudBlockBlob.Properties.Length; k++)
+                {
+                    videoFile[k] = 0x20;
+                }
+                await cloudBlockBlob.DownloadToByteArrayAsync(videoFile, 0);
+                GetVideoResponse response = new GetVideoResponse {File = videoFile};
+                return response;
+            }
+            //else cloudBlockBlob does not exist
+            return null;
         }
 
         public async Task<List<VideoMetaData>> GetAllVideos()
         {
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
-            var cloudBlobContainer = cloudBlobClient.GetContainerReference("demo2videos");
+            var cloudBlobContainer = cloudBlobClient.GetContainerReference(_container);
             var subdirectory = "";
             var blobResultSegment = await cloudBlobContainer.ListBlobsSegmentedAsync(subdirectory, true, BlobListingDetails.All,
                 int.MaxValue, null, null, null);
@@ -127,9 +150,8 @@ namespace src.Storage
                     {
                         thumbnail[k] = 0x20;
                     }
-
-                    currentVideo.Thumbnail = thumbnail;
                     await file.DownloadToByteArrayAsync(thumbnail, 0);
+                    currentVideo.Thumbnail = thumbnail;
                 }
                 else
                 {
