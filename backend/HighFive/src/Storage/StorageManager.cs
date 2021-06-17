@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Org.OpenAPITools.Models;
+using static System.String;
 
 namespace src.Storage
 {
@@ -53,7 +54,10 @@ namespace src.Storage
             }
             cloudBlockBlob.Properties.ContentType = file.ContentType;
             cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("originalName", file.FileName));
-            cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("salt", salt));
+            if (!IsNullOrEmpty(salt))
+            {
+                cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("salt", salt));
+            }
             cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("duration", "int"));
             cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("thumbnail", "byte array"));
             await cloudBlockBlob.UploadFromByteArrayAsync(fileBytes,0,(int)file.Length);
