@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
+using Org.OpenAPITools.Models;
 
 namespace src.Storage
 {
@@ -12,7 +14,6 @@ namespace src.Storage
         protected CloudStorageAccount CloudStorageAccount { get; }
 
         public Task UploadFile(IFormFile file);
-        public void RetrieveVideo(String videoName);
-        public void GetVideoStrings();
+        public Task<List<VideoMetaData>> GetAllVideos();
     }
 }

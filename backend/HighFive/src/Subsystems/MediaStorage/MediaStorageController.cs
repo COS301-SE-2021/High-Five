@@ -18,6 +18,17 @@ namespace src.Subsystems.MediaStorage
             _mediaStorageService = mediaStorageService;
         }
 
+        public override IActionResult GetAllVideos()
+        {
+            var result = _mediaStorageService.GetAllVideos();
+            return StatusCode(200, result);
+        }
+
+        public override IActionResult GetVideo(GetVideoRequest getVideoRequest)
+        {
+            throw new NotImplementedException();
+        }
+
         public override async Task<IActionResult> StoreVideo(IFormFile file)
         {
             StoreVideoResponse response = new StoreVideoResponse
@@ -28,11 +39,5 @@ namespace src.Subsystems.MediaStorage
            return StatusCode(200, response);
         }
         
-        public override IActionResult RetrieveVideos()
-        {
-            List<RetrieveVideosResponse> responseList = new List<RetrieveVideosResponse>();
-            
-            return StatusCode(200, responseList.ToArray());
-        }
     }
 }

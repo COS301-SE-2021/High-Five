@@ -24,13 +24,13 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class PingResponse : IEquatable<PingResponse>
+    public class GetVideoRequest : IEquatable<GetVideoRequest>
     {
         /// <summary>
-        /// Gets or Sets Message
+        /// Gets or Sets Id
         /// </summary>
-        [DataMember(Name="message", EmitDefaultValue=false)]
-        public string Message { get; set; }
+        [DataMember(Name="id", EmitDefaultValue=false)]
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -39,8 +39,8 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class PingResponse {\n");
-            sb.Append("  Message: ").Append(Message).Append("\n");
+            sb.Append("class GetVideoRequest {\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -63,24 +63,24 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((PingResponse)obj);
+            return obj.GetType() == GetType() && Equals((GetVideoRequest)obj);
         }
 
         /// <summary>
-        /// Returns true if PingResponse instances are equal
+        /// Returns true if GetVideoRequest instances are equal
         /// </summary>
-        /// <param name="other">Instance of PingResponse to be compared</param>
+        /// <param name="other">Instance of GetVideoRequest to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(PingResponse other)
+        public bool Equals(GetVideoRequest other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    Message == other.Message ||
-                    Message != null &&
-                    Message.Equals(other.Message)
+                    Id == other.Id ||
+                    Id != null &&
+                    Id.Equals(other.Id)
                 );
         }
 
@@ -94,8 +94,8 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Message != null)
-                    hashCode = hashCode * 59 + Message.GetHashCode();
+                    if (Id != null)
+                    hashCode = hashCode * 59 + Id.GetHashCode();
                 return hashCode;
             }
         }
@@ -103,12 +103,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(PingResponse left, PingResponse right)
+        public static bool operator ==(GetVideoRequest left, GetVideoRequest right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(PingResponse left, PingResponse right)
+        public static bool operator !=(GetVideoRequest left, GetVideoRequest right)
         {
             return !Equals(left, right);
         }

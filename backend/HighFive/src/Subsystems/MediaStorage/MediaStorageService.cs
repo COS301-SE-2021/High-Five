@@ -1,9 +1,11 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Org.OpenAPITools.Models;
 using src.Storage;
 
 namespace src.Subsystems.MediaStorage
@@ -32,9 +34,9 @@ namespace src.Subsystems.MediaStorage
             throw new System.NotImplementedException();
         }
 
-        public void GetVideoStrings()
+        public List<VideoMetaData> GetAllVideos()
         {
-            throw new System.NotImplementedException();
+            return _storageManager.GetAllVideos().Result;
         }
     }
 }

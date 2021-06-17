@@ -76,21 +76,41 @@ paths:
               schema:
                 $ref: '#/components/schemas/storeVideoResponse'
 
-  /media/retrieveVideos:
+  /media/getAllVideos:
     post:
       tags:
         - "MediaStorage"
-      description: Endpoint for Store Video use case
-      operationId: RetrieveVideos
+      description: Endpoint for Get Video Names use case
+      operationId: GetAllVideos
       responses:
         "200":
-          description: Returns a list of videos
+          description: Returns a list of metadata objects of all the videos in the blob storage
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/retrieveVideosResponse'
+                  $ref: '#/components/schemas/getAllVideosResponse'
+    
+  /media/getVideo:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Get Videos use case
+      operationId: GetVideo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/getVideoRequest'
+      responses:
+        "200":
+          description: Returns a list of the filenames of all videos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getVideoResponse'
 
   #==========================================================
   #     SCHEMAS
@@ -136,7 +156,47 @@ components:
     retrieveVideosResponse:
       type: object
       properties:
+        fileName:
+          type: string
+    
+    getAllVideosResponse:
+      type: object
+      properties:
+        videos:
+          type: array
+          items:
+            $ref: '#/components/schemas/videoMetaData'
+    
+    getVideoRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+    
+    getVideoResponse:
+      type: object
+      properties:
         file:
+          type: string
+          format: binary
+
+    videoMetaData:
+      type: object
+      properties:
+        name:
+          type: string
+        duration:
+          type: integer
+          description: duration of the video in seconds
+        dateStored:
+          type: string
+          format: date-time
+          description: The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Z
+        id:
+          type: string
+          format: uuid
+        thumbnail:
           type: string
           format: binary
 

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.MediaStorage
 {
@@ -9,6 +11,6 @@ namespace src.Subsystems.MediaStorage
     {
         public Task StoreVideo(IFormFile video);
         public void RetrieveVideo(String videoName);
-        public void GetVideoStrings();
+        public List<VideoMetaData> GetAllVideos();
     }
 }
