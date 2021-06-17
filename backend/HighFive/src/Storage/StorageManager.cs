@@ -113,17 +113,35 @@ namespace src.Storage
             var blobResultSegment = await cloudBlobContainer.ListBlobsSegmentedAsync(subdirectory, true, BlobListingDetails.All,
                 int.MaxValue, null, null, null);
             
-            var totalFiles = blobResultSegment.Results;
+            var allFiles = blobResultSegment.Results;
             var resultList = new List<VideoMetaData>();
-            foreach(var listBlobItem in totalFiles)
+            var currentVideo = new VideoMetaData();
+            foreach(var listBlobItem in allFiles)//NOTE: Assuming here that a thumbnail will be immediately followed by its corresponding mp4 file
             {
                 var file = (CloudBlob) listBlobItem;
-                if(!file.Name.Contains(".mp4"))
-                    continue;
-                var currentVideo = new VideoMetaData {Name = file.Name};
-                if (file.Properties.LastModified != null)
-                    currentVideo.DateStored = file.Properties.LastModified.Value.DateTime;
-                resultList.Add(currentVideo);
+                if (file.Name.Contains("thumbnail"))
+                {
+                    currentVideo = new VideoMetaData();
+                    var thumbnail = new byte[file.Properties.Length];
+                    for (int k = 0; k < file.Properties.Length; k++)
+                    {
+                        thumbnail[k] = 0x20;
+                    }
+
+                    currentVideo.Thumbnail = thumbnail;
+                    await file.DownloadToByteArrayAsync(thumbnail, 0);
+                }
+                else
+                {
+                    currentVideo.Id = file.Name.Replace(".mp4", "");
+                    if (file.Properties.LastModified != null)
+                        currentVideo.DateStored = file.Properties.LastModified.Value.DateTime;
+                    file.Metadata.TryGetValue("duration", out var time);
+                    currentVideo.Duration = int.Parse(time ?? Empty);
+                    file.Metadata.TryGetValue("originalName", out var oldName);
+                    currentVideo.Name = oldName;
+                    resultList.Add(currentVideo);
+                }
             }
 
             return resultList;
@@ -147,13 +165,11 @@ namespace src.Storage
         private string RandomString()
         {
             String str = "";
-             
             for(int i =0; i<5; i++)
             {
                 int a = _random.Next(_alphanumeric.Length);
                 str = str + _alphanumeric.ElementAt(a);
             }
-
             return str;
         }
 

@@ -197,7 +197,7 @@ components:
           type: string
         thumbnail:
           type: string
-          format: binary
+          format: byte
 
     #==========================================================
     #     GENERIC COMPONENTS
