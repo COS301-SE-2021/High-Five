@@ -24,20 +24,29 @@
         android:required="true"/>
     <!-- SDK requirement permission end -->
 
-    <application>
-        <uses-library android:name="org.apache.http.legacy" android:required="false" />
-        <!--
-            ADD API_KEY HERE and make sure you
-            are connected to the Internet before
-            the app is launched
-        -->
-        <!-- personal key -->
+    <application
+        android:name=".DJIApplication">
+        <uses-library android:name="com.android.future.usb.accessory" />
         <meta-data
             android:name="com.dji.sdk.API_KEY"
-            android:value="8c52e95c70af057e7a6fa2a9"/>
-        <!-- Required for receiving accessory attachment events.
-            This is necessary for product when connecting over USB. -->
-        <activity android:name=".DJIActivity"></activity>
+            android:value="8c52e95c70af057e7a6fa2a9" />
+        <activity
+            android:name="dji.sdk.sdkmanager.DJIAoaControllerActivity"
+            android:theme="@android:style/Theme.Translucent" >
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
+                android:resource="@xml/accessory_filter" />
+        </activity>
+        <service android:name="dji.sdk.sdkmanager.DJIGlobalService"
+            tools:ignore="Instantiatable">
+        </service>
+        <activity android:name=".DJIActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>
