@@ -6,12 +6,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,6 +148,12 @@ public class DJIActivity extends AppCompatActivity {
                             notifyStatusChange();
 
                         }
+
+                        @Override
+                        public void onProductChanged(BaseProduct baseProduct) {
+
+                        }
+
                         @Override
                         public void onComponentChange(BaseProduct.ComponentKey componentKey, BaseComponent oldComponent,
                                                       BaseComponent newComponent) {
@@ -180,6 +188,32 @@ public class DJIActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void notifyStatusChange() {
+        mHandler.removeCallbacks(updateRunnable);
+        mHandler.postDelayed(updateRunnable, 500);
+    }
+
+    private Runnable updateRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            Intent intent = new Intent(FLAG_CONNECTION_CHANGE);
+            sendBroadcast(intent);
+        }
+    };
+
+    private void showToast(final String toastMsg) {
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), toastMsg, Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
 }
