@@ -2,6 +2,8 @@ import {Component, Input, OnInit, Optional} from '@angular/core';
 import {ToolsetConstants} from '../../../constants/toolset-constants';
 import {PipelineModel} from '../../models/pipeline.model';
 import {PipelineService} from '../../services/pipeline/pipeline.service';
+import {AddPipelineComponent} from '../add-pipeline/add-pipeline.component';
+import {ModalController} from '@ionic/angular';
 
 @Component({
   selector: 'app-pipeline',
@@ -22,7 +24,10 @@ export class PipelineComponent implements OnInit {
 
   ngOnInit() {}
 
-  deletePipeline(): void{
+  async deletePipeline(){
+
+  }
+  async openCreatePipelineModal(){
 
   }
 }

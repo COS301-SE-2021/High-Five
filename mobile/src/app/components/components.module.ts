@@ -7,9 +7,10 @@ import {VideostreamCardComponent} from './videostream-card/videostream-card.comp
 import {VgControlsModule} from '@videogular/ngx-videogular/controls';
 import {VgCoreModule} from '@videogular/ngx-videogular/core';
 import {PipelineComponent} from './pipeline/pipeline.component';
+import {AddPipelineComponent} from './add-pipeline/add-pipeline.component';
 
 @NgModule({
-  declarations: [VideostoreCardComponent, VideostreamCardComponent, PipelineComponent],
+  declarations: [VideostoreCardComponent, VideostreamCardComponent, PipelineComponent, AddPipelineComponent],
   imports: [
     CommonModule,
     IonicModule,
@@ -17,6 +18,6 @@ import {PipelineComponent} from './pipeline/pipeline.component';
     VgControlsModule,
     VgCoreModule,
   ],
-  exports: [VideostoreCardComponent, VideostreamCardComponent, PipelineComponent]
+  exports: [VideostoreCardComponent, VideostreamCardComponent, PipelineComponent, AddPipelineComponent]
 })
 export class CustomComponentsModule {}

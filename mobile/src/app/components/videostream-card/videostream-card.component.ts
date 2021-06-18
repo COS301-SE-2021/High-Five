@@ -15,7 +15,7 @@ export class VideostreamCardComponent implements OnInit {
    * Dismisses the video playback modal.
    */
   async dismissModal() {
-    await this.modal.dismiss()
+    await this.modal.dismiss();
   }
 
 }

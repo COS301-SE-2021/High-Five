@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {VideoPreviewData} from "../../pages/videostore/videostore.page";
-import {ModalController, Platform} from "@ionic/angular";
-import {VideostreamCardComponent} from "../videostream-card/videostream-card.component";
+import {VideoPreviewData} from '../../pages/videostore/videostore.page';
+import {ModalController, Platform} from '@ionic/angular';
+import {VideostreamCardComponent} from '../videostream-card/videostream-card.component';
 
 @Component({
   selector: 'app-videostore-card',
@@ -26,8 +26,8 @@ export class VideostoreCardComponent implements OnInit {
       componentProps: {
         modal: this.modal
       }
-    })
-    videoModal.style.backgroundColor = "rgba(0,0,0,0.85)" //make the background for the modal darker.
+    });
+    videoModal.style.backgroundColor = 'rgba(0,0,0,0.85)'; //make the background for the modal darker.
 
     await videoModal.present();
   }

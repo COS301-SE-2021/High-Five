@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
 import {PipelineModel} from '../../models/pipeline.model';
 import {PipelineService} from '../../services/pipeline/pipeline.service';
-import {ModalController} from "@ionic/angular";
+import {ModalController} from '@ionic/angular';
+import {AddPipelineComponent} from '../../components/add-pipeline/add-pipeline.component';
 
 @Component({
   selector: 'app-analytics',
@@ -22,10 +23,27 @@ export class AnalyticsPage implements OnInit {
   ngOnInit() {
   }
 
-  // async openCreatePipelineModal(){
-  //   const modal = await this.modalController.create({
-  //     component
-  //   })
-  // }
+  async openCreatePipelineModal(){
+    try{
+      const modal = await this.modalController.create({
+        component : AddPipelineComponent,
+        componentProps: {
+          modal: this.modalController
+        }
+      });
+      return await modal.present;
+    }catch (e) {
+     console.error(e);
+    }
+  }
 
+  // const videoModal = await this.modal.create({
+  //   component: VideostreamCardComponent,
+  //   componentProps: {
+  //     modal: this.modal
+  //   }
+  // })
+  // videoModal.style.backgroundColor = "rgba(0,0,0,0.85)" //make the background for the modal darker.
+  //
+  // await videoModal.present();
 }

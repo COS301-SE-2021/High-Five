@@ -1,22 +1,22 @@
 
 
 <ion-content *ngIf="!isDesktop">
-  <div class = "pipelinesMobile">
+  <div id = "pipelinesMobile">
     <app-pipeline></app-pipeline>
   </div>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="secondary">
+    <ion-fab-button color="secondary"  (click)="openCreatePipelineModal()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>
 
 <ion-content *ngIf="isDesktop" >
-  <div class="pipelinesDesktop">
+  <div id="pipelinesDesktop">
     <app-pipeline></app-pipeline>
   </div>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-right: 5vw; margin-bottom: 5vh;"  >
-    <ion-fab-button color="secondary">
+    <ion-fab-button color="secondary"  (click)="openCreatePipelineModal()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
