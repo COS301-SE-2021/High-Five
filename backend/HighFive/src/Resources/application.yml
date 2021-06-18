@@ -119,6 +119,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/emptyObject'
 
+  /media/deleteVideo:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Get Videos use case
+      operationId: DeleteVideo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteVideoRequest'
+      responses:
+        "200":
+          description: Video successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
   #==========================================================
   #     PIPELINES SUBSYSTEM PATHING
   #==========================================================
@@ -303,6 +323,13 @@ components:
         thumbnail:
           type: string
           format: byte
+
+    deleteVideoRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique id assossciated with a certain video stored on the blob storage
 
     #==========================================================
     #     PIPELINES COMPONENTS

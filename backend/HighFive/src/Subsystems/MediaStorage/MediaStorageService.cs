@@ -136,5 +136,19 @@ namespace src.Subsystems.MediaStorage
             }
             return resultList;
         }
+
+        public async Task<bool> DeleteVideo(DeleteVideoRequest request)
+        {
+            var videoFile = _storageManager.GetFile(request.Id + ".mp4",ContainerName).Result;
+            if (videoFile == null)
+            {
+                return false;
+            }
+
+            var thumbnail = _storageManager.GetFile(request.Id + "-thumbnail.jpg", ContainerName).Result;
+            await videoFile.DeleteAsync();
+            await thumbnail.DeleteAsync();
+            return true;
+        }
     }
 }

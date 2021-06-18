@@ -60,5 +60,14 @@ namespace src.Subsystems.MediaStorage
             }
         }
         
+        public override IActionResult DeleteVideo(DeleteVideoRequest deleteVideoRequest)
+        {
+            var response = new EmptyObject {Success = true};
+            if (_mediaStorageService.DeleteVideo(deleteVideoRequest).Result) return StatusCode(200, response);
+            response.Success = false;
+            response.Message = "Video could not be deleted.";
+            return StatusCode(400, response);
+        }
+        
     }
 }
