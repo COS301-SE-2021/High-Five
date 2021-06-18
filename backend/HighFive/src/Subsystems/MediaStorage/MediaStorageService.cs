@@ -84,9 +84,9 @@ namespace src.Subsystems.MediaStorage
             await cloudBlockBlob.UploadFromByteArrayAsync(fileBytes, 0, (int) video.Length);
         }
 
-        public async Task<GetVideoResponse> GetVideo(string videoId)
+        public async Task<GetVideoResponse> GetVideo(GetVideoRequest request)
         {
-            videoId += ".mp4";
+            var videoId = request.Id + ".mp4";
             var file = _storageManager.GetFile(videoId, ContainerName).Result;
             if (file != null)
             {

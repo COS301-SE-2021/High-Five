@@ -10,7 +10,7 @@ namespace src.Subsystems.MediaStorage
     public interface IMediaStorageService
     {
         public Task StoreVideo(IFormFile video);
-        public Task<GetVideoResponse> GetVideo(string videoId);
+        public Task<GetVideoResponse> GetVideo(GetVideoRequest request);
         public Task<List<VideoMetaData>> GetAllVideos();
     }
 }

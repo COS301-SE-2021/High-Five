@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using src.Storage;
 using src.Subsystems.MediaStorage;
+using src.Subsystems.Pipelines;
 
 namespace src
 {

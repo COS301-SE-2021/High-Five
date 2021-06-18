@@ -26,7 +26,7 @@ namespace src.Subsystems.MediaStorage
 
         public override IActionResult GetVideo(GetVideoRequest getVideoRequest)
         {
-            var response = _mediaStorageService.GetVideo(getVideoRequest.Id).Result;
+            var response = _mediaStorageService.GetVideo(getVideoRequest).Result;
             if (response != null) return StatusCode(200, response);
             var fail = new EmptyObject
             {
