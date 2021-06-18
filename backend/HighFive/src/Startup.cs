@@ -46,7 +46,7 @@ namespace src
             app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "High Five");
-                    //c.RoutePrefix = String.Empty;
+                    c.RoutePrefix = String.Empty;
                 });
             app.UseHttpsRedirection();
             app.UseRouting();
