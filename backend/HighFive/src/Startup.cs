@@ -33,6 +33,7 @@ namespace src
             // Dependency Injections
             services.Add(new ServiceDescriptor(typeof(IStorageManager), new StorageManager(Configuration)));//singleton
             services.AddScoped<IMediaStorageService, MediaStorageService>();
+            services.AddScoped<IPipelineService, PipelineService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

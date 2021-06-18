@@ -26,12 +26,15 @@ namespace src.Storage
         private readonly CloudStorageAccount _cloudStorageAccount;
         IConfiguration IStorageManager.Configuration => _configuration;
         CloudStorageAccount IStorageManager.CloudStorageAccount => _cloudStorageAccount;
+        private readonly Random _random;
+        private readonly string _alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
 
         public StorageManager(IConfiguration config)
         {
             _configuration = config;
             String connectionString = _configuration.GetConnectionString("StorageConnection");
             _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
+            _random = new Random();
         }
 
         public async Task<CloudBlockBlob> GetFile(string fileName, string container, bool create=false)
@@ -79,6 +82,32 @@ namespace src.Storage
                 return null;
             }
             return newFile;
+        }
+        
+        public string HashMd5(string source)
+        {
+            MD5 md5 = System.Security.Cryptography.MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(source);
+            byte[] hashBytes = md5.ComputeHash(inputBytes);
+     
+            // Step 2, convert byte array to hex string
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hashBytes.Length; i++)
+            {
+                sb.Append(hashBytes[i].ToString("X2"));
+            }
+            return sb.ToString();
+        }
+
+        public string RandomString()
+        {
+            var str = "";
+            for(var i =0; i<5; i++)
+            {
+                var a = _random.Next(_alphanumeric.Length);
+                str = str + _alphanumeric.ElementAt(a);
+            }
+            return str;
         }
         
     }

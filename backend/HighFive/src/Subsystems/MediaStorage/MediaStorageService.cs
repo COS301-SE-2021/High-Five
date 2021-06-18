@@ -19,25 +19,22 @@ namespace src.Subsystems.MediaStorage
     {
         private readonly IStorageManager _storageManager;
         private const string ContainerName = "demo2videos";
-        private readonly Random _random;
-        private readonly string _alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
 
         public MediaStorageService(IStorageManager storageManager)
         {
             _storageManager = storageManager;
-            _random = new Random();
         }
         
         public async Task StoreVideo(IFormFile video)
         {
             //create storage name for file
-            var generatedName = HashMd5(video.FileName);
+            var generatedName = _storageManager.HashMd5(video.FileName);
             var cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".mp4", ContainerName).Result;
             var salt = "";
             while (cloudBlockBlob == null)
             {
-                salt += RandomString();
-                generatedName = HashMd5(video.FileName+salt);
+                salt += _storageManager.RandomString();
+                generatedName = _storageManager.HashMd5(video.FileName+salt);
                 cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".mp4", ContainerName).Result;
             }
             cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("originalName", video.FileName));
@@ -138,32 +135,6 @@ namespace src.Subsystems.MediaStorage
                 }
             }
             return resultList;
-        }
-        
-        private string HashMd5(string source)
-        {
-            MD5 md5 = System.Security.Cryptography.MD5.Create();
-            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(source);
-            byte[] hashBytes = md5.ComputeHash(inputBytes);
-     
-            // Step 2, convert byte array to hex string
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hashBytes.Length; i++)
-            {
-                sb.Append(hashBytes[i].ToString("X2"));
-            }
-            return sb.ToString();
-        }
-
-        private string RandomString()
-        {
-            var str = "";
-            for(var i =0; i<5; i++)
-            {
-                var a = _random.Next(_alphanumeric.Length);
-                str = str + _alphanumeric.ElementAt(a);
-            }
-            return str;
         }
     }
 }

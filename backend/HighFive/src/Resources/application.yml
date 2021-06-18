@@ -312,7 +312,7 @@ components:
       type: object
       properties:
         pipeline:
-          $ref: '#/components/schemas/pipeline'
+          $ref: '#/components/schemas/newPipeline'
     
     getPipelinesResponse:
       type: object
@@ -321,6 +321,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/pipeline'
+    
+    newPipeline:
+      type: object
+      properties:
+        name:
+          type: string
+        tools:
+          type: array
+          items:
+            type: string
+            description: All the tools stored as strings
     
     pipeline:
       type: object

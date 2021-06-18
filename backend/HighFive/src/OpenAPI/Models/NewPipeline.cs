@@ -24,13 +24,19 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class CreatePipelineRequest : IEquatable<CreatePipelineRequest>
+    public class NewPipeline : IEquatable<NewPipeline>
     {
         /// <summary>
-        /// Gets or Sets Pipeline
+        /// Gets or Sets Name
         /// </summary>
-        [DataMember(Name="pipeline", EmitDefaultValue=false)]
-        public NewPipeline Pipeline { get; set; }
+        [DataMember(Name="name", EmitDefaultValue=false)]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Tools
+        /// </summary>
+        [DataMember(Name="tools", EmitDefaultValue=false)]
+        public List<string> Tools { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -39,8 +45,9 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class CreatePipelineRequest {\n");
-            sb.Append("  Pipeline: ").Append(Pipeline).Append("\n");
+            sb.Append("class NewPipeline {\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Tools: ").Append(Tools).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -63,24 +70,30 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((CreatePipelineRequest)obj);
+            return obj.GetType() == GetType() && Equals((NewPipeline)obj);
         }
 
         /// <summary>
-        /// Returns true if CreatePipelineRequest instances are equal
+        /// Returns true if NewPipeline instances are equal
         /// </summary>
-        /// <param name="other">Instance of CreatePipelineRequest to be compared</param>
+        /// <param name="other">Instance of NewPipeline to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(CreatePipelineRequest other)
+        public bool Equals(NewPipeline other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    Pipeline == other.Pipeline ||
-                    Pipeline != null &&
-                    Pipeline.Equals(other.Pipeline)
+                    Name == other.Name ||
+                    Name != null &&
+                    Name.Equals(other.Name)
+                ) && 
+                (
+                    Tools == other.Tools ||
+                    Tools != null &&
+                    other.Tools != null &&
+                    Tools.SequenceEqual(other.Tools)
                 );
         }
 
@@ -94,8 +107,10 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Pipeline != null)
-                    hashCode = hashCode * 59 + Pipeline.GetHashCode();
+                    if (Name != null)
+                    hashCode = hashCode * 59 + Name.GetHashCode();
+                    if (Tools != null)
+                    hashCode = hashCode * 59 + Tools.GetHashCode();
                 return hashCode;
             }
         }
@@ -103,12 +118,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(CreatePipelineRequest left, CreatePipelineRequest right)
+        public static bool operator ==(NewPipeline left, NewPipeline right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(CreatePipelineRequest left, CreatePipelineRequest right)
+        public static bool operator !=(NewPipeline left, NewPipeline right)
         {
             return !Equals(left, right);
         }

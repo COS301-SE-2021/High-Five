@@ -17,5 +17,7 @@ namespace src.Storage
         public Task<CloudBlockBlob> GetFile(string fileName, string container, bool create=false);
         public Task<List<CloudBlockBlob>> GetAllFilesInContainer(string container);
         public Task<CloudBlockBlob> CreateNewFile(string name, string container);
+        public String RandomString();
+        public String HashMd5(string source);
     }
 }
