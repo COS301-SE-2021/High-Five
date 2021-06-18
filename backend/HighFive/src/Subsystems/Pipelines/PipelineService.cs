@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
@@ -14,6 +15,7 @@ namespace src.Subsystems.Pipelines
 {
     public class PipelineService: IPipelineService
     {
+        //NOTE: Does not check for duplicates in Tools
         private readonly IStorageManager _storageManager;
         private const string ContainerName = "demo2pipelines";
 
@@ -22,7 +24,7 @@ namespace src.Subsystems.Pipelines
             _storageManager = storageManager;
         }
         
-        public async Task<GetPipelinesResponse> GetPipelines()
+        public GetPipelinesResponse GetPipelines()
         {
             var allFiles = _storageManager.GetAllFilesInContainer(ContainerName);
             if (allFiles.Result == null)
@@ -32,8 +34,7 @@ namespace src.Subsystems.Pipelines
             var resultList = new List<Pipeline>();
             foreach(var listBlobItem in allFiles.Result)
             {
-                var jsonData = await listBlobItem.DownloadTextAsync();
-                var currentPipeline = JsonConvert.DeserializeObject<Pipeline>(jsonData);
+                var currentPipeline = ConvertFileToPipeline(listBlobItem).Result;
                 resultList.Add(currentPipeline);
             }
             var response = new GetPipelinesResponse {Pipelines = resultList};
@@ -57,21 +58,29 @@ namespace src.Subsystems.Pipelines
             {
                 cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("salt", salt));
             }
-
             var newPipeline = new Pipeline
             {
                 Id = generatedName,
                 Name = pipeline.Name,
                 Tools = pipeline.Tools
             };
-            var jsonData = JsonConvert.SerializeObject(newPipeline);
-            cloudBlockBlob.Properties.ContentType = "application/json";
-            cloudBlockBlob.UploadTextAsync(jsonData);
+            UploadPipelineToStorage(newPipeline, cloudBlockBlob);
         }
 
-        public void AddTools(AddToolsRequest request)
+        public bool AddTools(AddToolsRequest request)
         {
-            throw new System.NotImplementedException();
+            var file =_storageManager.GetFile(request.PipelineId+".json", ContainerName).Result;
+            if (file == null)
+            {
+                return false;
+            }
+
+            var pipeline = ConvertFileToPipeline(file).Result;
+            var pipelineToolset = pipeline.Tools;
+            pipelineToolset.AddRange(request.Tools);
+            pipeline.Tools = pipelineToolset;
+            UploadPipelineToStorage(pipeline, file);
+            return true;
         }
 
         public void RemoveTools(RemoveToolsRequest request)
@@ -82,6 +91,18 @@ namespace src.Subsystems.Pipelines
         public void DeletePipeline(DeletePipelineRequest request)
         {
             throw new System.NotImplementedException();
+        }
+
+        private async Task<Pipeline> ConvertFileToPipeline(CloudBlockBlob file)
+        {
+            var jsonData = await file.DownloadTextAsync();
+            return JsonConvert.DeserializeObject<Pipeline>(jsonData);
+        }
+
+        private void UploadPipelineToStorage(Pipeline pipeline, CloudBlockBlob cloudBlockBlob)
+        {
+            var jsonData = JsonConvert.SerializeObject(pipeline);
+            cloudBlockBlob.UploadTextAsync(jsonData);
         }
     }
 }

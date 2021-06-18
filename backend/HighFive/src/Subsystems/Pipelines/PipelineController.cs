@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
 using Org.OpenAPITools.Models;
 
@@ -15,7 +16,15 @@ namespace src.Subsystems.Pipelines
         
         public override IActionResult AddTools(AddToolsRequest addToolsRequest)
         {
-            throw new System.NotImplementedException();
+            var response = new EmptyObject {Success = true};
+            if (_pipelineService.AddTools(addToolsRequest))
+            {
+                return StatusCode(200, response);
+            }
+
+            response.Success = false;
+            response.Message = "Addition of tools to pipeline failed";
+            return StatusCode(400, response);
         }
 
         public override IActionResult CreatePipeline(CreatePipelineRequest createPipelineRequest)
@@ -32,7 +41,7 @@ namespace src.Subsystems.Pipelines
 
         public override IActionResult GetPipelines()
         {
-            var response = _pipelineService.GetPipelines().Result;
+            var response = _pipelineService.GetPipelines();
             return StatusCode(200, response);
         }
 
