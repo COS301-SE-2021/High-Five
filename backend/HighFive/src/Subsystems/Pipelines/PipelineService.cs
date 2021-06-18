@@ -85,7 +85,21 @@ namespace src.Subsystems.Pipelines
 
         public void RemoveTools(RemoveToolsRequest request)
         {
-            throw new System.NotImplementedException();
+            //NOTE: Currently does not check if anything is actually deleted
+            var file =_storageManager.GetFile(request.PipelineId+".json", ContainerName).Result;
+            if (file == null)
+            {
+                return;
+            }
+
+            var pipeline = ConvertFileToPipeline(file).Result;
+            var pipelineToolset = pipeline.Tools;
+            foreach (var tool in request.Tools)
+            {
+                pipelineToolset.Remove(tool);
+            }
+            pipeline.Tools = pipelineToolset;
+            UploadPipelineToStorage(pipeline, file);
         }
 
         public void DeletePipeline(DeletePipelineRequest request)

@@ -47,7 +47,9 @@ namespace src.Subsystems.Pipelines
 
         public override IActionResult RemoveTools(RemoveToolsRequest removeToolsRequest)
         {
-            throw new System.NotImplementedException();
+            var response = new EmptyObject {Success = true};
+            _pipelineService.RemoveTools(removeToolsRequest);
+            return StatusCode(200, response);
         }
     }
 }
