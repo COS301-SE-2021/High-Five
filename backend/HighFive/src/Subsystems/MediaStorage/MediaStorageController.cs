@@ -69,5 +69,19 @@ namespace src.Subsystems.MediaStorage
             return StatusCode(400, response);
         }
         
+        public override IActionResult GetVideoGetRequest(string videoId)
+        {
+            var getVideoRequest = new GetVideoRequest {Id = videoId};
+            
+            var response = _mediaStorageService.GetVideo(getVideoRequest).Result;
+            if (response != null) return StatusCode(200, response);
+            var fail = new EmptyObject
+            {
+                Success = false,
+                Message = "No video exists associated with video id: " + getVideoRequest.Id
+            };
+            return StatusCode(400, fail);
+        }
+        
     }
 }
