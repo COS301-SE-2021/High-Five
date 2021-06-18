@@ -69,5 +69,10 @@ namespace src.Subsystems.MediaStorage
             return StatusCode(400, response);
         }
         
+        public override IActionResult GetVideoGetRequest(string videoId)
+        {
+            throw new NotImplementedException();
+        }
+        
     }
 }
