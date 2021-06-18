@@ -29,6 +29,19 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Get Videos use case</remarks>
+        /// <param name="deleteVideoRequest"></param>
+        /// <response code="200">Video successfully deleted</response>
+        [HttpPost]
+        [Route("/media/deleteVideo")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult DeleteVideo([FromBody]DeleteVideoRequest deleteVideoRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Get All Videos use case</remarks>
         /// <response code="200">Returns a list of metadata objects of all the videos in the blob storage</response>
         [HttpPost]
