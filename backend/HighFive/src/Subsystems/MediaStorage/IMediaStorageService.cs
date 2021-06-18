@@ -11,6 +11,6 @@ namespace src.Subsystems.MediaStorage
     {
         public Task StoreVideo(IFormFile video);
         public Task<GetVideoResponse> GetVideo(string videoId);
-        public List<VideoMetaData> GetAllVideos();
+        public Task<List<VideoMetaData>> GetAllVideos();
     }
 }

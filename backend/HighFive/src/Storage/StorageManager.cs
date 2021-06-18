@@ -129,47 +129,6 @@ namespace src.Storage
             return null;
         }
 
-        public async Task<List<VideoMetaData>> GetAllVideos()
-        {
-            var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
-            var cloudBlobContainer = cloudBlobClient.GetContainerReference(_container);
-            var subdirectory = "";
-            var blobResultSegment = await cloudBlobContainer.ListBlobsSegmentedAsync(subdirectory, true, BlobListingDetails.All,
-                int.MaxValue, null, null, null);
-            
-            var allFiles = blobResultSegment.Results;
-            var resultList = new List<VideoMetaData>();
-            var currentVideo = new VideoMetaData();
-            foreach(var listBlobItem in allFiles)//NOTE: Assuming here that a thumbnail will be immediately followed by its corresponding mp4 file
-            {
-                var file = (CloudBlob) listBlobItem;
-                if (file.Name.Contains("thumbnail"))
-                {
-                    currentVideo = new VideoMetaData();
-                    var thumbnail = new byte[file.Properties.Length];
-                    for (int k = 0; k < file.Properties.Length; k++)
-                    {
-                        thumbnail[k] = 0x20;
-                    }
-                    await file.DownloadToByteArrayAsync(thumbnail, 0);
-                    currentVideo.Thumbnail = thumbnail;
-                }
-                else
-                {
-                    currentVideo.Id = file.Name.Replace(".mp4", "");
-                    if (file.Properties.LastModified != null)
-                        currentVideo.DateStored = file.Properties.LastModified.Value.DateTime;
-                    file.Metadata.TryGetValue("duration", out var time);
-                    currentVideo.Duration = int.Parse(time ?? Empty);
-                    file.Metadata.TryGetValue("originalName", out var oldName);
-                    currentVideo.Name = oldName;
-                    resultList.Add(currentVideo);
-                }
-            }
-
-            return resultList;
-        }
-
         private string HashMd5(string source)
         {
             MD5 md5 = System.Security.Cryptography.MD5.Create();
@@ -187,13 +146,46 @@ namespace src.Storage
 
         private string RandomString()
         {
-            String str = "";
-            for(int i =0; i<5; i++)
+            var str = "";
+            for(var i =0; i<5; i++)
             {
-                int a = _random.Next(_alphanumeric.Length);
+                var a = _random.Next(_alphanumeric.Length);
                 str = str + _alphanumeric.ElementAt(a);
             }
             return str;
+        }
+
+        public async Task<CloudBlockBlob> GetFile(string fileName, string container)
+        {
+            var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
+            var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
+            if (!await cloudBlobContainer.ExistsAsync())
+            {
+                return null;
+            }
+            var file = cloudBlobContainer.GetBlockBlobReference(fileName);
+            if (await file.ExistsAsync())
+            {
+                return file;
+            }
+            return null;
+        }
+
+        public async Task<List<CloudBlockBlob>> GetAllFilesInContainer(string container)
+        {
+            var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
+            var cloudBlobContainer = cloudBlobClient.GetContainerReference(_container);
+            if (await cloudBlobContainer.ExistsAsync())
+            {
+                await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions()
+                    {PublicAccess = BlobContainerPublicAccessType.Off});
+            }
+            var subdirectory = "";
+            var blobResultSegment = await cloudBlobContainer.ListBlobsSegmentedAsync(subdirectory, true, BlobListingDetails.All,
+                int.MaxValue, null, null, null);
+            var allFiles = blobResultSegment.Results;
+
+            return allFiles.Cast<CloudBlockBlob>().ToList();
         }
 
     }
