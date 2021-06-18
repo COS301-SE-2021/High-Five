@@ -156,6 +156,66 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getPipelinesResponse'
+                
+  /pipelines/addTools:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Add Tools use case
+      operationId: AddTools
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addToolsRequest'
+      responses:
+        "200":
+          description: Tools have been added to pipeline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+                
+  /pipelines/removeTools:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Remove Tools use case
+      operationId: RemoveTools
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/removeToolsRequest'
+      responses:
+        "200":
+          description: Tools have been removed from pipeline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /pipelines/deletePipeline:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Delete Pipeline use case
+      operationId: DeletePipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deletePipelineRequest'
+      responses:
+        "200":
+          description: Tools have been removed from pipeline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
   
   #==========================================================
   #     SCHEMAS
@@ -275,7 +335,33 @@ components:
           items:
             type: string
             description: All the tools stored as strings
+            
+    addToolsRequest:
+      type: object
+      properties:
+        pipelineId:
+          type: string
+        tools:
+          type: array
+          items:
+            type: string
 
+    removeToolsRequest:
+      type: object
+      properties:
+        pipelineId:
+          type: string
+        tools:
+          type: array
+          items:
+            type: string
+    
+    deletePipelineRequest:
+      type: object
+      properties:
+        pipelineId:
+          type: string
+          
     #==========================================================
     #     GENERIC COMPONENTS
     #==========================================================
