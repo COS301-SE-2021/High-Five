@@ -105,7 +105,7 @@ namespace src.Subsystems.MediaStorage
             var allFiles = _storageManager.GetAllFilesInContainer(ContainerName);
             if (allFiles.Result == null)
             {
-                return null;
+                return new List<VideoMetaData>();
             }
             var resultList = new List<VideoMetaData>();
             var currentVideo = new VideoMetaData();

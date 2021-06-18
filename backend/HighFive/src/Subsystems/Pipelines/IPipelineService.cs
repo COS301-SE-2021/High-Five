@@ -1,10 +1,11 @@
-﻿using Org.OpenAPITools.Models;
+﻿using System.Threading.Tasks;
+using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.Pipelines
 {
     public interface IPipelineService
     {
-        public GetPipelinesResponse GetPipelines();
+        public Task<GetPipelinesResponse> GetPipelines();
         public void CreatePipeline(CreatePipelineRequest request);
         public void AddTools(AddToolsRequest request);
         public void RemoveTools(RemoveToolsRequest request);

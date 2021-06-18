@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Org.OpenAPITools.Models;
 using src.Storage;
 using static System.String;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace src.Subsystems.Pipelines
 {
@@ -19,9 +22,22 @@ namespace src.Subsystems.Pipelines
             _storageManager = storageManager;
         }
         
-        public GetPipelinesResponse GetPipelines()
+        public async Task<GetPipelinesResponse> GetPipelines()
         {
-            throw new System.NotImplementedException();
+            var allFiles = _storageManager.GetAllFilesInContainer(ContainerName);
+            if (allFiles.Result == null)
+            {
+                return new GetPipelinesResponse{Pipelines = new List<Pipeline>()};
+            }
+            var resultList = new List<Pipeline>();
+            foreach(var listBlobItem in allFiles.Result)
+            {
+                var jsonData = await listBlobItem.DownloadTextAsync();
+                var currentPipeline = JsonConvert.DeserializeObject<Pipeline>(jsonData);
+                resultList.Add(currentPipeline);
+            }
+            var response = new GetPipelinesResponse {Pipelines = resultList};
+            return response;
         }
 
         public void CreatePipeline(CreatePipelineRequest request)

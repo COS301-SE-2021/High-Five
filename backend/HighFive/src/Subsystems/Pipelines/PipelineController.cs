@@ -32,8 +32,8 @@ namespace src.Subsystems.Pipelines
 
         public override IActionResult GetPipelines()
         {
-            var pipelines = _pipelineService.GetPipelines();
-            throw new System.NotImplementedException();
+            var response = _pipelineService.GetPipelines().Result;
+            return StatusCode(200, response);
         }
 
         public override IActionResult RemoveTools(RemoveToolsRequest removeToolsRequest)
