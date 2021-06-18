@@ -150,7 +150,7 @@ public class DJIActivity extends AppCompatActivity {
                             notifyStatusChange();
                         }
 
-                        @Override
+
                         public void onProductChanged(BaseProduct baseProduct) {
 
                         }

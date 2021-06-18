@@ -33,6 +33,7 @@
     "@ionic/angular": "^5.5.2",
     "@videogular/ngx-videogular": "^3.0.1",
     "capacitor-udp-requests": "file:../plugins/capacitor-udp-requests",
+    "cordova-plugin-enable-multidex": "^0.2.0",
     "dji-sdk": "file:../plugins/dji-sdk",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
