@@ -102,33 +102,6 @@ namespace src.Storage
             await cloudBlockBlob.UploadFromByteArrayAsync(fileBytes, 0, (int) file.Length);
         }
 
-        public async Task<GetVideoResponse> GetVideo(string videoId)
-        {
-            videoId += ".mp4";
-            var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
-            var cloudBlobContainer = cloudBlobClient.GetContainerReference(_container);
-            if (await cloudBlobContainer.CreateIfNotExistsAsync())
-            {
-                await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions()
-                    {PublicAccess = BlobContainerPublicAccessType.Off});
-            }
-
-            var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(videoId);
-            if (await cloudBlockBlob.ExistsAsync())
-            {
-                var videoFile = new byte[cloudBlockBlob.Properties.Length];
-                for (int k = 0; k < cloudBlockBlob.Properties.Length; k++)
-                {
-                    videoFile[k] = 0x20;
-                }
-                await cloudBlockBlob.DownloadToByteArrayAsync(videoFile, 0);
-                GetVideoResponse response = new GetVideoResponse {File = videoFile};
-                return response;
-            }
-            //else cloudBlockBlob does not exist
-            return null;
-        }
-
         private string HashMd5(string source)
         {
             MD5 md5 = System.Security.Cryptography.MD5.Create();

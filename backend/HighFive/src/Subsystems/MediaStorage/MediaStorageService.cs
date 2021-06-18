@@ -14,6 +14,7 @@ namespace src.Subsystems.MediaStorage
     public class MediaStorageService: IMediaStorageService
     {
         private readonly IStorageManager _storageManager;
+        private const string ContainerName = "demo2videos";
 
         public MediaStorageService(IStorageManager storageManager)
         {
@@ -25,15 +26,28 @@ namespace src.Subsystems.MediaStorage
             await _storageManager.UploadFile(video);
         }
 
-        public Task<GetVideoResponse> GetVideo(string videoId)
+        public async Task<GetVideoResponse> GetVideo(string videoId)
         {
-            return _storageManager.GetVideo(videoId);
+            videoId += ".mp4";
+            var file = _storageManager.GetFile(videoId, ContainerName).Result;
+            if (file != null)
+            {
+                var videoFile = new byte[file.Properties.Length];
+                for (int k = 0; k < file.Properties.Length; k++)
+                {
+                    videoFile[k] = 0x20;
+                }
+                await file.DownloadToByteArrayAsync(videoFile, 0);
+                GetVideoResponse response = new GetVideoResponse {File = videoFile};
+                return response;
+            }
+            //else cloudBlockBlob does not exist
+            return null;
         }
 
         public async Task<List<VideoMetaData>> GetAllVideos()
         {
-            var containerName = "demo2videos";
-            var allFiles = _storageManager.GetAllFilesInContainer(containerName);
+            var allFiles = _storageManager.GetAllFilesInContainer(ContainerName);
             if (allFiles.Result == null)
             {
                 return null;

@@ -20,14 +20,14 @@ namespace src.Subsystems.MediaStorage
 
         public override IActionResult GetAllVideos()
         {
-            var result = _mediaStorageService.GetAllVideos();
-            return StatusCode(200, result.Result);
+            var result = _mediaStorageService.GetAllVideos().Result;
+            return StatusCode(200, result);
         }
 
         public override IActionResult GetVideo(GetVideoRequest getVideoRequest)
         {
-            var response = _mediaStorageService.GetVideo(getVideoRequest.Id);
-            if (response.Result != null) return StatusCode(200, response.Result);
+            var response = _mediaStorageService.GetVideo(getVideoRequest.Id).Result;
+            if (response != null) return StatusCode(200, response);
             var fail = new EmptyObject
             {
                 Success = false,

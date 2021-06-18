@@ -15,7 +15,6 @@ namespace src.Storage
         protected CloudStorageAccount CloudStorageAccount { get; }
 
         public Task UploadFile(IFormFile file);
-        public Task<GetVideoResponse> GetVideo(string videoId);
         public Task<CloudBlockBlob> GetFile(string fileName, string container);
         public Task<List<CloudBlockBlob>> GetAllFilesInContainer(string container);
     }
