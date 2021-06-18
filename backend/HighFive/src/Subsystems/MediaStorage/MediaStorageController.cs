@@ -20,14 +20,14 @@ namespace src.Subsystems.MediaStorage
 
         public override IActionResult GetAllVideos()
         {
-            var result = _mediaStorageService.GetAllVideos();
+            var result = _mediaStorageService.GetAllVideos().Result;
             return StatusCode(200, result);
         }
 
         public override IActionResult GetVideo(GetVideoRequest getVideoRequest)
         {
-            var response = _mediaStorageService.GetVideo(getVideoRequest.Id);
-            if (response.Result != null) return StatusCode(200, response.Result);
+            var response = _mediaStorageService.GetVideo(getVideoRequest).Result;
+            if (response != null) return StatusCode(200, response);
             var fail = new EmptyObject
             {
                 Success = false,
@@ -58,6 +58,15 @@ namespace src.Subsystems.MediaStorage
                 var response500 = new EmptyObject() {Success = false, Message = e.ToString()};
                 return StatusCode(500, response500);
             }
+        }
+        
+        public override IActionResult DeleteVideo(DeleteVideoRequest deleteVideoRequest)
+        {
+            var response = new EmptyObject {Success = true};
+            if (_mediaStorageService.DeleteVideo(deleteVideoRequest).Result) return StatusCode(200, response);
+            response.Success = false;
+            response.Message = "Video could not be deleted.";
+            return StatusCode(400, response);
         }
         
     }
