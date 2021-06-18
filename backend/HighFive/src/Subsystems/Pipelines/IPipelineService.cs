@@ -9,6 +9,6 @@ namespace src.Subsystems.Pipelines
         public void CreatePipeline(CreatePipelineRequest request);
         public bool AddTools(AddToolsRequest request);
         public void RemoveTools(RemoveToolsRequest request);
-        public void DeletePipeline(DeletePipelineRequest request);
+        public Task<bool> DeletePipeline(DeletePipelineRequest request);
     }
 }

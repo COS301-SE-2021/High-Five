@@ -36,7 +36,11 @@ namespace src.Subsystems.Pipelines
 
         public override IActionResult DeletePipeline(DeletePipelineRequest deletePipelineRequest)
         {
-            throw new System.NotImplementedException();
+            var response = new EmptyObject() {Success = true};
+            if (_pipelineService.DeletePipeline(deletePipelineRequest).Result) return StatusCode(200, response);
+            response.Success = false;
+            response.Message = "Pipeline could not be deleted";
+            return StatusCode(400, response);
         }
 
         public override IActionResult GetPipelines()

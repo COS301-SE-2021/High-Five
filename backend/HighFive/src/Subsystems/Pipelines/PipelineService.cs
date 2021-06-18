@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -102,9 +103,15 @@ namespace src.Subsystems.Pipelines
             UploadPipelineToStorage(pipeline, file);
         }
 
-        public void DeletePipeline(DeletePipelineRequest request)
+        public async Task<bool> DeletePipeline(DeletePipelineRequest request)
         {
-            throw new System.NotImplementedException();
+            CloudBlockBlob file = _storageManager.GetFile(request.PipelineId + ".json", ContainerName).Result;
+            if (file == null)
+            {
+                return false;
+            }
+            await file.DeleteIfExistsAsync();
+            return true;
         }
 
         private async Task<Pipeline> ConvertFileToPipeline(CloudBlockBlob file)
