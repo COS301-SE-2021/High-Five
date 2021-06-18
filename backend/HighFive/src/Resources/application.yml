@@ -122,7 +122,7 @@ paths:
   #==========================================================
   #     PIPELINES SUBSYSTEM PATHING
   #==========================================================
-
+  
   /pipelines/createPipeline:
     post:
       tags:
@@ -142,6 +142,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
+                
+  /pipelines/getPipelines:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Get Pipelines use case
+      operationId: GetPipelines
+      responses:
+        "200":
+          description: All pipelines have been returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getPipelinesResponse'
   
   #==========================================================
   #     SCHEMAS
@@ -231,16 +245,36 @@ components:
           format: byte
 
     #==========================================================
-    #     GENERIC COMPONENTS
+    #     PIPELINES COMPONENTS
     #==========================================================
     
     createPipelineRequest:
       type: object
       properties:
+        pipeline:
+          $ref: '#/components/schemas/pipeline'
+    
+    getPipelinesResponse:
+      type: object
+      properties:
+        pipelines:
+          type: array
+          items:
+            $ref: '#/components/schemas/pipeline'
+    
+    pipeline:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+          description: Unique id associated with the pipeline
         tools:
           type: array
           items:
             type: string
+            description: All the tools stored as strings
 
     #==========================================================
     #     GENERIC COMPONENTS
