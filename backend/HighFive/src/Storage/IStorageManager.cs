@@ -13,9 +13,9 @@ namespace src.Storage
     {
         protected IConfiguration Configuration { get; }
         protected CloudStorageAccount CloudStorageAccount { get; }
-
-        public Task UploadFile(IFormFile file);
-        public Task<CloudBlockBlob> GetFile(string fileName, string container);
+        
+        public Task<CloudBlockBlob> GetFile(string fileName, string container, bool create=false);
         public Task<List<CloudBlockBlob>> GetAllFilesInContainer(string container);
+        public Task<CloudBlockBlob> CreateNewFile(string name, string container);
     }
 }

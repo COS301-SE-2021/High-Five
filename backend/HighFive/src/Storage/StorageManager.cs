@@ -26,19 +26,15 @@ namespace src.Storage
         private readonly CloudStorageAccount _cloudStorageAccount;
         IConfiguration IStorageManager.Configuration => _configuration;
         CloudStorageAccount IStorageManager.CloudStorageAccount => _cloudStorageAccount;
-        private Random _random;
-        private readonly string _alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
-        private string _container = "demo2videos";
 
         public StorageManager(IConfiguration config)
         {
             _configuration = config;
             String connectionString = _configuration.GetConnectionString("StorageConnection");
             _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
-            _random = new Random();
         }
         
-        public async Task UploadFile(IFormFile file)
+       /* public async Task UploadFile(IFormFile file)
         {
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
             var cloudBlobContainer = cloudBlobClient.GetContainerReference(_container);
@@ -80,7 +76,7 @@ namespace src.Storage
                 engine.GetMetadata(inputFile);
                 var options = new ConversionOptions {Seek = TimeSpan.FromSeconds(1), VideoSize = VideoSize.Cif};
                 engine.GetThumbnail(inputFile, thumbnail, options);
-            }*/
+            }
             if (!File.Exists(thumbnailPath))
             {
                 File.Create(thumbnailPath).Close();
@@ -100,38 +96,16 @@ namespace src.Storage
             var fileBytes = ms.ToArray();
             cloudBlockBlob.Properties.ContentType = file.ContentType;
             await cloudBlockBlob.UploadFromByteArrayAsync(fileBytes, 0, (int) file.Length);
-        }
+        }*/
 
-        private string HashMd5(string source)
-        {
-            MD5 md5 = System.Security.Cryptography.MD5.Create();
-            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(source);
-            byte[] hashBytes = md5.ComputeHash(inputBytes);
-     
-            // Step 2, convert byte array to hex string
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hashBytes.Length; i++)
-            {
-                sb.Append(hashBytes[i].ToString("X2"));
-            }
-            return sb.ToString();
-        }
-
-        private string RandomString()
-        {
-            var str = "";
-            for(var i =0; i<5; i++)
-            {
-                var a = _random.Next(_alphanumeric.Length);
-                str = str + _alphanumeric.ElementAt(a);
-            }
-            return str;
-        }
-
-        public async Task<CloudBlockBlob> GetFile(string fileName, string container)
+        public async Task<CloudBlockBlob> GetFile(string fileName, string container, bool create=false)
         {
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
             var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
+            if (create)//NOTE: Does not test if it actually exists or not
+            {
+                return cloudBlobContainer.GetBlockBlobReference(fileName);
+            }
             if (!await cloudBlobContainer.ExistsAsync())
             {
                 return null;
@@ -147,7 +121,7 @@ namespace src.Storage
         public async Task<List<CloudBlockBlob>> GetAllFilesInContainer(string container)
         {
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
-            var cloudBlobContainer = cloudBlobClient.GetContainerReference(_container);
+            var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
             if (await cloudBlobContainer.ExistsAsync())
             {
                 await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions()
@@ -161,5 +135,15 @@ namespace src.Storage
             return allFiles.Cast<CloudBlockBlob>().ToList();
         }
 
+        public async Task<CloudBlockBlob> CreateNewFile(string name, string container)
+        {
+            CloudBlockBlob newFile = GetFile(name, container, true).Result;
+            if (await newFile.ExistsAsync())
+            {
+                return null;
+            }
+            return newFile;
+        }
+        
     }
 }
