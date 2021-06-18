@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using src.Storage;
 using src.Subsystems.MediaStorage;
+using src.Subsystems.Pipelines;
 
 namespace src
 {
@@ -32,6 +33,7 @@ namespace src
             // Dependency Injections
             services.Add(new ServiceDescriptor(typeof(IStorageManager), new StorageManager(Configuration)));//singleton
             services.AddScoped<IMediaStorageService, MediaStorageService>();
+            services.AddScoped<IPipelineService, PipelineService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,7 +48,7 @@ namespace src
             app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "High Five");
-                    //c.RoutePrefix = String.Empty;
+                    c.RoutePrefix = String.Empty;
                 });
             app.UseHttpsRedirection();
             app.UseRouting();
