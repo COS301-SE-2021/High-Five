@@ -68,6 +68,17 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="videoId"></param>
+        /// <response code="200">Returns a list of the filenames of all videos</response>
+        [HttpGet]
+        [Route("/media/getVideo/{videoId}")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetVideoResponse))]
+        public abstract IActionResult GetVideoGetRequest([FromRoute (Name = "videoId")][Required]string videoId);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Store Video use case</remarks>
         /// <param name="file"></param>
         /// <response code="200">Video has been stored</response>
