@@ -1,4 +1,6 @@
 import os
+import subprocess
+
 import cv2
 import time
 import argparse
@@ -112,6 +114,29 @@ if __name__ == '__main__':
                                       height=args.height).start()
     fps = FPS().start()
 
+    frames = 30#int(video_capture.get(cv2.CAP_PROP_FPS))
+    width = 854#int(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = 480#int(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    p=None
+    if args.stream_out:
+        # command and params for ffmpeg
+        command = ['ffmpeg',
+                   '-y',
+                   '-f', 'rawvideo',
+                   '-vcodec', 'rawvideo',
+                   '-pix_fmt', 'bgr24',
+                   '-s', "{}x{}".format(width, height),
+                   '-r', str(frames),
+                   '-i', '-',
+                   '-c:v', 'libx264',
+                   '-pix_fmt', 'yuv420p',
+                   '-preset', 'ultrafast',
+                   '-f', 'flv',
+                   args.stream_out]
+
+        # using subprocess and pipe to fetch frame data
+        p = subprocess.Popen(command, stdin=subprocess.PIPE)
+
     while True:
         frame = video_capture.read()
         input_q.put(frame)
@@ -135,8 +160,7 @@ if __name__ == '__main__':
                 cv2.putText(frame, name[0], (int(point['xmin'] * args.width), int(point['ymin'] * args.height)), font,
                             0.3, (0, 0, 0), 1)
             if args.stream_out:
-                cv2.imwrite("testvideo.jpg",frame)
-
+                p.stdin.write(frame)#.tobytes())
                 #print('Streaming elsewhere!')
             else:
                 cv2.imshow('Video', frame)
