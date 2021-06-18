@@ -29,7 +29,7 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <remarks>Endpoint for Get Video Names use case</remarks>
+        /// <remarks>Endpoint for Get All Videos use case</remarks>
         /// <response code="200">Returns a list of metadata objects of all the videos in the blob storage</response>
         [HttpPost]
         [Route("/media/getAllVideos")]
