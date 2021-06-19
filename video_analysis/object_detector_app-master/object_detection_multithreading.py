@@ -76,10 +76,12 @@ def worker(input_q, output_q):
 
     fps = FPS().start()
     while True:
+        time.sleep(0.03)
         fps.update()
         frame = input_q.get()
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        output_q.put(detect_objects(frame_rgb, sess, detection_graph))
+        if frame is not None:
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            output_q.put(detect_objects(frame_rgb, sess, detection_graph))
 
     fps.stop()
     sess.close()
@@ -115,12 +117,13 @@ if __name__ == '__main__':
     fps = FPS().start()
 
     frames = 30#int(video_capture.get(cv2.CAP_PROP_FPS))
-    width = 854#int(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = 480#int(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    width = 1280#int(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = 720#int(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
     p=None
     if args.stream_out:
         # command and params for ffmpeg
         command = ['ffmpeg',
+                   '-re',
                    '-y',
                    '-f', 'rawvideo',
                    '-vcodec', 'rawvideo',
@@ -132,15 +135,16 @@ if __name__ == '__main__':
                    '-pix_fmt', 'yuv420p',
                    '-preset', 'ultrafast',
                    '-f', 'flv',
+                   '-r', str(frames),
                    args.stream_out]
 
         # using subprocess and pipe to fetch frame data
         p = subprocess.Popen(command, stdin=subprocess.PIPE)
-
+    t = time.time()
     while True:
         frame = video_capture.read()
         input_q.put(frame)
-
+        #time.sleep(max(0, 0.04 - (time.time() - t)))
         t = time.time()
 
         if output_q.empty():
@@ -159,6 +163,8 @@ if __name__ == '__main__':
                                int(point['ymin'] * args.height) - 10), color, -1, cv2.LINE_AA)
                 cv2.putText(frame, name[0], (int(point['xmin'] * args.width), int(point['ymin'] * args.height)), font,
                             0.3, (0, 0, 0), 1)
+            if frame is None:
+                continue
             if args.stream_out:
                 p.stdin.write(frame)#.tobytes())
                 #print('Streaming elsewhere!')
@@ -166,11 +172,13 @@ if __name__ == '__main__':
                 cv2.imshow('Video', frame)
 
         fps.update()
+        #time.sleep(0.03)
 
         print('[INFO] elapsed time: {:.2f}'.format(time.time() - t))
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+
 
     fps.stop()
     print('[INFO] elapsed time (total): {:.2f}'.format(fps.elapsed()))

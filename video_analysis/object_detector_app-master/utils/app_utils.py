@@ -76,8 +76,8 @@ class HLSVideoStream:
 
 		print('SUCCESS: Retrieved stream metadata.')
 
-		self.WIDTH = int(metadata["streams"][0]["width"]*1)
-		self.HEIGHT = int(metadata["streams"][0]["height"]*1)
+		self.WIDTH = int(metadata["streams"][1]["width"]*1)
+		self.HEIGHT = int(metadata["streams"][1]["height"]*1)
 
 		self.pipe = sp.Popen([ "C:\\FFmpeg\\bin\\"+FFMPEG_BIN, "-i", src,
 				 "-loglevel", "quiet", # no text output
