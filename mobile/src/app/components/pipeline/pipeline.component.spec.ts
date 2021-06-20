@@ -11,7 +11,7 @@ mockPipelinesService.getPipelines.and.callFake(
   (func)=>func(new Observable<GetPipelinesResponse>(subscriber => {}))
 );
 mockPipelinesService.deletePipeline.and.callFake(
-  ({pipelineId: id,})=>(new Observable<GetPipelinesResponse>(subscriber => {}))
+  ({pipelineId: id})=>(new Observable<GetPipelinesResponse>(subscriber => {}))
 );
 
 describe('PipelineComponent', () => {
