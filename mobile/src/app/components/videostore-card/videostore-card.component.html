@@ -9,6 +9,7 @@
         <div class="details">
           <ion-card-title test="videoTitle">{{data.name}}</ion-card-title>
           <ion-button test="playBtn" (click)="playVideo(data.id)"><ion-icon slot="start" name="play-circle-outline"></ion-icon>Play</ion-button>
+          <ion-button test="playBtn" color="danger" (click)="playVideo(data.id)"><ion-icon slot="start" name="trash-outline"></ion-icon>Delete</ion-button>
 <!--          <ion-card-subtitle></ion-card-subtitle>-->
         </div>
       </ion-card-header>

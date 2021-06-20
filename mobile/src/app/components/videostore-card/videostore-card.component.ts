@@ -32,4 +32,13 @@ export class VideostoreCardComponent implements OnInit {
 
     await videoModal.present();
   }
+
+  /**
+   * Deletes a video by the ID passed to the function.
+   *
+   * @param vidId
+   */
+  async deleteVideo(vidId: string) {
+
+  }
 }
