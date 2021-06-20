@@ -9,7 +9,7 @@
                 <ion-card-title>
                   <ion-item>
                     <ion-label position="floating">{{constants.labels.newPipeline[0]}}</ion-label>
-                    <ion-input (ionChange)="pipelineName=$event.detail.value" required="true" id="newPipelineName"></ion-input>
+                    <ion-input [(ngModel)]="pipelineName" type="text" (ionChange)="pipelineName=$event.detail.value" required="true" id="newPipelineName"></ion-input>
                   </ion-item>
                 </ion-card-title>
               </ion-col>
