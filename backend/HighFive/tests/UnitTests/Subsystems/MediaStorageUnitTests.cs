@@ -83,13 +83,13 @@ namespace tests.UnitTests.Subsystems.MediaStorage
         [Fact]
         public void TestGetVideoValidVideoId()
         {
-            var validVideoId = "B6BC3145D0D61BC932AACDA4FBB08FB";
+            var validVideoId = "C41FC390D337260C23C17DC20B1F0F76";
             var request = new GetVideoRequest
             {
                 Id = validVideoId
             };
             var response = _mockMediaStorageService.GetVideo(request).Result;
-            Assert.Null(response);
+            Assert.NotNull(response);
         }
         
         [Fact]

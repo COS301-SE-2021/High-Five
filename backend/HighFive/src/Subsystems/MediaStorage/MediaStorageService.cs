@@ -18,7 +18,7 @@ namespace src.Subsystems.MediaStorage
     public class MediaStorageService: IMediaStorageService
     {
         private readonly IStorageManager _storageManager;
-        private string _containerName = "demo2videos";
+        private string _containerName = "demo2video";
 
         public MediaStorageService(IStorageManager storageManager)
         {
