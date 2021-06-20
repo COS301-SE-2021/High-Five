@@ -37,6 +37,8 @@ public class LoginView extends LinearLayout implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+
+
         switch (v.getId()) {
 
             case R.id.btn_login:
