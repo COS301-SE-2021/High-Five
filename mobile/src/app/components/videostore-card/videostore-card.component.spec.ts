@@ -16,19 +16,13 @@ let fixture: ComponentFixture<VideostoreCardComponent>;
 const mockVideoDetail = jasmine.createSpyObj('VideoPreviewData', [ 'getTitle', 'getRecordedDate', 'getImageUrl' ]);
 
 //mocks the getTitle() function of VideoPreviewData
-mockVideoDetail.getTitle.and.callFake(function() {
-  return 'Test title';
-});
+mockVideoDetail.getTitle.and.callFake(() => 'Test title');
 
 //mocks the getRecordedDate() function of VideoPreviewData
-mockVideoDetail.getRecordedDate.and.callFake(function() {
-  return '2021-01-01';
-});
+mockVideoDetail.getRecordedDate.and.callFake(() => '2021-01-01');
 
 //mocks the getImageUrl() function of VideoPreviewData
-mockVideoDetail.getImageUrl.and.callFake(function() {
-  return 'https://example.com/img.png';
-});
+mockVideoDetail.getImageUrl.and.callFake(() =>'https://example.com/img.png');
 
 
 const mockModalController = createSpyObj('ModalController', ['create', 'present'], ['style']);
@@ -87,9 +81,7 @@ describe('VideostoreCardComponent', () => {
    */
   describe('desktop', () => {
     const mockPlatform = jasmine.createSpyObj('Platform', ['width']);
-    mockPlatform.width.and.callFake(function() {
-      return 701;
-    });
+    mockPlatform.width.and.callFake(() =>701);
 
     /**
      * This runs pre-flight code before each unit test.
@@ -112,9 +104,7 @@ describe('VideostoreCardComponent', () => {
    */
   describe('mobile', () => {
     const mockPlatform = jasmine.createSpyObj('Platform', ['width']);
-    mockPlatform.width.and.callFake(function() {
-      return 699;
-    });
+    mockPlatform.width.and.callFake(() =>699);
 
     setBeforeEach([IonicModule.forRoot()], [{provide: Platform, useValue: mockPlatform}]);
 
@@ -127,7 +117,7 @@ describe('VideostoreCardComponent', () => {
     });
   });
 
-  function setBeforeEach(imports, providers) {
+  const setBeforeEach=(imports, providers) =>{
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [ VideostoreCardComponent ],
@@ -140,5 +130,5 @@ describe('VideostoreCardComponent', () => {
       component.data = mockVideoDetail;
       fixture.detectChanges();
     }));
-  }
+  };
 });
