@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
 
 import { VideostorePage } from './videostore.page';
 import {VideoMetaData} from '../../models/videoMetaData';
+import {VideouploadService} from '../../services/videoupload/videoupload.service';
+import {RegisterCardComponent} from '../../components/register-card/register-card.component';
 
 const mockVideouploadService = jasmine.createSpyObj('VideouploadService', [ 'getAllVideos']);
 mockVideouploadService.getAllVideos.and.callFake(
@@ -12,6 +13,8 @@ mockVideouploadService.getAllVideos.and.callFake(
 describe('VideostorePage', () => {
   let component: VideostorePage;
   let fixture: ComponentFixture<VideostorePage>;
+
+
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -23,8 +26,27 @@ describe('VideostorePage', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
+  describe('general',()=>{
+    setBeforeEach([IonicModule.forRoot()], [ {provide: VideouploadService, useValue: mockVideouploadService}]);
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
+
+
   });
+
+  const setBeforeEach=(imports, providers) =>{
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ RegisterCardComponent ],
+        imports,
+        providers
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(VideostorePage);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    }));
+  };
 });
