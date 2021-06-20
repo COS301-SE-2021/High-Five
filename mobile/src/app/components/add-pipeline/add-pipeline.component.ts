@@ -15,11 +15,16 @@ import {PipelineService} from '../../services/pipeline/pipeline.service';
   styleUrls: ['./add-pipeline.component.scss'],
   providers: [PipelineComponent]
 })
+
+/**
+ * This class serves as a way to add pipelines
+ */
 export class AddPipelineComponent implements OnInit {
   selectedTools: boolean[];
   pipelineName: string;
   constructor(public constants: ToolsetConstants, public pipelinesService: PipelinesService,
-              private loadingController: LoadingController, private toastController: ToastController, private pipelineService: PipelineService) {
+              private loadingController: LoadingController, private toastController: ToastController,
+              private pipelineService: PipelineService) {
     this.selectedTools = new Array<boolean>(this.constants.labels.tools.length);
   }
 
@@ -35,7 +40,7 @@ export class AddPipelineComponent implements OnInit {
       animated:true,
     });
     await loading.present();
-    const toast = await  this.toastController.create(
+    const toast = await  this.toastController.create( // A small informative message at the bottom of the screen
       {
         message: 'Pipeline successfully created',
         duration: 2000

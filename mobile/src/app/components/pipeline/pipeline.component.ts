@@ -21,6 +21,10 @@ export class PipelineComponent implements OnInit {
               private loadingController: LoadingController, private modalController: ModalController,
               private toastController: ToastController, private pipelineService: PipelineService) {
 
+    /**
+     * The below code acts as an event listener for when the addedNewPipeline value in the pipeline service (not the
+     * OpenAPI service), is changed, this allows the page to be dynamically update without the need to reload the page
+     */
     this.pipelineService.addedNewPipelineWatch().subscribe(isDesktop=>{
       this.getAllPipelines();
       this.pipelineService.setNewPipelineAdded(false);
@@ -71,6 +75,12 @@ export class PipelineComponent implements OnInit {
 
   }
 
+  /**
+   * This function opens the modal which users will use to add and/or remove tools from the pipeline
+   *
+   * @param i a number passed in which represents the index of the pipeline in the pipelines array, the pipeline will be
+   * passed to the modal, so that the modal can use the values of the pipeline
+   */
   async startEditProcess(i){
     const modal = await this.modalController.create({
       component : EditPipelineComponent,
