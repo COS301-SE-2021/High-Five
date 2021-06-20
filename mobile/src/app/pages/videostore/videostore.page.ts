@@ -129,4 +129,10 @@ export class VideostorePage implements OnInit {
 
     await alert.present();
   }
+
+  getDeleteFunction() {
+    return () => {
+      alert('HELLO');
+    };
+  }
 }

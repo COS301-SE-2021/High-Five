@@ -11,6 +11,7 @@ import {VideouploadService} from '../../services/videoupload/videoupload.service
 })
 export class VideostoreCardComponent implements OnInit {
   @Input() data: VideoMetaData;
+  @Input() deleter: any;
 
   constructor(public platform: Platform, private modal: ModalController,
               private videoService: VideouploadService, private alertController: AlertController,
@@ -72,6 +73,7 @@ export class VideostoreCardComponent implements OnInit {
         });
 
         await toast.present();
+        this.deleter();
       });
     }
   }
