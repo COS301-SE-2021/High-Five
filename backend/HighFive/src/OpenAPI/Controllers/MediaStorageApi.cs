@@ -50,31 +50,20 @@ namespace Org.OpenAPITools.Controllers
         [ProducesResponseType(statusCode: 200, type: typeof(List<GetAllVideosResponse>))]
         public abstract IActionResult GetAllVideos();
 
-        // /// <summary>
-        // /// 
-        // /// </summary>
-        // /// <remarks>Endpoint for Get Videos use case</remarks>
-        // /// <param name="getVideoRequest"></param>
-        // /// <response code="200">Returns a list of the filenames of all videos</response>
-        // /// <response code="400">Invalid video id provided</response>
-        // [HttpPost]
-        // [Route("/media/getVideo")]
-        // [Consumes("application/json")]
-        // [ValidateModelState]
-        // [ProducesResponseType(statusCode: 200, type: typeof(GetVideoResponse))]
-        // [ProducesResponseType(statusCode: 400, type: typeof(EmptyObject))]
-        // public abstract IActionResult GetVideo([FromBody]GetVideoRequest getVideoRequest);
-
-        // /// <summary>
-        // /// 
-        // /// </summary>
-        // /// <param name="videoId"></param>
-        // /// <response code="200">Returns a list of the filenames of all videos</response>
-        // [HttpGet]
-        // [Route("/media/getVideo/{videoId}")]
-        // [ValidateModelState]
-        // [ProducesResponseType(statusCode: 200, type: typeof(GetVideoResponse))]
-        // public abstract IActionResult GetVideoGetRequest([FromRoute (Name = "videoId")][Required]string videoId);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Get Videos use case</remarks>
+        /// <param name="getVideoRequest"></param>
+        /// <response code="200">Returns a list of the filenames of all videos</response>
+        /// <response code="400">Invalid video id provided</response>
+        [HttpPost]
+        [Route("/media/getVideo")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetVideoResponse))]
+        [ProducesResponseType(statusCode: 400, type: typeof(EmptyObject))]
+        public abstract IActionResult GetVideo([FromBody]GetVideoRequest getVideoRequest);
 
         /// <summary>
         /// 
