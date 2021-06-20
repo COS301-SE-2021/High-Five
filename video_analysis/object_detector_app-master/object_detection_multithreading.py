@@ -116,14 +116,14 @@ if __name__ == '__main__':
                                       height=args.height).start()
     fps = FPS().start()
 
-    #Stream specifications used for output stream
+    # Stream specifications used for output stream
     frames = 30#int(video_capture.get(cv2.CAP_PROP_FPS))
     width = 1280#int(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = 720#int(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     p=None
     if args.stream_out:
-        #ffmpeg command used to connect to rtmp server for output
+        # ffmpeg command used to connect to rtmp server for output
         command = ['ffmpeg',
                    '-re',
                    '-y',
@@ -146,7 +146,6 @@ if __name__ == '__main__':
     while True:
         frame = video_capture.read()
         input_q.put(frame)
-        #time.sleep(max(0, 0.04 - (time.time() - t)))
         t = time.time()
 
         if output_q.empty():
@@ -168,13 +167,11 @@ if __name__ == '__main__':
             if frame is None:
                 continue
             if args.stream_out:
-                p.stdin.write(frame)#.tobytes())
-                #print('Streaming elsewhere!')
+                p.stdin.write(frame)
             else:
                 cv2.imshow('Video', frame)
 
         fps.update()
-        #time.sleep(0.03)
 
         print('[INFO] elapsed time: {:.2f}'.format(time.time() - t))
 
