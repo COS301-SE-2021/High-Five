@@ -105,6 +105,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/getVideoRequest'
+            example:
+              id: 166E8063E69164B056918CFE1CFF6B6E
       responses:
         "200":
           description: Returns a list of the filenames of all videos

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Moq;
 
 namespace src.Storage
 {
@@ -82,10 +83,10 @@ namespace src.Storage
         
         public string HashMd5(string source)
         {
-            MD5 md5 = System.Security.Cryptography.MD5.Create();
-            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(source);
+            MD5 md5 = MD5.Create();
+            byte[] inputBytes = Encoding.ASCII.GetBytes(source);
             byte[] hashBytes = md5.ComputeHash(inputBytes);
-     
+            var test = MockStorageManager();
             // Step 2, convert byte array to hex string
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < hashBytes.Length; i++)
@@ -104,6 +105,15 @@ namespace src.Storage
                 str = str + _alphanumeric.ElementAt(a);
             }
             return str;
+        }
+
+        public Mock<IStorageManager> MockStorageManager()
+        {
+            var mock = new Mock<IStorageManager>();
+            mock.Setup(c => c.GetFile(It.IsAny<string>(),It.IsAny<string>(),false)).Returns(Task.FromResult((CloudBlockBlob)null));
+            mock.Setup(c => c.GetAllFilesInContainer(It.IsAny<string>())).Returns(Task.FromResult((List<CloudBlockBlob>) null));
+            mock.Setup(c => c.CreateNewFile(It.IsAny<string>(), It.IsAny<string>()));
+            return mock;
         }
         
     }
