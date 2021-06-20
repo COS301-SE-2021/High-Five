@@ -10,35 +10,21 @@ import {distinctUntilChanged} from 'rxjs/operators';
 })
 export class PipelineService {
   private addedNew = new BehaviorSubject(false);
-  private pipelines: PipelineModel[];
-  constructor(private pipelineConstants: ToolsetConstants, private pipelinesService: PipelinesService) {
-    this.pipelines=[];
-  }
+  constructor() {}
 
-  public addPipelineModel(pipeline: PipelineModel){
-    this.pipelines.push(pipeline);
-  }
-
-  public removePipeline(id: number){
-    for (let i = 0; i < this.pipelines.length; i++) {
-      if (this.pipelines[i].pipelineId===id){
-        delete this.pipelines[i];
-        break;
-      }
-    }
-  }
-
-  get allPipelines(): PipelineModel[]{
-    return this.pipelines;
-  }
-
-  set allPipelines(pipelineModels: PipelineModel[]){
-    this.pipelines=pipelineModels;
-  }
+  /**
+   * This function will emit act as an event emitter when the value of addedNew changes, only when the value gets
+   * changed to a different one that it currently is.
+   */
   addedNewPipelineWatch(): Observable<boolean>{
     return this.addedNew.asObservable().pipe(distinctUntilChanged());
   }
 
+  /**
+   * This function allows us to update the value of the
+   *
+   * @param value the value that we would like the addedNew value to take on as a boolean (true or false)
+   */
   setNewPipelineAdded(value: boolean){
     this.addedNew.next(value);
   }
