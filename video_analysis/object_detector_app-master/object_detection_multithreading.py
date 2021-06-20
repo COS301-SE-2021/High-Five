@@ -118,8 +118,8 @@ if __name__ == '__main__':
 
     # Stream specifications used for output stream
     frames = 30#int(video_capture.get(cv2.CAP_PROP_FPS))
-    width = 1280#int(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = 720#int(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    width = args.width
+    height = args.height
 
     p=None
     if args.stream_out:
