@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {IonInfiniteScroll, ModalController} from '@ionic/angular';
+import {IonInfiniteScroll, ModalController, ToastController} from '@ionic/angular';
 import {VideouploadService} from '../../services/videoupload/videoupload.service';
 import {VideoMetaData} from '../../models/videoMetaData';
 
@@ -15,7 +15,7 @@ export class VideostorePage implements OnInit {
   public items: VideoMetaData[][] = [];
   public videosFetched = false;
 
-  constructor(private modal: ModalController, private videoService: VideouploadService) {
+  constructor(private modal: ModalController, private videoService: VideouploadService, public alertController: ToastController) {
     this.loadMoreData();
   }
 
@@ -65,9 +65,23 @@ export class VideostorePage implements OnInit {
    * @param fileData
    */
   uploadVideo(fileData: any) {
+    this.videosFetched = false;
     this.videoService.storeVideo(fileData.target.files[0].name, fileData.target.files[0], data => {
       console.log(data);
+      this.presentAlert().then();
+      this.items = [];
+      this.loadMoreData();
     });
   }
 
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      cssClass: 'alert-style',
+      header: 'Video Uploaded',
+      message: 'Video successfully uploaded.',
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
 }
