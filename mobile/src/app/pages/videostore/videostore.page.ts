@@ -13,6 +13,7 @@ export class VideostorePage implements OnInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   public items: VideoMetaData[][] = [];
+  public videosFetched = false;
 
   constructor(private modal: ModalController, private videoService: VideouploadService) {
     this.loadMoreData();
@@ -54,6 +55,7 @@ export class VideostorePage implements OnInit {
       if (!row) {
         this.items[counter].push(undefined);
       }
+      this.videosFetched = true;
     });
   }
 

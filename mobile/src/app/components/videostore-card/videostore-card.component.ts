@@ -9,7 +9,7 @@ import {VideoMetaData} from '../../models/videoMetaData';
   styleUrls: ['./videostore-card.component.scss'],
 })
 export class VideostoreCardComponent implements OnInit {
-  @Input() data: VideoMetaData;  //be specific later
+  @Input() data: VideoMetaData;
 
   constructor(public platform: Platform, private modal: ModalController) { }
 

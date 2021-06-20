@@ -1,10 +1,10 @@
 <ion-card>
   <table><tr>
     <td class="imageBox">
-      <img alt="preview" test="desktopImage" src="https://i.pinimg.com/originals/dc/eb/cb/dcebcb563b403620ddbfc1a147b5bcc2.jpg" *ngIf="this.platform.width() >= 700">
+      <img width="100px" height="100px" alt="preview" test="desktopImage" src="https://i.pinimg.com/originals/dc/eb/cb/dcebcb563b403620ddbfc1a147b5bcc2.jpg" *ngIf="this.platform.width() >= 700">
     </td>
     <td class="contentBox">
-      <img alt="preview" test="mobileImage" src="https://i.pinimg.com/originals/dc/eb/cb/dcebcb563b403620ddbfc1a147b5bcc2.jpg" *ngIf="this.platform.width() < 700">
+      <img width="100px" height="100px" alt="preview" test="mobileImage" src="https://i.pinimg.com/originals/dc/eb/cb/dcebcb563b403620ddbfc1a147b5bcc2.jpg" *ngIf="this.platform.width() < 700">
       <ion-card-header class="header">
         <div class="details">
           <ion-card-title test="videoTitle">{{data.name}}</ion-card-title>
