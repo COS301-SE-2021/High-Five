@@ -1,13 +1,11 @@
-import {Component, Input, OnInit, Optional} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ToolsetConstants} from '../../../constants/toolset-constants';
 import {PipelineService} from '../../services/pipeline/pipeline.service';
 import {PipelinesService} from '../../apis/pipelines.service';
 import {Pipeline} from '../../models/pipeline';
-import {CreatePipelineRequest} from '../../models/createPipelineRequest';
 import {LoadingController, ModalController, ToastController} from '@ionic/angular';
 import {DeletePipelineRequest} from '../../models/deletePipelineRequest';
 import {EditPipelineComponent} from '../edit-pipeline/edit-pipeline.component';
-import {AddPipelineComponent} from '../add-pipeline/add-pipeline.component';
 
 
 @Component({
@@ -70,11 +68,6 @@ export class PipelineComponent implements OnInit {
       }
   }
 
-
-  async edit(){
-
-  }
-
   /**
    * This function opens the modal which users will use to add and/or remove tools from the pipeline
    *
@@ -101,7 +94,7 @@ export class PipelineComponent implements OnInit {
    * A function that sends a request to get all the created pipelines
    */
   async getAllPipelines(){
-    const x = this.pipelinesService.getPipelines().subscribe(
+    this.pipelinesService.getPipelines().subscribe(
       response => {
         this.pipelines= response.pipelines;
       }
