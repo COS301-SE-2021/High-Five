@@ -18,7 +18,7 @@ namespace src.Subsystems.MediaStorage
     public class MediaStorageService: IMediaStorageService
     {
         private readonly IStorageManager _storageManager;
-        private const string ContainerName = "demo2videos";
+        private string ContainerName = "demo2videomocks";
 
         public MediaStorageService(IStorageManager storageManager)
         {
@@ -27,6 +27,10 @@ namespace src.Subsystems.MediaStorage
         
         public async Task StoreVideo(IFormFile video)
         {
+            if (video == null)
+            {
+                return;
+            }
             //create storage name for file
             var generatedName = _storageManager.HashMd5(video.FileName);
             var cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".mp4", ContainerName).Result;
@@ -149,6 +153,11 @@ namespace src.Subsystems.MediaStorage
             await videoFile.DeleteAsync();
             await thumbnail.DeleteAsync();
             return true;
+        }
+
+        public void SetContainer(String container)
+        {
+            ContainerName = container;
         }
     }
 }
