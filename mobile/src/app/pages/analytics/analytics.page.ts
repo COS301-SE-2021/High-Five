@@ -37,13 +37,4 @@ export class AnalyticsPage implements OnInit {
     }
   }
 
-  // const videoModal = await this.modal.create({
-  //   component: VideostreamCardComponent,
-  //   componentProps: {
-  //     modal: this.modal
-  //   }
-  // })
-  // videoModal.style.backgroundColor = "rgba(0,0,0,0.85)" //make the background for the modal darker.
-  //
-  // await videoModal.present();
 }

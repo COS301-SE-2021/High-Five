@@ -1,5 +1,9 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {PipelineModel} from '../../models/pipeline.model';
+import {PipelinesService} from '../../apis/pipelines.service';
+import {NewPipeline} from '../../models/newPipeline';
+import {ToolsetConstants} from '../../../constants/toolset-constants';
+import {CreatePipelineRequest} from '../../models/createPipelineRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +11,7 @@ import {PipelineModel} from '../../models/pipeline.model';
 export class PipelineService {
 
   private pipelines: PipelineModel[];
-  constructor() {
+  constructor(private pipelineConstants: ToolsetConstants) {
     this.pipelines=[];
   }
 
@@ -15,12 +19,33 @@ export class PipelineService {
     this.pipelines.push(pipeline);
   }
 
-  public addPipeline(selectedTools: boolean[], pipelineName: string){
+  async addPipeline(selectedTools: boolean[], pipelineName: string){
     const temp: boolean[]=new Array<boolean>(selectedTools.length);
+    const toolNames: string[] = [];
     for (let i =0; i < selectedTools.length; i++){
-      temp[i] = selectedTools[i];
+      if (selectedTools[i]){
+        temp[i] = true;
+        toolNames.push(this.pipelineConstants.labels.tools[i]);
+      }else{
+        temp[i] = false;
+      }
     }
+
+
     this.pipelines.push(new PipelineModel(pipelineName,temp));
+    const newPipeline: NewPipeline={
+      name: pipelineName,
+      tools : toolNames,
+    };
+
+    const createPipelineRequest: CreatePipelineRequest={
+      pipeline : newPipeline
+    };
+    // const res = this.pipelinesService.createPipeline(createPipelineRequest).subscribe(
+    //   response =>{
+    //     console.log(response.message);
+    //   }
+    // );
   }
 
   public removePipeline(id: number){
