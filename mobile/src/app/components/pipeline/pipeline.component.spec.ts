@@ -3,10 +3,15 @@ import { IonicModule } from '@ionic/angular';
 
 import { PipelineComponent } from './pipeline.component';
 import {PipelinesService} from '../../apis/pipelines.service';
+import {Observable} from 'rxjs';
+import {GetPipelinesResponse} from '../../models/getPipelinesResponse';
 
-const mockPipelinesService = jasmine.createSpyObj('PipelinesService', [ 'addedNewPipelineWatch','setNewPipelineAdded']);
+const mockPipelinesService = jasmine.createSpyObj('PipelinesService', [ 'getPipelines','deletePipeline']);
 mockPipelinesService.getPipelines.and.callFake(
-  (func)=>func()
+  (func)=>func(new Observable<GetPipelinesResponse>(subscriber => {}))
+);
+mockPipelinesService.deletePipeline.and.callFake(
+  ({pipelineId: id,})=>(new Observable<GetPipelinesResponse>(subscriber => {}))
 );
 
 describe('PipelineComponent', () => {
