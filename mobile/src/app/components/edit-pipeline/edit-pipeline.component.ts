@@ -59,6 +59,8 @@ export class EditPipelineComponent implements OnInit {
         removeTools.push(this.tools[i]);
       }
     }
+    console.log(removeTools);
+    console.log(newTools);
     const removeToolsRequest: RemoveToolsRequest = {
       pipelineId: this.pipeline.id,
       tools: removeTools,
@@ -69,11 +71,14 @@ export class EditPipelineComponent implements OnInit {
       tools: newTools,
     };
     const res = this.pipelinesService.removeTools(removeToolsRequest).subscribe(response => {
-      const res2 = this.pipelinesService.addTools(addToolsRequest).subscribe(addResponse => {
-        this.pipeline.tools = newTools;
-        loading.dismiss();
-        toast.present();
-      });
+
+      console.log(response);
+    });
+    const res2 = this.pipelinesService.addTools(addToolsRequest).subscribe(addResponse => {
+      console.log(addResponse);
+      this.pipeline.tools = newTools;
+      loading.dismiss();
+      toast.present();
     });
   }
 }

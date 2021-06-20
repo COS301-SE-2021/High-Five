@@ -4,7 +4,7 @@ import {PipelineService} from '../../services/pipeline/pipeline.service';
 import {PipelinesService} from '../../apis/pipelines.service';
 import {Pipeline} from '../../models/pipeline';
 import {CreatePipelineRequest} from '../../models/createPipelineRequest';
-import {LoadingController, ModalController} from '@ionic/angular';
+import {LoadingController, ModalController, ToastController} from '@ionic/angular';
 import {DeletePipelineRequest} from '../../models/deletePipelineRequest';
 import {EditPipelineComponent} from '../edit-pipeline/edit-pipeline.component';
 
@@ -17,7 +17,8 @@ import {EditPipelineComponent} from '../edit-pipeline/edit-pipeline.component';
 export class PipelineComponent implements OnInit {
   public pipelines: Pipeline[];
   constructor(public constants: ToolsetConstants, private pipelinesService: PipelinesService,
-              private loadingController: LoadingController, private modalController: ModalController) {
+              private loadingController: LoadingController, private modalController: ModalController,
+              private toastController: ToastController) {
     this.getAllPipelines();
   }
 
@@ -36,6 +37,12 @@ export class PipelineComponent implements OnInit {
         animated:true,
       });
       await loading.present();
+    const toast = await  this.toastController.create(
+      {
+        message: 'Pipeline successfully deleted',
+        duration: 2000
+      }
+    );
       const id: string= this.pipelines[index].id;
       const deletePipelineRequest: DeletePipelineRequest={
         pipelineId: id,
@@ -43,10 +50,13 @@ export class PipelineComponent implements OnInit {
       try{
         const res = this.pipelinesService.deletePipeline(deletePipelineRequest).subscribe(response =>{
           loading.dismiss();
+          toast.present();
           this.getAllPipelines();
         });
       }catch (e) {
+        toast.message= 'Error occured while deleting pipeline';
         await loading.dismiss();
+        await toast.present();
       }
   }
 
