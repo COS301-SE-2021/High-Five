@@ -4,6 +4,8 @@ import { VideostorePage } from './videostore.page';
 import {VideoMetaData} from '../../models/videoMetaData';
 import {VideouploadService} from '../../services/videoupload/videoupload.service';
 import {IonicModule} from '@ionic/angular';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {HttpClient} from '@angular/common/http';
 
 const mockVideouploadService = jasmine.createSpyObj('VideouploadService', [ 'getAllVideos']);
 mockVideouploadService.getAllVideos.and.callFake(
@@ -40,7 +42,10 @@ describe('VideostorePage', () => {
   }));
 
   describe('general',()=>{
-    setBeforeEach([IonicModule.forRoot()], [ {provide: VideouploadService, useValue: mockVideouploadService}]);
+    setBeforeEach([IonicModule.forRoot()], [
+      {provide: VideouploadService, useValue: mockVideouploadService},
+      {provide: HttpClient, useValue: HttpClientTestingModule}
+    ]);
 
     it('should create', () => {
       expect(component).toBeTruthy();
