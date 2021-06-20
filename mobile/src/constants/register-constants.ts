@@ -10,12 +10,12 @@ import { Injectable } from '@angular/core';
  */
 export class RegisterConstants {
   public labels = {
-    email_address: 'Enter Email Address',
-    verify_email: 'Verify',
-    enter_code: 'Enter Verification Code',
-    first_name: 'First Name',
-    last_name: 'Surname',
+    emailAddress: 'Enter Email Address',
+    verifyEmail: 'Verify',
+    enterCode: 'Enter Verification Code',
+    firstName: 'First Name',
+    lastName: 'Surname',
     password: 'Password',
-    password_confirm: 'Confirm Password'
+    passwordConfirm: 'Confirm Password'
   };
 }

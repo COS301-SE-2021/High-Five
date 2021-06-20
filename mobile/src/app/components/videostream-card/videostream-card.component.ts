@@ -1,5 +1,6 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ModalController} from "@ionic/angular";
+import {Component, Input, OnInit} from '@angular/core';
+import {ModalController} from '@ionic/angular';
+import {Endpoints} from '../../../constants/endpoints';
 @Component({
   selector: 'app-videostream-card',
   templateUrl: './videostream-card.component.html',
@@ -7,7 +8,8 @@ import {ModalController} from "@ionic/angular";
 })
 export class VideostreamCardComponent implements OnInit {
   @Input() modal: ModalController;
-  constructor() { }
+  @Input() vidId: string;
+  constructor(public readonly endpoints: Endpoints) { }
 
   ngOnInit() {}
 

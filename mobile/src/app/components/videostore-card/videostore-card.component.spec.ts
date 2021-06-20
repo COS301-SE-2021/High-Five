@@ -13,30 +13,39 @@ let fixture: ComponentFixture<VideostoreCardComponent>;
  * instead of using data from the real object (which gets created outside the VideostoreCardComponent and is passed to the
  * component)
  */
-let mockVideoDetail = jasmine.createSpyObj('VideoPreviewData', [ 'getTitle', 'getRecordedDate', 'getImageUrl' ]);
+const mockVideoDetail = jasmine.createSpyObj('VideoPreviewData', [ 'getTitle', 'getRecordedDate', 'getImageUrl' ]);
 
 //mocks the getTitle() function of VideoPreviewData
-mockVideoDetail.getTitle.and.callFake(function() {
-  return 'Test title';
-});
+mockVideoDetail.getTitle.and.callFake(() => 'Test title');
 
 //mocks the getRecordedDate() function of VideoPreviewData
-mockVideoDetail.getRecordedDate.and.callFake(function() {
-  return '2021-01-01';
-});
+mockVideoDetail.getRecordedDate.and.callFake(() => '2021-01-01');
 
 //mocks the getImageUrl() function of VideoPreviewData
-mockVideoDetail.getImageUrl.and.callFake(function() {
-  return 'https://example.com/img.png';
-});
+mockVideoDetail.getImageUrl.and.callFake(() =>'https://example.com/img.png');
 
 
-let mockModalController = createSpyObj('ModalController', ['create', 'present'], ['style']);
+const mockModalController = createSpyObj('ModalController', ['create', 'present'], ['style']);
 
 /**
  * Runs all test suites for the VideostoreCardComponent
  */
 describe('VideostoreCardComponent', () => {
+
+  const setBeforeEach=(imports, providers) =>{
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ VideostoreCardComponent ],
+        imports,
+        providers
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(VideostoreCardComponent);
+      component = fixture.componentInstance;
+      component.data = mockVideoDetail;
+      fixture.detectChanges();
+    }));
+  };
 
   /**
    * Runs all tests suits that don't depend on the version of the component.
@@ -45,7 +54,7 @@ describe('VideostoreCardComponent', () => {
     /**
      * This runs pre-flight code before each unit test.
      */
-    setBeforeEach([IonicModule.forRoot()], [ {provide: ModalController, useValue: mockModalController}])
+    setBeforeEach([IonicModule.forRoot()], [ {provide: ModalController, useValue: mockModalController}]);
 
     /**
      * Tests that the component is rendered.
@@ -58,7 +67,7 @@ describe('VideostoreCardComponent', () => {
      * Tests that the title of the card matches the returned value in the mock object
      */
     it('should show title', () => {
-      const title = fixture.debugElement.nativeElement.querySelector('ion-card-title[test="videoTitle"]').innerText
+      const title = fixture.debugElement.nativeElement.querySelector('ion-card-title[test="videoTitle"]').innerText;
       expect(title).toBe(mockVideoDetail.getTitle());
     });
 
@@ -66,8 +75,8 @@ describe('VideostoreCardComponent', () => {
      * Tests that the date of the card matches the date in the mock object.
      */
     it('should show date', () => {
-      const date = fixture.debugElement.nativeElement.querySelector('ion-card-content[test="recordedDate"]').innerHTML.trim()
-      expect(date).toBe(mockVideoDetail.getRecordedDate())
+      const date = fixture.debugElement.nativeElement.querySelector('ion-card-content[test="recordedDate"]').innerHTML.trim();
+      expect(date).toBe(mockVideoDetail.getRecordedDate());
     });
 
     /**
@@ -77,32 +86,30 @@ describe('VideostoreCardComponent', () => {
       spyOn(component, 'playVideo');
       const btn = fixture.debugElement.nativeElement.querySelector('ion-button[test="playBtn"]');
       btn.click();
-      expect(component.playVideo).toHaveBeenCalled()
-    })
-  })
+      expect(component.playVideo).toHaveBeenCalled();
+    });
+  });
 
   /**
    * Runs all test suites for the desktop version of the VideostoreCardComponent.
    * This suit uses a mocked Platform object that returns a width greater than 700.
    */
   describe('desktop', () => {
-    let mockPlatform = jasmine.createSpyObj('Platform', ['width']);
-    mockPlatform.width.and.callFake(function () {
-      return 701;
-    });
+    const mockPlatform = jasmine.createSpyObj('Platform', ['width']);
+    mockPlatform.width.and.callFake(() =>701);
 
     /**
      * This runs pre-flight code before each unit test.
      */
-    setBeforeEach([IonicModule.forRoot()], [{provide: Platform, useValue: mockPlatform}])
+    setBeforeEach([IonicModule.forRoot()], [{provide: Platform, useValue: mockPlatform}]);
 
     /**
      * Tests that the image for the desktop version of the card matches the image in the mock object.
      */
     it('should show desktop image', ()=>{
-      let img = fixture.debugElement.nativeElement.querySelector('img[test="desktopImage"]').src;
+      const img = fixture.debugElement.nativeElement.querySelector('img[test="desktopImage"]').src;
       expect(img).toBe(mockVideoDetail.getImageUrl());
-    })
+    });
   });
 
 
@@ -111,34 +118,19 @@ describe('VideostoreCardComponent', () => {
    * This suit uses a mocked Platform object that returns a width less than 700.
    */
   describe('mobile', () => {
-    let mockPlatform = jasmine.createSpyObj('Platform', ['width']);
-    mockPlatform.width.and.callFake(function () {
-      return 699;
-    });
+    const mockPlatform = jasmine.createSpyObj('Platform', ['width']);
+    mockPlatform.width.and.callFake(() =>699);
 
-    setBeforeEach([IonicModule.forRoot()], [{provide: Platform, useValue: mockPlatform}])
+    setBeforeEach([IonicModule.forRoot()], [{provide: Platform, useValue: mockPlatform}]);
 
     /**
      * Tests that the image for the desktop version of the card matches the image in the mock object.
      */
     it('should show mobile image', () => {
-      let img = fixture.debugElement.nativeElement.querySelector('img[test="mobileImage"]').src;
+      const img = fixture.debugElement.nativeElement.querySelector('img[test="mobileImage"]').src;
       expect(img).toBe(mockVideoDetail.getImageUrl());
-    })
-  })
+    });
+  });
 
-  function setBeforeEach(imports, providers) {
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ VideostoreCardComponent ],
-        imports: imports,
-        providers: providers
-      }).compileComponents();
 
-      fixture = TestBed.createComponent(VideostoreCardComponent);
-      component = fixture.componentInstance;
-      component.data = mockVideoDetail;
-      fixture.detectChanges();
-    }));
-  }
 });
