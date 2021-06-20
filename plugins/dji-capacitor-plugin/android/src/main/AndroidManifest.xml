@@ -1,0 +1,68 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="dji.sdk.plugin">
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.usb.accessory"
+        android:required="true"/>
+    <application>
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
+        <!--
+            ADD API_KEY HERE and make sure you
+            are connected to the Internet before
+            the app is launched
+        -->
+        <!-- personal key -->
+        <meta-data
+            android:name="com.dji.sdk.API_KEY"
+            android:value="2fc724d8d720c626a8e57688"/>
+        <!-- Required for receiving accessory attachment events.
+            This is necessary for product when connecting over USB. -->
+
+        <activity
+            android:name=".DjiActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
+                android:resource="@xml/accessory_filter"/>
+        </activity>
+
+        <activity
+            android:name=".demo.payload.PayloadActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="landscape"/>
+
+        <activity
+            android:name=".demo.payload.PayloadSendGetDataActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="landscape"/>
+
+        <activity android:name=".demo.utmiss.UTMISSActivity" />
+    </application>
+</manifest>

@@ -15,6 +15,8 @@ npx cap sync
 
 * [`echo(...)`](#echo)
 * [`sendUdpRequest(...)`](#sendudprequest)
+* [`getVideoStream()`](#getvideostream)
+* [`stopVideoStream()`](#stopvideostream)
 * [Interfaces](#interfaces)
 
 </docgen-index>
@@ -46,6 +48,28 @@ sendUdpRequest(options: SendUdpRequestOptions) => any
 | Param         | Type                                                                    |
 | ------------- | ----------------------------------------------------------------------- |
 | **`options`** | <code><a href="#sendudprequestoptions">SendUdpRequestOptions</a></code> |
+
+**Returns:** <code>any</code>
+
+--------------------
+
+
+### getVideoStream()
+
+```typescript
+getVideoStream() => any
+```
+
+**Returns:** <code>any</code>
+
+--------------------
+
+
+### stopVideoStream()
+
+```typescript
+stopVideoStream() => any
+```
 
 **Returns:** <code>any</code>
 
