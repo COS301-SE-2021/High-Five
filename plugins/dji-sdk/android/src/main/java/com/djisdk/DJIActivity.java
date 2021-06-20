@@ -117,6 +117,12 @@ public class DJIActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Spin up a new thread and attempt to perform registration using the API key in the manifest.
+     * If the registration is successful a toast will be shown to confirm this.
+     * If the registration fails, a toast will be shown to confirm this.
+     * Upon successful registration the sdk may be used to interact with the connected handheld controller and drone.
+     */
     private void startSDKRegistration() {
         if (isRegistrationInProgress.compareAndSet(false, true)) {
             AsyncTask.execute(new Runnable() {
@@ -190,6 +196,10 @@ public class DJIActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * Called whenever the registration status changes
+     */
     private void notifyStatusChange() {
         mHandler.removeCallbacks(updateRunnable);
         mHandler.postDelayed(updateRunnable, 500);
@@ -204,6 +214,10 @@ public class DJIActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Function to show the toast messages needed by the SDKRegistration function
+     * @param toastMsg - The message to show as a toast.
+     */
     private void showToast(final String toastMsg) {
 
         Handler handler = new Handler(Looper.getMainLooper());
