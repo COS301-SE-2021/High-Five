@@ -18,7 +18,23 @@ describe('PipelineComponent', () => {
     fixture.detectChanges();
   }));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  describe('general',()=> {
+
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
+
+    it('generated components',()=>{
+
+      component.pipelines = [{name: 'testName', id: 'testID', tools: ['tool1','tool2']}];
+      fixture.detectChanges();
+      const fName = fixture.debugElement.nativeElement.querySelector('ion-card-title[id="pipelineName-0"]').innerHTML;
+      expect(fName).toBe('testName');
+      const fTool1 = fixture.debugElement.nativeElement.querySelector('ion-text[id="pipelineTool-0-0"]').innerHTML;
+      expect(fTool1).toBe('tool1');
+      const fTool2 = fixture.debugElement.nativeElement.querySelector('ion-text[id="pipelineTool-0-1"]').innerHTML;
+      expect(fTool2).toBe('tool2');
+
+    });
   });
 });

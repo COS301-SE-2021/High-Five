@@ -6,7 +6,7 @@
           <ion-grid>
             <ion-row>
               <ion-col>
-                <ion-card-title>
+                <ion-card-title id="pipelineName-{{i}}">
                   {{pipeline.name}}
                 </ion-card-title>
               </ion-col>
@@ -16,7 +16,7 @@
                 <ion-grid>
                   <ion-row>
                     <ion-col>
-                      <ion-text>
+                      <ion-text  id="pipelineTool-{{i}}-{{x}}">
                         {{label}}
                       </ion-text>
                     </ion-col>
