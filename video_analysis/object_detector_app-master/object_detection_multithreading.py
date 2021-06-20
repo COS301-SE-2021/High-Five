@@ -180,9 +180,10 @@ if __name__ == '__main__':
         print('[INFO] elapsed time: {:.2f}'.format(time.time() - t))
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
+            # Exit loop when done with stream
             break
 
-
+    # Stop stream and terminate program
     fps.stop()
     print('[INFO] elapsed time (total): {:.2f}'.format(fps.elapsed()))
     print('[INFO] approx. FPS: {:.2f}'.format(fps.fps()))
