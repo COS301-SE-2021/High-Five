@@ -5,8 +5,6 @@ import {Pipeline} from '../../models/pipeline';
 import {CreatePipelineRequest} from '../../models/createPipelineRequest';
 import {LoadingController, ToastController} from '@ionic/angular';
 import {PipelineComponent} from '../pipeline/pipeline.component';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {distinctUntilChanged} from 'rxjs/operators';
 import {PipelineService} from '../../services/pipeline/pipeline.service';
 
 @Component({
@@ -76,12 +74,18 @@ export class AddPipelineComponent implements OnInit {
         if (!response.success){
           toast.message = 'Error occurred whilst creating pipeline';
         }
+        this.pipelineName='';
+        const allCheckBoxes = document.querySelectorAll('ion-checkbox');
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
+        for(let i =0; i < allCheckBoxes.length; i++){
+          allCheckBoxes[i].checked=false;
+        }
         loading.dismiss();
         toast.present();
         this.pipelineService.setNewPipelineAdded(true);
-
       }
     );
+
   }
   ngOnInit() {}
 }
