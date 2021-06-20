@@ -73,7 +73,7 @@ export class VideostoreCardComponent implements OnInit {
         });
 
         await toast.present();
-        this.deleter();
+        this.deleter(vidId);
       });
     }
   }

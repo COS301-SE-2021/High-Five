@@ -131,8 +131,29 @@ export class VideostorePage implements OnInit {
   }
 
   getDeleteFunction() {
-    return () => {
-      alert('HELLO');
+    const tmp: VideoMetaData[][] = [];
+    let flip = false;
+    let counter = 0;
+    return (vidId: string) => {
+      for (const item of this.items) {
+        for (const vid of item) {
+          if (vid !== undefined && vid.id !== vidId) {
+            if (!flip) {
+              tmp.push([vid]);
+              flip = true;
+            } else {
+              tmp[counter].push(vid);
+              counter++;
+              flip = false;
+            }
+          }
+        }
+      }
+      if (flip) {
+        tmp[counter].push(undefined);
+      }
+      this.items = tmp;
+      console.log(this.items);
     };
   }
 }
