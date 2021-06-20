@@ -7,6 +7,7 @@ import {CreatePipelineRequest} from '../../models/createPipelineRequest';
 import {LoadingController, ModalController, ToastController} from '@ionic/angular';
 import {DeletePipelineRequest} from '../../models/deletePipelineRequest';
 import {EditPipelineComponent} from '../edit-pipeline/edit-pipeline.component';
+import {AddPipelineComponent} from '../add-pipeline/add-pipeline.component';
 
 
 @Component({
@@ -18,8 +19,13 @@ export class PipelineComponent implements OnInit {
   public pipelines: Pipeline[];
   constructor(public constants: ToolsetConstants, private pipelinesService: PipelinesService,
               private loadingController: LoadingController, private modalController: ModalController,
-              private toastController: ToastController) {
-    this.getAllPipelines();
+              private toastController: ToastController, private pipelineService: PipelineService) {
+
+    this.pipelineService.addedNewPipelineWatch().subscribe(isDesktop=>{
+      this.getAllPipelines();
+      this.pipelineService.setNewPipelineAdded(false);
+
+    });
   }
 
   ngOnInit() {}
@@ -54,7 +60,7 @@ export class PipelineComponent implements OnInit {
           this.getAllPipelines();
         });
       }catch (e) {
-        toast.message= 'Error occured while deleting pipeline';
+        toast.message= 'Error occurred while deleting pipeline';
         await loading.dismiss();
         await toast.present();
       }

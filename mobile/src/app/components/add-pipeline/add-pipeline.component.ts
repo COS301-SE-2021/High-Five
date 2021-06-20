@@ -5,6 +5,9 @@ import {Pipeline} from '../../models/pipeline';
 import {CreatePipelineRequest} from '../../models/createPipelineRequest';
 import {LoadingController, ToastController} from '@ionic/angular';
 import {PipelineComponent} from '../pipeline/pipeline.component';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {distinctUntilChanged} from 'rxjs/operators';
+import {PipelineService} from '../../services/pipeline/pipeline.service';
 
 @Component({
   selector: 'app-add-pipeline',
@@ -15,12 +18,17 @@ import {PipelineComponent} from '../pipeline/pipeline.component';
 export class AddPipelineComponent implements OnInit {
   selectedTools: boolean[];
   pipelineName: string;
-  addedNew: boolean;
   constructor(public constants: ToolsetConstants, public pipelinesService: PipelinesService,
-              private loadingController: LoadingController, private toastController: ToastController) {
+              private loadingController: LoadingController, private toastController: ToastController, private pipelineService: PipelineService) {
     this.selectedTools = new Array<boolean>(this.constants.labels.tools.length);
   }
 
+
+  /**
+   * The function will make a request to the backend to create a new pipeline with the selected tools and name,
+   * this is accomplished using OpenAPI requests and responses and using these as parameters and return types for the
+   * pipelinesService
+   */
   async addPipeline(){
     const loading = await this.loadingController.create({
       spinner: 'circles',
@@ -65,11 +73,10 @@ export class AddPipelineComponent implements OnInit {
         }
         loading.dismiss();
         toast.present();
-        this.addedNew = true;
+        this.pipelineService.setNewPipelineAdded(true);
 
       }
     );
   }
   ngOnInit() {}
-
 }
