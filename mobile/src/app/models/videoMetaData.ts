@@ -15,11 +15,11 @@ export class VideoMetaData {
     /**
      * duration of the video in seconds
      */
-    duration?: number;
+    //duration?: number;
     /**
      * The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Z
      */
     dateStored?: Date;
     id?: string;
-    thumbnail?: string;
+    //thumbnail?: string;
 }

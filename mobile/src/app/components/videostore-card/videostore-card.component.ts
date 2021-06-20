@@ -20,11 +20,12 @@ export class VideostoreCardComponent implements OnInit {
    * This function creates a modal where the recorded drone footage can be
    * replayed to the user.
    */
-  async playVideo() {
+  async playVideo(vidId: string) {
     const videoModal = await this.modal.create({
       component: VideostreamCardComponent,
       componentProps: {
-        modal: this.modal
+        modal: this.modal,
+        vidId
       }
     });
     videoModal.style.backgroundColor = 'rgba(0,0,0,0.85)'; //make the background for the modal darker.

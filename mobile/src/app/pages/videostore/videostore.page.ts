@@ -63,7 +63,9 @@ export class VideostorePage implements OnInit {
    * @param fileData
    */
   uploadVideo(fileData: any) {
-    console.log(fileData.target.files[0]);
+    this.videoService.storeVideo(fileData.target.files[0].name, fileData.target.files[0], data => {
+      console.log(data);
+    });
   }
 
 }

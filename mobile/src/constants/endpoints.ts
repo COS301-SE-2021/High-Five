@@ -11,5 +11,7 @@ import { Injectable } from '@angular/core';
 export class Endpoints {
   public labels = {
     getAllVideos: 'https://high5api.azurewebsites.net/media/getAllVideos',
+    storeVideo: 'https://high5api.azurewebsites.net/media/storeVideo',
+    getVideo: 'https://high5api.azurewebsites.net/media/getVideo'
   };
 }

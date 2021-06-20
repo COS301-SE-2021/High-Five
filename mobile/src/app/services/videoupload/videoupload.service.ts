@@ -24,4 +24,16 @@ export class VideouploadService {
       subscription(data);
     });
   }
+
+  storeVideo(vidName: string, vidData: any, subscription: any) {
+    const formData = new FormData();
+    formData.append('file', vidData);
+    const headers = new HttpHeaders({
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      'Content-Type' : 'multipart/form-data'
+    });
+    this.http.post<any>(this.endpoints.labels.storeVideo, formData, {}).subscribe(data => {
+      subscription(data);
+    });
+  }
 }
