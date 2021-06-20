@@ -11,8 +11,16 @@ export class PipelineService {
     this.pipelines=[];
   }
 
-  public addPipeline(pipeline: PipelineModel){
+  public addPipelineModel(pipeline: PipelineModel){
     this.pipelines.push(pipeline);
+  }
+
+  public addPipeline(selectedTools: boolean[], pipelineName: string){
+    const temp: boolean[]=new Array<boolean>(selectedTools.length);
+    for (let i =0; i < selectedTools.length; i++){
+      temp[i] = selectedTools[i];
+    }
+    this.pipelines.push(new PipelineModel(pipelineName,temp));
   }
 
   public removePipeline(id: number){

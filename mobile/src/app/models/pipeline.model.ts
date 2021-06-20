@@ -3,16 +3,21 @@ export class PipelineModel{
   private id: number;
   private selected: boolean[];
 
-  constructor(name: string) {
+  constructor(name: string, selectedTools: boolean[]) {
     this.name=  name;
+    this.setSelectedTools(selectedTools);
   }
 
   get selectedTools(): boolean[]{
     return this.selected;
   }
 
-  set selectedTools(selectedTools: boolean[]){
-    this.selected=selectedTools;
+  setSelectedTools(selectedTools: boolean[]){
+    delete this.selected;
+    this.selected = new Array<boolean>(selectedTools.length);
+    for (let i = 0; i < selectedTools.length; i++) {
+      this.selected[i] = selectedTools[i];
+    }
 
   }
 

@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
  */
 export class ToolsetConstants {
   public labels = {
-    tools: ['Object Identification','Object Counting', 'Object Tracking']
+    tools: ['Object Identification','Object Counting', 'Object Tracking'],
+    newPipeline : ['New Pipeline Name']
   };
 }

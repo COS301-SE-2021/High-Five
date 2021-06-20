@@ -13,21 +13,11 @@ import {ModalController} from '@ionic/angular';
 export class PipelineComponent implements OnInit {
 
   constructor(public constants: ToolsetConstants, public  pipelineService: PipelineService) {
-    const x = new PipelineModel('XD');
-    x.selectedTools = [true,true,false];
-    x.pipelineId= 123123;
-    for (let i = 0; i < 10; i++) {
-      pipelineService.addPipeline(x);
-    }
-
   }
 
   ngOnInit() {}
 
   async deletePipeline(){
-
-  }
-  async openCreatePipelineModal(){
 
   }
 }
