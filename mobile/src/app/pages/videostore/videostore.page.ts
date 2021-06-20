@@ -11,7 +11,6 @@ import {VideoMetaData} from '../../models/videoMetaData';
 export class VideostorePage implements OnInit {
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
-  @ViewChild('uploadSpinner') uploadSpinner: HTMLDivElement;
 
   public items: VideoMetaData[][] = [];
   public videosFetched = false;
@@ -24,12 +23,19 @@ export class VideostorePage implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * Loads data from the backend once the 'video store' page has been loaded.
+   */
   async loadInitData() {
+
+    // show the spinner before fetching the data
     const loading = await this.loadingController.create({
       spinner: 'circles',
       animated:true,
     });
     await loading.present();
+
+    // load the data, and pass in a callback function to close the spinner
     this.loadMoreData(async () => {
       await loading.dismiss();
     });
@@ -56,23 +62,30 @@ export class VideostorePage implements OnInit {
     this.videoService.getAllVideos(data => {
       // eslint-disable-next-line guard-for-in
       let row = true;
-      let counter = 0;
+      let counter = 0; // keeps track of the current row
       for (const item of data) {
+
+        // cards are presented as two-column rows. Therefore we swap between the first and second row
+        // when populating the page.
         if (row) {
           this.items.push([Object.assign(new VideoMetaData(), item)]);
-          row = false;
+          row = false; //moves to the second column
         } else {
           this.items[counter].push(Object.assign(new VideoMetaData(), item));
-          counter++;
-          row = true;
+          counter++; //moves to the next row
+          row = true; //resets to the first column
         }
       }
+
+      // If there is an odd number of items, then set the second column of the
+      // last row to be undefined. Angular will not render it, as there is a check for an undefined column.
       if (!row) {
         this.items[counter].push(undefined);
       }
-      if (!this.videosFetched) {
-        this.videosFetched = true;
-      }
+
+      this.videosFetched = true; // tell Angular to show the items.
+
+      // calls the callback function if it has been set.
       if (func !== null) {
         func();
       }
