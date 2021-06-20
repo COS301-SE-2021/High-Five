@@ -3,13 +3,21 @@ import { IonicModule } from '@ionic/angular';
 
 import { PipelineComponent } from './pipeline.component';
 
+const mockPipelinesService = jasmine.createSpyObj('PipelinesService', [ 'addedNewPipelineWatch','setNewPipelineAdded']);
+mockPipelinesService.addedNewPipelineWatch.and.callFake(
+  (func)=>func()
+);
+mockPipelinesService.setNewPipelineAdded.and.callFake(
+  (func)=>func()
+);
+
 describe('PipelineComponent', () => {
   let component: PipelineComponent;
   let fixture: ComponentFixture<PipelineComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PipelineComponent ],
+      declarations: [ PipelineComponent],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
