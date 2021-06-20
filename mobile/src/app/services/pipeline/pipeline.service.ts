@@ -1,9 +1,6 @@
-import {inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {PipelineModel} from '../../models/pipeline.model';
-import {PipelinesService} from '../../apis/pipelines.service';
-import {NewPipeline} from '../../models/newPipeline';
 import {ToolsetConstants} from '../../../constants/toolset-constants';
-import {CreatePipelineRequest} from '../../models/createPipelineRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -33,14 +30,14 @@ export class PipelineService {
 
 
     this.pipelines.push(new PipelineModel(pipelineName,temp));
-    const newPipeline: NewPipeline={
-      name: pipelineName,
-      tools : toolNames,
-    };
+    // const newPipeline: NewPipeline={
+    //   name: pipelineName,
+    //   tools : toolNames,
+    // };
 
-    const createPipelineRequest: CreatePipelineRequest={
-      pipeline : newPipeline
-    };
+    // const createPipelineRequest: CreatePipelineRequest={
+    //   pipeline : newPipeline
+    // };
     // const res = this.pipelinesService.createPipeline(createPipelineRequest).subscribe(
     //   response =>{
     //     console.log(response.message);

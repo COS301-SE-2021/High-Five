@@ -32,9 +32,10 @@ import { Configuration }                                     from '../configurat
 export class PipelinesService {
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
-    protected basePath = '/';
+    protected basePath = 'https://high5api.azurewebsites.net';
 
 
+  // eslint-disable-next-line max-len
     constructor(protected httpClient: HttpClient, @Optional()@Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
         if (basePath) {
             this.basePath = basePath;

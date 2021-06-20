@@ -1,8 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ModalController} from '@ionic/angular';
 import {ToolsetConstants} from '../../../constants/toolset-constants';
-import {PipelineService} from '../../services/pipeline/pipeline.service';
-import {PipelineModel} from '../../models/pipeline.model';
+import {PipelinesService} from '../../apis/pipelines.service';
+import {Pipeline} from '../../models/pipeline';
+import {CreatePipelineRequest} from '../../models/createPipelineRequest';
+import {LoadingController} from '@ionic/angular';
 
 @Component({
   selector: 'app-add-pipeline',
@@ -12,12 +13,39 @@ import {PipelineModel} from '../../models/pipeline.model';
 export class AddPipelineComponent implements OnInit {
   selectedTools: boolean[];
   pipelineName: string;
-  constructor(public constants: ToolsetConstants, public pipelineService: PipelineService) {
+  constructor(public constants: ToolsetConstants, public pipelinesService: PipelinesService, private loadingController: LoadingController) {
     this.selectedTools = new Array<boolean>(this.constants.labels.tools.length);
   }
 
-  addPipeline(){
-    this.pipelineService.addPipeline(this.selectedTools,this.pipelineName);
+  async addPipeline(){
+    const loading = await this.loadingController.create({
+      spinner: 'circular',
+      animated:true,
+    });
+    loading.present();
+    const temp: string[] = [];
+    for (let i = 0; i < this.selectedTools.length; i++) {
+      if(this.selectedTools[i]){
+        temp.push(this.constants.labels.tools[i]);
+      }
+    }
+
+    const newPipeline: Pipeline ={
+      name:this.pipelineName,
+      tools: temp,
+    };
+
+    const newPipelineRequest: CreatePipelineRequest = {
+      pipeline: newPipeline,
+    };
+
+    const res = this.pipelinesService.createPipeline(newPipelineRequest).subscribe(
+      response =>{
+        loading.dismiss();
+        console.log(response);
+      }
+    );
+
 
   }
   ngOnInit() {}

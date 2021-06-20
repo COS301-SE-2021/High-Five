@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
-import {PipelineModel} from '../../models/pipeline.model';
-import {PipelineService} from '../../services/pipeline/pipeline.service';
-import {ModalController} from '@ionic/angular';
-import {AddPipelineComponent} from '../../components/add-pipeline/add-pipeline.component';
 
 @Component({
   selector: 'app-analytics',
@@ -11,30 +7,15 @@ import {AddPipelineComponent} from '../../components/add-pipeline/add-pipeline.c
   styleUrls: ['./analytics.page.scss'],
 })
 export class AnalyticsPage implements OnInit {
-  public pipelineData: PipelineModel[];
   public pipelineCount: number;
   public isDesktop: boolean;
-  constructor(private screenSizeService: ScreenSizeServiceService, public modalController: ModalController) {
+  constructor(private screenSizeService: ScreenSizeServiceService) {
     this.screenSizeService.isDesktopView().subscribe(isDesktop=>{
       this.isDesktop = isDesktop;
     });
   }
 
   ngOnInit() {
-  }
-
-  async openCreatePipelineModal(){
-    try{
-      const modal = await this.modalController.create({
-        component : AddPipelineComponent,
-        componentProps: {
-          modal: this.modalController
-        }
-      });
-      return await modal.present;
-    }catch (e) {
-     console.error(e);
-    }
   }
 
 }
