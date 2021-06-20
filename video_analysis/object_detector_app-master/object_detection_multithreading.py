@@ -151,6 +151,7 @@ if __name__ == '__main__':
         if output_q.empty():
             pass  # fill up queue
         else:
+            # Frame is analysed
             font = cv2.FONT_HERSHEY_SIMPLEX
             data = output_q.get()
             rec_points = data['rect_points']
@@ -166,9 +167,12 @@ if __name__ == '__main__':
                             0.3, (0, 0, 0), 1)
             if frame is None:
                 continue
+            # Analysed frame is either displayed in awindow or sent to an rtmp server
             if args.stream_out:
+                # Send frame to rtmp server
                 p.stdin.write(frame)
             else:
+                # Display frame in window
                 cv2.imshow('Video', frame)
 
         fps.update()
