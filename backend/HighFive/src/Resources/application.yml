@@ -119,26 +119,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/emptyObject'
   
-  /media/getVideo/{videoId}:
-    get:
-      tags:
-        - "MediaStorage"
-      operationId: GetVideoGetRequest
-      parameters:
-        - in: path
-          name: videoId
-          schema:
-            type: string
-          required: true
-      responses:
-        200:
-          description: Returns a list of the filenames of all videos
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getVideoResponse'
-      
-  
   /media/deleteVideo:
     post:
       tags:
