@@ -1,7 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
 import {Navigation, Router} from '@angular/router';
-import {DjiSdk} from 'dji-sdk';
+import {DjiSdkPlugin} from 'dji-capacitor-plugin/src';
+
+
 
 @Component({
   selector: 'app-navbar',
@@ -58,6 +60,6 @@ export class NavbarPage implements OnInit {
   }
 
   openPlugin(){
-    DjiSdk.present({message: 'hello'});
+   DjiSdkPlugin.echo({value:'XD'});
   }
 }
