@@ -34,7 +34,9 @@ public class DJIActivity extends AppCompatActivity {
     public static final String FLAG_CONNECTION_CHANGE = "dji_sdk_connection_change";
     private static BaseProduct mProduct;
     private Handler mHandler;
-
+    /**
+     * Array of strings containing the required permissions.
+     */
     private static final String[] REQUIRED_PERMISSION_LIST = new String[]{
             Manifest.permission.VIBRATE,
             Manifest.permission.INTERNET,

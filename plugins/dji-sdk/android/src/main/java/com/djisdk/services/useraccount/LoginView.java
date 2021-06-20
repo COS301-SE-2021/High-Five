@@ -39,41 +39,33 @@ public class LoginView extends LinearLayout implements View.OnClickListener {
     public void onClick(View v) {
 
 
-        switch (v.getId()) {
-
-            case R.id.btn_login:
-                // Launches a login dialog
-                UserAccountManager.getInstance().logIntoDJIUserAccount(this.getContext(),
-                        new CommonCallbacks.CompletionCallbackWith<UserAccountState>() {
-                            @Override
-                            public void onSuccess(UserAccountState userAccountState) {
-                                ToastUtils.setResultToToast("Login Success");
-                                updateLoginState(userAccountState);
-                            }
-
-                            @Override
-                            public void onFailure(DJIError djiError) {
-                                ToastUtils.setResultToToast("error:" + djiError.getDescription());
-                            }
-                        });
-
-                break;
-            case R.id.btn_login_out:
-                // Logs out the current user
-                UserAccountManager.getInstance().logoutOfDJIUserAccount(new CommonCallbacks.CompletionCallback() {
-                    @Override
-                    public void onResult(DJIError error) {
-                        if (null == error) {
-                            ToastUtils.setResultToToast("Logout Success");
-                            updateLoginState(UserAccountState.NOT_LOGGED_IN);
-                        } else {
-                            ToastUtils.setResultToToast("error:" + error.getDescription());
+        int id = v.getId();
+        if (id == R.id.btn_login) {// Launches a login dialog
+            UserAccountManager.getInstance().logIntoDJIUserAccount(this.getContext(),
+                    new CommonCallbacks.CompletionCallbackWith<UserAccountState>() {
+                        @Override
+                        public void onSuccess(UserAccountState userAccountState) {
+                            ToastUtils.setResultToToast("Login Success");
+                            updateLoginState(userAccountState);
                         }
+
+                        @Override
+                        public void onFailure(DJIError djiError) {
+                            ToastUtils.setResultToToast("error:" + djiError.getDescription());
+                        }
+                    });
+        } else if (id == R.id.btn_login_out) {// Logs out the current user
+            UserAccountManager.getInstance().logoutOfDJIUserAccount(new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError error) {
+                    if (null == error) {
+                        ToastUtils.setResultToToast("Logout Success");
+                        updateLoginState(UserAccountState.NOT_LOGGED_IN);
+                    } else {
+                        ToastUtils.setResultToToast("error:" + error.getDescription());
                     }
-                });
-                break;
-            default:
-                break;
+                }
+            });
         }
     }
 
