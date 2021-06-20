@@ -1,7 +1,4 @@
 import {Injectable} from '@angular/core';
-import {PipelineModel} from '../../models/pipeline.model';
-import {ToolsetConstants} from '../../../constants/toolset-constants';
-import {PipelinesService} from '../../apis/pipelines.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
 
