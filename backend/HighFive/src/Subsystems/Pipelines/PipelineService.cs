@@ -79,7 +79,7 @@ namespace src.Subsystems.Pipelines
             var pipeline = ConvertFileToPipeline(file).Result;
             var pipelineToolset = pipeline.Tools;
             pipelineToolset.AddRange(request.Tools);
-            pipeline.Tools = pipelineToolset;
+            pipeline.Tools = pipelineToolset.Distinct().ToList();
             UploadPipelineToStorage(pipeline, file);
             return true;
         }
