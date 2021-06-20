@@ -7,6 +7,20 @@ describe('RegisterCardComponent', () => {
   let component: RegisterCardComponent;
   let fixture: ComponentFixture<RegisterCardComponent>;
 
+  const setBeforeEach=(imports, providers) =>{
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ RegisterCardComponent ],
+        imports,
+        providers
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(RegisterCardComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    }));
+  };
+
   describe('general', () => {
 
     setBeforeEach([IonicModule.forRoot()], []);
@@ -102,17 +116,5 @@ describe('RegisterCardComponent', () => {
     });
   });
 
-  const setBeforeEach=(imports, providers) =>{
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ RegisterCardComponent ],
-        imports,
-        providers
-      }).compileComponents();
 
-      fixture = TestBed.createComponent(RegisterCardComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    }));
-  };
 });
