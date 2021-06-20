@@ -116,12 +116,14 @@ if __name__ == '__main__':
                                       height=args.height).start()
     fps = FPS().start()
 
+    #Stream specifications used for output stream
     frames = 30#int(video_capture.get(cv2.CAP_PROP_FPS))
     width = 1280#int(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = 720#int(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
     p=None
     if args.stream_out:
-        # command and params for ffmpeg
+        #ffmpeg command used to connect to rtmp server for output
         command = ['ffmpeg',
                    '-re',
                    '-y',
