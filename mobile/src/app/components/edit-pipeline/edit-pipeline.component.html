@@ -1,3 +1,8 @@
+<ion-fab vertical="top" horizontal="end">
+  <ion-button (click)="dismiss()" color="transparent">
+    <ion-icon name="close-outline"></ion-icon>
+  </ion-button>
+</ion-fab>
 <ion-card class="ion-justify-content-center ion-align-items-center">
   <ion-card-content>
     <ion-grid>
@@ -16,7 +21,9 @@
                 {{label}}
               </ion-col>
               <ion-col>
-                <ion-toggle [checked]="pipeline.tools.includes(label)" mode="ios" color="tertiary" class="ion-float-right"></ion-toggle>
+                <ion-toggle (ionChange)="selectedTools[x] = $event.detail.checked"
+                            [checked]="pipeline.tools.includes(label)" mode="ios" color="tertiary"
+                            class="ion-float-right"></ion-toggle>
               </ion-col>
             </ion-row>
           </ion-grid>
@@ -25,12 +32,10 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-button (click)="dismiss()" color="success" style="width: 100%">
+          <ion-button (click)="applyChanges()" color="success" style="width: 100%">
             <ion-icon name="checkmark-outline"></ion-icon>
           </ion-button>
         </ion-col>
-
-
 
 
       </ion-row>

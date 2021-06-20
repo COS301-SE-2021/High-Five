@@ -62,10 +62,10 @@ export class PipelineComponent implements OnInit {
       componentProps:{
         modalController : this.modalController,
         tools : this.constants.labels.tools,
-        pipeline : this.pipelines[i]
+        pipeline : this.pipelines[i],
+        loadingController : this.loadingController,
       }
     });
-    console.log(modal.componentProps);
     modal.style.backgroundColor = 'rgba(0,0,0,0.85)';
     return await  modal.present();
   }

@@ -1,6 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ModalController} from '@ionic/angular';
+import {LoadingController, ModalController, ToastController} from '@ionic/angular';
 import {Pipeline} from '../../models/pipeline';
+import {ToolsetConstants} from '../../../constants/toolset-constants';
+import {PipelinesService} from '../../apis/pipelines.service';
+import {RemoveToolsRequest} from '../../models/removeToolsRequest';
+import {AddToolsRequest} from '../../models/addToolsRequest';
 
 @Component({
   selector: 'app-edit-pipeline',
@@ -10,15 +14,68 @@ import {Pipeline} from '../../models/pipeline';
 export class EditPipelineComponent implements OnInit {
   @Input() modalController: ModalController;
   @Input() pipeline: Pipeline;
-  @Input() tools: string[];
-  constructor() { }
+  @Input() loadingController: LoadingController;
+  public selectedTools: boolean[];
+  tools: string[];
 
-  ngOnInit() {}
+  constructor(private toolsetConstants: ToolsetConstants, private pipelinesService: PipelinesService, private toastController: ToastController) {
+    this.tools = this.toolsetConstants.labels.tools;
+    this.selectedTools = new Array<boolean>(this.tools.length);
+  }
 
-  dismiss(){
+  ngOnInit() {
+  }
+
+  dismiss() {
     this.modalController.dismiss({
-      dismissed : true
+      dismissed: true
     });
   }
 
+  async applyChanges() {
+    await this.modalController.dismiss({
+      dismissed: true
+    });
+    const loading = await this.loadingController.create({
+      spinner: 'circles',
+      animated: true,
+    });
+
+
+    await loading.present();
+    const toast = await this.toastController.create(
+      {
+        message: 'Successfully edited pipeline',
+        duration: 2000
+      }
+    );
+    toast.translucent = true; // Will only work on IOS
+    const newTools: string[] = [];
+    const removeTools: string[] = [];
+    for (let i = 0; i < this.tools.length; i++) {
+      if (this.selectedTools[i]) {
+        newTools.push(this.tools[i]);
+      } else {
+        removeTools.push(this.tools[i]);
+      }
+    }
+    const removeToolsRequest: RemoveToolsRequest = {
+      pipelineId: this.pipeline.id,
+      tools: removeTools,
+    };
+
+    const addToolsRequest: AddToolsRequest = {
+      pipelineId: this.pipeline.id,
+      tools: newTools,
+    };
+    const res = this.pipelinesService.removeTools(removeToolsRequest).subscribe(response => {
+      const res2 = this.pipelinesService.addTools(addToolsRequest).subscribe(addResponse => {
+        this.pipeline.tools = newTools;
+        loading.dismiss();
+        toast.present();
+      });
+    });
+  }
 }
+
+
