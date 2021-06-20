@@ -16,9 +16,10 @@ export class EditPipelineComponent implements OnInit {
   @Input() pipeline: Pipeline;
   @Input() loadingController: LoadingController;
   public selectedTools: boolean[];
-  tools: string[];
+  public tools: string[];
 
-  constructor(private toolsetConstants: ToolsetConstants, private pipelinesService: PipelinesService, private toastController: ToastController) {
+  constructor(private toolsetConstants: ToolsetConstants, private pipelinesService: PipelinesService,
+              private toastController: ToastController) {
     this.tools = this.toolsetConstants.labels.tools;
     this.selectedTools = new Array<boolean>(this.tools.length);
   }
@@ -50,17 +51,19 @@ export class EditPipelineComponent implements OnInit {
       }
     );
     toast.translucent = true; // Will only work on IOS
-    const newTools: string[] = [];
-    const removeTools: string[] = [];
+
+    const newTools: string[] = []; // Tools that need to be added that are not already selected
+    const removeTools: string[] = []; // Tools that need to be removed
     for (let i = 0; i < this.tools.length; i++) {
       if (this.selectedTools[i]) {
         newTools.push(this.tools[i]);
-      } else {
+      } else if(!this.selectedTools[i]){
         removeTools.push(this.tools[i]);
+      }else{
+        newTools.push(this.tools[i]);
       }
     }
-    console.log(removeTools);
-    console.log(newTools);
+
     const removeToolsRequest: RemoveToolsRequest = {
       pipelineId: this.pipeline.id,
       tools: removeTools,
@@ -71,14 +74,11 @@ export class EditPipelineComponent implements OnInit {
       tools: newTools,
     };
     const res = this.pipelinesService.removeTools(removeToolsRequest).subscribe(response => {
-
-      console.log(response);
-    });
-    const res2 = this.pipelinesService.addTools(addToolsRequest).subscribe(addResponse => {
-      console.log(addResponse);
-      this.pipeline.tools = newTools;
-      loading.dismiss();
-      toast.present();
+      const res2 = this.pipelinesService.addTools(addToolsRequest).subscribe(addResponse => {
+        this.pipeline.tools = newTools;
+        loading.dismiss();
+        toast.present();
+      });
     });
   }
 }
