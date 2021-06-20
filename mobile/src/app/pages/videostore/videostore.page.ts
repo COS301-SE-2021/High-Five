@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {IonInfiniteScroll, LoadingController, ModalController, ToastController} from '@ionic/angular';
 import {VideouploadService} from '../../services/videoupload/videoupload.service';
 import {VideoMetaData} from '../../models/videoMetaData';
+import {VideoStoreConstants} from '../../../constants/pages/videostore-constants';
 
 @Component({
   selector: 'app-videostore',
@@ -16,7 +17,9 @@ export class VideostorePage implements OnInit {
   public videosFetched = false;
 
   constructor(private modal: ModalController, private videoService: VideouploadService,
-              public alertController: ToastController, private loadingController: LoadingController) {
+              public toastController: ToastController,
+              private loadingController: LoadingController,
+              private constants: VideoStoreConstants) {
     this.loadInitData().then();
   }
 
@@ -120,11 +123,11 @@ export class VideostorePage implements OnInit {
    * Shows a toast once a video is successfully uploaded.
    */
   async presentAlert() {
-    const alert = await this.alertController.create({
+    const alert = await this.toastController.create({
       cssClass: 'alert-style',
-      header: 'Video Uploaded',
-      message: 'Video successfully uploaded.',
-      buttons: ['OK']
+      header: this.constants.toastLabels.header,
+      message: this.constants.toastLabels.message,
+      buttons: this.constants.toastLabels.buttons
     });
 
     await alert.present();
