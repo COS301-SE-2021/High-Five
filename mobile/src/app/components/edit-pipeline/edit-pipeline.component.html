@@ -8,21 +8,31 @@
           </ion-card-title>
         </ion-col>
       </ion-row>
-      <ion-row>
-        <ion-col *ngFor="let label of tools, index as x;">
+      <ion-row *ngFor="let label of tools, index as x;">
+        <ion-col>
           <ion-grid>
             <ion-row>
               <ion-col>
-                <ion-text>
-                  {{label}}
-                </ion-text>
+                {{label}}
               </ion-col>
               <ion-col>
-                <ion-toggle  [checked]="pipeline.tools.includes(label)" mode="ios" color="tertiary" ></ion-toggle>
+                <ion-toggle [checked]="pipeline.tools.includes(label)" mode="ios" color="tertiary" class="ion-float-right"></ion-toggle>
               </ion-col>
             </ion-row>
           </ion-grid>
         </ion-col>
+
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button (click)="dismiss()" color="success" style="width: 100%">
+            <ion-icon name="checkmark-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+
+
+
+
       </ion-row>
     </ion-grid>
   </ion-card-content>
