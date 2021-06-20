@@ -1,0 +1,30 @@
+<ion-card class="ion-justify-content-center ion-align-items-center">
+  <ion-card-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-card-title>
+            {{pipeline.name}}
+          </ion-card-title>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col *ngFor="let label of tools, index as x;">
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-text>
+                  {{label}}
+                </ion-text>
+              </ion-col>
+              <ion-col>
+                <ion-toggle  [checked]="pipeline.tools.includes(label)" mode="ios" color="tertiary" ></ion-toggle>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+
+</ion-card>

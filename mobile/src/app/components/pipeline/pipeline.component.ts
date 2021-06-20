@@ -4,8 +4,9 @@ import {PipelineService} from '../../services/pipeline/pipeline.service';
 import {PipelinesService} from '../../apis/pipelines.service';
 import {Pipeline} from '../../models/pipeline';
 import {CreatePipelineRequest} from '../../models/createPipelineRequest';
-import {LoadingController} from '@ionic/angular';
+import {LoadingController, ModalController} from '@ionic/angular';
 import {DeletePipelineRequest} from '../../models/deletePipelineRequest';
+import {EditPipelineComponent} from '../edit-pipeline/edit-pipeline.component';
 
 
 @Component({
@@ -15,7 +16,8 @@ import {DeletePipelineRequest} from '../../models/deletePipelineRequest';
 })
 export class PipelineComponent implements OnInit {
   public pipelines: Pipeline[];
-  constructor(public constants: ToolsetConstants, private pipelinesService: PipelinesService, private loadingController: LoadingController) {
+  constructor(public constants: ToolsetConstants, private pipelinesService: PipelinesService,
+              private loadingController: LoadingController, private modalController: ModalController) {
     this.getAllPipelines();
   }
 
@@ -23,7 +25,8 @@ export class PipelineComponent implements OnInit {
 
 
   /**
-   * A
+   * A function that will delete a pipeline based off of its id that it gets by getting
+   * the index of the pipeline from the local pipelines array
    *
    * @param index is the index of the pipeline in the array
    */
@@ -39,7 +42,6 @@ export class PipelineComponent implements OnInit {
       };
       try{
         const res = this.pipelinesService.deletePipeline(deletePipelineRequest).subscribe(response =>{
-          console.log(response);
           loading.dismiss();
           this.getAllPipelines();
         });
@@ -48,8 +50,24 @@ export class PipelineComponent implements OnInit {
       }
   }
 
+
   async edit(){
 
+  }
+
+  async startEditProcess(i){
+    const modal = await this.modalController.create({
+      component : EditPipelineComponent,
+      cssClass : 'editPipeline',
+      componentProps:{
+        modalController : this.modalController,
+        tools : this.constants.labels.tools,
+        pipeline : this.pipelines[i]
+      }
+    });
+    console.log(modal.componentProps);
+    modal.style.backgroundColor = 'rgba(0,0,0,0.85)';
+    return await  modal.present();
   }
 
 

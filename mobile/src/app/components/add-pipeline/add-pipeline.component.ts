@@ -15,7 +15,9 @@ import {PipelineComponent} from '../pipeline/pipeline.component';
 export class AddPipelineComponent implements OnInit {
   selectedTools: boolean[];
   pipelineName: string;
-  constructor(public constants: ToolsetConstants, public pipelinesService: PipelinesService, private loadingController: LoadingController, private pipelinesComp: PipelineComponent, private toastController: ToastController) {
+  addedNew: boolean;
+  constructor(public constants: ToolsetConstants, public pipelinesService: PipelinesService,
+              private loadingController: LoadingController, private toastController: ToastController) {
     this.selectedTools = new Array<boolean>(this.constants.labels.tools.length);
   }
 
@@ -31,6 +33,7 @@ export class AddPipelineComponent implements OnInit {
         duration: 2000
       }
     );
+    toast.translucent=true; // Will only work on IOS
     const temp: string[] = [];
     let allEmpty = true;
     for (let i = 0; i < this.selectedTools.length; i++) {
@@ -39,9 +42,10 @@ export class AddPipelineComponent implements OnInit {
         allEmpty= false;
       }
     }
-    if(allEmpty){
-      //todo create alert to user that the pipeline needs at least one pipeline
+    if(allEmpty || this.pipelineName==' '){
       await loading.dismiss();
+      toast.message = 'Pipeline must contain a name and have at least one tool selected before creation';
+      await toast.present();
       return;
     }
 
@@ -61,6 +65,7 @@ export class AddPipelineComponent implements OnInit {
         }
         loading.dismiss();
         toast.present();
+        this.addedNew = true;
 
       }
     );
