@@ -5,6 +5,9 @@ import { PipelineComponent } from './pipeline.component';
 import {PipelinesService} from '../../apis/pipelines.service';
 
 const mockPipelinesService = jasmine.createSpyObj('PipelinesService', [ 'addedNewPipelineWatch','setNewPipelineAdded']);
+mockPipelinesService.getPipelines.and.callFake(
+  (func)=>func()
+);
 
 describe('PipelineComponent', () => {
   let component: PipelineComponent;
