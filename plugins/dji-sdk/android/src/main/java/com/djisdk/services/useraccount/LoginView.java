@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.djisdk.R;
+import com.djisdk.utils.ToastUtils;
+
 import dji.common.error.DJIError;
 import dji.common.useraccount.UserAccountState;
 import dji.common.util.CommonCallbacks;
