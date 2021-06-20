@@ -37,7 +37,7 @@ namespace tests.UnitTests.Subsystems.MediaStorage
             {
                 Pipeline = newPipeline
             };
-            var pipelineCountBeforeInsert = _mockPipelineService.GetPipelines().Pipelines.Count;
+            var pipelineCountBeforeInsert = _mockPipelineService.GetPipelines().Pipelines.Count-1;
             _mockPipelineService.CreatePipeline(request);
             var pipelineCountAfterInsert = _mockPipelineService.GetPipelines().Pipelines.Count;
             Assert.NotEqual(pipelineCountBeforeInsert, pipelineCountAfterInsert);
