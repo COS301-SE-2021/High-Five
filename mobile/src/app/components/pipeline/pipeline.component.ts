@@ -48,6 +48,10 @@ export class PipelineComponent implements OnInit {
       }
   }
 
+  async edit(){
+
+  }
+
 
   /**
    * A function that sends a request to get all the created pipelines

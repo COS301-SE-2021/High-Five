@@ -26,10 +26,22 @@
                   </ion-row>
                 </ion-grid>
               </ion-col>
-              <ion-col size="1">
-                <ion-button (click)="deletePipeline(i)">
-                  <ion-icon name="trash-outline"></ion-icon>
-                </ion-button>
+              <ion-col size="2">
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      <ion-button (click)="deletePipeline(i)" color="danger">
+                        <ion-icon name="trash-outline"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                    <ion-col>
+                      <ion-button id="edit-{{i}}}" (click)="edit(i)">
+                        <ion-icon name="pencil-outline"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+
               </ion-col>
             </ion-row>
           </ion-grid>
