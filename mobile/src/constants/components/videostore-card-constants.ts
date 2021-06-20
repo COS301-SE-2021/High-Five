@@ -7,14 +7,14 @@ import { Injectable } from '@angular/core';
 /**
  * Contains default labels that are used in the program.
  */
-export class VideoStoreConstants {
+export class VideoStoreCardConstants {
 
   /**
    * These labels are for the Toast controller object when it displays messages
    */
   public toastLabels = {
-    header: 'Video Uploaded',
-    message: 'Video successfully uploaded.',
+    header: 'Video Deleted',
+    message: 'Video successfully deleted.',
     buttons: ['OK']
   };
 

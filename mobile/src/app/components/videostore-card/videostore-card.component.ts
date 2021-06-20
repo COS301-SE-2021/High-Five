@@ -3,6 +3,7 @@ import {AlertController, ModalController, Platform, ToastController} from '@ioni
 import {VideostreamCardComponent} from '../videostream-card/videostream-card.component';
 import {VideoMetaData} from '../../models/videoMetaData';
 import {VideouploadService} from '../../services/videoupload/videoupload.service';
+import {VideoStoreCardConstants} from "../../../constants/components/videostore-card-constants";
 
 @Component({
   selector: 'app-videostore-card',
@@ -15,7 +16,8 @@ export class VideostoreCardComponent implements OnInit {
 
   constructor(public platform: Platform, private modal: ModalController,
               private videoService: VideouploadService, private alertController: AlertController,
-              private toastController: ToastController) { }
+              private toastController: ToastController,
+              private constants: VideoStoreCardConstants) { }
 
   ngOnInit() {
   }
@@ -45,15 +47,15 @@ export class VideostoreCardComponent implements OnInit {
   async deleteVideo(vidId: string) {
     const alert = await this.alertController.create({
       cssClass: 'alerter',
-      header: 'Delete video',
-      message: 'Do you want to delete the video?',
+      header: this.constants.alertLabels.header,
+      message: this.constants.alertLabels.message,
       buttons: [
         {
-          text: 'Yes',
-          role: 'yes'
+          text: this.constants.alertLabels.buttonsYes.text,
+          role: this.constants.alertLabels.buttonsYes.role
         }, {
-          text: 'No',
-          role: 'no'
+          text: this.constants.alertLabels.buttonsNo.text,
+          role: this.constants.alertLabels.buttonsNo.role
         }
       ]
     });
@@ -62,14 +64,14 @@ export class VideostoreCardComponent implements OnInit {
 
     const { role } = await alert.onDidDismiss();
 
-    if (role === 'yes') {
+    if (role === this.constants.alertLabels.buttonsYes.role) {
       this.videoService.deleteVideo(vidId, async data => {
         console.log(data);
         const toast = await this.toastController.create({
           cssClass: 'alert-style',
-          header: 'Video Deleted',
-          message: 'Video successfully deleted.',
-          buttons: ['OK']
+          header: this.constants.toastLabels.header,
+          message: this.constants.toastLabels.message,
+          buttons: this.constants.toastLabels.buttons
         });
 
         await toast.present();
