@@ -3,7 +3,7 @@ import {AlertController, ModalController, Platform, ToastController} from '@ioni
 import {VideostreamCardComponent} from '../videostream-card/videostream-card.component';
 import {VideoMetaData} from '../../models/videoMetaData';
 import {VideouploadService} from '../../services/videoupload/videoupload.service';
-import {VideoStoreCardConstants} from "../../../constants/components/videostore-card-constants";
+import {VideoStoreCardConstants} from '../../../constants/components/videostore-card-constants';
 
 @Component({
   selector: 'app-videostore-card',
