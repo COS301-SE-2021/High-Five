@@ -1,22 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using MediaToolkit;
-using MediaToolkit.Model;
-using MediaToolkit.Options;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using Org.OpenAPITools.Models;
-using static System.String;
 
 namespace src.Storage
 {
@@ -33,6 +23,12 @@ namespace src.Storage
         {
             _configuration = config;
             String connectionString = _configuration.GetConnectionString("StorageConnection");
+            _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
+            _random = new Random();
+        }
+
+        public StorageManager(String connectionString)
+        {
             _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             _random = new Random();
         }

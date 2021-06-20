@@ -18,7 +18,7 @@ namespace src.Subsystems.MediaStorage
     public class MediaStorageService: IMediaStorageService
     {
         private readonly IStorageManager _storageManager;
-        private const string ContainerName = "demo2videos";
+        private string _containerName = "demo2videos";
 
         public MediaStorageService(IStorageManager storageManager)
         {
@@ -27,15 +27,19 @@ namespace src.Subsystems.MediaStorage
         
         public async Task StoreVideo(IFormFile video)
         {
+            if (video == null)
+            {
+                return;
+            }
             //create storage name for file
             var generatedName = _storageManager.HashMd5(video.FileName);
-            var cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".mp4", ContainerName).Result;
+            var cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
             var salt = "";
             while (cloudBlockBlob == null)
             {
                 salt += _storageManager.RandomString();
                 generatedName = _storageManager.HashMd5(video.FileName+salt);
-                cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".mp4", ContainerName).Result;
+                cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
             }
             cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("originalName", video.FileName));
             if (!IsNullOrEmpty(salt))
@@ -64,7 +68,7 @@ namespace src.Subsystems.MediaStorage
             {
                 File.Create(thumbnailPath).Close();
             }
-            var thumbnailBlockBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", ContainerName).Result;
+            var thumbnailBlockBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", _containerName).Result;
             thumbnailBlockBlob.Properties.ContentType = "image/jpg";
             await thumbnailBlockBlob.UploadFromFileAsync(thumbnailPath);
                 
@@ -84,7 +88,7 @@ namespace src.Subsystems.MediaStorage
         public async Task<GetVideoResponse> GetVideo(GetVideoRequest request)
         {
             var videoId = request.Id + ".mp4";
-            var file = _storageManager.GetFile(videoId, ContainerName).Result;
+            var file = _storageManager.GetFile(videoId, _containerName).Result;
             if (file != null)
             {
                 var videoFile = new byte[file.Properties.Length];
@@ -102,7 +106,7 @@ namespace src.Subsystems.MediaStorage
 
         public async Task<List<VideoMetaData>> GetAllVideos()
         {
-            var allFiles = _storageManager.GetAllFilesInContainer(ContainerName);
+            var allFiles = _storageManager.GetAllFilesInContainer(_containerName);
             if (allFiles.Result == null)
             {
                 return new List<VideoMetaData>();
@@ -139,16 +143,21 @@ namespace src.Subsystems.MediaStorage
 
         public async Task<bool> DeleteVideo(DeleteVideoRequest request)
         {
-            var videoFile = _storageManager.GetFile(request.Id + ".mp4",ContainerName).Result;
+            var videoFile = _storageManager.GetFile(request.Id + ".mp4",_containerName).Result;
             if (videoFile == null)
             {
                 return false;
             }
 
-            var thumbnail = _storageManager.GetFile(request.Id + "-thumbnail.jpg", ContainerName).Result;
+            var thumbnail = _storageManager.GetFile(request.Id + "-thumbnail.jpg", _containerName).Result;
             await videoFile.DeleteAsync();
             await thumbnail.DeleteAsync();
             return true;
+        }
+
+        public void SetContainer(String container)
+        {
+            _containerName = container;
         }
     }
 }
