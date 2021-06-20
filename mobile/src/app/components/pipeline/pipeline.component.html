@@ -1,5 +1,5 @@
 <ion-grid id="pipelinesList">
-  <ion-row *ngFor="let pipelineModel of pipelineService.allPipelines; index as i;">
+  <ion-row *ngFor="let pipeline of pipelines ; index as i;">
     <ion-col size="12">
       <ion-card class="ion-justify-content-center ion-align-items-center">
         <ion-card-content>
@@ -7,7 +7,7 @@
             <ion-row>
               <ion-col>
                 <ion-card-title>
-                  {{pipelineModel.pipelineName}}
+                  {{pipeline.name}}
                 </ion-card-title>
               </ion-col>
             </ion-row>
@@ -21,13 +21,13 @@
                       </ion-text>
                     </ion-col>
                     <ion-col>
-                      <ion-checkbox [disabled]="true" [checked]="pipelineModel.selectedTools[x]" mode="ios" color="tertiary"></ion-checkbox>
+                      <ion-checkbox [disabled]="true" [checked]="pipelines[i].tools.includes(label)" mode="ios" color="tertiary"></ion-checkbox>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
               </ion-col>
               <ion-col size="1">
-                <ion-button (click)="deletePipeline()">
+                <ion-button (click)="deletePipeline(i)">
                   <ion-icon name="trash-outline"></ion-icon>
                 </ion-button>
               </ion-col>

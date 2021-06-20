@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ToolsetConstants} from '../../../constants/toolset-constants';
 import {PipelinesService} from '../../apis/pipelines.service';
 import {Pipeline} from '../../models/pipeline';
@@ -19,15 +19,22 @@ export class AddPipelineComponent implements OnInit {
 
   async addPipeline(){
     const loading = await this.loadingController.create({
-      spinner: 'circular',
+      spinner: 'circles',
       animated:true,
     });
-    loading.present();
+    await loading.present();
     const temp: string[] = [];
+    let allEmpty = true;
     for (let i = 0; i < this.selectedTools.length; i++) {
       if(this.selectedTools[i]){
         temp.push(this.constants.labels.tools[i]);
+        allEmpty= false;
       }
+    }
+    if(allEmpty){
+      //todo create alert to user that the pipeline needs at least one pipeline
+      await loading.dismiss();
+      return;
     }
 
     const newPipeline: Pipeline ={
@@ -42,11 +49,8 @@ export class AddPipelineComponent implements OnInit {
     const res = this.pipelinesService.createPipeline(newPipelineRequest).subscribe(
       response =>{
         loading.dismiss();
-        console.log(response);
       }
     );
-
-
   }
   ngOnInit() {}
 
