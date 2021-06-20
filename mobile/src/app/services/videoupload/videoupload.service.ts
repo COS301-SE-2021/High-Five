@@ -36,4 +36,18 @@ export class VideouploadService {
       subscription(data);
     });
   }
+
+  deleteVideo(vidId: string, subscription: any) {
+    const formData = new FormData();
+    formData.append('id', vidId);
+
+    const headers = new HttpHeaders({
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      'Content-Type' : 'application/json'
+    });
+
+    this.http.post<any>(this.endpoints.labels.deleteVideo, JSON.stringify({id: vidId}), {headers}).subscribe(data => {
+      subscription(data);
+    });
+  }
 }

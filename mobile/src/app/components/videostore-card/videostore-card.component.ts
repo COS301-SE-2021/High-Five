@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ModalController, Platform} from '@ionic/angular';
+import {AlertController, ModalController, Platform} from '@ionic/angular';
 import {VideostreamCardComponent} from '../videostream-card/videostream-card.component';
 import {VideoMetaData} from '../../models/videoMetaData';
+import {VideouploadService} from '../../services/videoupload/videoupload.service';
 
 @Component({
   selector: 'app-videostore-card',
@@ -11,7 +12,8 @@ import {VideoMetaData} from '../../models/videoMetaData';
 export class VideostoreCardComponent implements OnInit {
   @Input() data: VideoMetaData;
 
-  constructor(public platform: Platform, private modal: ModalController) { }
+  constructor(public platform: Platform, private modal: ModalController,
+              private videoService: VideouploadService, private alertController: AlertController) { }
 
   ngOnInit() {
   }
@@ -39,6 +41,29 @@ export class VideostoreCardComponent implements OnInit {
    * @param vidId
    */
   async deleteVideo(vidId: string) {
+    const alert = await this.alertController.create({
+      cssClass: 'alerter',
+      header: 'Delete video',
+      message: 'Do you want to delete the video?',
+      buttons: [
+        {
+          text: 'Yes',
+          role: 'yes'
+        }, {
+          text: 'No',
+          role: 'no'
+        }
+      ]
+    });
 
+    await alert.present();
+
+    const { role } = await alert.onDidDismiss();
+
+    if (role === 'yes') {
+      this.videoService.deleteVideo(vidId, data => {
+        console.log(data);
+      });
+    }
   }
 }
