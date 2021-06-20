@@ -2,31 +2,31 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { PipelineComponent } from './pipeline.component';
+import {PipelinesService} from '../../apis/pipelines.service';
 
 const mockPipelinesService = jasmine.createSpyObj('PipelinesService', [ 'addedNewPipelineWatch','setNewPipelineAdded']);
-mockPipelinesService.addedNewPipelineWatch.and.callFake(
-  (func)=>func()
-);
-mockPipelinesService.setNewPipelineAdded.and.callFake(
-  (func)=>func()
-);
 
 describe('PipelineComponent', () => {
   let component: PipelineComponent;
   let fixture: ComponentFixture<PipelineComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ PipelineComponent],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+  const setBeforeEach=(imports, providers) =>{
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ PipelineComponent ],
+        imports,
+        providers
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(PipelineComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(PipelineComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    }));
+  };
 
   describe('general',()=> {
+
+    setBeforeEach([IonicModule.forRoot()],[{provide: PipelinesService, useValue: mockPipelinesService}]);
 
     it('should create', () => {
       expect(component).toBeTruthy();
