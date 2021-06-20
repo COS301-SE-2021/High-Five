@@ -32,6 +32,21 @@ const mockModalController = createSpyObj('ModalController', ['create', 'present'
  */
 describe('VideostoreCardComponent', () => {
 
+  const setBeforeEach=(imports, providers) =>{
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ VideostoreCardComponent ],
+        imports,
+        providers
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(VideostoreCardComponent);
+      component = fixture.componentInstance;
+      component.data = mockVideoDetail;
+      fixture.detectChanges();
+    }));
+  };
+
   /**
    * Runs all tests suits that don't depend on the version of the component.
    */
@@ -117,18 +132,5 @@ describe('VideostoreCardComponent', () => {
     });
   });
 
-  const setBeforeEach=(imports, providers) =>{
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ VideostoreCardComponent ],
-        imports,
-        providers
-      }).compileComponents();
 
-      fixture = TestBed.createComponent(VideostoreCardComponent);
-      component = fixture.componentInstance;
-      component.data = mockVideoDetail;
-      fixture.detectChanges();
-    }));
-  };
 });

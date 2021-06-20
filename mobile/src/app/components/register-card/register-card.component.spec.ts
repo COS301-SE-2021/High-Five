@@ -7,6 +7,20 @@ describe('RegisterCardComponent', () => {
   let component: RegisterCardComponent;
   let fixture: ComponentFixture<RegisterCardComponent>;
 
+  const setBeforeEach=(imports, providers) =>{
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ RegisterCardComponent ],
+        imports,
+        providers
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(RegisterCardComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    }));
+  };
+
   describe('general', () => {
 
     setBeforeEach([IonicModule.forRoot()], []);
@@ -26,25 +40,25 @@ describe('RegisterCardComponent', () => {
       component.showVerify = true;
       fixture.detectChanges();
       const fName = fixture.debugElement.nativeElement.querySelector('ion-label[name="firstName"]').innerHTML;
-      expect(fName).toBe(component.constants.labels.first_name);
+      expect(fName).toBe(component.constants.labels.firstName);
 
       const lName = fixture.debugElement.nativeElement.querySelector('ion-label[name="lastName"]').innerHTML;
-      expect(lName).toBe(component.constants.labels.last_name);
+      expect(lName).toBe(component.constants.labels.lastName);
 
       const email = fixture.debugElement.nativeElement.querySelector('ion-label[name="emailAddr"]').innerHTML;
-      expect(email).toBe(component.constants.labels.email_address);
+      expect(email).toBe(component.constants.labels.emailAddress);
 
       const verify = fixture.debugElement.nativeElement.querySelector('ion-label[name="verifyCode"]').innerHTML;
-      expect(verify).toBe(component.constants.labels.enter_code);
+      expect(verify).toBe(component.constants.labels.enterCode);
 
       const pWord = fixture.debugElement.nativeElement.querySelector('ion-label[name="password"]').innerHTML;
       expect(pWord).toBe(component.constants.labels.password);
 
       const pWordConf = fixture.debugElement.nativeElement.querySelector('ion-label[name="passwordConfirm"]').innerHTML;
-      expect(pWordConf).toBe(component.constants.labels.password_confirm);
+      expect(pWordConf).toBe(component.constants.labels.passwordConfirm);
 
       const verifyBtn = fixture.debugElement.nativeElement.querySelector('ion-button[name="verifyBtn"]').innerHTML;
-      expect(verifyBtn).toBe(component.constants.labels.verify_email);
+      expect(verifyBtn).toBe(component.constants.labels.verifyEmail);
     });
   });
 
@@ -102,17 +116,5 @@ describe('RegisterCardComponent', () => {
     });
   });
 
-  const setBeforeEach=(imports, providers) =>{
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ RegisterCardComponent ],
-        imports,
-        providers
-      }).compileComponents();
 
-      fixture = TestBed.createComponent(RegisterCardComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    }));
-  };
 });
