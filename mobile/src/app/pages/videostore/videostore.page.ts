@@ -130,13 +130,20 @@ export class VideostorePage implements OnInit {
     await alert.present();
   }
 
+  /**
+   * Returns an anonymous functions for the child component to use when deleting itself.
+   */
   getDeleteFunction() {
-    const tmp: VideoMetaData[][] = [];
-    let flip = false;
-    let counter = 0;
     return (vidId: string) => {
+
+      // Updated list of videos
+      const tmp: VideoMetaData[][] = [];
+      let flip = false; // determines to which column the video goes to
+      let counter = 0;
       for (const item of this.items) {
         for (const vid of item) {
+
+          //Only add a video if it's id does not match the given ID.
           if (vid !== undefined && vid.id !== vidId) {
             if (!flip) {
               tmp.push([vid]);
@@ -149,6 +156,8 @@ export class VideostorePage implements OnInit {
           }
         }
       }
+
+      // add an 'undefined' item so that Angular knows not to try add an empty column
       if (flip) {
         tmp[counter].push(undefined);
       }
