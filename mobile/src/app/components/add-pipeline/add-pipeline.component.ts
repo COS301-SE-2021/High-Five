@@ -76,6 +76,7 @@ export class AddPipelineComponent implements OnInit {
         }
         this.pipelineName='';
         const allCheckBoxes = document.querySelectorAll('ion-checkbox');
+        // The below code allows us to clear the inputs after we've created a pipeline
         // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for(let i =0; i < allCheckBoxes.length; i++){
           allCheckBoxes[i].checked=false;
