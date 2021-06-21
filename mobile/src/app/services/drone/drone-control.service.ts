@@ -6,13 +6,14 @@ export default  udp;
   providedIn: 'root'
 })
 export class DroneControlService {
-
+  private portNumber = '8889';
+  private telloIp =  '192.168.10.1';
   constructor() { }
 
   connect(){
     const landOptions: SendUdpRequestOptions = {
-      port: '8889',
-      address: '192.168.10.1',
+      port: this.portNumber,
+      address: this.telloIp,
       payload: 'command'
     };
     udp.sendUdpRequest(landOptions);
@@ -20,8 +21,8 @@ export class DroneControlService {
 
   takeoff(){
     const landOptions: SendUdpRequestOptions = {
-      port: '8889',
-      address: '192.168.10.1',
+      port: this.portNumber,
+      address: this.telloIp,
       payload: 'takeoff'
     };
     udp.sendUdpRequest(landOptions);
@@ -29,8 +30,8 @@ export class DroneControlService {
 
   land(){
     const landOptions: SendUdpRequestOptions = {
-      port: '8889',
-      address: '192.168.10.1',
+      port: this.portNumber,
+      address: this.telloIp,
       payload: 'land'
     };
     udp.sendUdpRequest(landOptions);
@@ -38,8 +39,8 @@ export class DroneControlService {
 
   forward(distance){
     const landOptions: SendUdpRequestOptions = {
-      port: '8889',
-      address: '192.168.10.1',
+      port: this.portNumber,
+      address: this.telloIp,
       payload: 'forward ' + distance.toString()
     };
     udp.sendUdpRequest(landOptions);
@@ -47,8 +48,8 @@ export class DroneControlService {
 
   backward(distance){
     const landOptions: SendUdpRequestOptions = {
-      port: '8889',
-      address: '192.168.10.1',
+      port: this.portNumber,
+      address: this.telloIp,
       payload: 'back ' + distance.toString()
     };
     udp.sendUdpRequest(landOptions);
@@ -56,8 +57,8 @@ export class DroneControlService {
 
   up(distance){
     const landOptions: SendUdpRequestOptions = {
-      port: '8889',
-      address: '192.168.10.1',
+      port: this.portNumber,
+      address: this.telloIp,
       payload: 'up ' + distance.toString()
     };
     udp.sendUdpRequest(landOptions);
@@ -65,8 +66,8 @@ export class DroneControlService {
 
   down(distance){
     const landOptions: SendUdpRequestOptions = {
-      port: '8889',
-      address: '192.168.10.1',
+      port: this.portNumber,
+      address: this.telloIp,
       payload: 'down ' + distance.toString()
     };
     udp.sendUdpRequest(landOptions);
@@ -74,8 +75,8 @@ export class DroneControlService {
 
   left(distance){
     const landOptions: SendUdpRequestOptions = {
-      port: '8889',
-      address: '192.168.10.1',
+      port: this.portNumber,
+      address: this.telloIp,
       payload: 'left ' + distance.toString()
     };
     udp.sendUdpRequest(landOptions);
@@ -83,8 +84,8 @@ export class DroneControlService {
 
   right(distance){
     const landOptions: SendUdpRequestOptions = {
-      port: '8889',
-      address: '192.168.10.1',
+      port: this.portNumber,
+      address: this.telloIp,
       payload: 'right ' + distance.toString()
     };
     udp.sendUdpRequest(landOptions);
@@ -92,8 +93,8 @@ export class DroneControlService {
 
   rotateLeft(angle){
     const landOptions: SendUdpRequestOptions = {
-      port: '8889',
-      address: '192.168.10.1',
+      port: this.portNumber,
+      address: this.telloIp,
       payload: 'ccw ' + angle.toString()
     };
     udp.sendUdpRequest(landOptions);
@@ -101,8 +102,8 @@ export class DroneControlService {
 
   rotateRight(angle){
     const landOptions: SendUdpRequestOptions = {
-      port: '8889',
-      address: '192.168.10.1',
+      port: this.portNumber,
+      address: this.telloIp,
       payload: 'cw ' + angle.toString()
     };
     udp.sendUdpRequest(landOptions);
@@ -110,8 +111,8 @@ export class DroneControlService {
 
   enableStream(){
     const landOptions: SendUdpRequestOptions = {
-      port: '8889',
-      address: '192.168.10.1',
+      port: this.portNumber,
+      address: this.telloIp,
       payload: 'streamon'
     };
     udp.sendUdpRequest(landOptions);
@@ -119,8 +120,8 @@ export class DroneControlService {
 
   disableStream(){
     const landOptions: SendUdpRequestOptions = {
-      port: '8889',
-      address: '192.168.10.1',
+      port: this.portNumber,
+      address: this.telloIp,
       payload: 'streamoff'
     };
     udp.sendUdpRequest(landOptions);
