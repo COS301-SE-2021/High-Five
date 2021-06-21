@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Component, Directive, Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Endpoints} from '../../../constants/endpoints';
 
