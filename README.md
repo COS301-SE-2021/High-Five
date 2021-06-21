@@ -130,7 +130,6 @@ master ( build )
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− development ( build )
 </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− backend−development ( build )
-<
 </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− backend-feature-feature_name
 </br>
