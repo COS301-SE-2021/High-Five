@@ -8,7 +8,7 @@
 import { Injectable } from '@angular/core';
 // import {SendUdpRequestOptions, UdpRequests} from '../../../../../plugins/capacitor-udp-requests/src';
 // const udp = UdpRequests;
-export default  udp;
+// export default  udp;
 @Injectable({
   providedIn: 'root'
 })
