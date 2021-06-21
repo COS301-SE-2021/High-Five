@@ -8,6 +8,7 @@ info:
 tags:
   - name: "MediaStorage"
   - name: "Test"
+  - name: "Pipelines"
 
   #==========================================================
   #     PATHS
@@ -80,7 +81,7 @@ paths:
     post:
       tags:
         - "MediaStorage"
-      description: Endpoint for Get Video Names use case
+      description: Endpoint for Get All Videos use case
       operationId: GetAllVideos
       responses:
         "200":
@@ -117,7 +118,125 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
+  
+  /media/deleteVideo:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Get Videos use case
+      operationId: DeleteVideo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteVideoRequest'
+      responses:
+        "200":
+          description: Video successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
 
+  #==========================================================
+  #     PIPELINES SUBSYSTEM PATHING
+  #==========================================================
+  
+  /pipelines/createPipeline:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Create Pipeline use case
+      operationId: CreatePipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createPipelineRequest'
+      responses:
+        "200":
+          description: Pipeline has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+                
+  /pipelines/getPipelines:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Get Pipelines use case
+      operationId: GetPipelines
+      responses:
+        "200":
+          description: All pipelines have been returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getPipelinesResponse'
+                
+  /pipelines/addTools:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Add Tools use case
+      operationId: AddTools
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addToolsRequest'
+      responses:
+        "200":
+          description: Tools have been added to pipeline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+                
+  /pipelines/removeTools:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Remove Tools use case
+      operationId: RemoveTools
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/removeToolsRequest'
+      responses:
+        "200":
+          description: Tools have been removed from pipeline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /pipelines/deletePipeline:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Delete Pipeline use case
+      operationId: DeletePipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deletePipelineRequest'
+      responses:
+        "200":
+          description: Tools have been removed from pipeline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+  
   #==========================================================
   #     SCHEMAS
   #==========================================================
@@ -205,6 +324,82 @@ components:
           type: string
           format: byte
 
+    deleteVideoRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique id assossciated with a certain video stored on the blob storage
+
+    #==========================================================
+    #     PIPELINES COMPONENTS
+    #==========================================================
+    
+    createPipelineRequest:
+      type: object
+      properties:
+        pipeline:
+          $ref: '#/components/schemas/newPipeline'
+    
+    getPipelinesResponse:
+      type: object
+      properties:
+        pipelines:
+          type: array
+          items:
+            $ref: '#/components/schemas/pipeline'
+    
+    newPipeline:
+      type: object
+      properties:
+        name:
+          type: string
+        tools:
+          type: array
+          items:
+            type: string
+            description: All the tools stored as strings
+    
+    pipeline:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+          description: Unique id associated with the pipeline
+        tools:
+          type: array
+          items:
+            type: string
+            description: All the tools stored as strings
+            
+    addToolsRequest:
+      type: object
+      properties:
+        pipelineId:
+          type: string
+        tools:
+          type: array
+          items:
+            type: string
+
+    removeToolsRequest:
+      type: object
+      properties:
+        pipelineId:
+          type: string
+        tools:
+          type: array
+          items:
+            type: string
+    
+    deletePipelineRequest:
+      type: object
+      properties:
+        pipelineId:
+          type: string
+          
     #==========================================================
     #     GENERIC COMPONENTS
     #==========================================================
