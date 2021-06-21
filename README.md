@@ -83,9 +83,20 @@
 High Five is a real-time image analysis platform for images and videos taken by drone cameras. Users can add and customize the platform with the type of analysis that must be performed. Examples include counting cars in a parking lot, property surveillance or mapping, and color depth analysis for agricultural purposes - to name a few.
 
 ### Project Links
-* []()[BDP Solutions - Demo1](https://drive.google.com/file/d/1eK1aoB-zd5L3d2GkG10BPtbhP_gGUUHX/view?usp=sharing)
-* []()[Software Requirements Specification (SRS)](https://drive.google.com/file/d/1BYFmZhJphzAOLJm7mU-x7vVI2vvxT8V4/view?usp=sharing)
 * []()[GitHub Project Board](https://github.com/COS301-SE-2021/High-Five/projects/1)
+
+#### Demo 1
+* []()[BDP Solutions - Demo1](https://drive.google.com/file/d/1eK1aoB-zd5L3d2GkG10BPtbhP_gGUUHX/view?usp=sharing)
+* []()[Software Requirements Specification - Demo1 (SRS)](https://drive.google.com/file/d/1BYFmZhJphzAOLJm7mU-x7vVI2vvxT8V4/view?usp=sharing)
+
+#### Demo 2
+* []()[BDP Solutions - Demo2](https://drive.google.com/file/d/1K5mNdgFBeGa1tp_Fl8Fh_CcXkf_9zz-h/view?usp=sharing)
+* []()[Software Requirements Specification - Demo2 (SRS)](https://drive.google.com/file/d/1pA2TqDQkoDK0Kvq6weMCwAaWwQO4EX78/view?usp=sharing)
+* []()[Architectural Requirements Document - Demo2 (SRS)](https://drive.google.com/file/d/1_l-fwXj9XdJryhRKQd4tGYtKaMqAoUl1/view?usp=sharing)
+* []()[User Manual - Demo2 (SRS)](https://drive.google.com/file/d/1AjHnnmrIYHzJ_tqd5kKdCd7cyxjT9Zpw/view?usp=sharing)
+* []()[Coding Standards - Demo2 (SRS)](https://drive.google.com/file/d/1tvIkCgz74yAf9RBsicJtToGem8FsMj5i/view?usp=sharing)
+
+
 
 ### Technology Stack
 * []()Backend
@@ -96,8 +107,7 @@ High Five is a real-time image analysis platform for images and videos taken by 
 * []()Deployment
   * []()[Microsoft Azure](https://azure.microsoft.com/en-us/)
 * []()Database
-    * []()[MongoDB](https://www.mongodb.com/)
-    * []()[MicrosoftSQL](https://www.microsoft.com/en-us/sql-server/sql-server-2019)
+  * []()[Microsoft Azure Blob Storage](https://azure.microsoft.com/en-us/services/storage/blobs/)
 
 ## Team Members
 
@@ -121,19 +131,14 @@ master ( build )
 </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− backend−development ( build )
 </br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− module-develop ( build )
-</br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− feature-module-feature_name
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− backend-feature-feature_name
 </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− mobile−development ( build )
 </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− mobile-feature-feature_name
 
 Development of the back-end and front-end has been divided into seperate branches for separation
-of concerns. For every module(subsystem) a seperate branch has been created, and every feature per module has its own branch as well. Before merging, all branches
-must go through a mandatory Pull Request procedure in which the branch will be reviewed by
-another team member, who did not make the pull request, and - if approved - merged
-into the branch immediately above the requested branch in the hierarchy as defined above.
+of concerns. Feature branches are used for both front-end and back-end to develop certain features before they are propagated into the appropriate development branches. Before merging, all branches must go through a mandatory Pull Request procedure in which the branch will be reviewed by another team member, who did not make the pull request, and - if approved - merged into the branch immediately above the requested branch in the hierarchy as defined above.
 
 ### Code Quality Badges
 [![Contributors][contributors-shield]][contributors-url]
@@ -146,7 +151,7 @@ into the branch immediately above the requested branch in the hierarchy as defin
 <br>
 <br>
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fdiscord.com%2Fchannels%2F841566124087705620%2F841566124087705625%2F848982894759641118)](https://high5app.azurewebsites.net/)
-</br>
+<br>
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/COS301-SE-2021/High-Five.svg?style=for-the-badge

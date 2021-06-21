@@ -24,7 +24,7 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public partial class EchoRequest : IEquatable<EchoRequest>
+    public class EchoRequest : IEquatable<EchoRequest>
     {
         /// <summary>
         /// Gets or Sets Message

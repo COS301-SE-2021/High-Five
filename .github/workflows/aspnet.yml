@@ -26,5 +26,5 @@ jobs:
           dotnet-version: 5.x
       - name: Build with dotnet
         working-directory: ./backend/HighFive
-        run: dotnet build 
+        run: dotnet build
           

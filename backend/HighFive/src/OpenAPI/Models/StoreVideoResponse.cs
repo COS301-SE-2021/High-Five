@@ -24,7 +24,7 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public partial class StoreVideoResponse : IEquatable<StoreVideoResponse>
+    public class StoreVideoResponse : IEquatable<StoreVideoResponse>
     {
         /// <summary>
         /// Gets or Sets Success

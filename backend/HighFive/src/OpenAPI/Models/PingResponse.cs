@@ -24,7 +24,7 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public partial class PingResponse : IEquatable<PingResponse>
+    public class PingResponse : IEquatable<PingResponse>
     {
         /// <summary>
         /// Gets or Sets Message

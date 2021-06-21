@@ -70,4 +70,4 @@ export class ControlsPage implements OnInit {
   }
 
 
-  }
+}

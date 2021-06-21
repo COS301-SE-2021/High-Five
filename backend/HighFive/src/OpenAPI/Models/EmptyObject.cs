@@ -24,7 +24,7 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public partial class EmptyObject : IEquatable<EmptyObject>
+    public class EmptyObject : IEquatable<EmptyObject>
     {
         /// <summary>
         /// Gets or Sets Success

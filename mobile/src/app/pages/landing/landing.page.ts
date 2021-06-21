@@ -11,5 +11,4 @@ export class LandingPage implements OnInit {
 
   ngOnInit() {
   }
-
 }
