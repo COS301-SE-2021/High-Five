@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
 
 @Component({
   selector: 'app-analytics',
@@ -6,8 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./analytics.page.scss'],
 })
 export class AnalyticsPage implements OnInit {
-
-  constructor() { }
+  public pipelineCount: number;
+  public isDesktop: boolean;
+  constructor(private screenSizeService: ScreenSizeServiceService) {
+    this.screenSizeService.isDesktopView().subscribe(isDesktop=>{
+      this.isDesktop = isDesktop;
+    });
+  }
 
   ngOnInit() {
   }
