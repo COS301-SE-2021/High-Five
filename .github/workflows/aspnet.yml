@@ -1,0 +1,30 @@
+﻿name: .NET Core Build
+
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches:
+      - 'development'
+      - 'master'
+  pull_request:
+    branches:
+      - 'development'
+      - 'master'
+      - 'backend-development'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.x
+      - name: Build with dotnet
+        working-directory: ./backend/HighFive
+        run: dotnet build
+          

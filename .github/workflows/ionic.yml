@@ -9,10 +9,12 @@ on:
     branches: 
       - 'development'
       - 'master'
+      - 'mobile-development'
   pull_request:
     branches: 
       - 'development'
       - 'master'
+      - 'mobile-development'
 
   workflow_dispatch:
 
