@@ -7,7 +7,7 @@
           <ion-col></ion-col>
           <ion-col size="12">
             <ion-item>
-              <ion-label name="firstName" position="floating">{{constants.labels.first_name}}</ion-label>
+              <ion-label name="firstName" position="floating">{{constants.labels.firstName}}</ion-label>
               <ion-input type="text"></ion-input>
             </ion-item>
           </ion-col>
@@ -17,7 +17,7 @@
           <ion-col></ion-col>
           <ion-col size="12">
             <ion-item>
-              <ion-label name="lastName" position="floating">{{constants.labels.last_name}}</ion-label>
+              <ion-label name="lastName" position="floating">{{constants.labels.lastName}}</ion-label>
               <ion-input type="text"></ion-input>
             </ion-item>
           </ion-col>
@@ -27,11 +27,11 @@
           <ion-col></ion-col>
           <ion-col size="12">
             <ion-item>
-              <ion-label name="emailAddr" position="floating">{{constants.labels.email_address}}</ion-label>
+              <ion-label name="emailAddr" position="floating">{{constants.labels.emailAddress}}</ion-label>
               <ion-input type="text" autocorrect="on" placeholder="example@example.com">
                 <ion-icon name="mail-outline" slot="start" ></ion-icon>
               </ion-input>
-              <ion-button name="verifyBtn" style="height: 80%;" slot="end" color="primary" (click)="showVerify= true">{{constants.labels.verify_email}}</ion-button>
+              <ion-button name="verifyBtn" style="height: 80%;" slot="end" color="primary" (click)="showVerify= true">{{constants.labels.verifyEmail}}</ion-button>
 
             </ion-item>
           </ion-col>
@@ -42,7 +42,7 @@
             <ion-col></ion-col>
             <ion-col size="{{adjustSize(8)}}">
               <ion-item id="verifyCode">
-                <ion-label name="verifyCode" position="floating">{{constants.labels.enter_code}}</ion-label>
+                <ion-label name="verifyCode" position="floating">{{constants.labels.enterCode}}</ion-label>
                 <ion-input></ion-input>
               </ion-item>
             </ion-col>
@@ -70,7 +70,7 @@
           <ion-col></ion-col>
           <ion-col size="12">
             <ion-item style="width: 80%">
-              <ion-label name="passwordConfirm" position="floating">{{constants.labels.password_confirm}}</ion-label>
+              <ion-label name="passwordConfirm" position="floating">{{constants.labels.passwordConfirm}}</ion-label>
               <ion-input type="password" placeholder="">
                 <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
               </ion-input>
