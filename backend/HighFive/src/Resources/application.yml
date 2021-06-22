@@ -1,0 +1,413 @@
+﻿openapi: 3.0.0
+
+info:
+  version: 0.0.1
+  title: High Five
+  description: The OpenAPI specification for High Five's controllers
+
+tags:
+  - name: "MediaStorage"
+  - name: "Test"
+  - name: "Pipelines"
+
+  #==========================================================
+  #     PATHS
+  #==========================================================
+paths:
+
+  #==========================================================
+  #     TEST SUBSYSTEM PATHING
+  #==========================================================
+
+  /test/ping:
+    post:
+      tags:
+        - "Test"
+      description: Test if the server is online
+      operationId: Ping
+      responses:
+        "200":
+          description: Ping successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pingResponse'
+
+  /test/echo:
+    post:
+      tags:
+        - "Test"
+      description: Test if the server is online
+      operationId: Echo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/echoRequest'
+      responses:
+        "200":
+          description: Ping successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pingResponse'
+
+  #==========================================================
+  #     VIDEO STORAGE SUBSYSTEM PATHING
+  #==========================================================
+
+  /media/storeVideo:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Store Video use case
+      operationId: StoreVideo
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/storeVideoRequest'
+      responses:
+        "200":
+          description: Video has been stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/storeVideoResponse'
+
+  /media/getAllVideos:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Get All Videos use case
+      operationId: GetAllVideos
+      responses:
+        "200":
+          description: Returns a list of metadata objects of all the videos in the blob storage
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/getAllVideosResponse'
+    
+  /media/getVideo:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Get Videos use case
+      operationId: GetVideo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/getVideoRequest'
+      responses:
+        "200":
+          description: Returns a list of the filenames of all videos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getVideoResponse'
+        "400":
+          description: Invalid video id provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+  
+  /media/deleteVideo:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Get Videos use case
+      operationId: DeleteVideo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteVideoRequest'
+      responses:
+        "200":
+          description: Video successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  #==========================================================
+  #     PIPELINES SUBSYSTEM PATHING
+  #==========================================================
+  
+  /pipelines/createPipeline:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Create Pipeline use case
+      operationId: CreatePipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createPipelineRequest'
+      responses:
+        "200":
+          description: Pipeline has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+                
+  /pipelines/getPipelines:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Get Pipelines use case
+      operationId: GetPipelines
+      responses:
+        "200":
+          description: All pipelines have been returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getPipelinesResponse'
+                
+  /pipelines/addTools:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Add Tools use case
+      operationId: AddTools
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addToolsRequest'
+      responses:
+        "200":
+          description: Tools have been added to pipeline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+                
+  /pipelines/removeTools:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Remove Tools use case
+      operationId: RemoveTools
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/removeToolsRequest'
+      responses:
+        "200":
+          description: Tools have been removed from pipeline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /pipelines/deletePipeline:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Delete Pipeline use case
+      operationId: DeletePipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deletePipelineRequest'
+      responses:
+        "200":
+          description: Tools have been removed from pipeline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+  
+  #==========================================================
+  #     SCHEMAS
+  #==========================================================
+components:
+  schemas:
+
+    #==========================================================
+    #     TEST COMPONENTS
+    #==========================================================
+
+    pingResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
+    echoRequest:
+      type: object
+      properties:
+        message:
+          type: string
+
+    #==========================================================
+    #     VIDEO STORAGE COMPONENTS
+    #==========================================================
+
+    storeVideoRequest:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+
+    storeVideoResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+
+    retrieveVideosResponse:
+      type: object
+      properties:
+        fileName:
+          type: string
+    
+    getAllVideosResponse:
+      type: object
+      properties:
+        videos:
+          type: array
+          items:
+            $ref: '#/components/schemas/videoMetaData'
+    
+    getVideoRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique id assossciated with a certain video stored on the blob storage
+    
+    getVideoResponse:
+      type: object
+      properties:
+        file:
+          type: string
+          format: byte
+
+    videoMetaData:
+      type: object
+      properties:
+        name:
+          type: string
+        duration:
+          type: integer
+          description: duration of the video in seconds
+        dateStored:
+          type: string
+          format: date-time
+          description: The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Z
+        id:
+          type: string
+        thumbnail:
+          type: string
+          format: byte
+
+    deleteVideoRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique id assossciated with a certain video stored on the blob storage
+
+    #==========================================================
+    #     PIPELINES COMPONENTS
+    #==========================================================
+    
+    createPipelineRequest:
+      type: object
+      properties:
+        pipeline:
+          $ref: '#/components/schemas/newPipeline'
+    
+    getPipelinesResponse:
+      type: object
+      properties:
+        pipelines:
+          type: array
+          items:
+            $ref: '#/components/schemas/pipeline'
+    
+    newPipeline:
+      type: object
+      properties:
+        name:
+          type: string
+        tools:
+          type: array
+          items:
+            type: string
+            description: All the tools stored as strings
+    
+    pipeline:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+          description: Unique id associated with the pipeline
+        tools:
+          type: array
+          items:
+            type: string
+            description: All the tools stored as strings
+            
+    addToolsRequest:
+      type: object
+      properties:
+        pipelineId:
+          type: string
+        tools:
+          type: array
+          items:
+            type: string
+
+    removeToolsRequest:
+      type: object
+      properties:
+        pipelineId:
+          type: string
+        tools:
+          type: array
+          items:
+            type: string
+    
+    deletePipelineRequest:
+      type: object
+      properties:
+        pipelineId:
+          type: string
+          
+    #==========================================================
+    #     GENERIC COMPONENTS
+    #==========================================================
+
+    emptyObject:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
