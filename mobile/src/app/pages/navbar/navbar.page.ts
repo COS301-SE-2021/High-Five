@@ -15,6 +15,7 @@ export class NavbarPage implements OnInit {
   @ViewChild('analyticsNav') analyticsNav: HTMLIonButtonElement;
   @ViewChild('videoNav') videoNav: HTMLIonButtonElement;
   @ViewChild('controlsNav') controlsNav: HTMLIonButtonElement;
+  //These links are arrays so that when the content is changed, it is shown in the HTML
   homeLink = ['active-link'];
   analyticsLink = ['link'];
   videoLink = ['link'];
@@ -24,9 +25,8 @@ export class NavbarPage implements OnInit {
   darkMode: boolean ;
   private navPages;
 
-  //These links are arrays so that when the content is changed, it is shown in the HTML
 
-  constructor(private screenSizeService: ScreenSizeServiceService, private nav: Router, private themeService: ThemeService) {
+  constructor(private screenSizeService: ScreenSizeServiceService, private nav: Router) {
     this.screenSizeService.isDesktopView().subscribe(isDesktop=>{
       this.isDesktop = isDesktop;
     });
@@ -49,6 +49,7 @@ export class NavbarPage implements OnInit {
    * @param tab The navigation button to set to be active
    */
   navigateTo(url: string, tab: string) {
+    // eslint-disable-next-line guard-for-in
     for (const key in this.navPages) {
       const value = this.navPages[key];
       if (key !== tab) {

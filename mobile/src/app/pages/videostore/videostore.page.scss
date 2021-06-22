@@ -1,4 +1,16 @@
-ion-content{
-  --background: url("../../../assets/images/welcome_landscape.svg");
+.spin{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+ion-spinner {
+  width: 28px;
+  height: 28px;
+  stroke: #444;
+  fill: #222;
 }
 
+.alert-style .alert-wrapper {
+  background: #e5e5e5;
+}
