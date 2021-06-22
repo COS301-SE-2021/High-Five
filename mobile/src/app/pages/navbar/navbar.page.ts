@@ -26,7 +26,7 @@ export class NavbarPage implements OnInit {
   private navPages;
 
 
-  constructor(private screenSizeService: ScreenSizeServiceService, private nav: Router) {
+  constructor(private screenSizeService: ScreenSizeServiceService, private nav: Router, private themeService:ThemeService) {
     this.screenSizeService.isDesktopView().subscribe(isDesktop=>{
       this.isDesktop = isDesktop;
     });
