@@ -11,5 +11,5 @@ export class VideoUploadConstants {
   public labels = {
     'file_name': "File Name",
     'file_upload': "Upload"
-  }
+  };
 }
