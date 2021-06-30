@@ -1,0 +1,16 @@
+
+
+<ion-content *ngIf="!isDesktop">
+  <div id = "pipelinesMobile">
+    <app-pipeline></app-pipeline>
+  </div>
+</ion-content>
+
+<ion-content *ngIf="isDesktop" >
+  <div id="pipelinesDesktop">
+    <app-pipeline></app-pipeline>
+  </div>
+</ion-content>
+<ion-footer>
+  <app-add-pipeline></app-add-pipeline>
+</ion-footer>

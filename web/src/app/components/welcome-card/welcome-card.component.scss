@@ -1,0 +1,35 @@
+ion-card{
+  max-width: 400px;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20vh;
+  max-height: 50vh;
+  height: 400px;
+  --background: rgba(0,0,0,0.78);
+}
+
+ion-card-title{
+  text-align: center;
+}
+
+ion-card-subtitle{
+  text-align: center;
+  margin-bottom: 4%;
+}
+
+ion-row
+{
+  margin-bottom: 10%;
+}
+
+ion-button:first-of-type{
+  margin-top: 5%;
+}
+
+ion-button{
+  margin-left: 5%;
+  margin-right: 5%;
+}
