@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 
 import { VideouploadService } from './videoupload.service';
-import {VideostoreCardComponent} from "../../components/videostore-card/videostore-card.component";
-import {IonicModule} from "@ionic/angular";
-import {HttpClient, HttpClientModule} from "@angular/common/http";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {VideostoreCardComponent} from '../../components/videostore-card/videostore-card.component';
+import {IonicModule} from '@ionic/angular';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('VideouploadService', () => {
   let service: VideouploadService;
