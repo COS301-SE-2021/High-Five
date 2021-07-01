@@ -7,16 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { VideostorePageRoutingModule } from './videostore-routing.module';
 
 import { VideostorePage } from './videostore.page';
-import {CustomComponentsModule} from '../../components/components.module';
+import {VideostoreCardComponent} from '../../components/videostore-card/videostore-card.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    VideostorePageRoutingModule,
-    CustomComponentsModule
+    VideostorePageRoutingModule
   ],
-  declarations: [VideostorePage]
+  declarations: [VideostorePage, VideostoreCardComponent]
 })
 export class VideostorePageModule {}

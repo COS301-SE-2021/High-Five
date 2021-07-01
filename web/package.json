@@ -10,6 +10,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "serve lab": "ionic serve --lab",
     "test:prod": "ng test --browsers=ChromeHeadless --watch=false --code-coverage"
   },
   "private": true,
@@ -49,6 +50,7 @@
     "@angular/language-service": "~12.0.1",
     "@capacitor/cli": "^3.0.0",
     "@ionic/angular-toolkit": "^4.0.0",
+    "@ionic/lab": "3.2.10",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",

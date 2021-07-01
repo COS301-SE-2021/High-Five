@@ -1,12 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {ToolsetConstants} from '../../../constants/toolset-constants';
-import {PipelineService} from '../../services/pipeline/pipeline.service';
-import {PipelinesService} from '../../apis/pipelines.service';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Pipeline} from '../../models/pipeline';
-import {LoadingController, ModalController, ToastController} from '@ionic/angular';
+import {convertNodeSourceSpanToLoc} from '@angular-eslint/template-parser/dist/convert-source-span-to-loc';
+import {LoadingController, Platform, ToastController} from '@ionic/angular';
+import {element} from 'protractor';
+import {PipelinesService} from '../../apis/pipelines.service';
 import {DeletePipelineRequest} from '../../models/deletePipelineRequest';
-import {EditPipelineComponent} from '../edit-pipeline/edit-pipeline.component';
-
 
 @Component({
   selector: 'app-pipeline',
@@ -14,90 +12,59 @@ import {EditPipelineComponent} from '../edit-pipeline/edit-pipeline.component';
   styleUrls: ['./pipeline.component.scss'],
 })
 export class PipelineComponent implements OnInit {
-  public pipelines: Pipeline[];
-  constructor(public constants: ToolsetConstants, private pipelinesService: PipelinesService,
-              private loadingController: LoadingController, private modalController: ModalController,
-              private toastController: ToastController, private pipelineService: PipelineService) {
+  @Input() pipeline: Pipeline;
+  @Output() deletePipeline: EventEmitter<string>  = new EventEmitter<string>(); // Will send the id of the pipeline
+  @Output() removeTool: EventEmitter<Pipeline> = new EventEmitter<Pipeline>(); // Will send through a new pipeline object
+  constructor(private platform: Platform, private pipelinesService: PipelinesService,
+              private loadingController: LoadingController, private toastController: ToastController) {}
 
+  ngOnInit() {
     /**
-     * The below code acts as an event listener for when the addedNewPipeline value in the pipeline service (not the
-     * OpenAPI service), is changed, this allows the page to be dynamically update without the need to reload the page
+     * The below allows us to add custom colours to the ionic chips, you cant use color ={{color}} as by default the
+     * chips only accept the ionic colours (primary, secondary, warning, etc.)
      */
-    this.pipelineService.addedNewPipelineWatch().subscribe(isDesktop=>{
-      this.getAllPipelines();
-      this.pipelineService.setNewPipelineAdded(false);
-
-    });
-  }
-
-  ngOnInit() {}
-
-
-  /**
-   * A function that will delete a pipeline based off of its id that it gets by getting
-   * the index of the pipeline from the local pipelines array
-   *
-   * @param index is the index of the pipeline in the array
-   */
-  async deletePipeline(index: number){
-      const loading = await this.loadingController.create({
-        spinner: 'circles',
-        animated:true,
+    this.platform.ready().then(()=>{
+      const temp = Array.from(document.getElementsByClassName('tool-chip') as HTMLCollectionOf<HTMLElement>);
+      temp.forEach(value => {
+        value.style.borderColor='#' + ('000000' +
+          Math.floor(0x1000000 * Math.random()).toString(16)).slice(-6);
       });
-      await loading.present();
-    const toast = await  this.toastController.create(
-      {
-        message: 'Pipeline successfully deleted',
-        duration: 2000
-      }
-    );
-      const id: string= this.pipelines[index].id;
-      const deletePipelineRequest: DeletePipelineRequest={
-        pipelineId: id,
-      };
-      try{
-        const res = this.pipelinesService.deletePipeline(deletePipelineRequest).subscribe(response =>{
-          loading.dismiss();
-          toast.present();
-          this.getAllPipelines();
-        });
-      }catch (e) {
-        toast.message= 'Error occurred while deleting pipeline';
-        await loading.dismiss();
-        await toast.present();
-      }
-  }
-
-  /**
-   * This function opens the modal which users will use to add and/or remove tools from the pipeline
-   *
-   * @param i a number passed in which represents the index of the pipeline in the pipelines array, the pipeline will be
-   * passed to the modal, so that the modal can use the values of the pipeline
-   */
-  async startEditProcess(i){
-    const modal = await this.modalController.create({
-      component : EditPipelineComponent,
-      cssClass : 'editPipeline',
-      componentProps:{
-        modalController : this.modalController,
-        tools : this.constants.labels.tools,
-        pipeline : this.pipelines[i],
-        loadingController : this.loadingController,
-      }
     });
-    modal.style.backgroundColor = 'rgba(0,0,0,0.85)';
-    return await  modal.present();
   }
 
+  async onRemoveTool(tool: string){
+    this.pipeline.tools = this.pipeline.tools.filter(t => t !== tool);
+    this.removeTool.emit(this.pipeline);
+  }
+  async onAddTool(){
+    console.log('Edit button pressed');
+  }
 
-  /**
-   * A function that sends a request to get all the created pipelines
-   */
-  async getAllPipelines(){
-    this.pipelinesService.getPipelines().subscribe(
-      response => {
-        this.pipelines= response.pipelines;
-      }
-    );
+  async onDeletePipeline(){
+    const loading = await this.loadingController.create({
+      spinner:'dots',
+      animated : true,
+    });
+    await loading.present();
+
+    const deletePipelineRequest: DeletePipelineRequest={
+      pipelineId : this.pipeline.id
+    };
+    try{
+      const res = this.pipelinesService.deletePipeline(deletePipelineRequest).subscribe(response=>{
+        loading.dismiss();
+        this.deletePipeline.emit(this.pipeline.id);
+      });
+    }catch (e){
+      const  toast = await this.toastController.create({
+        message: 'Deletion of pipeline failed, please contact the developers',
+        duration: 2000
+      });
+      await loading.dismiss();
+      await toast.present();
+    }
+    await loading.dismiss();
+
+    this.deletePipeline.emit(this.pipeline.id);
   }
 }
