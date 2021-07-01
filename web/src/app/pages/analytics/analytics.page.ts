@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
 import {Pipeline} from '../../models/pipeline';
 import {PipelinesService} from '../../apis/pipelines.service';
-import {GetPipelinesResponse} from '../../models/getPipelinesResponse';
 import {ToastController} from '@ionic/angular';
 
 @Component({
@@ -31,13 +30,24 @@ export class AnalyticsPage implements OnInit {
     }).then(m => m.present());
   }
 
-  editPipeline(pipeline: Pipeline){
+  removeTool(pipeline: Pipeline){
+    const  toast = this.toastController.create({
+      header: 'Success!',
+      message: 'removed tool from ' + pipeline.name,
+      duration: 2000,
+      translucent : true,
+      position: 'bottom'
+    }).then(m => m.present());
   }
 
   ngOnInit() {
     this.pipelinesService.getPipelines().subscribe(response => {
       this.pipelines = response.pipelines;
     });
+  }
+
+  addPipeline() {
+
   }
 }
 

@@ -5,6 +5,7 @@ import {LoadingController, Platform, ToastController} from '@ionic/angular';
 import {element} from 'protractor';
 import {PipelinesService} from '../../apis/pipelines.service';
 import {DeletePipelineRequest} from '../../models/deletePipelineRequest';
+import {RemoveToolsRequest} from '../../models/removeToolsRequest';
 
 @Component({
   selector: 'app-pipeline',
@@ -33,8 +34,22 @@ export class PipelineComponent implements OnInit {
   }
 
   async onRemoveTool(tool: string){
-    this.pipeline.tools = this.pipeline.tools.filter(t => t !== tool);
-    this.removeTool.emit(this.pipeline);
+    const removeToolRequest: RemoveToolsRequest ={
+      pipelineId: this.pipeline.id,
+      tools : [tool]
+    };
+    try{
+      const rest = this.pipelinesService.removeTools(removeToolRequest).subscribe(response => {
+        this.pipeline.tools = this.pipeline.tools.filter(t => t !== tool);
+        this.removeTool.emit(this.pipeline);
+      });
+    }catch (e){
+      const  toast = await this.toastController.create({
+        message: 'Removal of tool from pipeline failed',
+        duration: 2000
+      });
+      await toast.present();
+    }
   }
   async onAddTool(){
     console.log('Edit button pressed');
