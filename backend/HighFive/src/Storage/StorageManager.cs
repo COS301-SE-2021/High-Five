@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using MediaToolkit;
 using MediaToolkit.Model;
 using MediaToolkit.Options;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
@@ -33,6 +29,12 @@ namespace src.Storage
         {
             _configuration = config;
             String connectionString = _configuration.GetConnectionString("StorageConnection");
+            _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
+            _random = new Random();
+        }
+
+        public StorageManager(String connectionString)
+        {
             _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             _random = new Random();
         }
@@ -83,13 +85,13 @@ namespace src.Storage
             }
             return newFile;
         }
-        
+
         public string HashMd5(string source)
         {
-            MD5 md5 = System.Security.Cryptography.MD5.Create();
-            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(source);
+            MD5 md5 = MD5.Create();
+            byte[] inputBytes = Encoding.ASCII.GetBytes(source);
             byte[] hashBytes = md5.ComputeHash(inputBytes);
-     
+            var test = MockStorageManager();
             // Step 2, convert byte array to hex string
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < hashBytes.Length; i++)
@@ -109,6 +111,15 @@ namespace src.Storage
             }
             return str;
         }
-        
+
+        public Mock<IStorageManager> MockStorageManager()
+        {
+            var mock = new Mock<IStorageManager>();
+            mock.Setup(c => c.GetFile(It.IsAny<string>(),It.IsAny<string>(),false)).Returns(Task.FromResult((CloudBlockBlob)null));
+            mock.Setup(c => c.GetAllFilesInContainer(It.IsAny<string>())).Returns(Task.FromResult((List<CloudBlockBlob>) null));
+            mock.Setup(c => c.CreateNewFile(It.IsAny<string>(), It.IsAny<string>()));
+            return mock;
+        }
+
     }
 }

@@ -18,7 +18,7 @@ namespace src.Subsystems.Pipelines
     {
         //NOTE: Does not check for duplicates in Tools
         private readonly IStorageManager _storageManager;
-        private const string ContainerName = "demo2pipelines";
+        private string _containerName = "demo2pipelines";
 
         public PipelineService(IStorageManager storageManager)
         {
@@ -27,7 +27,7 @@ namespace src.Subsystems.Pipelines
         
         public GetPipelinesResponse GetPipelines()
         {
-            var allFiles = _storageManager.GetAllFilesInContainer(ContainerName);
+            var allFiles = _storageManager.GetAllFilesInContainer(_containerName);
             if (allFiles.Result == null)
             {
                 return new GetPipelinesResponse{Pipelines = new List<Pipeline>()};
@@ -46,13 +46,13 @@ namespace src.Subsystems.Pipelines
         {
             var pipeline = request.Pipeline;
             var generatedName = _storageManager.HashMd5(pipeline.Name);
-            var cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".json", ContainerName).Result;
+            var cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".json", _containerName).Result;
             var salt = "";
             while (cloudBlockBlob == null)
             {
                 salt += _storageManager.RandomString();
                 generatedName = _storageManager.HashMd5(pipeline.Name+salt);
-                cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".json", ContainerName).Result;
+                cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".json", _containerName).Result;
             }
             cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("originalName", pipeline.Name));
             if (!IsNullOrEmpty(salt))
@@ -70,7 +70,7 @@ namespace src.Subsystems.Pipelines
 
         public bool AddTools(AddToolsRequest request)
         {
-            var file =_storageManager.GetFile(request.PipelineId+".json", ContainerName).Result;
+            var file =_storageManager.GetFile(request.PipelineId+".json", _containerName).Result;
             if (file == null)
             {
                 return false;
@@ -79,18 +79,18 @@ namespace src.Subsystems.Pipelines
             var pipeline = ConvertFileToPipeline(file).Result;
             var pipelineToolset = pipeline.Tools;
             pipelineToolset.AddRange(request.Tools);
-            pipeline.Tools = pipelineToolset;
+            pipeline.Tools = pipelineToolset.Distinct().ToList();
             UploadPipelineToStorage(pipeline, file);
             return true;
         }
 
-        public void RemoveTools(RemoveToolsRequest request)
+        public bool RemoveTools(RemoveToolsRequest request)
         {
             //NOTE: Currently does not check if anything is actually deleted
-            var file =_storageManager.GetFile(request.PipelineId+".json", ContainerName).Result;
+            var file =_storageManager.GetFile(request.PipelineId+".json", _containerName).Result;
             if (file == null)
             {
-                return;
+                return false;
             }
 
             var pipeline = ConvertFileToPipeline(file).Result;
@@ -101,11 +101,12 @@ namespace src.Subsystems.Pipelines
             }
             pipeline.Tools = pipelineToolset;
             UploadPipelineToStorage(pipeline, file);
+            return true;
         }
 
         public async Task<bool> DeletePipeline(DeletePipelineRequest request)
         {
-            CloudBlockBlob file = _storageManager.GetFile(request.PipelineId + ".json", ContainerName).Result;
+            CloudBlockBlob file = _storageManager.GetFile(request.PipelineId + ".json", _containerName).Result;
             if (file == null)
             {
                 return false;
@@ -124,6 +125,12 @@ namespace src.Subsystems.Pipelines
         {
             var jsonData = JsonConvert.SerializeObject(pipeline);
             cloudBlockBlob.UploadTextAsync(jsonData);
+        }
+
+
+        public void SetContainer(string container)
+        {
+            _containerName = container;
         }
     }
 }
