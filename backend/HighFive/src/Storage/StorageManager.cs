@@ -4,10 +4,15 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using MediaToolkit;
+using MediaToolkit.Model;
+using MediaToolkit.Options;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using Moq;
+using Org.OpenAPITools.Models;
+using static System.String;
 
 namespace src.Storage
 {
@@ -80,7 +85,7 @@ namespace src.Storage
             }
             return newFile;
         }
-        
+
         public string HashMd5(string source)
         {
             MD5 md5 = MD5.Create();
@@ -115,6 +120,6 @@ namespace src.Storage
             mock.Setup(c => c.CreateNewFile(It.IsAny<string>(), It.IsAny<string>()));
             return mock;
         }
-        
+
     }
 }
