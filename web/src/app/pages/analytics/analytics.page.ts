@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
 import {Pipeline} from '../../models/pipeline';
 import {PipelinesService} from '../../apis/pipelines.service';
-import {ToastController} from '@ionic/angular';
+import {ModalController, ToastController} from '@ionic/angular';
+import {EditPipelineComponent} from '../../components/edit-pipeline/edit-pipeline.component';
 
 @Component({
   selector: 'app-analytics',
@@ -15,7 +16,7 @@ export class AnalyticsPage implements OnInit {
   public pipelines: Pipeline[] = [];
 
   constructor(private screenSizeService: ScreenSizeServiceService, private pipelinesService: PipelinesService,
-              private toastController: ToastController) {
+              private toastController: ToastController, private modalController: ModalController) {
     this.screenSizeService.isDesktopView().subscribe(isDesktop => {
       this.isDesktop = isDesktop;
     });
@@ -46,6 +47,19 @@ export class AnalyticsPage implements OnInit {
     });
   }
 
+
+  async openAddPipelineModal(){
+    const modal = await this.modalController.create({
+      component: EditPipelineComponent,
+      componentProps:{
+        modalController  : this.modalController
+      }
+    });
+    modal.onWillDismiss().then(data=> {
+      console.log(data);
+    });
+    return await modal.present();
+  }
   addPipeline() {
 
   }

@@ -1,11 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Pipeline} from '../../models/pipeline';
 import {convertNodeSourceSpanToLoc} from '@angular-eslint/template-parser/dist/convert-source-span-to-loc';
-import {LoadingController, Platform, ToastController} from '@ionic/angular';
+import {LoadingController, Platform, PopoverController, ToastController} from '@ionic/angular';
 import {element} from 'protractor';
 import {PipelinesService} from '../../apis/pipelines.service';
 import {DeletePipelineRequest} from '../../models/deletePipelineRequest';
 import {RemoveToolsRequest} from '../../models/removeToolsRequest';
+import {AddToolComponent} from '../add-tool/add-tool.component';
 
 @Component({
   selector: 'app-pipeline',
@@ -17,7 +18,8 @@ export class PipelineComponent implements OnInit {
   @Output() deletePipeline: EventEmitter<string>  = new EventEmitter<string>(); // Will send the id of the pipeline
   @Output() removeTool: EventEmitter<Pipeline> = new EventEmitter<Pipeline>(); // Will send through a new pipeline object
   constructor(private platform: Platform, private pipelinesService: PipelinesService,
-              private loadingController: LoadingController, private toastController: ToastController) {}
+              private loadingController: LoadingController, private toastController: ToastController,
+              private popoverController: PopoverController) {}
 
   ngOnInit() {
     /**
@@ -81,5 +83,24 @@ export class PipelineComponent implements OnInit {
     await loading.dismiss();
 
     this.deletePipeline.emit(this.pipeline.id);
+  }
+
+  async presentAddToolPopover(ev: any){
+    const selectedTools: string[] = [];
+    const availableTools: string[]= [];
+    for (let i = 0; i < 10; i++) {
+      availableTools.push(String(i));
+    }
+    const addToolPopover = await this.popoverController.create({
+      component: AddToolComponent,
+      event: ev,
+      translucent: true,
+      componentProps: {
+        tools : selectedTools,
+        availableTools
+      }
+    });
+    await addToolPopover.present();
+
   }
 }

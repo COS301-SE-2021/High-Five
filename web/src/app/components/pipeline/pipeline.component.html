@@ -1,14 +1,14 @@
 <ion-card>
-  <ion-card-title align="center">
-    {{pipeline.name}}
-  </ion-card-title>
   <ion-card-content align="center">
+    <ion-card-title align="center">
+      {{pipeline.name}}
+    </ion-card-title>
     <ion-chip *ngFor="let tool of pipeline.tools; let index = index" [outline]="true" mode="md" class="tool-chip">
       <ion-label color="dark">{{tool}}</ion-label>
       <ion-icon color="dark" (click)="onRemoveTool(tool)" name="close"></ion-icon>
     </ion-chip>
     <ion-buttons class="ion-justify-content-center">
-      <ion-button (click)="onAddTool()" color="primary">
+      <ion-button (click)="presentAddToolPopover($event)" color="primary">
         <ion-label>
           Add Tool
         </ion-label>
