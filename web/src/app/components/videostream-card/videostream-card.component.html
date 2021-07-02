@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button name="dismissBtn" (click)="dismissModal()" fill="clear"><ion-icon name="close-outline"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <vg-player>
+    <video [vgMedia]="media" #media id="singleVideo" preload="auto" controls>
+      <source src="{{endpoints.labels.getVideo}}/{{vidId}}" type="video/mp4">
+    </video>
+  </vg-player>
+</ion-content>

@@ -3,6 +3,7 @@ package com.bdpsolutions.plugin;
 import android.Manifest;
 
 import com.bdpsolutions.plugin.sender.Sender;
+import com.bdpsolutions.plugin.server.UdpVideoServer;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.PermissionState;
 import com.getcapacitor.Plugin;
@@ -28,7 +29,7 @@ permissions ={
 public class UdpRequestsPlugin extends Plugin {
 
     private UdpRequests implementation = new UdpRequests();
-
+    private UdpVideoServer videoServer;
     @PluginMethod
     public void echo(PluginCall call) {
         String value = call.getString("value");
@@ -46,6 +47,42 @@ public class UdpRequestsPlugin extends Plugin {
            handleUdpRequest(call);
         }
     }
+
+    @PluginMethod
+    public void getVideoStream(PluginCall call){
+        if(getPermissionState("requests")!= PermissionState.GRANTED){
+            requestPermissionForAlias("requests", call , "requestsPermissionCallback");
+        }else{
+            startVideoStreamServer();
+            JSObject ret = new JSObject();
+            ret.put("status" , "Ok");
+            ret.put("responseMessage" , "ok");
+            call.resolve(ret);
+        }
+    }
+
+    @PluginMethod
+    public void stopVideoStream(PluginCall call){
+        if(getPermissionState("requests")!= PermissionState.GRANTED){
+            requestPermissionForAlias("requests", call , "requestsPermissionCallback");
+        }else{
+            stopVideoStreamServer();
+            JSObject ret = new JSObject();
+            ret.put("status" , "Ok");
+            ret.put("responseMessage" , "ok");
+            call.resolve(ret);
+        }
+    }
+
+    private void startVideoStreamServer(){
+        videoServer = new UdpVideoServer();
+    }
+
+    private void stopVideoStreamServer(){
+        videoServer.stopServer();
+    }
+
+
 
     private void handleUdpRequest(PluginCall call){
         String address = call.getString("address");
