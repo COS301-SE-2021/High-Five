@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -24,9 +22,8 @@ namespace src.Storage
         private readonly CloudStorageAccount _cloudStorageAccount;
         IConfiguration IStorageManager.Configuration => _configuration;
         CloudStorageAccount IStorageManager.CloudStorageAccount => _cloudStorageAccount;
-        private Random _random;
+        private readonly Random _random;
         private readonly string _alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
-        private string _container = "demo2videos";
 
         public StorageManager(IConfiguration config)
         {
@@ -36,140 +33,60 @@ namespace src.Storage
             _random = new Random();
         }
 
-        public async Task UploadFile(IFormFile file)
+        public StorageManager(String connectionString)
         {
-            var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
-            var cloudBlobContainer = cloudBlobClient.GetContainerReference(_container);
-            if (await cloudBlobContainer.CreateIfNotExistsAsync())
-            {
-                await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions()
-                    {PublicAccess = BlobContainerPublicAccessType.Off});
-            }
-            
-            //create storage name for file
-            var generatedName = HashMd5(file.FileName);
-            var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(generatedName + ".mp4");
-            var salt = "";
-            while (await cloudBlockBlob.ExistsAsync())
-            {
-                salt += RandomString();
-                generatedName = HashMd5(file.FileName+salt + ".mp4");
-                cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(generatedName);
-            }
-            cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("originalName", file.FileName));
-            if (!IsNullOrEmpty(salt))
-            {
-                cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("salt", salt));
-            }
-            
-            //create local temp copy of video file and thumbnail
-            var thumbnailPath = Directory.GetCurrentDirectory() + "\\Subsystems\\MediaStorage\\Videos\\thumbnail.jpg";
-            var videoPath = Directory.GetCurrentDirectory() + "\\Subsystems\\MediaStorage\\Videos\\" + file.FileName;
-            try
-            {
-                await using var stream = new FileStream(videoPath, FileMode.Create);
-                await file.CopyToAsync(stream);
-
-                //get video thumbnail and store as separate blob
-                var inputFile = new MediaFile {Filename = videoPath};
-                var thumbnail = new MediaFile {Filename = thumbnailPath};
-                using (var engine = new Engine())
-                {
-                    engine.GetMetadata(inputFile);
-                    var options = new ConversionOptions {Seek = TimeSpan.FromSeconds(1)};
-                    engine.GetThumbnail(inputFile, thumbnail, options);
-                }
-                var thumbnailBlockBlob = cloudBlobContainer.GetBlockBlobReference(generatedName + "-thumbnail.jpg");
-                thumbnailBlockBlob.Properties.ContentType = "image/jpg";
-                await thumbnailBlockBlob.UploadFromFileAsync(thumbnailPath);
-                
-                //get video duration in seconds
-                var seconds = Math.Truncate(inputFile.Metadata.Duration.TotalSeconds);
-                cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("duration", seconds.ToString()));
-
-                //upload to Azure Blob Storage
-                var ms = new MemoryStream();
-                await file.CopyToAsync(ms);
-                var fileBytes = ms.ToArray();
-                cloudBlockBlob.Properties.ContentType = file.ContentType;
-                await cloudBlockBlob.UploadFromByteArrayAsync(fileBytes, 0, (int) file.Length);
-            }
-            finally
-            {
-                File.Delete(videoPath);
-                File.Delete(thumbnailPath);
-            }
+            _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
+            _random = new Random();
         }
 
-        public async Task<GetVideoResponse> GetVideo(string videoId)
+        public async Task<CloudBlockBlob> GetFile(string fileName, string container, bool create=false)
         {
-            videoId += ".mp4";
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
-            var cloudBlobContainer = cloudBlobClient.GetContainerReference(_container);
-            if (await cloudBlobContainer.CreateIfNotExistsAsync())
+            var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
+            if (create)//NOTE: Does not test if it actually exists or not
             {
-                await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions()
-                    {PublicAccess = BlobContainerPublicAccessType.Off});
+                return cloudBlobContainer.GetBlockBlobReference(fileName);
             }
-
-            var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(videoId);
-            if (await cloudBlockBlob.ExistsAsync())
+            if (!await cloudBlobContainer.ExistsAsync())
             {
-                var videoFile = new byte[cloudBlockBlob.Properties.Length];
-                for (int k = 0; k < cloudBlockBlob.Properties.Length; k++)
-                {
-                    videoFile[k] = 0x20;
-                }
-                await cloudBlockBlob.DownloadToByteArrayAsync(videoFile, 0);
-                GetVideoResponse response = new GetVideoResponse {File = videoFile};
-                return response;
+                return null;
             }
-            //else cloudBlockBlob does not exist
+            var file = cloudBlobContainer.GetBlockBlobReference(fileName);
+            if (await file.ExistsAsync())
+            {
+                return file;
+            }
             return null;
         }
 
-        public async Task<List<VideoMetaData>> GetAllVideos()
+        public async Task<List<CloudBlockBlob>> GetAllFilesInContainer(string container)
         {
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
-            var cloudBlobContainer = cloudBlobClient.GetContainerReference(_container);
+            var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
+            if (await cloudBlobContainer.ExistsAsync())
+            {
+                await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions()
+                    {PublicAccess = BlobContainerPublicAccessType.Off});
+            }
             var subdirectory = "";
             var blobResultSegment = await cloudBlobContainer.ListBlobsSegmentedAsync(subdirectory, true, BlobListingDetails.All,
                 int.MaxValue, null, null, null);
-            
             var allFiles = blobResultSegment.Results;
-            var resultList = new List<VideoMetaData>();
-            var currentVideo = new VideoMetaData();
-            foreach(var listBlobItem in allFiles)//NOTE: Assuming here that a thumbnail will be immediately followed by its corresponding mp4 file
-            {
-                var file = (CloudBlob) listBlobItem;
-                if (file.Name.Contains("thumbnail"))
-                {
-                    currentVideo = new VideoMetaData();
-                    var thumbnail = new byte[file.Properties.Length];
-                    for (int k = 0; k < file.Properties.Length; k++)
-                    {
-                        thumbnail[k] = 0x20;
-                    }
-                    await file.DownloadToByteArrayAsync(thumbnail, 0);
-                    currentVideo.Thumbnail = thumbnail;
-                }
-                else
-                {
-                    currentVideo.Id = file.Name.Replace(".mp4", "");
-                    if (file.Properties.LastModified != null)
-                        currentVideo.DateStored = file.Properties.LastModified.Value.DateTime;
-                    file.Metadata.TryGetValue("duration", out var time);
-                    currentVideo.Duration = int.Parse(time ?? Empty);
-                    file.Metadata.TryGetValue("originalName", out var oldName);
-                    currentVideo.Name = oldName;
-                    resultList.Add(currentVideo);
-                }
-            }
 
-            return resultList;
+            return allFiles.Cast<CloudBlockBlob>().ToList();
         }
 
-        private string HashMd5(string source)
+        public async Task<CloudBlockBlob> CreateNewFile(string name, string container)
+        {
+            CloudBlockBlob newFile = GetFile(name, container, true).Result;
+            if (await newFile.ExistsAsync())
+            {
+                return null;
+            }
+            return newFile;
+        }
+        
+        public string HashMd5(string source)
         {
             MD5 md5 = System.Security.Cryptography.MD5.Create();
             byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(source);
@@ -184,16 +101,16 @@ namespace src.Storage
             return sb.ToString();
         }
 
-        private string RandomString()
+        public string RandomString()
         {
-            String str = "";
-            for(int i =0; i<5; i++)
+            var str = "";
+            for(var i =0; i<5; i++)
             {
-                int a = _random.Next(_alphanumeric.Length);
+                var a = _random.Next(_alphanumeric.Length);
                 str = str + _alphanumeric.ElementAt(a);
             }
             return str;
         }
-
+        
     }
 }

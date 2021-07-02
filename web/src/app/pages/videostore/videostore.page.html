@@ -1,0 +1,31 @@
+<ion-content>
+
+  <div class="ion-padding">
+    <h1>Recorded Videos</h1>
+
+    <div *ngIf="videosFetched">
+      <ion-list>
+        <ion-grid>
+          <ion-row *ngFor="let item of items; let i=index;">
+            <ion-col size-xl="6" size-lg="6" size-md="6" size="6">
+              <app-videostore-card [data]=item[0] [deleter]="getDeleteFunction()"></app-videostore-card>
+            </ion-col>
+            <ion-col size-xl="6" size-lg="6" size-md="6" size="6" *ngIf="item[1] !== undefined">
+              <app-videostore-card [data]=item[1] [deleter]="getDeleteFunction()"></app-videostore-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-list>
+    </div>
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Loading more data...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </div>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" style="margin-right: 2%; margin-bottom: 2%">
+    <ion-fab-button (click)="fileUpload.click()"><ion-icon name="add"></ion-icon></ion-fab-button>
+  </ion-fab>
+  <input hidden type="file" accept="video/mp4" #fileUpload (change)="uploadVideo($event)">
+</ion-content>
