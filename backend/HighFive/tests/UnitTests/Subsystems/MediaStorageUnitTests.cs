@@ -95,7 +95,7 @@ namespace tests.UnitTests.Subsystems.MediaStorage
         [Fact]
         public void TestGetVideoInvalidVideoId()
         {
-            var validVideoId = "5";
+            const string validVideoId = "5";
             var request = new GetVideoRequest
             {
                 Id = validVideoId

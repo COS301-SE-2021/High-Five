@@ -26,11 +26,11 @@ namespace src.Storage
          * and constructing BlobFile objects to return to external callers.
          *
          *      Attributes:
-         * -> _cloudStorageAccount - this is the object that contains a reference to the Azure Storage account.
+         * -> _cloudStorageAccount: this is the object that contains a reference to the Azure Storage account.
          *      being used. It is initialised in the constructor through a connection string that can be
          *      retrieved from the Azure portal.
-         * -> _random - this is a random object that is used to generate unique id's for uploaded files.
-         * -> Alphanumeric - this is a simple alphanumeric string used to generate salt during the process
+         * -> _random: this is a random object that is used to generate unique id's for uploaded files.
+         * -> Alphanumeric: this is a simple alphanumeric string used to generate salt during the process
          *      where uploaded files are granted unique id's.
          */
         
@@ -53,7 +53,7 @@ namespace src.Storage
              * appropriate connection string passed through.
              *
              *      Parameters:
-             * -> connectionString - the connection string of a Cloud Storage Client that can be retrieved.
+             * -> connectionString: the connection string of a Cloud Storage Client that can be retrieved.
              *      from the Azure portal.
              */
             
@@ -70,9 +70,9 @@ namespace src.Storage
              * contains the CloudBlockBlob itself.
              *
              *      Parameters:
-             * -> fileName - this is the name of the file that is being retrieved. I.e. "video1.mp4".
-             * -> container - this is the name of the storage container to be searched for the file.
-             * -> create - this flag is only used internally by the CreateNewFile function to indicate to
+             * -> fileName: this is the name of the file that is being retrieved. I.e. "video1.mp4".
+             * -> container: this is the name of the storage container to be searched for the file.
+             * -> create: this flag is only used internally by the CreateNewFile function to indicate to
              *      this function that it does not need to check if the blob file exists, but that it should
              *      rather instantiate the BlobFile with a reference to a CloudBlockBlob object that may
              *      or may not be in storage. The creation of the file itself will be handled by the
@@ -105,7 +105,7 @@ namespace src.Storage
              * This function will return all the blob files stored in a provided container.
              *
              *      Parameters:
-             * -> container - the name of the container which will contain all the blob files returned.
+             * -> container: the name of the container which will contain all the blob files returned.
              */
             
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
@@ -138,8 +138,8 @@ namespace src.Storage
              * cloud storage.
              *
              *       Parameters:
-             * -> name - this is the name of the file to be created.
-             * -> container - the name of the cloud storage container where the file should be created.
+             * -> name: this is the name of the file to be created.
+             * -> container: the name of the cloud storage container where the file should be created.
              */
             
             var newFile = GetFile(name, container, true).Result;
@@ -158,7 +158,7 @@ namespace src.Storage
              * guaranteed to be unique. An MD5 hash will be applied to the string passed to this function.
              *
              *      Parameters:
-             * -> source - the string to be hashed.
+             * -> source: the string to be hashed.
              */
             
             var md5 = MD5.Create();
