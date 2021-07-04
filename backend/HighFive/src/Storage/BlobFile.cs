@@ -62,12 +62,25 @@ namespace src.Storage
         {
             /*
              *      Description:
-             * This function will upload a new textfile to the Blob in the Azure Blob Storage associated
+             * This function will upload a new text file to the Blob in the Azure Blob Storage associated
              * with the file contained within this BlobFile. This function overwrites any data currently stored
              * in the CloudBlockBlob file and uploads it to the storage directly.
+             *
+             *      Parameters:
+             * text - the text file stored as a single string to be uploaded to the blob storage.
              */
             
             _file.UploadTextAsync(text);
+        }
+
+        public async Task Delete()
+        {
+            /*
+             *      Description:
+             * This function will remove the blob file from the storage completely.
+             */
+            
+            await _file.DeleteAsync();
         }
         
     }
