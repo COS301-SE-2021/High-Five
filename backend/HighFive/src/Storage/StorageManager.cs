@@ -186,7 +186,7 @@ namespace src.Storage
             for(var i =0; i<5; i++)
             {
                 var a = _random.Next(Alphanumeric.Length);
-                str = str + Alphanumeric.ElementAt(a);
+                str += Alphanumeric.ElementAt(a);
             }
             return str;
         }

@@ -100,7 +100,7 @@ namespace src.Subsystems.MediaStorage
             await videoBlob.UploadFile(video);
         }
 
-        public async Task<GetVideoResponse> GetVideo(GetVideoRequest request)
+        public GetVideoResponse GetVideo(GetVideoRequest request)
         {
             /*
              *      Description:
@@ -120,7 +120,7 @@ namespace src.Subsystems.MediaStorage
             //else cloudBlockBlob does not exist
         }
 
-        public async Task<List<VideoMetaData>> GetAllVideos()
+        public List<VideoMetaData> GetAllVideos()
         {
             /*
              *      Description:

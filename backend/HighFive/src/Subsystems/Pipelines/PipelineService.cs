@@ -35,7 +35,7 @@ namespace src.Subsystems.Pipelines
             var resultList = new List<Pipeline>();
             foreach(var listBlobItem in allFiles.Result)
             {
-                var currentPipeline = ConvertFileToPipeline(listBlobItem).Result;
+                var currentPipeline = ConvertFileToPipeline(listBlobItem);
                 resultList.Add(currentPipeline);
             }
             var response = new GetPipelinesResponse {Pipelines = resultList};
@@ -77,7 +77,7 @@ namespace src.Subsystems.Pipelines
                 return false;
             }
 
-            var pipeline = ConvertFileToPipeline(file).Result;
+            var pipeline = ConvertFileToPipeline(file);
             var pipelineToolset = pipeline.Tools;
             pipelineToolset.AddRange(request.Tools);
             pipeline.Tools = pipelineToolset.Distinct().ToList();
@@ -94,7 +94,7 @@ namespace src.Subsystems.Pipelines
                 return false;
             }
 
-            var pipeline = ConvertFileToPipeline(file).Result;
+            var pipeline = ConvertFileToPipeline(file);
             var pipelineToolset = pipeline.Tools;
             foreach (var tool in request.Tools)
             {
@@ -116,13 +116,13 @@ namespace src.Subsystems.Pipelines
             return true;
         }
 
-        private async Task<Pipeline> ConvertFileToPipeline(BlobFile file)
+        private static Pipeline ConvertFileToPipeline(BlobFile file)
         {
             var jsonData = file.ToText().Result;
             return JsonConvert.DeserializeObject<Pipeline>(jsonData);
         }
 
-        private void UploadPipelineToStorage(Pipeline pipeline, BlobFile blobFile)
+        private static void UploadPipelineToStorage(Pipeline pipeline, BlobFile blobFile)
         {
             var jsonData = JsonConvert.SerializeObject(pipeline);
             blobFile.UploadText(jsonData);
