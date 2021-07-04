@@ -97,8 +97,16 @@ namespace src.Storage
             return null;
         }
 
-        public async Task<List<CloudBlockBlob>> GetAllFilesInContainer(string container)
+        public async Task<List<BlobFile>> GetAllFilesInContainer(string container)
         {
+            /*
+             *      Description:
+             * This function will return all the blob files stored in a provided container.
+             *
+             *      Parameters:
+             * -> container - the name of the container which will contain all the blob files returned.
+             */
+            
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
             var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
             if (await cloudBlobContainer.ExistsAsync())
@@ -110,8 +118,13 @@ namespace src.Storage
             var blobResultSegment = await cloudBlobContainer.ListBlobsSegmentedAsync(subdirectory, true, BlobListingDetails.All,
                 int.MaxValue, null, null, null);
             var allFiles = blobResultSegment.Results;
-
-            return allFiles.Cast<CloudBlockBlob>().ToList();
+            var blobFileList = new List<BlobFile>();
+            foreach (var listBlobItem in allFiles)
+            {
+                var blob = (CloudBlockBlob) listBlobItem;
+                blobFileList.Add(new BlobFile(blob));
+            }
+            return blobFileList;
         }
 
         public async Task<BlobFile> CreateNewFile(string name, string container)
@@ -138,6 +151,15 @@ namespace src.Storage
         
         public string HashMd5(string source)
         {
+            /*
+             *      Description:
+             * This function is primarily used to generate id's for files stored in blob storage that are
+             * guaranteed to be unique. An MD5 hash will be applied to the string passed to this function.
+             *
+             *      Parameters:
+             * -> source - the string to be hashed.
+             */
+            
             var md5 = MD5.Create();
             var inputBytes = Encoding.ASCII.GetBytes(source);
             var hashBytes = md5.ComputeHash(inputBytes);
@@ -152,6 +174,13 @@ namespace src.Storage
 
         public string RandomString()
         {
+            /*
+             *      Description:
+             * This function returns a 5-character string consisting of randomly selected characters from
+             * the Alphanumeric constant. It is mainly used during unique name generation of files, in
+             * particular when salt needs to be added to the string to be hashed.
+             */
+            
             var str = "";
             for(var i =0; i<5; i++)
             {

@@ -112,6 +112,11 @@ namespace src.Subsystems.MediaStorage
 
         public async Task<List<VideoMetaData>> GetAllVideos()
         {
+            /*
+             *      Description:
+             * This function will return all videos that a user has stored in the cloud storage.
+             */
+            
             var allFiles = _storageManager.GetAllFilesInContainer(_containerName);
             if (allFiles.Result == null)
             {
@@ -124,12 +129,7 @@ namespace src.Subsystems.MediaStorage
                 if (listBlobItem.Name.Contains("thumbnail"))
                 {
                     currentVideo = new VideoMetaData();
-                    var thumbnail = new byte[listBlobItem.Properties.Length];
-                    for (var k = 0; k < listBlobItem.Properties.Length; k++)
-                    {
-                        thumbnail[k] = 0x20;
-                    }
-                    await listBlobItem.DownloadToByteArrayAsync(thumbnail, 0);
+                    var thumbnail = listBlobItem.ToByteArray().Result;
                     currentVideo.Thumbnail = thumbnail;
                 }
                 else
@@ -137,9 +137,9 @@ namespace src.Subsystems.MediaStorage
                     currentVideo.Id = listBlobItem.Name.Replace(".mp4", "");
                     if (listBlobItem.Properties.LastModified != null)
                         currentVideo.DateStored = listBlobItem.Properties.LastModified.Value.DateTime;
-                    listBlobItem.Metadata.TryGetValue("duration", out var time);
+                    var time = listBlobItem.GetMetaData("duration");
                     currentVideo.Duration = int.Parse(time ?? Empty);
-                    listBlobItem.Metadata.TryGetValue("originalName", out var oldName);
+                    var oldName = listBlobItem.GetMetaData("originalName");
                     currentVideo.Name = oldName;
                     resultList.Add(currentVideo); 
                 }
@@ -152,7 +152,7 @@ namespace src.Subsystems.MediaStorage
             /*
              *      Description:
              * This function will attempt to delete a video with details as passed through by the request object.
-             * True is returned if the video was deleted succesfully, false is returned if there exists no video
+             * True is returned if the video was deleted successfully, false is returned if there exists no video
              * with the details specified in the request object.
              *
              *      Parameters:
