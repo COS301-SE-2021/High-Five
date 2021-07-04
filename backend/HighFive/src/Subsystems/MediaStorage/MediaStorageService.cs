@@ -17,6 +17,16 @@ namespace src.Subsystems.MediaStorage
 {
     public class MediaStorageService: IMediaStorageService
     {
+        /*
+         *      Description:
+         * This service class manages all the service contracts of the MediaStorage subsystem. It is responsible
+         * for retrieving, creating and deleting videos from a user's blob storage.
+         *
+         *      Attributes:
+         * -> _storageManager: an reference to the storage manager, used to access the blob storage.
+         * -> _containerName: the name of the container in which a user's videos are stored.
+         */
+        
         private readonly IStorageManager _storageManager;
         private string _containerName = "demo2videos";
 
@@ -33,7 +43,7 @@ namespace src.Subsystems.MediaStorage
              * it to the cloud storage.
              *
              *      Parameters:
-             * -> video - the video that will be stored on the cloud storage.
+             * -> video: the video that will be stored on the cloud storage.
              */
             
             if (video == null)
@@ -98,7 +108,7 @@ namespace src.Subsystems.MediaStorage
              * exists, null otherwise.
              *
              *      Parameters:
-             * -> request - the request object for this service contract.
+             * -> request: the request object for this service contract.
              */
             
             var videoId = request.Id + ".mp4";
@@ -156,7 +166,7 @@ namespace src.Subsystems.MediaStorage
              * with the details specified in the request object.
              *
              *      Parameters:
-             * -> request - the request object for this service contract.
+             * -> request: the request object for this service contract.
              */
             
             var videoFile = _storageManager.GetFile(request.Id + ".mp4",_containerName).Result;

@@ -22,7 +22,8 @@ namespace src.Storage
         /*
          *      Description:
          * The StorageManager class serves as a general manager that interfaces with the Azure Cloud Storage
-         * where data is stored. This manager is primarily responsible for retrieving blobs from the storage.
+         * where data is stored. This manager is primarily responsible for retrieving blobs from the storage
+         * and constructing BlobFile objects to return to external callers.
          *
          *      Attributes:
          * -> _cloudStorageAccount - this is the object that contains a reference to the Azure Storage account.
