@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,35 +19,63 @@ namespace src.Storage
 {
     public class StorageManager: IStorageManager
     {
-        private readonly IConfiguration _configuration;
+        /*
+         *      Description:
+         * The StorageManager class serves as a general manager that interfaces with the Azure Cloud Storage
+         * where data is stored. This manager is primarily responsible for retrieving blobs from the storage.
+         *
+         *      Attributes:
+         * -> _cloudStorageAccount - this is the object that contains a reference to the Azure Storage account.
+         *      being used. It is initialised in the constructor through a connection string that can be
+         *      retrieved from the Azure portal.
+         * -> _random - this is a random object that is used to generate unique id's for uploaded files.
+         * -> Alphanumeric - this is a simple alphanumeric string used to generate salt during the process
+         *      where uploaded files are granted unique id's.
+         */
+        
         private readonly CloudStorageAccount _cloudStorageAccount;
-        IConfiguration IStorageManager.Configuration => _configuration;
-        CloudStorageAccount IStorageManager.CloudStorageAccount => _cloudStorageAccount;
         private readonly Random _random;
-        private readonly string _alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
+        private const string Alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
 
         public StorageManager(IConfiguration config)
         {
-            _configuration = config;
-            var connectionString = _configuration.GetConnectionString("StorageConnection");
+            var connectionString = config.GetConnectionString("StorageConnection");
             _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             _random = new Random();
         }
 
-        public StorageManager(String connectionString)
+        public StorageManager(string connectionString)
         {
+            /*
+             *      Description:
+             * The constructor of the class that initializes the CloudStorageAccount based on an
+             * appropriate connection string passed through.
+             *
+             *      Parameters:
+             * -> connectionString - the connection string of a Cloud Storage Client that can be retrieved.
+             *      from the Azure portal.
+             */
+            
             _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             _random = new Random();
         }
 
-        public async Task<CloudBlockBlob> GetFile(string fileName, string container, bool create=false)
+        public async Task<BlobFile> GetFile(string fileName, string container)
         {
+            /*
+             *      Description:
+             * This function returns a reference to an existing blob file in some container within the storage,
+             * or null if the searched file does not exist in the storage. A BlobFile object is returns which
+             * contains the CloudBlockBlob itself.
+             *
+             *      Parameters:
+             * -> fileName - this is the name of the file that is being retrieved. I.e. "video1.mp4".
+             * -> container - this is the name of the storage container to be searched for the file.
+             */
+            
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
             var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
-            if (create)//NOTE: Does not test if it actually exists or not
-            {
-                return cloudBlobContainer.GetBlockBlobReference(fileName);
-            }
+
             if (!await cloudBlobContainer.ExistsAsync())
             {
                 return null;
@@ -54,7 +83,7 @@ namespace src.Storage
             var file = cloudBlobContainer.GetBlockBlobReference(fileName);
             if (await file.ExistsAsync())
             {
-                return file;
+                return new BlobFile(file);
             }
             return null;
         }
@@ -105,8 +134,8 @@ namespace src.Storage
             var str = "";
             for(var i =0; i<5; i++)
             {
-                var a = _random.Next(_alphanumeric.Length);
-                str = str + _alphanumeric.ElementAt(a);
+                var a = _random.Next(Alphanumeric.Length);
+                str = str + Alphanumeric.ElementAt(a);
             }
             return str;
         }
