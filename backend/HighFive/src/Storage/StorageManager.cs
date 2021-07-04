@@ -60,7 +60,7 @@ namespace src.Storage
             _random = new Random();
         }
 
-        public async Task<BlobFile> GetFile(string fileName, string container)
+        public async Task<BlobFile> GetFile(string fileName, string container, bool create=false)
         {
             /*
              *      Description:
@@ -71,11 +71,20 @@ namespace src.Storage
              *      Parameters:
              * -> fileName - this is the name of the file that is being retrieved. I.e. "video1.mp4".
              * -> container - this is the name of the storage container to be searched for the file.
+             * -> create - this flag is only used internally by the CreateNewFile function to indicate to
+             *      this function that it does not need to check if the blob file exists, but that it should
+             *      rather instantiate the BlobFile with a reference to a CloudBlockBlob object that may
+             *      or may not be in storage. The creation of the file itself will be handled by the
+             *      CreateNewFile function.
              */
             
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
             var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
-
+            if (create)
+            {
+                return new BlobFile(cloudBlobContainer.GetBlockBlobReference(fileName));
+            }
+            
             if (!await cloudBlobContainer.ExistsAsync())
             {
                 return null;
@@ -105,10 +114,22 @@ namespace src.Storage
             return allFiles.Cast<CloudBlockBlob>().ToList();
         }
 
-        public async Task<CloudBlockBlob> CreateNewFile(string name, string container)
+        public async Task<BlobFile> CreateNewFile(string name, string container)
         {
-            CloudBlockBlob newFile = GetFile(name, container, true).Result;
-            if (await newFile.ExistsAsync())
+            /*
+             *      Description:
+             * This function will attempt to create a new blob file in temporary memory. It returns null
+             * if the provided name already exists in the cloud storage, otherwise it returns the
+             * BlobFile object with a reference to a CloudBlockBlob object that does not exist in the
+             * cloud storage.
+             *
+             *       Parameters:
+             * -> name - this is the name of the file to be created.
+             * -> container - the name of the cloud storage container where the file should be created.
+             */
+            
+            var newFile = GetFile(name, container, true).Result;
+            if (await newFile.Exists())
             {
                 return null;
             }

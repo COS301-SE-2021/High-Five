@@ -91,6 +91,16 @@ namespace src.Storage
             
             await _file.DeleteAsync();
         }
-        
+
+        public async Task<bool> Exists()
+        {
+            /*
+             *      Description:
+             * This function returns a boolean indicating whether or not the contained CloudBlockBlob object
+             * exists.
+             */
+            
+            return await _file.ExistsAsync();
+        }
     }
 }
