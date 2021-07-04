@@ -28,7 +28,7 @@ namespace src.Storage
         public StorageManager(IConfiguration config)
         {
             _configuration = config;
-            String connectionString = _configuration.GetConnectionString("StorageConnection");
+            var connectionString = _configuration.GetConnectionString("StorageConnection");
             _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             _random = new Random();
         }
@@ -88,15 +88,14 @@ namespace src.Storage
 
         public string HashMd5(string source)
         {
-            MD5 md5 = MD5.Create();
-            byte[] inputBytes = Encoding.ASCII.GetBytes(source);
-            byte[] hashBytes = md5.ComputeHash(inputBytes);
-            var test = MockStorageManager();
-            // Step 2, convert byte array to hex string
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hashBytes.Length; i++)
+            var md5 = MD5.Create();
+            var inputBytes = Encoding.ASCII.GetBytes(source);
+            var hashBytes = md5.ComputeHash(inputBytes);
+
+            var sb = new StringBuilder();
+            foreach (var t in hashBytes)
             {
-                sb.Append(hashBytes[i].ToString("X2"));
+                sb.Append(t.ToString("X2"));
             }
             return sb.ToString();
         }

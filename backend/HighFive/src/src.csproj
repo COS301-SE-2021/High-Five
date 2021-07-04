@@ -9,18 +9,7 @@
         <PackageReference Include="Azure.Storage.Blobs" Version="12.9.0-beta.4" />
         <PackageReference Include="AzureFunctionsToolkit" Version="0.3.5" />
         <PackageReference Include="MediaToolkit" Version="1.1.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0-preview.4.21253.1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0-preview.4.21253.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-preview.4.21253.1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.3" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0-preview.4.21253.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.0" />
         <PackageReference Include="Microsoft.WindowsAzure.ConfigurationManager" Version="3.2.3" />
         <PackageReference Include="Moq" Version="4.16.1" />
         <PackageReference Include="NReco.VideoInfo.LT" Version="1.1.0" />
