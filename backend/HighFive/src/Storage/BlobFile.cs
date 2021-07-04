@@ -17,9 +17,11 @@ namespace src.Storage
          *
          *      Attributes:
          * -> _file - this is a reference to the Blob from storage that is currently being handled.
+         * -> Properties - this variable contains the properties of the CloudBlockBlob from file
         */
         
         private readonly CloudBlockBlob _file;
+        public BlobProperties Properties { get; }
 
         public BlobFile(CloudBlockBlob file)
         {
@@ -32,6 +34,7 @@ namespace src.Storage
              */
             
             _file = file;
+            Properties = file.Properties;
         }
         
         public void AddMetadata(string key, string value)
@@ -116,6 +119,22 @@ namespace src.Storage
              */
             
             return await _file.ExistsAsync();
+        }
+
+        public async Task<byte[]> ToByteArray()
+        {
+            /*
+             *      Description:
+             * This function converts the contents of the blob storage into a byte array and returns it.
+             */
+            
+            var byteArray = new byte[Properties.Length];
+            for (int k = 0; k < Properties.Length; k++)
+            {
+                byteArray[k] = 0x20;
+            }
+            await _file.DownloadToByteArrayAsync(byteArray, 0);
+            return byteArray;
         }
     }
 }
