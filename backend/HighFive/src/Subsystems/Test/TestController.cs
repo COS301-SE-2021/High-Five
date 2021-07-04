@@ -10,13 +10,13 @@ namespace src.Subsystems.Test
     {
         public override IActionResult Echo(EchoRequest echoRequest)
         {
-            PingResponse response = new PingResponse() {Message = echoRequest.Message};
+            var response = new PingResponse() {Message = echoRequest.Message};
             return StatusCode(200, response);
         }
 
         public override IActionResult Ping()
         {
-            PingResponse response = new PingResponse() {Message = "The server is working."};
+            var response = new PingResponse() {Message = "The server is working."};
             return StatusCode(200, response);
         }
     }

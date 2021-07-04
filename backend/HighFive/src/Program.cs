@@ -25,7 +25,7 @@ namespace Org.OpenAPITools
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
 
         public static IHostBuilder CreateHostBuilderDevelop(string[] args) =>
-            //Note: This configuration will not show the swagger on startup, but will allow requests to be made to http://localhost:5001
+            //This configuration will not show the swagger on startup, but will allow requests to be made to http://localhost:5001
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
