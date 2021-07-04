@@ -39,11 +39,11 @@ namespace src.Storage
             _file.Metadata.Add(new KeyValuePair<string, string>(key, value));;
         }
         
-        public async Task Upload(IFormFile newFile)
+        public async Task UploadFile(IFormFile newFile)
         {
             /*
              *      Description:
-             * The Upload function will upload a new file to the Blob in the Azure Blob Storage assosciated
+             * This function will upload a new file to the Blob in the Azure Blob Storage associated
              * with the file contained within this BlobFile. This function overwrites any data currently stored
              * in the CloudBlockBlob file and uploads it to the storage directly.
              *
@@ -56,6 +56,18 @@ namespace src.Storage
             var fileBytes = ms.ToArray();
             _file.Properties.ContentType = newFile.ContentType;
             await _file.UploadFromByteArrayAsync(fileBytes, 0, (int) newFile.Length);
+        }
+
+        public void UploadText(string text)
+        {
+            /*
+             *      Description:
+             * This function will upload a new textfile to the Blob in the Azure Blob Storage associated
+             * with the file contained within this BlobFile. This function overwrites any data currently stored
+             * in the CloudBlockBlob file and uploads it to the storage directly.
+             */
+            
+            _file.UploadTextAsync(text);
         }
         
     }
