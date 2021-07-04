@@ -27,24 +27,34 @@ namespace src.Subsystems.MediaStorage
         
         public async Task StoreVideo(IFormFile video)
         {
+            /*
+             *      Description:
+             * This function will create a new blob file, containing the data from a provided video, and store
+             * it to the cloud storage.
+             *
+             *      Parameters:
+             * -> video - the video that will be stored on the cloud storage.
+             */
+            
             if (video == null)
             {
                 return;
             }
             //create storage name for file
             var generatedName = _storageManager.HashMd5(video.FileName);
-            var cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
+            var videoBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
             var salt = "";
-            while (cloudBlockBlob == null)
+            while (videoBlob == null)
             {
                 salt += _storageManager.RandomString();
                 generatedName = _storageManager.HashMd5(video.FileName+salt);
-                cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
+                videoBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
             }
-            cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("originalName", video.FileName));
+
+            videoBlob.AddMetadata("originalName", video.FileName);
             if (!IsNullOrEmpty(salt))
             {
-                cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("salt", salt));
+                videoBlob.AddMetadata("salt", salt);
             }
 
             //create local temp copy of video file and thumbnail
@@ -68,21 +78,16 @@ namespace src.Subsystems.MediaStorage
             {
                 File.Create(thumbnailPath).Close();
             }
-            var thumbnailBlockBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", _containerName).Result;
-            thumbnailBlockBlob.Properties.ContentType = "image/jpg";
-            await thumbnailBlockBlob.UploadFromFileAsync(thumbnailPath);
+            var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", _containerName).Result;
+            await thumbnailBlob.UploadFile(thumbnailPath);
                 
             //get video duration in seconds
             //var seconds = Math.Truncate(inputFile.Metadata.Duration.TotalSeconds);
             var seconds = 0;
-            cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("duration", seconds.ToString()));
+            videoBlob.AddMetadata("duration", seconds.ToString());
 
             //upload to Azure Blob Storage
-            var ms = new MemoryStream();
-            await video.CopyToAsync(ms);
-            var fileBytes = ms.ToArray();
-            cloudBlockBlob.Properties.ContentType = video.ContentType;
-            await cloudBlockBlob.UploadFromByteArrayAsync(fileBytes, 0, (int) video.Length);
+            await videoBlob.UploadFile(video);
         }
 
         public async Task<GetVideoResponse> GetVideo(GetVideoRequest request)
