@@ -98,7 +98,7 @@ namespace src.Subsystems.MediaStorage
              * exists, null otherwise.
              *
              *      Parameters:
-             * -> request - the request object for this service contract
+             * -> request - the request object for this service contract.
              */
             
             var videoId = request.Id + ".mp4";
@@ -149,6 +149,16 @@ namespace src.Subsystems.MediaStorage
 
         public async Task<bool> DeleteVideo(DeleteVideoRequest request)
         {
+            /*
+             *      Description:
+             * This function will attempt to delete a video with details as passed through by the request object.
+             * True is returned if the video was deleted succesfully, false is returned if there exists no video
+             * with the details specified in the request object.
+             *
+             *      Parameters:
+             * -> request - the request object for this service contract.
+             */
+            
             var videoFile = _storageManager.GetFile(request.Id + ".mp4",_containerName).Result;
             if (videoFile == null)
             {
@@ -156,12 +166,12 @@ namespace src.Subsystems.MediaStorage
             }
 
             var thumbnail = _storageManager.GetFile(request.Id + "-thumbnail.jpg", _containerName).Result;
-            await videoFile.DeleteAsync();
-            await thumbnail.DeleteAsync();
+            await videoFile.Delete();
+            await thumbnail.Delete();
             return true;
         }
 
-        public void SetContainer(String container)
+        public void SetContainer(string container)
         {
             _containerName = container;
         }

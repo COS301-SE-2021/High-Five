@@ -136,5 +136,16 @@ namespace src.Storage
             await _file.DownloadToByteArrayAsync(byteArray, 0);
             return byteArray;
         }
+
+        public async Task<string> ToText()
+        {
+            /*
+             *      Description:
+             * This function converts the contents of a blob file to text. It is usually to return data
+             * from text or json files.
+             */
+            
+            return await _file.DownloadTextAsync();
+        }
     }
 }
