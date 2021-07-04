@@ -92,21 +92,22 @@ namespace src.Subsystems.MediaStorage
 
         public async Task<GetVideoResponse> GetVideo(GetVideoRequest request)
         {
+            /*
+             *      Description:
+             * This function will attempt to retrieve a video from blob storage and return the video if it
+             * exists, null otherwise.
+             *
+             *      Parameters:
+             * -> request - the request object for this service contract
+             */
+            
             var videoId = request.Id + ".mp4";
             var file = _storageManager.GetFile(videoId, _containerName).Result;
-            if (file != null)
-            {
-                var videoFile = new byte[file.Properties.Length];
-                for (int k = 0; k < file.Properties.Length; k++)
-                {
-                    videoFile[k] = 0x20;
-                }
-                await file.DownloadToByteArrayAsync(videoFile, 0);
-                GetVideoResponse response = new GetVideoResponse {File = videoFile};
-                return response;
-            }
+            if (file == null) return null;
+            var videoFile = file.ToByteArray().Result;
+            var response = new GetVideoResponse {File = videoFile};
+            return response;
             //else cloudBlockBlob does not exist
-            return null;
         }
 
         public async Task<List<VideoMetaData>> GetAllVideos()

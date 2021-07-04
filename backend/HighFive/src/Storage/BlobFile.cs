@@ -129,7 +129,7 @@ namespace src.Storage
              */
             
             var byteArray = new byte[Properties.Length];
-            for (int k = 0; k < Properties.Length; k++)
+            for (var k = 0; k < Properties.Length; k++)
             {
                 byteArray[k] = 0x20;
             }
