@@ -43,6 +43,11 @@ namespace src.Subsystems.Pipelines
             return StatusCode(400, response);
         }
 
+        public override IActionResult GetAllTools()
+        {
+            throw new NotImplementedException();
+        }
+
         public override IActionResult GetPipelines()
         {
             var response = _pipelineService.GetPipelines();

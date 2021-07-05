@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
@@ -16,7 +17,6 @@ namespace src.Subsystems.Pipelines
 {
     public class PipelineService: IPipelineService
     {
-        //NOTE: Does not check for duplicates in Tools
         private readonly IStorageManager _storageManager;
         private string _containerName = "demo2pipelines";
 
@@ -87,7 +87,6 @@ namespace src.Subsystems.Pipelines
 
         public bool RemoveTools(RemoveToolsRequest request)
         {
-            //NOTE: Currently does not check if anything is actually deleted
             var file =_storageManager.GetFile(request.PipelineId+".json", _containerName).Result;
             if (file == null)
             {
@@ -114,6 +113,23 @@ namespace src.Subsystems.Pipelines
             }
             await blobFile.Delete();
             return true;
+        }
+
+        public string[] GetAllTools()
+        {
+            /*
+             *      Description:
+             * This function will return all the existing tools as stored in a singular text file in the
+             * cloud storage.
+             */
+
+            var oldContainer = _containerName;
+            _containerName = "public";
+            var toolsFile = _storageManager.GetFile("tools.txt", _containerName).Result;
+            _containerName = oldContainer;
+            var toolsArray = toolsFile.ToText().Result.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+            //the above line splits the textfile's contents by newlines into an array
+            return toolsArray;
         }
 
         private static Pipeline ConvertFileToPipeline(BlobFile file)

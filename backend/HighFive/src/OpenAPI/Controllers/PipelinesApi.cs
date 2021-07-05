@@ -67,6 +67,17 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Get All Tools use case</remarks>
+        /// <response code="200">All existing tools have been returned</response>
+        [HttpPost]
+        [Route("/pipelines/getAllTools")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(List<string>))]
+        public abstract IActionResult GetAllTools();
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Get Pipelines use case</remarks>
         /// <response code="200">All pipelines have been returned</response>
         [HttpPost]
