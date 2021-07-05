@@ -35,7 +35,7 @@ namespace src.Subsystems.Pipelines
             var resultList = new List<Pipeline>();
             foreach(var listBlobItem in allFiles.Result)
             {
-                var currentPipeline = ConvertFileToPipeline(listBlobItem).Result;
+                var currentPipeline = ConvertFileToPipeline(listBlobItem);
                 resultList.Add(currentPipeline);
             }
             var response = new GetPipelinesResponse {Pipelines = resultList};
@@ -46,18 +46,19 @@ namespace src.Subsystems.Pipelines
         {
             var pipeline = request.Pipeline;
             var generatedName = _storageManager.HashMd5(pipeline.Name);
-            var cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".json", _containerName).Result;
+            var blobFile = _storageManager.CreateNewFile(generatedName + ".json", _containerName).Result;
             var salt = "";
-            while (cloudBlockBlob == null)
+            while (blobFile == null)
             {
                 salt += _storageManager.RandomString();
                 generatedName = _storageManager.HashMd5(pipeline.Name+salt);
-                cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".json", _containerName).Result;
+                blobFile = _storageManager.CreateNewFile(generatedName + ".json", _containerName).Result;
             }
-            cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("originalName", pipeline.Name));
+
+            blobFile.AddMetadata("originalName", pipeline.Name);
             if (!IsNullOrEmpty(salt))
             {
-                cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("salt", salt));
+                blobFile.AddMetadata("salt", salt);
             }
             var newPipeline = new Pipeline
             {
@@ -65,7 +66,7 @@ namespace src.Subsystems.Pipelines
                 Name = pipeline.Name,
                 Tools = pipeline.Tools
             };
-            UploadPipelineToStorage(newPipeline, cloudBlockBlob);
+            UploadPipelineToStorage(newPipeline, blobFile);
         }
 
         public bool AddTools(AddToolsRequest request)
@@ -76,7 +77,7 @@ namespace src.Subsystems.Pipelines
                 return false;
             }
 
-            var pipeline = ConvertFileToPipeline(file).Result;
+            var pipeline = ConvertFileToPipeline(file);
             var pipelineToolset = pipeline.Tools;
             pipelineToolset.AddRange(request.Tools);
             pipeline.Tools = pipelineToolset.Distinct().ToList();
@@ -93,7 +94,7 @@ namespace src.Subsystems.Pipelines
                 return false;
             }
 
-            var pipeline = ConvertFileToPipeline(file).Result;
+            var pipeline = ConvertFileToPipeline(file);
             var pipelineToolset = pipeline.Tools;
             foreach (var tool in request.Tools)
             {
@@ -106,25 +107,25 @@ namespace src.Subsystems.Pipelines
 
         public async Task<bool> DeletePipeline(DeletePipelineRequest request)
         {
-            CloudBlockBlob file = _storageManager.GetFile(request.PipelineId + ".json", _containerName).Result;
-            if (file == null)
+            var blobFile = _storageManager.GetFile(request.PipelineId + ".json", _containerName).Result;
+            if (blobFile == null)
             {
                 return false;
             }
-            await file.DeleteIfExistsAsync();
+            await blobFile.Delete();
             return true;
         }
 
-        private async Task<Pipeline> ConvertFileToPipeline(CloudBlockBlob file)
+        private static Pipeline ConvertFileToPipeline(BlobFile file)
         {
-            var jsonData = await file.DownloadTextAsync();
+            var jsonData = file.ToText().Result;
             return JsonConvert.DeserializeObject<Pipeline>(jsonData);
         }
 
-        private void UploadPipelineToStorage(Pipeline pipeline, CloudBlockBlob cloudBlockBlob)
+        private static void UploadPipelineToStorage(Pipeline pipeline, BlobFile blobFile)
         {
             var jsonData = JsonConvert.SerializeObject(pipeline);
-            cloudBlockBlob.UploadTextAsync(jsonData);
+            blobFile.UploadText(jsonData);
         }
 
 

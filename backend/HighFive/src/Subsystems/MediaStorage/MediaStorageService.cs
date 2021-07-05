@@ -17,6 +17,16 @@ namespace src.Subsystems.MediaStorage
 {
     public class MediaStorageService: IMediaStorageService
     {
+        /*
+         *      Description:
+         * This service class manages all the service contracts of the MediaStorage subsystem. It is responsible
+         * for retrieving, creating and deleting videos from a user's blob storage.
+         *
+         *      Attributes:
+         * -> _storageManager: an reference to the storage manager, used to access the blob storage.
+         * -> _containerName: the name of the container in which a user's videos are stored.
+         */
+        
         private readonly IStorageManager _storageManager;
         private string _containerName = "demo2video";
 
@@ -27,24 +37,34 @@ namespace src.Subsystems.MediaStorage
         
         public async Task StoreVideo(IFormFile video)
         {
+            /*
+             *      Description:
+             * This function will create a new blob file, containing the data from a provided video, and store
+             * it to the cloud storage.
+             *
+             *      Parameters:
+             * -> video: the video that will be stored on the cloud storage.
+             */
+            
             if (video == null)
             {
                 return;
             }
             //create storage name for file
             var generatedName = _storageManager.HashMd5(video.FileName);
-            var cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
+            var videoBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
             var salt = "";
-            while (cloudBlockBlob == null)
+            while (videoBlob == null)
             {
                 salt += _storageManager.RandomString();
                 generatedName = _storageManager.HashMd5(video.FileName+salt);
-                cloudBlockBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
+                videoBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
             }
-            cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("originalName", video.FileName));
+
+            videoBlob.AddMetadata("originalName", video.FileName);
             if (!IsNullOrEmpty(salt))
             {
-                cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("salt", salt));
+                videoBlob.AddMetadata("salt", salt);
             }
 
             //create local temp copy of video file and thumbnail
@@ -68,44 +88,45 @@ namespace src.Subsystems.MediaStorage
             {
                 File.Create(thumbnailPath).Close();
             }
-            var thumbnailBlockBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", _containerName).Result;
-            thumbnailBlockBlob.Properties.ContentType = "image/jpg";
-            await thumbnailBlockBlob.UploadFromFileAsync(thumbnailPath);
+            var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", _containerName).Result;
+            await thumbnailBlob.UploadFile(thumbnailPath);
                 
             //get video duration in seconds
             //var seconds = Math.Truncate(inputFile.Metadata.Duration.TotalSeconds);
             var seconds = 0;
-            cloudBlockBlob.Metadata.Add(new KeyValuePair<string, string>("duration", seconds.ToString()));
+            videoBlob.AddMetadata("duration", seconds.ToString());
 
             //upload to Azure Blob Storage
-            var ms = new MemoryStream();
-            await video.CopyToAsync(ms);
-            var fileBytes = ms.ToArray();
-            cloudBlockBlob.Properties.ContentType = video.ContentType;
-            await cloudBlockBlob.UploadFromByteArrayAsync(fileBytes, 0, (int) video.Length);
+            await videoBlob.UploadFile(video);
         }
 
-        public async Task<GetVideoResponse> GetVideo(GetVideoRequest request)
+        public GetVideoResponse GetVideo(GetVideoRequest request)
         {
+            /*
+             *      Description:
+             * This function will attempt to retrieve a video from blob storage and return the video if it
+             * exists, null otherwise.
+             *
+             *      Parameters:
+             * -> request: the request object for this service contract.
+             */
+            
             var videoId = request.Id + ".mp4";
             var file = _storageManager.GetFile(videoId, _containerName).Result;
-            if (file != null)
-            {
-                var videoFile = new byte[file.Properties.Length];
-                for (int k = 0; k < file.Properties.Length; k++)
-                {
-                    videoFile[k] = 0x20;
-                }
-                await file.DownloadToByteArrayAsync(videoFile, 0);
-                GetVideoResponse response = new GetVideoResponse {File = videoFile};
-                return response;
-            }
+            if (file == null) return null;
+            var videoFile = file.ToByteArray().Result;
+            var response = new GetVideoResponse {File = videoFile};
+            return response;
             //else cloudBlockBlob does not exist
-            return null;
         }
 
-        public async Task<List<VideoMetaData>> GetAllVideos()
+        public List<VideoMetaData> GetAllVideos()
         {
+            /*
+             *      Description:
+             * This function will return all videos that a user has stored in the cloud storage.
+             */
+            
             var allFiles = _storageManager.GetAllFilesInContainer(_containerName);
             if (allFiles.Result == null)
             {
@@ -118,12 +139,7 @@ namespace src.Subsystems.MediaStorage
                 if (listBlobItem.Name.Contains("thumbnail"))
                 {
                     currentVideo = new VideoMetaData();
-                    var thumbnail = new byte[listBlobItem.Properties.Length];
-                    for (var k = 0; k < listBlobItem.Properties.Length; k++)
-                    {
-                        thumbnail[k] = 0x20;
-                    }
-                    await listBlobItem.DownloadToByteArrayAsync(thumbnail, 0);
+                    var thumbnail = listBlobItem.ToByteArray().Result;
                     currentVideo.Thumbnail = thumbnail;
                 }
                 else
@@ -131,9 +147,9 @@ namespace src.Subsystems.MediaStorage
                     currentVideo.Id = listBlobItem.Name.Replace(".mp4", "");
                     if (listBlobItem.Properties.LastModified != null)
                         currentVideo.DateStored = listBlobItem.Properties.LastModified.Value.DateTime;
-                    listBlobItem.Metadata.TryGetValue("duration", out var time);
+                    var time = listBlobItem.GetMetaData("duration");
                     currentVideo.Duration = int.Parse(time ?? Empty);
-                    listBlobItem.Metadata.TryGetValue("originalName", out var oldName);
+                    var oldName = listBlobItem.GetMetaData("originalName");
                     currentVideo.Name = oldName;
                     resultList.Add(currentVideo); 
                 }
@@ -143,6 +159,16 @@ namespace src.Subsystems.MediaStorage
 
         public async Task<bool> DeleteVideo(DeleteVideoRequest request)
         {
+            /*
+             *      Description:
+             * This function will attempt to delete a video with details as passed through by the request object.
+             * True is returned if the video was deleted successfully, false is returned if there exists no video
+             * with the details specified in the request object.
+             *
+             *      Parameters:
+             * -> request: the request object for this service contract.
+             */
+            
             var videoFile = _storageManager.GetFile(request.Id + ".mp4",_containerName).Result;
             if (videoFile == null)
             {
@@ -150,12 +176,12 @@ namespace src.Subsystems.MediaStorage
             }
 
             var thumbnail = _storageManager.GetFile(request.Id + "-thumbnail.jpg", _containerName).Result;
-            await videoFile.DeleteAsync();
-            await thumbnail.DeleteAsync();
+            await videoFile.Delete();
+            await thumbnail.Delete();
             return true;
         }
 
-        public void SetContainer(String container)
+        public void SetContainer(string container)
         {
             _containerName = container;
         }

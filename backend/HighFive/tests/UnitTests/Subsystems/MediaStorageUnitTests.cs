@@ -23,20 +23,20 @@ namespace tests.UnitTests.Subsystems.MediaStorage
         [Fact]
         public void TestStoreValidVideo()
         {
-            var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Result.Count/2.0-1;
+            var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count/2.1;
             var validVideo = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validVideo", "validVideo");
             _mockMediaStorageService.StoreVideo(validVideo);
-            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Result.Count/2.0;
+            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count/2.0;
             Assert.NotEqual(videoCountBeforeInsert, videoCountAfterInsert);
         }
-        
+
         [Fact]
         public void TestStoreNullVideo()
         {
-            var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Result.Count;
+            var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
             FormFile invalidVideo = null;
             _mockMediaStorageService.StoreVideo(invalidVideo);
-            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Result.Count;
+            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
             Assert.Equal(videoCountBeforeInsert, videoCountAfterInsert);
         }
 
@@ -44,13 +44,13 @@ namespace tests.UnitTests.Subsystems.MediaStorage
         public void TestGetAllVideos()
         {
             var response = _mockMediaStorageService.GetAllVideos();
-            Assert.NotNull(response.Result);
+            Assert.NotNull(response);
         }
-        
+
         [Fact]
         public void TestDeleteVideoValidVideoId()
         {
-            var allVids = _mockMediaStorageService.GetAllVideos().Result;
+            var allVids = _mockMediaStorageService.GetAllVideos();
             var videoCountBeforeInsert = allVids.Count;
             if (allVids.Count == 0)
             {
@@ -62,24 +62,24 @@ namespace tests.UnitTests.Subsystems.MediaStorage
                 Id = validVideoId
             };
             _mockMediaStorageService.DeleteVideo(request);
-            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Result;
-            Assert.NotNull(videoCountAfterInsert);
+            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
+            Assert.Equal(videoCountBeforeInsert, videoCountAfterInsert);
         }
-        
+
         [Fact]
         public void TestDeleteVideoInvalidVideoId()
         {
-            var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Result.Count;
+            var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
             var invalidVideoId = "5";
             var request = new DeleteVideoRequest
             {
                 Id = invalidVideoId
             };
             _mockMediaStorageService.DeleteVideo(request);
-            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Result.Count;
+            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
             Assert.Equal(videoCountBeforeInsert, videoCountAfterInsert);
         }
-        
+
         [Fact]
         public void TestGetVideoValidVideoId()
         {
@@ -88,21 +88,21 @@ namespace tests.UnitTests.Subsystems.MediaStorage
             {
                 Id = validVideoId
             };
-            var response = _mockMediaStorageService.GetVideo(request).Result;
+            var response = _mockMediaStorageService.GetVideo(request);
             Assert.NotNull(response);
         }
-        
+
         [Fact]
         public void TestGetVideoInvalidVideoId()
         {
-            var validVideoId = "5";
+            const string validVideoId = "5";
             var request = new GetVideoRequest
             {
                 Id = validVideoId
             };
-            var response = _mockMediaStorageService.GetVideo(request).Result;
+            var response = _mockMediaStorageService.GetVideo(request);
             Assert.Null(response);
         }
-        
+
     }
 }
