@@ -45,6 +45,7 @@ export class AnalyticsPage implements OnInit {
   ngOnInit() {
     this.pipelinesService.getPipelines().subscribe(response => {
       this.pipelines = response.pipelines;
+      this.pipelines.sort((a,b)=> a.name.localeCompare(b.name));
     });
   }
 

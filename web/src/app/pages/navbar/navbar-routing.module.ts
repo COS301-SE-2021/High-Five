@@ -34,7 +34,7 @@ const routes: Routes = [
   },
   {
     path:'',
-    redirectTo:'navbar/landing',
+    redirectTo:'/landing',
     pathMatch:'full'
   }
 ];

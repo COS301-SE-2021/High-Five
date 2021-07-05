@@ -16,7 +16,10 @@ export class AddPipelineComponent implements OnInit {
   tools: string[] = [];
 
   constructor(private modalController: ModalController) {
-    this.tools.push('ASD');
+    for (let i = 0; i < 20; i++) {
+      this.tools.push('ASD' +i);
+    }
+    this.tools.sort((a,b)=> a.localeCompare(b));
   }
 
   /**
