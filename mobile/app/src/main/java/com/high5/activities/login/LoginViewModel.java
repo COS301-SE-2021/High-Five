@@ -6,10 +6,9 @@ import androidx.lifecycle.ViewModel;
 
 import android.util.Patterns;
 
-import com.high5.models.login.LoginRepository;
-import com.high5.models.login.Result;
-import com.high5.models.login.LoggedInUser;
-import com.high5.activities.login.R;
+import com.high5.models.user.LoginRepository;
+import com.high5.models.user.Result;
+import com.high5.R;
 
 public class LoginViewModel extends ViewModel {
 

@@ -1,4 +1,4 @@
-package com.high5.models.login;
+package com.high5.models.user;
 
 import java.io.IOException;
 
@@ -7,12 +7,12 @@ import java.io.IOException;
  */
 public class LoginDataSource {
 
-    public Result<LoggedInUser> login(String username, String password) {
+    public Result<User> login(String username, String password) {
 
         try {
             // TODO: handle loggedInUser authentication
-            LoggedInUser fakeUser =
-                    new LoggedInUser(
+            User fakeUser =
+                    new User(
                             java.util.UUID.randomUUID().toString(),
                             "Jane Doe");
             return new Result.Success<>(fakeUser);
