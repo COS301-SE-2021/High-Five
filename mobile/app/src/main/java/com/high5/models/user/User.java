@@ -17,4 +17,10 @@ public class User {
     @ColumnInfo(name = "auth_token")
     public String authToken;
 
+    public User(){}
+
+    public User(String token) {
+        this.authToken = token;
+    }
+
 }

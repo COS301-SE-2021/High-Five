@@ -1,5 +1,7 @@
 package com.high5.models.user;
 
+import com.high5.database.DatabaseController;
+
 import java.io.IOException;
 
 /**
@@ -10,12 +12,15 @@ public class LoginDataSource {
     public Result<User> login(String username, String password) {
 
         try {
-            // TODO: handle loggedInUser authentication
-            User fakeUser =
-                    new User(
-                            java.util.UUID.randomUUID().toString(),
-                            "Jane Doe");
-            return new Result.Success<>(fakeUser);
+            User user = DatabaseController.getInstance(null).getDatabase().userDao().getUser();
+
+            //TODO: authenticate with backend and get token from there.
+            //TODO: create service that will do the authentication
+            if (user == null) {
+                user = new User("HELLO");
+                DatabaseController.getInstance(null).getDatabase().userDao().createUser(user);
+            }
+            return new Result.Success<>(user);
         } catch (Exception e) {
             return new Result.Error(new IOException("Error logging in", e));
         }

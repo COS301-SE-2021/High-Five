@@ -9,6 +9,7 @@ import android.util.Patterns;
 import com.high5.models.user.LoginRepository;
 import com.high5.models.user.Result;
 import com.high5.R;
+import com.high5.models.user.User;
 
 public class LoginViewModel extends ViewModel {
 
@@ -30,23 +31,23 @@ public class LoginViewModel extends ViewModel {
 
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
+        Result<User> result = loginRepository.login(username, password);
 
         if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+            User data = ((Result.Success<User>) result).getData();
+            loginResult.postValue(new LoginResult(new LoggedInUserView("Hello")));
         } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
+            loginResult.postValue(new LoginResult(R.string.login_failed));
         }
     }
 
     public void loginDataChanged(String username, String password) {
         if (!isUserNameValid(username)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
+            loginFormState.postValue(new LoginFormState(R.string.invalid_username, null));
         } else if (!isPasswordValid(password)) {
-            loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
+            loginFormState.postValue(new LoginFormState(null, R.string.invalid_password));
         } else {
-            loginFormState.setValue(new LoginFormState(true));
+            loginFormState.postValue(new LoginFormState(true));
         }
     }
 
