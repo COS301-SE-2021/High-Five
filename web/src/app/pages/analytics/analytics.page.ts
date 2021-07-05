@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
 import {Pipeline} from '../../models/pipeline';
 import {PipelinesService} from '../../apis/pipelines.service';
 import {ModalController, ToastController} from '@ionic/angular';
 import {EditPipelineComponent} from '../../components/edit-pipeline/edit-pipeline.component';
 import {AddPipelineComponent} from '../../components/add-pipeline/add-pipeline.component';
+import {NewPipeline} from '../../models/newPipeline';
+import {CreatePipelineRequest} from '../../models/createPipelineRequest';
 
 @Component({
   selector: 'app-analytics',
@@ -23,21 +25,21 @@ export class AnalyticsPage implements OnInit {
     });
   }
 
-  deletePipeline(id: string){
-    this.pipelines = this.pipelines.filter(pipeline => pipeline.id !==id);
-    const  toast = this.toastController.create({
+  deletePipeline(id: string) {
+    this.pipelines = this.pipelines.filter(pipeline => pipeline.id !== id);
+    const toast = this.toastController.create({
       message: 'Successfully deleted pipeline',
       duration: 2000,
-      translucent : true
+      translucent: true
     }).then(m => m.present());
   }
 
-  removeTool(pipeline: Pipeline){
-    const  toast = this.toastController.create({
+  removeTool(pipeline: Pipeline) {
+    const toast = this.toastController.create({
       header: 'Success!',
       message: 'removed tool from ' + pipeline.name,
       duration: 2000,
-      translucent : true,
+      translucent: true,
       position: 'bottom'
     }).then(m => m.present());
   }
@@ -45,23 +47,41 @@ export class AnalyticsPage implements OnInit {
   ngOnInit() {
     this.pipelinesService.getPipelines().subscribe(response => {
       this.pipelines = response.pipelines;
-      this.pipelines.sort((a,b)=> a.name.localeCompare(b.name));
+      this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
     });
   }
 
 
-  async openAddPipelineModal(){
+  async openAddPipelineModal() {
     const modal = await this.modalController.create({
       component: AddPipelineComponent,
       cssClass: 'add-pipeline-modal',
       showBackdrop: true,
-      animated: true
+      animated: true,
+      backdropDismiss: false
     });
-    modal.onWillDismiss().then(data=> {
-      console.log(data.data.pipeline);
+    modal.onWillDismiss().then(data => {
+      console.log(data);
+      if (data.data.pipeline) {
+        if (data.data.pipeline.name) {
+          const newPipeline: NewPipeline = {
+            name: data.data.pipeline.name,
+            tools: data.data.pipeline.tools
+          };
+          const createPipelineRequest: CreatePipelineRequest = {
+            pipeline: newPipeline
+          };
+          this.pipelinesService.createPipeline(createPipelineRequest).subscribe(response => {
+            console.log('Successfully created pipeline');
+          });
+        } else {
+          console.log('No valid pipeline found');
+        }
+      }
     });
     return await modal.present();
   }
+
   addPipeline() {
 
   }

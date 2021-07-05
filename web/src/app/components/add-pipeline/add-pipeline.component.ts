@@ -17,9 +17,9 @@ export class AddPipelineComponent implements OnInit {
 
   constructor(private modalController: ModalController) {
     for (let i = 0; i < 20; i++) {
-      this.tools.push('ASD' +i);
+      this.tools.push('ASD' + i);
     }
-    this.tools.sort((a,b)=> a.localeCompare(b));
+    this.tools.sort((a, b) => a.localeCompare(b));
   }
 
   /**
@@ -30,7 +30,7 @@ export class AddPipelineComponent implements OnInit {
   async dismiss() {
     await this.modalController.dismiss({
       dismissed: true,
-      pipeline : this.pipeline
+      pipeline: this.pipeline
     });
   }
 
@@ -45,6 +45,6 @@ export class AddPipelineComponent implements OnInit {
   }
 
   removeTool(tool: string) {
-    this.tools = this.tools.filter(t => t !==tool);
+    this.tools = this.tools.filter(t => t !== tool);
   }
 }
