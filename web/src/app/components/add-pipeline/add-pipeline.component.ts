@@ -12,9 +12,11 @@ import {Pipeline} from '../../models/pipeline';
  * This class serves as a way to add pipelines
  */
 export class AddPipelineComponent implements OnInit {
-  pipeline: Pipeline;
+  pipeline: Pipeline = {};
+  tools: string[] = [];
 
   constructor(private modalController: ModalController) {
+    this.tools.push('ASD');
   }
 
   /**
@@ -25,8 +27,7 @@ export class AddPipelineComponent implements OnInit {
   async dismiss() {
     await this.modalController.dismiss({
       dismissed: true,
-      pipelineId: '12312331asdasda',
-      pipelineTools: ['tools1']
+      pipeline : this.pipeline
     });
   }
 
@@ -38,5 +39,9 @@ export class AddPipelineComponent implements OnInit {
     await this.modalController.dismiss({
       dismissed: true,
     });
+  }
+
+  removeTool(tool: string) {
+    this.tools = this.tools.filter(t => t !==tool);
   }
 }

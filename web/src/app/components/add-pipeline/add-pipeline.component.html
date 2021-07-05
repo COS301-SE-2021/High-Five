@@ -6,40 +6,21 @@
   </ion-fab>
 </ion-header>
 <ion-content>
-  <ion-list>
     <ion-item>
-      <ion-list-header>
-        <ion-text>
+        <ion-title>
           Create New Pipeline
-        </ion-text>
-      </ion-list-header>
+        </ion-title>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Enter Pipeline Name</ion-label>
       <ion-input></ion-input>
     </ion-item>
-  </ion-list>
-  <ion-button (click)="dismiss()"></ion-button>
+    <ion-item>
+          <ion-chip *ngFor="let tool of tools; let index = index" [outline]="true" mode="md" class="tool-chip">
+            <ion-label color="dark">{{tool}}</ion-label>
+            <ion-icon color="dark" (click)="removeTool(tool)" name="close"></ion-icon>
+          </ion-chip>
+    </ion-item>
+    <ion-button strong="true" expand="block" (click)="dismiss()" fill="outline">Add Pipeline</ion-button>
+    <ion-button expand="block" (click)="dismissWithoutSaving()" fill="outline" color="danger" >Cancel</ion-button>
 </ion-content>
-
-<!--<div class="ion-page">-->
-<!--  <ion-fab vertical="top" horizontal="end" >-->
-<!--    <ion-button (click)="dismissWithoutSaving()" fill="clear">-->
-<!--      <ion-icon   name="close-outline"></ion-icon>-->
-<!--    </ion-button>-->
-<!--  </ion-fab>-->
-<!--  <ion-card>-->
-<!--    <ion-card-content>-->
-<!--      <ion-card-title>-->
-<!--        <ion-text>-->
-<!--          Create New Pipeline-->
-<!--        </ion-text>-->
-<!--      </ion-card-title>-->
-<!--      <ion-item>-->
-<!--        <ion-label position="floating">Enter Pipeline Name</ion-label>-->
-<!--        <ion-input></ion-input>-->
-<!--      </ion-item>-->
-<!--      <ion-button (click)="dismiss()"></ion-button>-->
-<!--    </ion-card-content>-->
-<!--  </ion-card>-->
-<!--</div>-->

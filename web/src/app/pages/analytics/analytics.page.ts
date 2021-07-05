@@ -57,7 +57,7 @@ export class AnalyticsPage implements OnInit {
       animated: true
     });
     modal.onWillDismiss().then(data=> {
-      console.log(data.data.pipelineId);
+      console.log(data.data.pipeline);
     });
     return await modal.present();
   }
