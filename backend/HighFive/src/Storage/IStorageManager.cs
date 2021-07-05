@@ -11,12 +11,10 @@ namespace src.Storage
 {
     public interface IStorageManager
     {
-        protected IConfiguration Configuration { get; }
-        protected CloudStorageAccount CloudStorageAccount { get; }
-        public Task<CloudBlockBlob> GetFile(string fileName, string container, bool create=false);
-        public Task<List<CloudBlockBlob>> GetAllFilesInContainer(string container);
-        public Task<CloudBlockBlob> CreateNewFile(string name, string container);
-        public String RandomString();
-        public String HashMd5(string source);
+        public Task<BlobFile> GetFile(string fileName, string container, bool create=false);
+        public Task<List<BlobFile>> GetAllFilesInContainer(string container);
+        public Task<BlobFile> CreateNewFile(string name, string container);
+        public string RandomString();
+        public string HashMd5(string source);
     }
 }
