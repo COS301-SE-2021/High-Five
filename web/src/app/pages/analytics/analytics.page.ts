@@ -4,6 +4,7 @@ import {Pipeline} from '../../models/pipeline';
 import {PipelinesService} from '../../apis/pipelines.service';
 import {ModalController, ToastController} from '@ionic/angular';
 import {EditPipelineComponent} from '../../components/edit-pipeline/edit-pipeline.component';
+import {AddPipelineComponent} from '../../components/add-pipeline/add-pipeline.component';
 
 @Component({
   selector: 'app-analytics',
@@ -50,13 +51,13 @@ export class AnalyticsPage implements OnInit {
 
   async openAddPipelineModal(){
     const modal = await this.modalController.create({
-      component: EditPipelineComponent,
-      componentProps:{
-        modalController  : this.modalController
-      }
+      component: AddPipelineComponent,
+      cssClass: 'add-pipeline-modal',
+      showBackdrop: true,
+      animated: true
     });
     modal.onWillDismiss().then(data=> {
-      console.log(data);
+      console.log(data.data.pipelineId);
     });
     return await modal.present();
   }

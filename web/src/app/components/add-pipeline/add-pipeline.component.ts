@@ -12,9 +12,10 @@ import {Pipeline} from '../../models/pipeline';
  * This class serves as a way to add pipelines
  */
 export class AddPipelineComponent implements OnInit {
-  @Input() modalController: ModalController;
   pipeline: Pipeline;
-  constructor() {}
+
+  constructor(private modalController: ModalController) {
+  }
 
   /**
    * This function closes the modal without performing any function or updating the pipeline's values, all changes will
@@ -23,12 +24,19 @@ export class AddPipelineComponent implements OnInit {
    */
   async dismiss() {
     await this.modalController.dismiss({
-      dismissed : true,
-      pipelineId : '12312331asdasda',
-      pipelineTools : ['tools1']
+      dismissed: true,
+      pipelineId: '12312331asdasda',
+      pipelineTools: ['tools1']
     });
   }
 
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
+
+  async dismissWithoutSaving() {
+    await this.modalController.dismiss({
+      dismissed: true,
+    });
+  }
 }
