@@ -17,6 +17,17 @@ namespace src.Subsystems.Pipelines
 {
     public class PipelineService: IPipelineService
     {
+        /*
+         *      Description:
+         * This service class manages all the service contracts of the Pipelines subsystem. It is responsible
+         * for creating, deleting and retrieving pipelines as well as adding or removing tools from pipelines
+         * as well as 
+         *
+         *      Attributes:
+         * -> _storageManager: a reference to the storage manager, used to access the blob storage.
+         * -> _containerName: the name of the container in which a user's pipeline data is stored.
+         */
+        
         private readonly IStorageManager _storageManager;
         private string _containerName = "demo2pipelines";
 
