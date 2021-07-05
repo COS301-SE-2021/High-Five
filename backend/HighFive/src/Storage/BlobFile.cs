@@ -64,7 +64,7 @@ namespace src.Storage
              * -> key: the key that may or may not belong to a key-value pair in the file's meta-data
              */
             
-            _file.Metadata.TryGetValue("duration", out var value);
+            _file.Metadata.TryGetValue(key, out var value);
             return value;
             //TODO: verify that if meta-data does not exist, empty string is returned
         }

@@ -58,7 +58,7 @@ namespace src.Subsystems.Pipelines
             return response;
         }
 
-        public void CreatePipeline(CreatePipelineRequest request)
+        public CreatePipelineResponse CreatePipeline(CreatePipelineRequest request)
         {
             /*
              *      Description:
@@ -92,6 +92,12 @@ namespace src.Subsystems.Pipelines
                 Tools = pipeline.Tools
             };
             UploadPipelineToStorage(newPipeline, blobFile);
+
+            var response = new CreatePipelineResponse()
+            {
+                PipelineId = generatedName
+            };
+            return response;
         }
 
         public bool AddTools(AddToolsRequest request)

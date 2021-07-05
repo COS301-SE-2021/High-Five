@@ -48,7 +48,7 @@ namespace Org.OpenAPITools.Controllers
         [Route("/pipelines/createPipeline")]
         [Consumes("application/json")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        [ProducesResponseType(statusCode: 200, type: typeof(CreatePipelineResponse))]
         public abstract IActionResult CreatePipeline([FromBody]CreatePipelineRequest createPipelineRequest);
 
         /// <summary>

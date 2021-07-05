@@ -29,8 +29,7 @@ namespace src.Subsystems.Pipelines
 
         public override IActionResult CreatePipeline(CreatePipelineRequest createPipelineRequest)
         {
-            _pipelineService.CreatePipeline(createPipelineRequest);
-            var response = new EmptyObject {Success = true};
+            var response = _pipelineService.CreatePipeline(createPipelineRequest);
             return StatusCode(200, response);
         }
 

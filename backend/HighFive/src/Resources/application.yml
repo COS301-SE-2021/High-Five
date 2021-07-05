@@ -161,7 +161,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/emptyObject'
+                $ref: '#/components/schemas/createPipelineResponse'
                 
   /pipelines/getPipelines:
     post:
@@ -356,6 +356,12 @@ components:
       properties:
         pipeline:
           $ref: '#/components/schemas/newPipeline'
+    
+    createPipelineResponse:
+      type: object
+      properties:
+        pipelineId:
+          type: string
     
     getPipelinesResponse:
       type: object
