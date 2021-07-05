@@ -27,6 +27,11 @@ namespace src.Subsystems.Pipelines
         
         public GetPipelinesResponse GetPipelines()
         {
+            /*
+             *      Description:
+             * This function will return all the pipelines belonging to this user in the cloud storage.
+             */
+            
             var allFiles = _storageManager.GetAllFilesInContainer(_containerName);
             if (allFiles.Result == null)
             {
@@ -44,6 +49,15 @@ namespace src.Subsystems.Pipelines
 
         public void CreatePipeline(CreatePipelineRequest request)
         {
+            /*
+             *      Description:
+             * This function will create and save a new analysis pipeline in the cloud storage.
+             *
+             *      Parameters:
+             * -> request: contains the name of the pipeline as well as a list of tools that it should have
+             *      initially.
+             */
+            
             var pipeline = request.Pipeline;
             var generatedName = _storageManager.HashMd5(pipeline.Name);
             var blobFile = _storageManager.CreateNewFile(generatedName + ".json", _containerName).Result;
@@ -71,6 +85,16 @@ namespace src.Subsystems.Pipelines
 
         public bool AddTools(AddToolsRequest request)
         {
+            /*
+             *      Description:
+             * This function will add a number of tools from a selected pipeline and udpate the new pipeline
+             * in the cloud storage.
+             *
+             *      Parameters:
+             * -> request: the request object for this service contract. It contains the pipeline id as well
+             * as a list of tools to be added.
+             */
+            
             var file =_storageManager.GetFile(request.PipelineId+".json", _containerName).Result;
             if (file == null)
             {
@@ -87,6 +111,16 @@ namespace src.Subsystems.Pipelines
 
         public bool RemoveTools(RemoveToolsRequest request)
         {
+            /*
+             *      Description:
+             * This function will remove a number of tools from a selected pipeline and update the new pipeline
+             * in the cloud storage.
+             *
+             *      Parameters:
+             * -> request: the request object for this function. It contains the id of the pipeline to be
+             *      modified as well as a list of tools to be removed from the pipeline.
+             */
+            
             var file =_storageManager.GetFile(request.PipelineId+".json", _containerName).Result;
             if (file == null)
             {
@@ -106,6 +140,14 @@ namespace src.Subsystems.Pipelines
 
         public async Task<bool> DeletePipeline(DeletePipelineRequest request)
         {
+            /*
+             *      Description:
+             * This function will delete a pipeline by a specific pipeline id.
+             *
+             *      Parameters:
+             * -> request: the request object for this use case that contains the pipeline id to be deleted.
+             */
+            
             var blobFile = _storageManager.GetFile(request.PipelineId + ".json", _containerName).Result;
             if (blobFile == null)
             {
@@ -128,18 +170,37 @@ namespace src.Subsystems.Pipelines
             var toolsFile = _storageManager.GetFile("tools.txt", _containerName).Result;
             _containerName = oldContainer;
             var toolsArray = toolsFile.ToText().Result.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
-            //the above line splits the textfile's contents by newlines into an array
+            //the above line splits the text file's contents by newlines into an array
             return toolsArray;
         }
 
         private static Pipeline ConvertFileToPipeline(BlobFile file)
         {
+            /*
+             *      Description:
+             * This is a helper function that converts a BlobFile object into a Pipeline object.
+             *
+             *      Parameters:
+             * -> file: the file object that will be converted to a pipeline object.
+             */
+            
             var jsonData = file.ToText().Result;
             return JsonConvert.DeserializeObject<Pipeline>(jsonData);
         }
 
         private static void UploadPipelineToStorage(Pipeline pipeline, BlobFile blobFile)
         {
+            /*
+             *      Description:
+             * This is a helper function that will upload a pipeline object to the cloud storage in a
+             * provided blob file.
+             *
+             *      Parameters:
+             * -> pipeline: the pipeline object to be uploaded to the cloud storage.
+             * -> blobFile: the BlobFile object instantiated in an appropriate container which will be
+             *      the reference to which the pipeline is uploaded.
+             */
+            
             var jsonData = JsonConvert.SerializeObject(pipeline);
             blobFile.UploadText(jsonData);
         }

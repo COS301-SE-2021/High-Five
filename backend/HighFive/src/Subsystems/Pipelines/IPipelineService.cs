@@ -10,5 +10,6 @@ namespace src.Subsystems.Pipelines
         public bool AddTools(AddToolsRequest request);
         public bool RemoveTools(RemoveToolsRequest request);
         public Task<bool> DeletePipeline(DeletePipelineRequest request);
+        public string[] GetAllTools();
     }
 }

@@ -45,7 +45,8 @@ namespace src.Subsystems.Pipelines
 
         public override IActionResult GetAllTools()
         {
-            throw new NotImplementedException();
+            var response = _pipelineService.GetAllTools();
+            return StatusCode(200, response);
         }
 
         public override IActionResult GetPipelines()
