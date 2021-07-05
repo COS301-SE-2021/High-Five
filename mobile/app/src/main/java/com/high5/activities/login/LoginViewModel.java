@@ -1,4 +1,4 @@
-package com.high5.activities.login.ui.login;
+package com.high5.activities.login;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel;
 
 import android.util.Patterns;
 
-import com.high5.activities.login.data.LoginRepository;
-import com.high5.activities.login.data.Result;
-import com.high5.activities.login.data.model.LoggedInUser;
+import com.high5.models.login.LoginRepository;
+import com.high5.models.login.Result;
+import com.high5.models.login.LoggedInUser;
 import com.high5.activities.login.R;
 
 public class LoginViewModel extends ViewModel {

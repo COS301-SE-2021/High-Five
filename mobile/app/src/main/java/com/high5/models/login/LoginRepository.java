@@ -1,6 +1,4 @@
-package com.high5.activities.login.data;
-
-import com.high5.activities.login.data.model.LoggedInUser;
+package com.high5.models.login;
 
 /**
  * Class that requests authentication and user information from the remote data source and

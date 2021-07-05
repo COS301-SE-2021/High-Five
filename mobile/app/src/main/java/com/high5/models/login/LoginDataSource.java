@@ -1,6 +1,4 @@
-package com.high5.activities.login.data;
-
-import com.high5.activities.login.data.model.LoggedInUser;
+package com.high5.models.login;
 
 import java.io.IOException;
 

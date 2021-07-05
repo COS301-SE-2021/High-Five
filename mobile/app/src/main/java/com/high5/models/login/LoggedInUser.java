@@ -1,4 +1,4 @@
-package com.high5.activities.login.data.model;
+package com.high5.models.login;
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository

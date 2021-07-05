@@ -1,4 +1,4 @@
-package com.high5.activities.login.ui.login;
+package com.high5.activities.login;
 
 /**
  * Class exposing authenticated user details to the UI.

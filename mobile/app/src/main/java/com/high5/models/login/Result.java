@@ -1,4 +1,4 @@
-package com.high5.activities.login.data;
+package com.high5.models.login;
 
 /**
  * A generic class that holds a result success w/ data or an error exception.

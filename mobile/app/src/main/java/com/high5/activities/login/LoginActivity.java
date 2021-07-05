@@ -1,4 +1,4 @@
-package com.high5.activities.login.ui.login;
+package com.high5.activities.login;
 
 import android.app.Activity;
 
@@ -23,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.high5.R;
-import com.high5.activities.login.ui.login.LoginViewModel;
-import com.high5.activities.login.ui.login.LoginViewModelFactory;
 import com.high5.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
