@@ -18,9 +18,12 @@
 
       <ion-card>
         <ion-chip *ngFor="let tool of tools; let index = index" [outline]="true" mode="md" class="tool-chip">
-          <ion-label color="dark">{{tool}}</ion-label>
-          <ion-icon color="dark" (click)="removeTool(tool)" name="close"></ion-icon>
+          <ion-label>{{tool}}</ion-label>
+          <ion-icon (click)="removeTool(tool)" name="close"></ion-icon>
         </ion-chip>
+        <ion-button fill="clear" size="small" shape="round" (click)="presentAddToolPopover($event)">
+          <ion-icon name="add" slot="icon-only"></ion-icon>
+        </ion-button>
       </ion-card>
 
     <ion-button strong="true" expand="block" (click)="dismiss()" fill="outline">Add Pipeline</ion-button>

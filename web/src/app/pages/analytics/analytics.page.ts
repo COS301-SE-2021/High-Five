@@ -17,6 +17,7 @@ export class AnalyticsPage implements OnInit {
 
   public isDesktop: boolean;
   public pipelines: Pipeline[] = [];
+  public availableTools: string[] = [];
 
   constructor(private screenSizeService: ScreenSizeServiceService, private pipelinesService: PipelinesService,
               private toastController: ToastController, private modalController: ModalController) {
@@ -48,6 +49,11 @@ export class AnalyticsPage implements OnInit {
     this.pipelinesService.getPipelines().subscribe(response => {
       this.pipelines = response.pipelines;
       this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
+      this.availableTools.push('Tool 1');
+      this.availableTools.push('Tool 2');
+      this.availableTools.push('Tool 3');
+      this.availableTools.push('Tool 4');
+      this.availableTools.sort((a, b) => a.localeCompare(b));
     });
   }
 
@@ -58,7 +64,10 @@ export class AnalyticsPage implements OnInit {
       cssClass: 'add-pipeline-modal',
       showBackdrop: true,
       animated: true,
-      backdropDismiss: false
+      backdropDismiss: false,
+      componentProps:{
+        availableTools  : this.availableTools
+      }
     });
     modal.onWillDismiss().then(data => {
       console.log(data);
@@ -73,6 +82,8 @@ export class AnalyticsPage implements OnInit {
           };
           this.pipelinesService.createPipeline(createPipelineRequest).subscribe(response => {
             console.log('Successfully created pipeline');
+            this.pipelines.push(data.data.pipeline);
+            this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
           });
         } else {
           console.log('No valid pipeline found');

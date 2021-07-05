@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ModalController} from '@ionic/angular';
+import {ModalController, PopoverController} from '@ionic/angular';
 import {Pipeline} from '../../models/pipeline';
+import {AddToolComponent} from '../add-tool/add-tool.component';
 
 @Component({
   selector: 'app-add-pipeline',
@@ -12,28 +13,39 @@ import {Pipeline} from '../../models/pipeline';
  * This class serves as a way to add pipelines
  */
 export class AddPipelineComponent implements OnInit {
+  @Input() availableTools: string[];
   pipeline: Pipeline = {};
   tools: string[] = [];
 
-  constructor(private modalController: ModalController) {
-    for (let i = 0; i < 20; i++) {
-      this.tools.push('ASD' + i);
-    }
+  constructor(private modalController: ModalController, private popoverController: PopoverController) {
     this.tools.sort((a, b) => a.localeCompare(b));
   }
 
-  /**
-   * This function closes the modal without performing any function or updating the pipeline's values, all changes will
-   * be discarded when this function is called (if there were any changes made in the frontend to the tools in the
-   * pipeline)
-   */
   async dismiss() {
+    if (this.pipeline && this.tools.length > 0) {
+      this.pipeline.tools = this.tools;
+    } else {
+      this.pipeline = {};
+    }
     await this.modalController.dismiss({
       dismissed: true,
       pipeline: this.pipeline
     });
   }
 
+  async presentAddToolPopover(ev: any) {
+    const selectedTools: string[] = [];
+    const addToolPopover = await this.popoverController.create({
+      component: AddToolComponent,
+      event: ev,
+      translucent: true,
+      componentProps: {
+        tools: selectedTools,
+        availableTools: this.availableTools
+      }
+    });
+    await addToolPopover.present();
+  }
 
   ngOnInit() {
   }
