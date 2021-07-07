@@ -3,7 +3,6 @@ package com.bdpsolutions.highfive.ui.splash
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import com.bdpsolutions.highfive.MainActivity
 import com.bdpsolutions.highfive.ui.login.LoginActivity
@@ -13,6 +12,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
+/**
+ * This class runs logic for the SplashActivity to start the main or login activity based
+ * on whether the user is logged in or not.
+ */
 class SplashViewModel : ViewModel() {
 
     /**

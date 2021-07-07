@@ -34,6 +34,10 @@ class SplashActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
             )
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
         splashViewModel.redirectActivity(this)
     }
 }

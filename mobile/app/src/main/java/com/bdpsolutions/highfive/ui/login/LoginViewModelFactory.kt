@@ -2,8 +2,8 @@ package com.bdpsolutions.highfive.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.bdpsolutions.highfive.data.LoginDataSource
-import com.bdpsolutions.highfive.data.LoginRepository
+import com.bdpsolutions.highfive.data.login.source.APILogin
+import com.bdpsolutions.highfive.data.login.LoginRepository
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.
@@ -16,7 +16,7 @@ class LoginViewModelFactory : ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             return LoginViewModel(
                 loginRepository = LoginRepository(
-                    dataSource = LoginDataSource()
+                    loginSource = APILogin()
                 )
             ) as T
         }

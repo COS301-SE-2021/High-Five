@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
-import com.bdpsolutions.highfive.data.LoginRepository
-import com.bdpsolutions.highfive.data.Result
+import com.bdpsolutions.highfive.data.login.LoginRepository
+import com.bdpsolutions.highfive.data.login.Result
 
 import com.bdpsolutions.highfive.R
 
@@ -23,7 +23,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
         if (result is Result.Success) {
             _loginResult.value =
-                LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+                LoginResult(success = LoggedInUserView(displayName = "Hello"))
         } else {
             _loginResult.value = LoginResult(error = R.string.login_failed)
         }

@@ -1,4 +1,4 @@
-package com.bdpsolutions.highfive.data
+package com.bdpsolutions.highfive.data.login
 
 /**
  * A generic class that holds a value with its loading status.

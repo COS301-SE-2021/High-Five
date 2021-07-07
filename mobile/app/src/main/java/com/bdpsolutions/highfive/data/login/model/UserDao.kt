@@ -1,4 +1,4 @@
-package com.bdpsolutions.highfive.data.model
+package com.bdpsolutions.highfive.data.login.model
 
 import androidx.room.*
 
