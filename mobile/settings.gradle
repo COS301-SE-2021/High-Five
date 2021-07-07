@@ -1,2 +1,2 @@
-rootProject.name = "high5_android"
+rootProject.name = "HighFive"
 include ':app'
