@@ -1,10 +1,8 @@
 package com.bdpsolutions.highfive.data.login.source
 
 import com.bdpsolutions.highfive.data.login.Result
-import com.bdpsolutions.highfive.data.login.model.LoggedInUser
 import com.bdpsolutions.highfive.data.login.model.User
 import java.io.IOException
-import java.util.*
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
