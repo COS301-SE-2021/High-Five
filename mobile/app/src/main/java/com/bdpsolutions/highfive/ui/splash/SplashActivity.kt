@@ -1,4 +1,4 @@
-package com.bdpsolutions.highfive
+package com.bdpsolutions.highfive.ui.splash
 
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
