@@ -5,14 +5,23 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowManager
+import androidx.lifecycle.ViewModelProvider
 import com.bdpsolutions.highfive.databinding.ActivitySplashBinding
+import com.bdpsolutions.highfive.ui.login.LoginViewModel
+import com.bdpsolutions.highfive.ui.login.LoginViewModelFactory
 
 class SplashActivity : AppCompatActivity() {
+
+    private lateinit var splashViewModel: SplashViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val splashBinding: ActivitySplashBinding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(splashBinding.root)
+
+        splashViewModel = ViewModelProvider(this, SplashViewModelFactory())
+            .get(SplashViewModel::class.java)
 
         // Hiding status bars, since this is the splash screen
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -25,5 +34,6 @@ class SplashActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
             )
         }
+        splashViewModel.redirectActivity(this)
     }
 }
