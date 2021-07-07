@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.bdpsolutions.highfive.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_analysis"
+        android:name="com.bdpsolutions.highfive.ui.analysis.AnalysisFragment"
+        android:label="@string/analysis_fragment"
+        tools:layout="@layout/analysis_fragment" />
 
     <fragment
         android:id="@+id/navigation_notifications"
