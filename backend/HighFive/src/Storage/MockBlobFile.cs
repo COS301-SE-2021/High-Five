@@ -28,9 +28,9 @@ namespace src.Storage
         
         //mock variables
         private Hashtable _metaData;
-        private List<MockBlobFile> _container;
+        private List<IBlobFile> _container;
 
-        public MockBlobFile(List<MockBlobFile> container, string name)
+        public MockBlobFile(List<IBlobFile> container, string name)
         {
             _container = container;
             _metaData = new Hashtable();

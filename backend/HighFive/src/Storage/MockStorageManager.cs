@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace src.Storage
@@ -18,7 +21,7 @@ namespace src.Storage
          *      where uploaded files are granted unique id's.
          */
         
-        private List<MockBlobFile> _mockContainer;
+        private List<IBlobFile> _mockContainer;
         private readonly Random _random;
         private const string Alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
         
@@ -30,7 +33,7 @@ namespace src.Storage
              * serve as the mocked cloud storage.
              */
             
-            _mockContainer = new List<MockBlobFile>();
+            _mockContainer = new List<IBlobFile>();
             _random = new Random();
         }
         public async Task<IBlobFile> GetFile(string fileName, string container, bool create = false)
@@ -66,22 +69,80 @@ namespace src.Storage
 
         public async Task<List<IBlobFile>> GetAllFilesInContainer(string container)
         {
-            throw new System.NotImplementedException();
+            /*
+             *      Description:
+             * This function will return all the mocked files stored in the mocked container.
+             *
+             *      Parameters:
+             * -> container: the name of the container which will contain all the blob files returned. It will
+             *      be ignored in this mocked implementation.
+             */
+
+            return _mockContainer;
         }
 
         public async Task<IBlobFile> CreateNewFile(string name, string container)
         {
-            throw new System.NotImplementedException();
-        }
+            /*
+             *      Description:
+             * This function will attempt to create a new blob file in temporary memory. It returns null
+             * if the provided name already exists in the mocked storage, otherwise it returns the
+             * MockBlobFile object that does not yet exist in the mocked container.
+             *
+             *       Parameters:
+             * -> name: this is the name of the file to be created.
+             * -> container: the name of the cloud storage container where the file should be created. Will
+             *      be ignored in this mocked implementation.
+             */
 
-        public string RandomString()
-        {
-            throw new System.NotImplementedException();
+            var newFile = GetFile(name, container, true).Result;
+            if (await newFile.Exists())
+            {
+                return null;
+            }
+
+            return newFile;
         }
 
         public string HashMd5(string source)
         {
-            throw new System.NotImplementedException();
+            /*
+             *      Description:
+             * This function is primarily used to generate id's for files stored in blob storage that are
+             * guaranteed to be unique. An MD5 hash will be applied to the string passed to this function.
+             *
+             *      Parameters:
+             * -> source: the string to be hashed.
+             */
+            
+            var md5 = MD5.Create();
+            var inputBytes = Encoding.ASCII.GetBytes(source);
+            var hashBytes = md5.ComputeHash(inputBytes);
+            
+            var sb = new StringBuilder();
+            foreach (var t in hashBytes)
+            {
+                sb.Append(t.ToString("X2"));
+            }
+            return sb.ToString();
+        }
+
+        public string RandomString()
+        {
+            /*
+             *      Description:
+             * This function returns a 5-character string consisting of randomly selected characters from
+             * the Alphanumeric constant. It is mainly used during unique name generation of files, in
+             * particular when salt needs to be added to the string to be hashed.
+             */
+            
+            var str = "";
+            for(var i =0; i<5; i++)
+            {
+                var a = _random.Next(Alphanumeric.Length);
+                str += Alphanumeric.ElementAt(a);
+            }
+            return str;
         }
     }
 }

@@ -92,6 +92,12 @@ namespace src.Subsystems.Pipelines
                 Tools = pipeline.Tools
             };
             UploadPipelineToStorage(newPipeline, blobFile);
+            
+            var response = new CreatePipelineResponse()
+            {
+                PipelineId = generatedName
+            };
+            return response;
         }
 
         public bool AddTools(AddToolsRequest request)
@@ -177,7 +183,7 @@ namespace src.Subsystems.Pipelines
             return toolsArray;
         }
 
-        private static Pipeline ConvertFileToPipeline(BlobFile file)
+        private static Pipeline ConvertFileToPipeline(IBlobFile file)
         {
             /*
              *      Description:
