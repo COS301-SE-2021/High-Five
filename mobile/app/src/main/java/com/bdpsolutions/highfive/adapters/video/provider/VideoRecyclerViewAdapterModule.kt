@@ -9,6 +9,11 @@ import dagger.hilt.android.components.ActivityComponent
 
 @Module
 @InstallIn(ActivityComponent::class)
+/**
+ * This class provides the implementation for the VideoFragmentRecyclerViewAdapter.
+ *
+ * Implementations are chosen here.
+ */
 abstract class VideoRecyclerViewAdapterModule {
     @Binds
     abstract fun bindRecyclerView(

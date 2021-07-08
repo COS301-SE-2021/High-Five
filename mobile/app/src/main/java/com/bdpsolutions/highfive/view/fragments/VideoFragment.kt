@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.bdpsolutions.highfive.adapters.video.adapter.VideoFragmentRecyclerViewAdapter
 import com.bdpsolutions.highfive.databinding.FragmentVideoBinding
-import com.bdpsolutions.highfive.adapters.video.provider.VideoRecyclerViewAdapterProvider
 import com.bdpsolutions.highfive.view.views.VideoItemView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class VideoFragment: Fragment() {
 
     @Inject
-    lateinit var service: VideoRecyclerViewAdapterProvider
+    lateinit var service: VideoFragmentRecyclerViewAdapter
 
     var binding: FragmentVideoBinding? = null
 
@@ -25,7 +25,7 @@ class VideoFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentVideoBinding.inflate(layoutInflater)
-        val adapter = service.provider
+        val adapter = service
         binding?.videoHolder?.adapter = adapter
         adapter.setData(
             arrayOf(
