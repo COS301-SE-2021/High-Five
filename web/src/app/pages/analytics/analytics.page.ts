@@ -46,27 +46,28 @@ export class AnalyticsPage implements OnInit {
   }
 
   ngOnInit() {
-    this.pipelinesService.getPipelines().subscribe(response => {
-      this.pipelines = response.pipelines;
-      this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
-      this.availableTools.push('Tool 1');
-      this.availableTools.push('Tool 2');
-      this.availableTools.push('Tool 3');
-      this.availableTools.push('Tool 4');
-      this.availableTools.sort((a, b) => a.localeCompare(b));
+    let updatedTools = false;
+    let updatedPipelines = false;
+    this.updateAvailableTools().then(res => {
+      updatedTools = res;
+    });
+    this.updatePipelines().then(res => {
+      updatedPipelines = res;
     });
   }
 
 
   async openAddPipelineModal() {
+    console.log(this.availableTools);
+
     const modal = await this.modalController.create({
       component: AddPipelineComponent,
       cssClass: 'add-pipeline-modal',
       showBackdrop: true,
       animated: true,
       backdropDismiss: false,
-      componentProps:{
-        availableTools  : this.availableTools
+      componentProps: {
+        availableTools: this.availableTools
       }
     });
     modal.onWillDismiss().then(data => {
@@ -93,8 +94,22 @@ export class AnalyticsPage implements OnInit {
     return await modal.present();
   }
 
-  addPipeline() {
+  private async updatePipelines(): Promise<boolean> {
+    this.pipelinesService.getPipelines().subscribe(response => {
+      this.pipelines = response.pipelines;
+      this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
+      return true;
+    });
+    return false;
+  }
 
+  private async updateAvailableTools(): Promise<boolean> {
+    this.pipelinesService.getAllTools().subscribe(response => {
+      this.availableTools = response;
+      this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
+      return true;
+    });
+    return false;
   }
 }
 

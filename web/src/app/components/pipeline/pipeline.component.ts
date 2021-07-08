@@ -15,6 +15,7 @@ import {AddToolComponent} from '../add-tool/add-tool.component';
 })
 export class PipelineComponent implements OnInit {
   @Input() pipeline: Pipeline;
+  @Input() availableTools: string[];
   @Output() deletePipeline: EventEmitter<string> = new EventEmitter<string>(); // Will send the id of the pipeline
   @Output() removeTool: EventEmitter<Pipeline> = new EventEmitter<Pipeline>(); // Will send through a new pipeline object
   constructor(private platform: Platform, private pipelinesService: PipelinesService,
@@ -37,6 +38,9 @@ export class PipelineComponent implements OnInit {
   }
 
   async onRemoveTool(tool: string) {
+    if(this.pipeline.tools.length===1){
+      await this.onDeletePipeline();
+    }
     const removeToolRequest: RemoveToolsRequest = {
       pipelineId: this.pipeline.id,
       tools: [tool]
@@ -55,8 +59,15 @@ export class PipelineComponent implements OnInit {
     }
   }
 
-  async onAddTool() {
-    console.log('Edit button pressed');
+  async onAddTool(tools: string[]) {
+    this.pipeline.tools= this.pipeline.tools.concat(tools);
+    this.pipelinesService.addTools({pipelineId: this.pipeline.id,tools : this.pipeline.tools}).subscribe(res => {
+      const temp = Array.from(document.getElementsByClassName('tool-chip') as HTMLCollectionOf<HTMLElement>);
+      temp.forEach(value => {
+        value.style.borderColor = '#' + ('000000' +
+          Math.floor(0x1000000 * Math.random()).toString(16)).slice(-6);
+      });
+    });
   }
 
   async onDeletePipeline() {
@@ -88,17 +99,20 @@ export class PipelineComponent implements OnInit {
   }
 
   async presentAddToolPopover(ev: any) {
-    const selectedTools: string[] = [];
-    const availableTools: string[] = [];
-        const addToolPopover = await this.popoverController.create({
+    const addToolPopover = await this.popoverController.create({
       component: AddToolComponent,
       event: ev,
       translucent: true,
       componentProps: {
-        tools: selectedTools,
-        availableTools
+        availableTools: this.availableTools.filter(tool => !this.pipeline.tools.includes(tool))
       }
     });
     await addToolPopover.present();
+    await addToolPopover.onDidDismiss().then(
+      data=>{
+        this.onAddTool(data.data.tools);
+      }
+  );
+
   }
 }

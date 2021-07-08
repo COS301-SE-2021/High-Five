@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {PopoverController} from '@ionic/angular';
 
 @Component({
   selector: 'app-add-tool',
@@ -7,12 +8,23 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class AddToolComponent implements OnInit {
 
-  @Input() tools: string[];
   @Input() availableTools: string[];
-  constructor() { }
+  private tools: string[] = [];
+  constructor(private popoverControl: PopoverController) { }
 
   ngOnInit() {
 
   }
 
+  changeCheckbox(checked: boolean, tool: string) {
+    if(checked){
+      this.tools.push(tool);
+    } else {
+      this.tools= this.tools.filter(t => t!== tool);
+    }
+  }
+
+  addTools() {
+    this.popoverControl.dismiss({tools: this.tools});
+  }
 }

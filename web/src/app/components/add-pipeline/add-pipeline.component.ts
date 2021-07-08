@@ -18,12 +18,13 @@ export class AddPipelineComponent implements OnInit {
   tools: string[] = [];
 
   constructor(private modalController: ModalController, private popoverController: PopoverController) {
-    this.tools.sort((a, b) => a.localeCompare(b));
+    this.pipeline= {};
   }
 
   async dismiss() {
     if (this.pipeline && this.tools.length > 0) {
       this.pipeline.tools = this.tools;
+      this.pipeline.tools.sort((a, b) => a.localeCompare(b));
     } else {
       this.pipeline = {};
     }
@@ -34,17 +35,18 @@ export class AddPipelineComponent implements OnInit {
   }
 
   async presentAddToolPopover(ev: any) {
-    const selectedTools: string[] = [];
     const addToolPopover = await this.popoverController.create({
       component: AddToolComponent,
       event: ev,
       translucent: true,
       componentProps: {
-        tools: selectedTools,
-        availableTools: this.availableTools
+        availableTools: this.availableTools.filter(tool => !this.tools.includes(tool))
       }
     });
     await addToolPopover.present();
+    await addToolPopover.onDidDismiss().then(data =>{
+      this.tools = this.tools.concat(data.data.tools);
+    });
   }
 
   ngOnInit() {

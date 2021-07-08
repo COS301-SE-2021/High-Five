@@ -34,7 +34,7 @@ import {Configuration} from '../configuration';
 @Injectable()
 export class PipelinesService {
 
-  protected basePath = '/';
+  protected basePath = 'https://high5api.azurewebsites.net';
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
 

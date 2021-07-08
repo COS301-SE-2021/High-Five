@@ -2,7 +2,7 @@
   <ion-grid>
     <ion-row>
       <ion-col *ngFor="let pipeline of pipelines" size-xl="3">
-        <app-pipeline  [pipeline]="pipeline" (deletePipeline)="deletePipeline($event)" (removeTool)="removeTool($event)" ></app-pipeline>
+        <app-pipeline [availableTools]="availableTools" [pipeline]="pipeline" (deletePipeline)="deletePipeline($event)" (removeTool)="removeTool($event)" ></app-pipeline>
       </ion-col>
     </ion-row>
   </ion-grid>
