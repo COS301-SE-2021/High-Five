@@ -6,6 +6,7 @@ using Moq;
 using Org.OpenAPITools.Models;
 using src.Storage;
 using src.Subsystems.MediaStorage;
+using src.Utils.Controller;
 using Xunit;
 
 namespace tests.UnitTests.Subsystems
@@ -13,9 +14,11 @@ namespace tests.UnitTests.Subsystems
     public class MediaStorageUnitTests 
     {
         private IMediaStorageService _mockMediaStorageService;
+        private IStorageManager _mockStorageManager;
         public MediaStorageUnitTests()
         {
-            _mockMediaStorageService = new MediaStorageService(new MockStorageManager());
+            _mockStorageManager = new MockStorageManager();
+            _mockMediaStorageService = new MediaStorageService(_mockStorageManager);
         }
 
         [Fact]
@@ -79,29 +82,23 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        public void TestGetVideoValidVideoId()
+        public async Task TestGetVideoValidVideoId()
         {
             var validVideo = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validVideo", "validVideo");
-            _mockMediaStorageService.StoreVideo(validVideo);
+            await _mockMediaStorageService.StoreVideo(validVideo);
             var validVideoId = _mockMediaStorageService.GetAllVideos()[0].Id;
-            var request = new GetVideoRequest
-            {
-                Id = validVideoId
-            };
-            var response = _mockMediaStorageService.GetVideo(request);
-            Assert.NotNull(response);
+            var getController = new GetVideoController(_mockStorageManager);
+            var response = getController.GetVideo(validVideoId);
+            Assert.NotEmpty(response.FileContents);
         }
         
         [Fact]
         public void TestGetVideoInvalidVideoId()
         {
-            const string validVideoId = "5";
-            var request = new GetVideoRequest
-            {
-                Id = validVideoId
-            };
-            var response = _mockMediaStorageService.GetVideo(request);
-            Assert.Null(response);
+            const string invalidVideoId = "5";
+            var getController = new GetVideoController(_mockStorageManager);
+            var response = getController.GetVideo(invalidVideoId);
+            Assert.Empty(response.FileContents);
         }
         
     }
