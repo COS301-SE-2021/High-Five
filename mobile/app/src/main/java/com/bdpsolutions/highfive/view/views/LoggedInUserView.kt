@@ -1,4 +1,4 @@
-package com.bdpsolutions.highfive.view.views.login
+package com.bdpsolutions.highfive.view.views
 
 /**
  * User details post authentication that is exposed to the UI

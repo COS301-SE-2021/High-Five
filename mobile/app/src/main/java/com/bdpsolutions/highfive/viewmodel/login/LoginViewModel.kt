@@ -8,7 +8,7 @@ import com.bdpsolutions.highfive.models.login.LoginRepository
 import com.bdpsolutions.highfive.models.login.Result
 
 import com.bdpsolutions.highfive.R
-import com.bdpsolutions.highfive.view.views.login.LoggedInUserView
+import com.bdpsolutions.highfive.view.views.LoggedInUserView
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 

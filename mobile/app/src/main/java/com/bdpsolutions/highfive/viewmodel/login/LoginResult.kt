@@ -1,6 +1,6 @@
 package com.bdpsolutions.highfive.viewmodel.login
 
-import com.bdpsolutions.highfive.view.views.login.LoggedInUserView
+import com.bdpsolutions.highfive.view.views.LoggedInUserView
 
 /**
  * Authentication result : success (user details) or error message.

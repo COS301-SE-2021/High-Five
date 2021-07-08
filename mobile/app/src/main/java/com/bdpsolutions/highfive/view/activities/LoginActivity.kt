@@ -14,7 +14,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
 
-import com.bdpsolutions.highfive.view.views.login.LoggedInUserView
+import com.bdpsolutions.highfive.view.views.LoggedInUserView
 import com.bdpsolutions.highfive.databinding.ActivityLoginBinding
 import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.viewmodel.login.LoginViewModel
