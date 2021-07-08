@@ -31,7 +31,7 @@ namespace src.Subsystems.MediaStorage
         public byte[] ProcessFrame(byte[] frame)
         {
             // IntPtr image= CvInvoke.imread
-            return new byte[0];
+            return Array.Empty<byte>();
         }
     }
 }

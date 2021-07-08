@@ -191,14 +191,5 @@ namespace src.Storage
             return str;
         }
 
-        public Mock<IStorageManager> MockStorageManager()
-        {
-            var mock = new Mock<IStorageManager>();
-            mock.Setup(c => c.GetFile(It.IsAny<string>(),It.IsAny<string>(),false)).Returns(Task.FromResult((CloudBlockBlob)null));
-            mock.Setup(c => c.GetAllFilesInContainer(It.IsAny<string>())).Returns(Task.FromResult((List<CloudBlockBlob>) null));
-            mock.Setup(c => c.CreateNewFile(It.IsAny<string>(), It.IsAny<string>()));
-            return mock;
-        }
-
     }
 }
