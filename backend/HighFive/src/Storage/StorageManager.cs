@@ -32,32 +32,39 @@ namespace src.Storage
          * -> _random: this is a random object that is used to generate unique id's for uploaded files.
          * -> Alphanumeric: this is a simple alphanumeric string used to generate salt during the process
          *      where uploaded files are granted unique id's.
+         * -> _mocked: this boolean parameter indicated whether the storage manager should be working with the
+         *      actual cloud storage or with a mocked in-memory storage. It will only be set to true when the
+         *      default constructor of the StorageManager is called.
+         * -> _mockContainer: an array containing all mocked blob files. Will only be used when _mocked is true.
          */
         
         private readonly CloudStorageAccount _cloudStorageAccount;
         private readonly Random _random;
         private const string Alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
+        
+        //variables used during cloud storage mocking
+        private bool _mocked;
+        private List<MockBlobFile> _mockContainer;
 
         public StorageManager(IConfiguration config)
         {
             var connectionString = config.GetConnectionString("StorageConnection");
             _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             _random = new Random();
+            _mocked = false;
         }
 
-        public StorageManager(string connectionString)
+        public StorageManager()
         {
             /*
              *      Description:
-             * The constructor of the class that initializes the CloudStorageAccount based on an
-             * appropriate connection string passed through.
-             *
-             *      Parameters:
-             * -> connectionString: the connection string of a Cloud Storage Client that can be retrieved.
-             *      from the Azure portal.
+             * The default constructor of the class will enable the manager's "Mock Mode" in which it will
+             * be working with a mocked in-memory storage as opposed to the actual cloud storage. Used for
+             * testing purposes.
              */
             
-            _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
+            _mocked = true;
+            _mockContainer = new List<MockBlobFile>();
             _random = new Random();
         }
 
@@ -78,7 +85,7 @@ namespace src.Storage
              *      or may not be in storage. The creation of the file itself will be handled by the
              *      CreateNewFile function.
              */
-            
+
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
             var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
             if (create)

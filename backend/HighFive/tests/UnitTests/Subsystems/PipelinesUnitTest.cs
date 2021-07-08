@@ -10,11 +10,9 @@ namespace tests.UnitTests.Subsystems.MediaStorage
     public class PipelinesUnitTest
     {
         private IPipelineService _mockPipelineService;
-        private const string ConnectionString = "DefaultEndpointsProtocol=https;AccountName=high5storage;AccountKey=Au+qHV2suTNDeydwjDjvJHJYxxWTX4/9GyZ6a+qeBoUdsWOJ+SQeMjhid5+Pxu/vR4LQM9yC5uPQlLjk5JHKaw==;EndpointSuffix=core.windows.net";
-
         public PipelinesUnitTest()
         {
-            _mockPipelineService = new PipelineService(new StorageManager(ConnectionString));
+            _mockPipelineService = new PipelineService(new StorageManager());
             ((PipelineService) _mockPipelineService).SetContainer("demo2pipelinemocks");
         }
         

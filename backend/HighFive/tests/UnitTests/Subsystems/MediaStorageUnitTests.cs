@@ -12,11 +12,9 @@ namespace tests.UnitTests.Subsystems.MediaStorage
 {
     public class MediaStorageUnitTests {
         private IMediaStorageService _mockMediaStorageService;
-        private const string ConnectionString = "DefaultEndpointsProtocol=https;AccountName=high5storage;AccountKey=Au+qHV2suTNDeydwjDjvJHJYxxWTX4/9GyZ6a+qeBoUdsWOJ+SQeMjhid5+Pxu/vR4LQM9yC5uPQlLjk5JHKaw==;EndpointSuffix=core.windows.net";
-
         public MediaStorageUnitTests()
         {
-            _mockMediaStorageService = new MediaStorageService(new StorageManager(ConnectionString));
+            _mockMediaStorageService = new MediaStorageService(new StorageManager());
             ((MediaStorageService) _mockMediaStorageService).SetContainer("demo2videomocks");
         }
 
