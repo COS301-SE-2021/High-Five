@@ -58,7 +58,6 @@ export class AnalyticsPage implements OnInit {
 
 
   async openAddPipelineModal() {
-    console.log(this.availableTools);
 
     const modal = await this.modalController.create({
       component: AddPipelineComponent,
@@ -71,7 +70,6 @@ export class AnalyticsPage implements OnInit {
       }
     });
     modal.onWillDismiss().then(data => {
-      console.log(data);
       if (data.data.pipeline) {
         if (data.data.pipeline.name) {
           const newPipeline: NewPipeline = {
@@ -82,12 +80,10 @@ export class AnalyticsPage implements OnInit {
             pipeline: newPipeline
           };
           this.pipelinesService.createPipeline(createPipelineRequest).subscribe(response => {
-            console.log('Successfully created pipeline');
             this.pipelines.push(data.data.pipeline);
             this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
           });
         } else {
-          console.log('No valid pipeline found');
         }
       }
     });
