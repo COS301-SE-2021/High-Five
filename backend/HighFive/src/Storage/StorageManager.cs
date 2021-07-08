@@ -33,7 +33,7 @@ namespace src.Storage
          * -> Alphanumeric: this is a simple alphanumeric string used to generate salt during the process
          *      where uploaded files are granted unique id's.
          */
-        
+
         private readonly CloudStorageAccount _cloudStorageAccount;
         private readonly Random _random;
         private const string Alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -69,7 +69,7 @@ namespace src.Storage
             {
                 return new BlobFile(cloudBlobContainer.GetBlockBlobReference(fileName));
             }
-            
+
             if (!await cloudBlobContainer.ExistsAsync())
             {
                 return null;
@@ -91,7 +91,7 @@ namespace src.Storage
              *      Parameters:
              * -> container: the name of the container which will contain all the blob files returned.
              */
-            
+
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
             var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
             if (await cloudBlobContainer.ExistsAsync())
@@ -125,7 +125,7 @@ namespace src.Storage
              * -> name: this is the name of the file to be created.
              * -> container: the name of the cloud storage container where the file should be created.
              */
-            
+
             var newFile = GetFile(name, container, true).Result;
             if (await newFile.Exists())
             {
@@ -133,7 +133,7 @@ namespace src.Storage
             }
             return newFile;
         }
-        
+
         public string HashMd5(string source)
         {
             /*
@@ -144,11 +144,11 @@ namespace src.Storage
              *      Parameters:
              * -> source: the string to be hashed.
              */
-            
+
             var md5 = MD5.Create();
             var inputBytes = Encoding.ASCII.GetBytes(source);
             var hashBytes = md5.ComputeHash(inputBytes);
-            
+
             var sb = new StringBuilder();
             foreach (var t in hashBytes)
             {
@@ -165,7 +165,7 @@ namespace src.Storage
              * the Alphanumeric constant. It is mainly used during unique name generation of files, in
              * particular when salt needs to be added to the string to be hashed.
              */
-            
+
             var str = "";
             for(var i =0; i<5; i++)
             {
@@ -174,6 +174,6 @@ namespace src.Storage
             }
             return str;
         }
-        
+
     }
 }

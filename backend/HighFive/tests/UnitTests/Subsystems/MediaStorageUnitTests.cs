@@ -8,7 +8,7 @@ using src.Storage;
 using src.Subsystems.MediaStorage;
 using Xunit;
 
-namespace tests.UnitTests.Subsystems.MediaStorage
+namespace tests.UnitTests.Subsystems
 {
     public class MediaStorageUnitTests {
         private IMediaStorageService _mockMediaStorageService;
