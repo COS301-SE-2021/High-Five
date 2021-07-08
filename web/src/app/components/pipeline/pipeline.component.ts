@@ -29,11 +29,7 @@ export class PipelineComponent implements OnInit {
      * chips only accept the ionic colours (primary, secondary, warning, etc.)
      */
     this.platform.ready().then(() => {
-      const temp = Array.from(document.getElementsByClassName('tool-chip') as HTMLCollectionOf<HTMLElement>);
-      temp.forEach(value => {
-        value.style.borderColor = '#' + ('000000' +
-          Math.floor(0x1000000 * Math.random()).toString(16)).slice(-6);
-      });
+      this.updateToolColours();
     });
   }
 
@@ -61,13 +57,7 @@ export class PipelineComponent implements OnInit {
 
   async onAddTool(tools: string[]) {
     this.pipeline.tools= this.pipeline.tools.concat(tools);
-    this.pipelinesService.addTools({pipelineId: this.pipeline.id,tools : this.pipeline.tools}).subscribe(res => {
-      const temp = Array.from(document.getElementsByClassName('tool-chip') as HTMLCollectionOf<HTMLElement>);
-      temp.forEach(value => {
-        value.style.borderColor = '#' + ('000000' +
-          Math.floor(0x1000000 * Math.random()).toString(16)).slice(-6);
-      });
-    });
+    this.pipelinesService.addTools({pipelineId: this.pipeline.id,tools : this.pipeline.tools}).subscribe(this.updateToolColours);
   }
 
   async onDeletePipeline() {
@@ -113,6 +103,13 @@ export class PipelineComponent implements OnInit {
         this.onAddTool(data.data.tools);
       }
   );
+  }
 
+  private updateToolColours(){
+    const temp = Array.from(document.getElementsByClassName('tool-chip') as HTMLCollectionOf<HTMLElement>);
+    temp.forEach(value => {
+      value.style.borderColor = '#' + ('000000' +
+        Math.floor(0x1000000 * Math.random()).toString(16)).slice(-6);
+    });
   }
 }
