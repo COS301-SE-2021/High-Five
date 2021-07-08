@@ -25,7 +25,11 @@
     </ion-infinite-scroll>
   </div>
   <ion-fab slot="fixed" vertical="bottom" horizontal="end" style="margin-right: 2%; margin-bottom: 2%">
-    <ion-fab-button (click)="fileUpload.click()"><ion-icon name="add"></ion-icon></ion-fab-button>
+    <ion-fab-button><ion-icon name="add"></ion-icon></ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button   color="tertiary" (click)="fileUpload.click()"><ion-icon  name="videocam-outline"></ion-icon></ion-fab-button>
+      <ion-fab-button  color="tertiary" ><ion-icon   name="image-outline"></ion-icon></ion-fab-button>
+    </ion-fab-list>
   </ion-fab>
   <input hidden type="file" accept="video/mp4" #fileUpload (change)="uploadVideo($event)">
 </ion-content>
