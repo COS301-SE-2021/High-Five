@@ -104,7 +104,7 @@ namespace src.Storage
             await _file.UploadFromFileAsync(path);
         }
 
-        public void UploadText(string text)
+        public async Task UploadText(string text)
         {
             /*
              *      Description:
@@ -116,7 +116,7 @@ namespace src.Storage
              * -> text: the text file stored as a single string to be uploaded to the blob storage.
              */
 
-            _file.UploadTextAsync(text);
+            await _file.UploadTextAsync(text);
         }
 
         public async Task Delete()

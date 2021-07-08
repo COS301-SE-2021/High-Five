@@ -102,7 +102,7 @@ namespace src.Storage
             }
         }
 
-        public void UploadText(string text)
+        public async Task UploadText(string text)
         {
             /*
              *      Description:
@@ -155,10 +155,11 @@ namespace src.Storage
             /*
              *      Description:
              * This function converts the contents of a blob file to text. It is usually to return data
-             * from text or json files. In the mocked case it will return a simple string.
+             * from text or json files. In the mocked case it will return a simple string. The return value
+             * is the specified json format of a stored pipeline.
              */
                         
-            return "This is a mocked blob file.";
+            return "{\"name\":\"Mock\",\"id\":\"3D173E3D421CAB3F11C1DDDC9711EFE8\",\"tools\":[]}";
         }
     }
 }

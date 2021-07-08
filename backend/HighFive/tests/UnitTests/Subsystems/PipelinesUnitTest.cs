@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Org.OpenAPITools.Models;
 using src.Storage;
 using src.Subsystems.MediaStorage;
@@ -19,11 +20,11 @@ namespace tests.UnitTests.Subsystems.MediaStorage
         public void TestGetPipelines()
         {
             var pipelines = _mockPipelineService.GetPipelines().Pipelines;
-            Assert.NotNull(pipelines);
+            Assert.Empty(pipelines);
         }
         
         [Fact]
-        public void TestCreatePipeline()
+        public async Task TestCreatePipeline()
         {
             var newPipeline = new NewPipeline()
             {
@@ -35,7 +36,7 @@ namespace tests.UnitTests.Subsystems.MediaStorage
                 Pipeline = newPipeline
             };
             var pipelineCountBeforeInsert = _mockPipelineService.GetPipelines().Pipelines.Count;
-            _mockPipelineService.CreatePipeline(request);
+            await _mockPipelineService.CreatePipeline(request);
             var pipelineCountAfterInsert = _mockPipelineService.GetPipelines().Pipelines.Count;
             Assert.NotEqual(pipelineCountBeforeInsert, pipelineCountAfterInsert);
         }
@@ -75,7 +76,7 @@ namespace tests.UnitTests.Subsystems.MediaStorage
                 PipelineId = validId,
                 Tools = tools
             };
-            var response = _mockPipelineService.AddTools(request);
+            var response = _mockPipelineService.AddTools(request).Result;
             Assert.True(response);
         }
         
@@ -90,7 +91,7 @@ namespace tests.UnitTests.Subsystems.MediaStorage
                 PipelineId = invalidId,
                 Tools = tools
             };
-            var response = _mockPipelineService.AddTools(request);
+            var response = _mockPipelineService.AddTools(request).Result;
             Assert.False(response);
         }
         
@@ -105,7 +106,7 @@ namespace tests.UnitTests.Subsystems.MediaStorage
                 PipelineId = validId,
                 Tools = tools
             };
-            var response = _mockPipelineService.RemoveTools(request);
+            var response = _mockPipelineService.RemoveTools(request).Result;
             Assert.True(response);
         }
         
@@ -120,7 +121,7 @@ namespace tests.UnitTests.Subsystems.MediaStorage
                 PipelineId = validId,
                 Tools = tools
             };
-            var response = _mockPipelineService.RemoveTools(request);
+            var response = _mockPipelineService.RemoveTools(request).Result;
             Assert.False(response);
         }
         
@@ -135,7 +136,7 @@ namespace tests.UnitTests.Subsystems.MediaStorage
                 PipelineId = validId,
                 Tools = tools
             };
-            var response = _mockPipelineService.RemoveTools(request);
+            var response = _mockPipelineService.RemoveTools(request).Result;
             Assert.True(response);
         }
         
@@ -150,7 +151,7 @@ namespace tests.UnitTests.Subsystems.MediaStorage
                 PipelineId = validId,
                 Tools = tools
             };
-            var response = _mockPipelineService.RemoveTools(request);
+            var response = _mockPipelineService.RemoveTools(request).Result;
             Assert.False(response);
         }
 
