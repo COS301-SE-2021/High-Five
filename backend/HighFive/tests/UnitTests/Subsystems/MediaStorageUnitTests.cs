@@ -14,7 +14,7 @@ namespace tests.UnitTests.Subsystems.MediaStorage
         private IMediaStorageService _mockMediaStorageService;
         public MediaStorageUnitTests()
         {
-            _mockMediaStorageService = new MediaStorageService(new StorageManager());
+            _mockMediaStorageService = new MediaStorageService(new MockStorageManager());
             ((MediaStorageService) _mockMediaStorageService).SetContainer("demo2videomocks");
         }
 

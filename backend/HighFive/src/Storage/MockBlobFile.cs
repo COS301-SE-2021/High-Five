@@ -30,10 +30,11 @@ namespace src.Storage
         private Hashtable _metaData;
         private List<MockBlobFile> _container;
 
-        public MockBlobFile(List<MockBlobFile> container)
+        public MockBlobFile(List<MockBlobFile> container, string name)
         {
             _container = container;
             _metaData = new Hashtable();
+            Name = name;
         }
         public void AddMetadata(string key, string value)
         {
