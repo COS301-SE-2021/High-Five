@@ -159,7 +159,7 @@ namespace src.Storage
              * is the specified json format of a stored pipeline.
              */
                         
-            return "{\"name\":\"Mock\",\"id\":\"3D173E3D421CAB3F11C1DDDC9711EFE8\",\"tools\":[]}";
+            return "{\"name\":\"Mock\",\"id\":\""+Name.Split(".")[0]+"\",\"tools\":[]}";
         }
     }
 }

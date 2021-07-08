@@ -10,7 +10,7 @@ namespace tests.UnitTests.Subsystems.MediaStorage
 {
     public class PipelinesUnitTest
     {
-        private IPipelineService _mockPipelineService;
+        private readonly IPipelineService _mockPipelineService;
         public PipelinesUnitTest()
         {
             _mockPipelineService = new PipelineService(new MockStorageManager());
@@ -44,7 +44,7 @@ namespace tests.UnitTests.Subsystems.MediaStorage
         [Fact]
         public void TestDeleteValidPipeline()
         {
-            var validId = GetValidPipelineId();
+            var validId = GetValidPipelineId().Result;
             var request = new DeletePipelineRequest
             {
                 PipelineId = validId
@@ -68,9 +68,8 @@ namespace tests.UnitTests.Subsystems.MediaStorage
         [Fact]
         public void TestAddToolToValidPipeline()
         {
-            var validId = GetValidPipelineId();
-            var tools = new List<string>();
-            tools.Add("newTool");
+            var validId = GetValidPipelineId().Result;
+            var tools = new List<string> {"newTool"};
             var request = new AddToolsRequest
             {
                 PipelineId = validId,
@@ -98,7 +97,7 @@ namespace tests.UnitTests.Subsystems.MediaStorage
         [Fact]
         public void TestRemoveExistingToolFromValidPipeline()
         {
-            var validId = GetValidPipelineId();
+            var validId = GetValidPipelineId().Result;
             var tools = new List<string>();
             tools.Add("newTool");
             var request = new RemoveToolsRequest
@@ -128,9 +127,8 @@ namespace tests.UnitTests.Subsystems.MediaStorage
         [Fact]
         public void TestRemoveNonexistingToolFromValidPipeline()
         {
-            var validId = GetValidPipelineId();
-            var tools = new List<string>();
-            tools.Add("nonExistingTool");
+            var validId = GetValidPipelineId().Result;
+            var tools = new List<string> {"nonExistingTool"};
             var request = new RemoveToolsRequest
             {
                 PipelineId = validId,
@@ -155,14 +153,20 @@ namespace tests.UnitTests.Subsystems.MediaStorage
             Assert.False(response);
         }
 
-        private string GetValidPipelineId()
+        private async Task<string> GetValidPipelineId()
         {
-            var allPipes = _mockPipelineService.GetPipelines().Pipelines;
-            if (allPipes == null)
+            var newPipeline = new NewPipeline()
             {
-                return "";
-            }
-            return allPipes[0].Id;
+                Name = "New Pipeline",
+                Tools = new List<string>()
+            };
+            var request = new CreatePipelineRequest
+            {
+                Pipeline = newPipeline
+            };
+            await _mockPipelineService.CreatePipeline(request);
+            var validId = _mockPipelineService.GetPipelines().Pipelines[0].Id;
+            return validId;
         }
     }
 }
