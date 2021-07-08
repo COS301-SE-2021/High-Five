@@ -134,7 +134,7 @@ namespace src.Storage
             /*
              *      Description:
              * This function returns a boolean indicating whether or not the contained CloudBlockBlob object
-             * exists.
+             * exists in the cloud storage.
              */
             
             return await _file.ExistsAsync();
