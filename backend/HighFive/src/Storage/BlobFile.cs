@@ -17,7 +17,8 @@ namespace src.Storage
          *
          *      Attributes:
          * -> _file: this is a reference to the Blob from storage that is currently being handled.
-         * -> Properties: this variable contains the properties of the CloudBlockBlob from file
+         * -> Properties: this variable contains the properties of the CloudBlockBlob from file.
+         * -> Name: this variable contains the name of the file.
         */
         
         private readonly CloudBlockBlob _file;
