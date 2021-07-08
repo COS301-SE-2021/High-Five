@@ -116,13 +116,13 @@ namespace src.Subsystems.Pipelines
             return true;
         }
 
-        private static Pipeline ConvertFileToPipeline(BlobFile file)
+        private static Pipeline ConvertFileToPipeline(IBlobFile file)
         {
             var jsonData = file.ToText().Result;
             return JsonConvert.DeserializeObject<Pipeline>(jsonData);
         }
 
-        private static void UploadPipelineToStorage(Pipeline pipeline, BlobFile blobFile)
+        private static void UploadPipelineToStorage(Pipeline pipeline, IBlobFile blobFile)
         {
             var jsonData = JsonConvert.SerializeObject(pipeline);
             blobFile.UploadText(jsonData);

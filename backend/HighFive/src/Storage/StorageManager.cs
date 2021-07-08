@@ -68,7 +68,7 @@ namespace src.Storage
             _random = new Random();
         }
 
-        public async Task<BlobFile> GetFile(string fileName, string container, bool create=false)
+        public async Task<IBlobFile> GetFile(string fileName, string container, bool create=false)
         {
             /*
              *      Description:
@@ -105,7 +105,7 @@ namespace src.Storage
             return null;
         }
 
-        public async Task<List<BlobFile>> GetAllFilesInContainer(string container)
+        public async Task<List<IBlobFile>> GetAllFilesInContainer(string container)
         {
             /*
              *      Description:
@@ -126,7 +126,7 @@ namespace src.Storage
             var blobResultSegment = await cloudBlobContainer.ListBlobsSegmentedAsync(subdirectory, true, BlobListingDetails.All,
                 int.MaxValue, null, null, null);
             var allFiles = blobResultSegment.Results;
-            var blobFileList = new List<BlobFile>();
+            var blobFileList = new List<IBlobFile>();
             foreach (var listBlobItem in allFiles)
             {
                 var blob = (CloudBlockBlob) listBlobItem;
@@ -135,7 +135,7 @@ namespace src.Storage
             return blobFileList;
         }
 
-        public async Task<BlobFile> CreateNewFile(string name, string container)
+        public async Task<IBlobFile> CreateNewFile(string name, string container)
         {
             /*
              *      Description:
