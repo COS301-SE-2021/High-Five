@@ -7,7 +7,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace src.Storage
 {
-    public class BlobFile
+    public class BlobFile: IBlobFile
     {
         /*
          *      Description:
@@ -17,9 +17,10 @@ namespace src.Storage
          *
          *      Attributes:
          * -> _file: this is a reference to the Blob from storage that is currently being handled.
-         * -> Properties: this variable contains the properties of the CloudBlockBlob from file
+         * -> Properties: this variable contains the properties of the CloudBlockBlob from file.
+         * -> Name: this variable contains the name of the file.
         */
-        
+
         private readonly CloudBlockBlob _file;
         public BlobProperties Properties { get; }
         public string Name { get; }
@@ -33,12 +34,12 @@ namespace src.Storage
              *      Parameters:
              * -> file: the CloudBlockBlob file that this BlobFile object wraps.
              */
-            
+
             _file = file;
             Properties = file.Properties;
             Name = file.Name;
         }
-        
+
         public void AddMetadata(string key, string value)
         {
             /*
@@ -49,7 +50,7 @@ namespace src.Storage
              * -> key: this parameter represents the key in the key-value pair being added as meta-data.
              * -> value: this parameter represents the value in the key-value pair being added as meta-data.
              */
-            
+
             _file.Metadata.Add(new KeyValuePair<string, string>(key, value));;
         }
 
@@ -63,12 +64,12 @@ namespace src.Storage
              *      Parameters:
              * -> key: the key that may or may not belong to a key-value pair in the file's meta-data
              */
-            
+
             _file.Metadata.TryGetValue(key, out var value);
             return value;
             //TODO: verify that if meta-data does not exist, empty string is returned
         }
-        
+
         public async Task UploadFile(IFormFile newFile)
         {
             /*
@@ -80,7 +81,7 @@ namespace src.Storage
              *      Parameters:
              * -> newFile: this parameter is the new file to be uploaded to the blob storage.
              */
-            
+
             var ms = new MemoryStream();
             await newFile.CopyToAsync(ms);
             var fileBytes = ms.ToArray();
@@ -99,11 +100,11 @@ namespace src.Storage
              *      Parameters:
              * -> path: the full path pointing to where the file is stored.
              */
-            
+
             await _file.UploadFromFileAsync(path);
         }
 
-        public void UploadText(string text)
+        public async Task UploadText(string text)
         {
             /*
              *      Description:
@@ -114,8 +115,8 @@ namespace src.Storage
              *      Parameters:
              * -> text: the text file stored as a single string to be uploaded to the blob storage.
              */
-            
-            _file.UploadTextAsync(text);
+
+            await _file.UploadTextAsync(text);
         }
 
         public async Task Delete()
@@ -124,7 +125,7 @@ namespace src.Storage
              *      Description:
              * This function will remove the blob file from the storage completely.
              */
-            
+
             await _file.DeleteAsync();
         }
 
@@ -133,9 +134,9 @@ namespace src.Storage
             /*
              *      Description:
              * This function returns a boolean indicating whether or not the contained CloudBlockBlob object
-             * exists.
+             * exists in the cloud storage.
              */
-            
+
             return await _file.ExistsAsync();
         }
 
@@ -145,7 +146,7 @@ namespace src.Storage
              *      Description:
              * This function converts the contents of the blob storage into a byte array and returns it.
              */
-            
+
             var byteArray = new byte[Properties.Length];
             for (var k = 0; k < Properties.Length; k++)
             {
@@ -162,7 +163,7 @@ namespace src.Storage
              * This function converts the contents of a blob file to text. It is usually to return data
              * from text or json files.
              */
-            
+
             return await _file.DownloadTextAsync();
         }
     }

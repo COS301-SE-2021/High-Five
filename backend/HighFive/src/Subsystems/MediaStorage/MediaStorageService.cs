@@ -23,18 +23,21 @@ namespace src.Subsystems.MediaStorage
          * for retrieving, creating and deleting videos from a user's blob storage.
          *
          *      Attributes:
-         * -> _storageManager: a reference to the storage manager, used to access the blob storage.
+         * -> _storageManager: an reference to the storage manager, used to access the blob storage.
          * -> _containerName: the name of the container in which a user's videos are stored.
          */
-        
-        private readonly IStorageManager _storageManager;
+
+        private IStorageManager _storageManager;
         private string _containerName = "demo2videos";
+        
+        //mock variables
+        private bool _mocked;
 
         public MediaStorageService(IStorageManager storageManager)
         {
             _storageManager = storageManager;
         }
-        
+
         public async Task StoreVideo(IFormFile video)
         {
             /*
@@ -45,7 +48,7 @@ namespace src.Subsystems.MediaStorage
              *      Parameters:
              * -> video: the video that will be stored on the cloud storage.
              */
-            
+
             if (video == null)
             {
                 return;
@@ -90,7 +93,7 @@ namespace src.Subsystems.MediaStorage
             }
             var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", _containerName).Result;
             await thumbnailBlob.UploadFile(thumbnailPath);
-                
+
             //get video duration in seconds
             //var seconds = Math.Truncate(inputFile.Metadata.Duration.TotalSeconds);
             var seconds = 0;
@@ -110,7 +113,7 @@ namespace src.Subsystems.MediaStorage
              *      Parameters:
              * -> request: the request object for this service contract.
              */
-            
+
             var videoId = request.Id + ".mp4";
             var file = _storageManager.GetFile(videoId, _containerName).Result;
             if (file == null) return null;
@@ -126,15 +129,15 @@ namespace src.Subsystems.MediaStorage
              *      Description:
              * This function will return all videos that a user has stored in the cloud storage.
              */
-            
-            var allFiles = _storageManager.GetAllFilesInContainer(_containerName);
-            if (allFiles.Result == null)
+
+            var allFiles = _storageManager.GetAllFilesInContainer(_containerName).Result;
+            if (allFiles == null)
             {
                 return new List<VideoMetaData>();
             }
             var resultList = new List<VideoMetaData>();
             var currentVideo = new VideoMetaData();
-            foreach(var listBlobItem in allFiles.Result)//NOTE: Assuming here that a thumbnail will be immediately followed by its corresponding mp4 file
+            foreach(var listBlobItem in allFiles)//NOTE: Assuming here that a thumbnail will be immediately followed by its corresponding mp4 file
             {
                 if (listBlobItem.Name.Contains("thumbnail"))
                 {
@@ -145,13 +148,13 @@ namespace src.Subsystems.MediaStorage
                 else
                 {
                     currentVideo.Id = listBlobItem.Name.Replace(".mp4", "");
-                    if (listBlobItem.Properties.LastModified != null)
+                    if (listBlobItem.Properties != null && listBlobItem.Properties.LastModified != null)
                         currentVideo.DateStored = listBlobItem.Properties.LastModified.Value.DateTime;
                     var time = listBlobItem.GetMetaData("duration");
                     currentVideo.Duration = int.Parse(time ?? Empty);
                     var oldName = listBlobItem.GetMetaData("originalName");
                     currentVideo.Name = oldName;
-                    resultList.Add(currentVideo); 
+                    resultList.Add(currentVideo);
                 }
             }
             return resultList;
@@ -168,7 +171,7 @@ namespace src.Subsystems.MediaStorage
              *      Parameters:
              * -> request: the request object for this service contract.
              */
-            
+
             var videoFile = _storageManager.GetFile(request.Id + ".mp4",_containerName).Result;
             if (videoFile == null)
             {
