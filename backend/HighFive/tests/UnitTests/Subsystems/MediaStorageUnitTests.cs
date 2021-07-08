@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Moq;
 using Org.OpenAPITools.Models;
 using src.Storage;
 using src.Subsystems.MediaStorage;
@@ -13,8 +11,8 @@ namespace tests.UnitTests.Subsystems
 {
     public class MediaStorageUnitTests 
     {
-        private IMediaStorageService _mockMediaStorageService;
-        private IStorageManager _mockStorageManager;
+        private readonly IMediaStorageService _mockMediaStorageService;
+        private readonly IStorageManager _mockStorageManager;
         public MediaStorageUnitTests()
         {
             _mockStorageManager = new MockStorageManager();

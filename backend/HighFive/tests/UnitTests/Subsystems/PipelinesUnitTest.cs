@@ -2,11 +2,10 @@
 using System.Threading.Tasks;
 using Org.OpenAPITools.Models;
 using src.Storage;
-using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
 using Xunit;
 
-namespace tests.UnitTests.Subsystems.MediaStorage
+namespace tests.UnitTests.Subsystems
 {
     public class PipelinesUnitTest
     {
