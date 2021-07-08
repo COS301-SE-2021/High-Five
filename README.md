@@ -145,15 +145,16 @@ of concerns. Feature branches are used for both front-end and back-end to develo
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]<br><br>
-####Builds
+
+#### Builds
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Ionic%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/ionic.yml)
 <br>
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/.NET%20Core%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/aspnet.yml)
 <br>
-####Testing
+#### Testing
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/.NET%20Core%20Unit%20Tests/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/aspnet_tests.yml)
 <br>
-####Monitoring
+#### Monitoring
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fdiscord.com%2Fchannels%2F841566124087705620%2F841566124087705625%2F848982894759641118)](https://high5app.azurewebsites.net/)
 <br>
 <!-- MARKDOWN LINKS & IMAGES -->
