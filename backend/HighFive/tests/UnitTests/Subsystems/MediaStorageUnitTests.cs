@@ -10,21 +10,21 @@ using Xunit;
 
 namespace tests.UnitTests.Subsystems
 {
-    public class MediaStorageUnitTests {
+    public class MediaStorageUnitTests 
+    {
         private IMediaStorageService _mockMediaStorageService;
         public MediaStorageUnitTests()
         {
             _mockMediaStorageService = new MediaStorageService(new MockStorageManager());
-            ((MediaStorageService) _mockMediaStorageService).SetContainer("demo2videomocks");
         }
 
         [Fact]
-        public void TestStoreValidVideo()
+        public async Task TestStoreValidVideo()
         {
-            var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count/2.1;
+            var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
             var validVideo = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validVideo", "validVideo");
-            _mockMediaStorageService.StoreVideo(validVideo);
-            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count/2.0;
+            await _mockMediaStorageService.StoreVideo(validVideo);
+            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
             Assert.NotEqual(videoCountBeforeInsert, videoCountAfterInsert);
         }
         
@@ -81,7 +81,9 @@ namespace tests.UnitTests.Subsystems
         [Fact]
         public void TestGetVideoValidVideoId()
         {
-            var validVideoId = "B6BC3145D0D61BC932AACDA4FBB08FB4";
+            var validVideo = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validVideo", "validVideo");
+            _mockMediaStorageService.StoreVideo(validVideo);
+            var validVideoId = _mockMediaStorageService.GetAllVideos()[0].Id;
             var request = new GetVideoRequest
             {
                 Id = validVideoId

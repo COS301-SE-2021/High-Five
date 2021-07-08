@@ -13,7 +13,6 @@ namespace tests.UnitTests.Subsystems.MediaStorage
         public PipelinesUnitTest()
         {
             _mockPipelineService = new PipelineService(new MockStorageManager());
-            ((PipelineService) _mockPipelineService).SetContainer("demo2pipelinemocks");
         }
         
         [Fact]

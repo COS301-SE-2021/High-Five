@@ -27,8 +27,11 @@ namespace src.Subsystems.MediaStorage
          * -> _containerName: the name of the container in which a user's videos are stored.
          */
 
-        private readonly IStorageManager _storageManager;
+        private IStorageManager _storageManager;
         private string _containerName = "demo2videos";
+        
+        //mock variables
+        private bool _mocked;
 
         public MediaStorageService(IStorageManager storageManager)
         {
@@ -127,14 +130,14 @@ namespace src.Subsystems.MediaStorage
              * This function will return all videos that a user has stored in the cloud storage.
              */
 
-            var allFiles = _storageManager.GetAllFilesInContainer(_containerName);
-            if (allFiles.Result == null)
+            var allFiles = _storageManager.GetAllFilesInContainer(_containerName).Result;
+            if (allFiles == null)
             {
                 return new List<VideoMetaData>();
             }
             var resultList = new List<VideoMetaData>();
             var currentVideo = new VideoMetaData();
-            foreach(var listBlobItem in allFiles.Result)//NOTE: Assuming here that a thumbnail will be immediately followed by its corresponding mp4 file
+            foreach(var listBlobItem in allFiles)//NOTE: Assuming here that a thumbnail will be immediately followed by its corresponding mp4 file
             {
                 if (listBlobItem.Name.Contains("thumbnail"))
                 {
@@ -145,7 +148,7 @@ namespace src.Subsystems.MediaStorage
                 else
                 {
                     currentVideo.Id = listBlobItem.Name.Replace(".mp4", "");
-                    if (listBlobItem.Properties.LastModified != null)
+                    if (listBlobItem.Properties != null && listBlobItem.Properties.LastModified != null)
                         currentVideo.DateStored = listBlobItem.Properties.LastModified.Value.DateTime;
                     var time = listBlobItem.GetMetaData("duration");
                     currentVideo.Duration = int.Parse(time ?? Empty);

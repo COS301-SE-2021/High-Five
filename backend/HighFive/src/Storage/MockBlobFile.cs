@@ -34,6 +34,7 @@ namespace src.Storage
         {
             _container = container;
             _metaData = new Hashtable();
+            Properties = null;
             Name = name;
         }
         public void AddMetadata(string key, string value)
