@@ -4,15 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.Fragment
-import com.bdpsolutions.highfive.R
-import com.bdpsolutions.highfive.databinding.ActivityMainBinding
 import com.bdpsolutions.highfive.databinding.FragmentVideoBinding
-import com.bdpsolutions.highfive.utils.adapters.VideoFragmentRecyclerViewAdapter
+import com.bdpsolutions.highfive.adapters.video.provider.VideoRecyclerViewAdapterProvider
 import com.bdpsolutions.highfive.view.views.VideoItemView
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class VideoFragment : Fragment() {
+@AndroidEntryPoint
+class VideoFragment: Fragment() {
+
+    @Inject
+    lateinit var service: VideoRecyclerViewAdapterProvider
 
     var binding: FragmentVideoBinding? = null
 
@@ -22,18 +25,22 @@ class VideoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentVideoBinding.inflate(layoutInflater)
-        binding?.videoHolder?.adapter = VideoFragmentRecyclerViewAdapter(arrayOf(
-            VideoItemView(
-                "Hello",
-                "1",
-                "2021-01-01"
-            ),
-            VideoItemView(
-                "World",
-                "2",
-                "2021-01-02"
+        val adapter = service.provider
+        binding?.videoHolder?.adapter = adapter
+        adapter.setData(
+            arrayOf(
+                VideoItemView(
+                    "Hello",
+                    "1",
+                    "2021-01-01"
+                ),
+                VideoItemView(
+                    "World",
+                    "2",
+                    "2021-01-02"
+                )
             )
-        ))
+        )
         return binding?.root
         //return inflater.inflate(R.layout.fragment_video, container, false)
     }

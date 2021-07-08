@@ -1,18 +1,18 @@
-package com.bdpsolutions.highfive.utils.adapters
+package com.bdpsolutions.highfive.adapters.video.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bdpsolutions.highfive.databinding.FragmentVideoItemBinding
-import com.bdpsolutions.highfive.view.views.VideoItemView
+import javax.inject.Inject
 
 /**
  * This class serves as an adapter for the video view fragment.
  *
  * Data fetched from the API is passed to this class, which will populate the video data.
  */
-class VideoFragmentRecyclerViewAdapter(private val dataSet: Array<VideoItemView>) :
-    RecyclerView.Adapter<VideoFragmentRecyclerViewAdapter.ViewHolder>() {
+class VideoFragmentRecyclerViewAdapterImpl @Inject constructor():
+    VideoFragmentRecyclerViewAdapter() {
 
     /**
      * Provide a reference to the type of views that you are using
@@ -36,12 +36,12 @@ class VideoFragmentRecyclerViewAdapter(private val dataSet: Array<VideoItemView>
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
 
-        viewHolder.videoItem.videoName.text = dataSet[position].videoName
-        viewHolder.videoItem.videoDate.text = dataSet[position].videoDate
-        viewHolder.videoItem.videoId.text = dataSet[position].videoId
+        viewHolder.videoItem.videoName.text = dataSet!![position].videoName
+        viewHolder.videoItem.videoDate.text = dataSet!![position].videoDate
+        viewHolder.videoItem.videoId.text = dataSet!![position].videoId
     }
 
     // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = dataSet.size
+    override fun getItemCount() = dataSet!!.size
 
 }
