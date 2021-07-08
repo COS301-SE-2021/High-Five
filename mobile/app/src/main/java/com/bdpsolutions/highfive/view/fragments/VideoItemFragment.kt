@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.databinding.FragmentVideoItemBinding
 
 class VideoItemFragment: Fragment() {

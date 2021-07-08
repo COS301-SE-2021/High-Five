@@ -10,6 +10,7 @@ import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.databinding.ActivityMainBinding
 import com.bdpsolutions.highfive.databinding.FragmentVideoBinding
 import com.bdpsolutions.highfive.utils.adapters.VideoFragmentRecyclerViewAdapter
+import com.bdpsolutions.highfive.view.views.VideoItemView
 
 class VideoFragment : Fragment() {
 
@@ -21,7 +22,18 @@ class VideoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentVideoBinding.inflate(layoutInflater)
-        binding?.videoHolder?.adapter = VideoFragmentRecyclerViewAdapter(arrayOf("hello", "world"))
+        binding?.videoHolder?.adapter = VideoFragmentRecyclerViewAdapter(arrayOf(
+            VideoItemView(
+                "Hello",
+                "1",
+                "2021-01-01"
+            ),
+            VideoItemView(
+                "World",
+                "2",
+                "2021-01-02"
+            )
+        ))
         return binding?.root
         //return inflater.inflate(R.layout.fragment_video, container, false)
     }

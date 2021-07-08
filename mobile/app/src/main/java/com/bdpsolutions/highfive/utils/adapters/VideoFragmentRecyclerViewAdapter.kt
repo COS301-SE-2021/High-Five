@@ -4,13 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bdpsolutions.highfive.databinding.FragmentVideoItemBinding
+import com.bdpsolutions.highfive.view.views.VideoItemView
 
 /**
  * This class serves as an adapter for the video view fragment.
  *
  * Data fetched from the API is passed to this class, which will populate the video data.
  */
-class VideoFragmentRecyclerViewAdapter(private val dataSet: Array<String>) :
+class VideoFragmentRecyclerViewAdapter(private val dataSet: Array<VideoItemView>) :
     RecyclerView.Adapter<VideoFragmentRecyclerViewAdapter.ViewHolder>() {
 
     /**
@@ -35,8 +36,9 @@ class VideoFragmentRecyclerViewAdapter(private val dataSet: Array<String>) :
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
 
-        viewHolder.videoItem.videoName.text = dataSet[position]
-        //viewHolder.videoItem.binding?.videoDate?.text = dataSet[position]
+        viewHolder.videoItem.videoName.text = dataSet[position].videoName
+        viewHolder.videoItem.videoDate.text = dataSet[position].videoDate
+        viewHolder.videoItem.videoId.text = dataSet[position].videoId
     }
 
     // Return the size of your dataset (invoked by the layout manager)
