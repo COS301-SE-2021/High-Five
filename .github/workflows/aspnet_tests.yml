@@ -27,7 +27,8 @@ jobs:
           
       - name: Build
         working-directory: ./backend/HighFive
-        run: dotnet build         
+        run: dotnet build
+        #Note to developer, this --no-restore flag was added later and might cause problems.
           
       - name: Run dotnet unit tests
         working-directory: ./backend/HighFive
