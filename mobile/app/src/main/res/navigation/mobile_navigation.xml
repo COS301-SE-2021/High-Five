@@ -18,8 +18,8 @@
         tools:layout="@layout/analysis_fragment" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.bdpsolutions.highfive.view.fragments.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_video"
+        android:name="com.bdpsolutions.highfive.view.fragments.VideoFragment"
+        android:label="@string/video_fragment"
+        tools:layout="@layout/fragment_video" />
 </navigation>
