@@ -12,11 +12,9 @@ namespace tests.UnitTests.Subsystems
 {
     public class MediaStorageUnitTests {
         private IMediaStorageService _mockMediaStorageService;
-        private const string ConnectionString = "DefaultEndpointsProtocol=https;AccountName=high5storage;AccountKey=Au+qHV2suTNDeydwjDjvJHJYxxWTX4/9GyZ6a+qeBoUdsWOJ+SQeMjhid5+Pxu/vR4LQM9yC5uPQlLjk5JHKaw==;EndpointSuffix=core.windows.net";
-
         public MediaStorageUnitTests()
         {
-            _mockMediaStorageService = new MediaStorageService(new StorageManager(ConnectionString));
+            _mockMediaStorageService = new MediaStorageService(new MockStorageManager());
             ((MediaStorageService) _mockMediaStorageService).SetContainer("demo2videomocks");
         }
 
@@ -29,7 +27,7 @@ namespace tests.UnitTests.Subsystems
             var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count/2.0;
             Assert.NotEqual(videoCountBeforeInsert, videoCountAfterInsert);
         }
-
+        
         [Fact]
         public void TestStoreNullVideo()
         {
@@ -46,7 +44,7 @@ namespace tests.UnitTests.Subsystems
             var response = _mockMediaStorageService.GetAllVideos();
             Assert.NotNull(response);
         }
-
+        
         [Fact]
         public void TestDeleteVideoValidVideoId()
         {
@@ -65,7 +63,7 @@ namespace tests.UnitTests.Subsystems
             var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
             Assert.Equal(videoCountBeforeInsert, videoCountAfterInsert);
         }
-
+        
         [Fact]
         public void TestDeleteVideoInvalidVideoId()
         {
@@ -79,11 +77,11 @@ namespace tests.UnitTests.Subsystems
             var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
             Assert.Equal(videoCountBeforeInsert, videoCountAfterInsert);
         }
-
+        
         [Fact]
         public void TestGetVideoValidVideoId()
         {
-            var validVideoId = "C41FC390D337260C23C17DC20B1F0F76";
+            var validVideoId = "B6BC3145D0D61BC932AACDA4FBB08FB4";
             var request = new GetVideoRequest
             {
                 Id = validVideoId
@@ -91,7 +89,7 @@ namespace tests.UnitTests.Subsystems
             var response = _mockMediaStorageService.GetVideo(request);
             Assert.NotNull(response);
         }
-
+        
         [Fact]
         public void TestGetVideoInvalidVideoId()
         {
@@ -103,6 +101,6 @@ namespace tests.UnitTests.Subsystems
             var response = _mockMediaStorageService.GetVideo(request);
             Assert.Null(response);
         }
-
+        
     }
 }
