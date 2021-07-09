@@ -1,32 +1,31 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Moq;
 using Org.OpenAPITools.Models;
 using src.Storage;
 using src.Subsystems.MediaStorage;
+using src.Utils.Controller;
 using Xunit;
 
-namespace tests.UnitTests.Subsystems.MediaStorage
+namespace tests.UnitTests.Subsystems
 {
-    public class MediaStorageUnitTests {
-        private IMediaStorageService _mockMediaStorageService;
-        private const string ConnectionString = "DefaultEndpointsProtocol=https;AccountName=high5storage;AccountKey=Au+qHV2suTNDeydwjDjvJHJYxxWTX4/9GyZ6a+qeBoUdsWOJ+SQeMjhid5+Pxu/vR4LQM9yC5uPQlLjk5JHKaw==;EndpointSuffix=core.windows.net";
-
+    public class MediaStorageUnitTests
+    {
+        private readonly IMediaStorageService _mockMediaStorageService;
+        private readonly IStorageManager _mockStorageManager;
         public MediaStorageUnitTests()
         {
-            _mockMediaStorageService = new MediaStorageService(new StorageManager(ConnectionString));
-            ((MediaStorageService) _mockMediaStorageService).SetContainer("demo2videomocks");
+            _mockStorageManager = new MockStorageManager();
+            _mockMediaStorageService = new MediaStorageService(_mockStorageManager);
         }
 
         [Fact]
-        public void TestStoreValidVideo()
+        public async Task TestStoreValidVideo()
         {
-            var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count/2.1;
+            var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
             var validVideo = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validVideo", "validVideo");
-            _mockMediaStorageService.StoreVideo(validVideo);
-            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count/2.0;
+            await _mockMediaStorageService.StoreVideo(validVideo);
+            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
             Assert.NotEqual(videoCountBeforeInsert, videoCountAfterInsert);
         }
 
@@ -81,27 +80,23 @@ namespace tests.UnitTests.Subsystems.MediaStorage
         }
 
         [Fact]
-        public void TestGetVideoValidVideoId()
+        public async Task TestGetVideoValidVideoId()
         {
-            var validVideoId = "C41FC390D337260C23C17DC20B1F0F76";
-            var request = new GetVideoRequest
-            {
-                Id = validVideoId
-            };
-            var response = _mockMediaStorageService.GetVideo(request);
-            Assert.NotNull(response);
+            var validVideo = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validVideo", "validVideo");
+            await _mockMediaStorageService.StoreVideo(validVideo);
+            var validVideoId = _mockMediaStorageService.GetAllVideos()[0].Id;
+            var getController = new GetVideoController(_mockStorageManager);
+            var response = getController.GetVideo(validVideoId);
+            Assert.NotEmpty(response.FileContents);
         }
 
         [Fact]
         public void TestGetVideoInvalidVideoId()
         {
-            const string validVideoId = "5";
-            var request = new GetVideoRequest
-            {
-                Id = validVideoId
-            };
-            var response = _mockMediaStorageService.GetVideo(request);
-            Assert.Null(response);
+            const string invalidVideoId = "5";
+            var getController = new GetVideoController(_mockStorageManager);
+            var response = getController.GetVideo(invalidVideoId);
+            Assert.Empty(response.FileContents);
         }
 
     }
