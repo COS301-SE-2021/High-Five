@@ -183,4 +183,8 @@ export class VideostorePage implements OnInit {
   onDeleteImage(imageId: string) {
 
   }
+
+  uploadImage($event: Event) {
+
+  }
 }
