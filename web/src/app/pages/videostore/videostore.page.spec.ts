@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { VideostorePage } from './videostore.page';
-import {MediaService} from '../../services/videoupload/media.service';
+import {MediaService} from '../../services/media/media.service';
 import {IonicModule} from '@ionic/angular';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {HttpClient} from '@angular/common/http';

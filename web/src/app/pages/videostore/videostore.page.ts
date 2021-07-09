@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {IonInfiniteScroll, LoadingController, ModalController, ToastController} from '@ionic/angular';
 import {VideoMetaData} from '../../models/videoMetaData';
 import {VideoStoreConstants} from '../../../constants/pages/videostore-constants';
-import {MediaService} from '../../services/videoupload/media.service';
+import {MediaService} from '../../services/media/media.service';
 import {Image} from '../../models/image';
 
 @Component({
