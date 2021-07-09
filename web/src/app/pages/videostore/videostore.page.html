@@ -53,8 +53,8 @@
     <div *ngSwitchCase="'images'">
       <ion-grid>
         <ion-row>
-          <ion-col *ngFor="let x of images; index as i" sizeXl="3" sizeXs="6">
-            <app-image-card [imageName]="'image1'" [imageUrl]="'https://i.pinimg.com/originals/2b/cf/66/2bcf66da8927dcd64e0203b8d1a9d55e.jpg'"></app-image-card>
+          <ion-col *ngFor="let img of images; index as i" sizeXl="3" sizeXs="6">
+            <app-image-card (deleteImage)="onDeleteImage($event)" [image]="img"></app-image-card>
           </ion-col>
         </ion-row>
       </ion-grid>
