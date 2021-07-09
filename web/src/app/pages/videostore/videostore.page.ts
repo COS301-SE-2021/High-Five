@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {IonInfiniteScroll, LoadingController, ModalController, ToastController} from '@ionic/angular';
-import {VideouploadService} from '../../services/videoupload/videoupload.service';
 import {VideoMetaData} from '../../models/videoMetaData';
 import {VideoStoreConstants} from '../../../constants/pages/videostore-constants';
+import {MediaService} from '../../services/videoupload/media.service';
 
 @Component({
   selector: 'app-videostore',
@@ -15,12 +15,15 @@ export class VideostorePage implements OnInit {
 
   public items: VideoMetaData[][] = [];
   public videosFetched = false;
+  public segment;
+  public images: string[]= new Array(20);
 
-  constructor(private modal: ModalController, private videoService: VideouploadService,
+  constructor(private modal: ModalController, private videoService: MediaService,
               public toastController: ToastController,
               private loadingController: LoadingController,
               private constants: VideoStoreConstants) {
     this.loadInitData().then();
+    this.segment='all';
   }
 
   ngOnInit() {
