@@ -22,10 +22,10 @@ namespace src.Storage
          * -> _container: a reference to the container in which this mocked file is located. Will be handled
          *      externally by the StorageManager
         */
-        
+
         public BlobProperties Properties { get; }
         public string Name { get; }
-        
+
         //mock variables
         private Hashtable _metaData;
         private List<IBlobFile> _container;
@@ -34,6 +34,7 @@ namespace src.Storage
         {
             _container = container;
             _metaData = new Hashtable();
+            Properties = null;
             Name = name;
         }
         public void AddMetadata(string key, string value)
@@ -46,7 +47,7 @@ namespace src.Storage
              * -> key: this parameter represents the key in the key-value pair being added as meta-data.
              * -> value: this parameter represents the value in the key-value pair being added as meta-data.
              */
-            
+
             _metaData.Add(key, value);
         }
 
@@ -78,7 +79,7 @@ namespace src.Storage
              *      Parameters:
              * -> newFile: this parameter is the new file to be uploaded to the blob storage.
              */
-            
+
             if (!_container.Contains(this))
             {
                 _container.Add(this);
@@ -94,14 +95,14 @@ namespace src.Storage
              *      Parameters:
              * -> path: the full path pointing to where the file is stored.
              */
-            
+
             if (!_container.Contains(this))
             {
                 _container.Add(this);
             }
         }
 
-        public void UploadText(string text)
+        public async Task UploadText(string text)
         {
             /*
              *      Description:
@@ -110,7 +111,7 @@ namespace src.Storage
              *      Parameters:
              * -> text: the text file stored as a single string to be uploaded to the blob storage.
              */
-            
+
             if (!_container.Contains(this))
             {
                 _container.Add(this);
@@ -123,7 +124,7 @@ namespace src.Storage
              *      Description:
              * This function will remove the mocked file from the mocked storage completely.
              */
-            
+
             _container.Remove(this);
         }
 
@@ -144,7 +145,7 @@ namespace src.Storage
              *      Description:
              * This function converts the contents of the blob storage into a byte array and returns it.
              */
-                        
+
             var arr = new byte[5];
             return arr;
         }
@@ -154,10 +155,11 @@ namespace src.Storage
             /*
              *      Description:
              * This function converts the contents of a blob file to text. It is usually to return data
-             * from text or json files. In the mocked case it will return a simple string.
+             * from text or json files. In the mocked case it will return a simple string. The return value
+             * is the specified json format of a stored pipeline.
              */
-                        
-            return "This is a mocked blob file.";
+
+            return "{\"name\":\"Mock\",\"id\":\""+Name.Split(".")[0]+"\",\"tools\":[]}";
         }
     }
 }
