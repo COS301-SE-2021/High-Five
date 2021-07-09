@@ -11,9 +11,9 @@ namespace src.Storage
 {
     public interface IStorageManager
     {
-        public Task<BlobFile> GetFile(string fileName, string container, bool create=false);
-        public Task<List<BlobFile>> GetAllFilesInContainer(string container);
-        public Task<BlobFile> CreateNewFile(string name, string container);
+        public Task<IBlobFile> GetFile(string fileName, string container, bool create=false);
+        public Task<List<IBlobFile>> GetAllFilesInContainer(string container);
+        public Task<IBlobFile> CreateNewFile(string name, string container);
         public string RandomString();
         public string HashMd5(string source);
     }

@@ -21,13 +21,13 @@ namespace src.Subsystems.Pipelines
          *      Description:
          * This service class manages all the service contracts of the Pipelines subsystem. It is responsible
          * for creating, deleting and retrieving pipelines as well as adding or removing tools from pipelines
-         * as well as 
+         * as well as
          *
          *      Attributes:
          * -> _storageManager: a reference to the storage manager, used to access the blob storage.
          * -> _containerName: the name of the container in which a user's pipeline data is stored.
          */
-        
+
         private readonly IStorageManager _storageManager;
         private string _containerName = "demo2pipelines";
 
@@ -35,14 +35,14 @@ namespace src.Subsystems.Pipelines
         {
             _storageManager = storageManager;
         }
-        
+
         public GetPipelinesResponse GetPipelines()
         {
             /*
              *      Description:
              * This function will return all the pipelines belonging to this user in the cloud storage.
              */
-            
+
             var allFiles = _storageManager.GetAllFilesInContainer(_containerName);
             if (allFiles.Result == null)
             {
@@ -58,7 +58,7 @@ namespace src.Subsystems.Pipelines
             return response;
         }
 
-        public CreatePipelineResponse CreatePipeline(CreatePipelineRequest request)
+        public async Task<CreatePipelineResponse> CreatePipeline(CreatePipelineRequest request)
         {
             /*
              *      Description:
@@ -68,7 +68,7 @@ namespace src.Subsystems.Pipelines
              * -> request: contains the name of the pipeline as well as a list of tools that it should have
              *      initially.
              */
-            
+
             var pipeline = request.Pipeline;
             var generatedName = _storageManager.HashMd5(pipeline.Name);
             var blobFile = _storageManager.CreateNewFile(generatedName + ".json", _containerName).Result;
@@ -91,7 +91,7 @@ namespace src.Subsystems.Pipelines
                 Name = pipeline.Name,
                 Tools = pipeline.Tools
             };
-            UploadPipelineToStorage(newPipeline, blobFile);
+            await UploadPipelineToStorage(newPipeline, blobFile);
 
             var response = new CreatePipelineResponse()
             {
@@ -100,7 +100,7 @@ namespace src.Subsystems.Pipelines
             return response;
         }
 
-        public bool AddTools(AddToolsRequest request)
+        public async Task<bool> AddTools(AddToolsRequest request)
         {
             /*
              *      Description:
@@ -111,7 +111,7 @@ namespace src.Subsystems.Pipelines
              * -> request: the request object for this service contract. It contains the pipeline id as well
              * as a list of tools to be added.
              */
-            
+
             var file =_storageManager.GetFile(request.PipelineId+".json", _containerName).Result;
             if (file == null)
             {
@@ -122,11 +122,11 @@ namespace src.Subsystems.Pipelines
             var pipelineToolset = pipeline.Tools;
             pipelineToolset.AddRange(request.Tools);
             pipeline.Tools = pipelineToolset.Distinct().ToList();
-            UploadPipelineToStorage(pipeline, file);
+            await UploadPipelineToStorage(pipeline, file);
             return true;
         }
 
-        public bool RemoveTools(RemoveToolsRequest request)
+        public async Task<bool> RemoveTools(RemoveToolsRequest request)
         {
             /*
              *      Description:
@@ -137,7 +137,7 @@ namespace src.Subsystems.Pipelines
              * -> request: the request object for this function. It contains the id of the pipeline to be
              *      modified as well as a list of tools to be removed from the pipeline.
              */
-            
+
             var file =_storageManager.GetFile(request.PipelineId+".json", _containerName).Result;
             if (file == null)
             {
@@ -151,7 +151,7 @@ namespace src.Subsystems.Pipelines
                 pipelineToolset.Remove(tool);
             }
             pipeline.Tools = pipelineToolset;
-            UploadPipelineToStorage(pipeline, file);
+            await UploadPipelineToStorage(pipeline, file);
             return true;
         }
 
@@ -164,7 +164,7 @@ namespace src.Subsystems.Pipelines
              *      Parameters:
              * -> request: the request object for this use case that contains the pipeline id to be deleted.
              */
-            
+
             var blobFile = _storageManager.GetFile(request.PipelineId + ".json", _containerName).Result;
             if (blobFile == null)
             {
@@ -191,7 +191,7 @@ namespace src.Subsystems.Pipelines
             return toolsArray;
         }
 
-        private static Pipeline ConvertFileToPipeline(BlobFile file)
+        private static Pipeline ConvertFileToPipeline(IBlobFile file)
         {
             /*
              *      Description:
@@ -200,12 +200,12 @@ namespace src.Subsystems.Pipelines
              *      Parameters:
              * -> file: the file object that will be converted to a pipeline object.
              */
-            
+
             var jsonData = file.ToText().Result;
             return JsonConvert.DeserializeObject<Pipeline>(jsonData);
         }
 
-        private static void UploadPipelineToStorage(Pipeline pipeline, BlobFile blobFile)
+        private static async Task UploadPipelineToStorage(Pipeline pipeline, IBlobFile blobFile)
         {
             /*
              *      Description:
@@ -217,9 +217,9 @@ namespace src.Subsystems.Pipelines
              * -> blobFile: the BlobFile object instantiated in an appropriate container which will be
              *      the reference to which the pipeline is uploaded.
              */
-            
+
             var jsonData = JsonConvert.SerializeObject(pipeline);
-            blobFile.UploadText(jsonData);
+            await blobFile.UploadText(jsonData);
         }
 
 

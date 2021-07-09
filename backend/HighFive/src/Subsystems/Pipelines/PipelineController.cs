@@ -17,7 +17,7 @@ namespace src.Subsystems.Pipelines
         public override IActionResult AddTools(AddToolsRequest addToolsRequest)
         {
             var response = new EmptyObject {Success = true};
-            if (_pipelineService.AddTools(addToolsRequest))
+            if (_pipelineService.AddTools(addToolsRequest).Result)
             {
                 return StatusCode(200, response);
             }
