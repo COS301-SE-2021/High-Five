@@ -17,7 +17,7 @@ namespace src.Subsystems.Pipelines
         public override IActionResult AddTools(AddToolsRequest addToolsRequest)
         {
             var response = new EmptyObject {Success = true};
-            if (_pipelineService.AddTools(addToolsRequest))
+            if (_pipelineService.AddTools(addToolsRequest).Result)
             {
                 return StatusCode(200, response);
             }
@@ -29,8 +29,7 @@ namespace src.Subsystems.Pipelines
 
         public override IActionResult CreatePipeline(CreatePipelineRequest createPipelineRequest)
         {
-            _pipelineService.CreatePipeline(createPipelineRequest);
-            var response = new EmptyObject {Success = true};
+            var response = _pipelineService.CreatePipeline(createPipelineRequest);
             return StatusCode(200, response);
         }
 
@@ -41,6 +40,12 @@ namespace src.Subsystems.Pipelines
             response.Success = false;
             response.Message = "Pipeline could not be deleted";
             return StatusCode(400, response);
+        }
+
+        public override IActionResult GetAllTools()
+        {
+            var response = _pipelineService.GetAllTools();
+            return StatusCode(200, response);
         }
 
         public override IActionResult GetPipelines()

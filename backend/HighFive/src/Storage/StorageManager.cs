@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,35 +19,57 @@ namespace src.Storage
 {
     public class StorageManager: IStorageManager
     {
-        private readonly IConfiguration _configuration;
+        /*
+         *      Description:
+         * The StorageManager class serves as a general manager that interfaces with the Azure Cloud Storage
+         * where data is stored. This manager is primarily responsible for retrieving blobs from the storage
+         * and constructing BlobFile objects to return to external callers.
+         *
+         *      Attributes:
+         * -> _cloudStorageAccount: this is the object that contains a reference to the Azure Storage account.
+         *      being used. It is initialised in the constructor through a connection string that can be
+         *      retrieved from the Azure portal.
+         * -> _random: this is a random object that is used to generate unique id's for uploaded files.
+         * -> Alphanumeric: this is a simple alphanumeric string used to generate salt during the process
+         *      where uploaded files are granted unique id's.
+         */
+
         private readonly CloudStorageAccount _cloudStorageAccount;
-        IConfiguration IStorageManager.Configuration => _configuration;
-        CloudStorageAccount IStorageManager.CloudStorageAccount => _cloudStorageAccount;
         private readonly Random _random;
-        private readonly string _alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
+        private const string Alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
 
         public StorageManager(IConfiguration config)
         {
-            _configuration = config;
-            var connectionString = _configuration.GetConnectionString("StorageConnection");
+            var connectionString = config.GetConnectionString("StorageConnection");
             _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             _random = new Random();
         }
 
-        public StorageManager(String connectionString)
+        public async Task<IBlobFile> GetFile(string fileName, string container, bool create=false)
         {
-            _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
-            _random = new Random();
-        }
+            /*
+             *      Description:
+             * This function returns a reference to an existing blob file in some container within the storage,
+             * or null if the searched file does not exist in the storage. A BlobFile object is returns which
+             * contains the CloudBlockBlob itself.
+             *
+             *      Parameters:
+             * -> fileName: this is the name of the file that is being retrieved. I.e. "video1.mp4".
+             * -> container: this is the name of the storage container to be searched for the file.
+             * -> create: this flag is only used internally by the CreateNewFile function to indicate to
+             *      this function that it does not need to check if the blob file exists, but that it should
+             *      rather instantiate the BlobFile with a reference to a CloudBlockBlob object that may
+             *      or may not be in storage. The creation of the file itself will be handled by the
+             *      CreateNewFile function.
+             */
 
-        public async Task<CloudBlockBlob> GetFile(string fileName, string container, bool create=false)
-        {
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
             var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
-            if (create)//NOTE: Does not test if it actually exists or not
+            if (create)
             {
-                return cloudBlobContainer.GetBlockBlobReference(fileName);
+                return new BlobFile(cloudBlobContainer.GetBlockBlobReference(fileName));
             }
+
             if (!await cloudBlobContainer.ExistsAsync())
             {
                 return null;
@@ -54,13 +77,21 @@ namespace src.Storage
             var file = cloudBlobContainer.GetBlockBlobReference(fileName);
             if (await file.ExistsAsync())
             {
-                return file;
+                return new BlobFile(file);
             }
             return null;
         }
 
-        public async Task<List<CloudBlockBlob>> GetAllFilesInContainer(string container)
+        public async Task<List<IBlobFile>> GetAllFilesInContainer(string container)
         {
+            /*
+             *      Description:
+             * This function will return all the blob files stored in a provided container.
+             *
+             *      Parameters:
+             * -> container: the name of the container which will contain all the blob files returned.
+             */
+
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
             var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
             if (await cloudBlobContainer.ExistsAsync())
@@ -72,26 +103,52 @@ namespace src.Storage
             var blobResultSegment = await cloudBlobContainer.ListBlobsSegmentedAsync(subdirectory, true, BlobListingDetails.All,
                 int.MaxValue, null, null, null);
             var allFiles = blobResultSegment.Results;
-
-            return allFiles.Cast<CloudBlockBlob>().ToList();
+            var blobFileList = new List<IBlobFile>();
+            foreach (var listBlobItem in allFiles)
+            {
+                var blob = (CloudBlockBlob) listBlobItem;
+                blobFileList.Add(new BlobFile(blob));
+            }
+            return blobFileList;
         }
 
-        public async Task<CloudBlockBlob> CreateNewFile(string name, string container)
+        public async Task<IBlobFile> CreateNewFile(string name, string container)
         {
-            CloudBlockBlob newFile = GetFile(name, container, true).Result;
-            if (await newFile.ExistsAsync())
+            /*
+             *      Description:
+             * This function will attempt to create a new blob file in temporary memory. It returns null
+             * if the provided name already exists in the cloud storage, otherwise it returns the
+             * BlobFile object with a reference to a CloudBlockBlob object that does not exist in the
+             * cloud storage.
+             *
+             *       Parameters:
+             * -> name: this is the name of the file to be created.
+             * -> container: the name of the cloud storage container where the file should be created.
+             */
+
+            var newFile = GetFile(name, container, true).Result;
+            if (await newFile.Exists())
             {
                 return null;
             }
             return newFile;
         }
-        
+
         public string HashMd5(string source)
         {
+            /*
+             *      Description:
+             * This function is primarily used to generate id's for files stored in blob storage that are
+             * guaranteed to be unique. An MD5 hash will be applied to the string passed to this function.
+             *
+             *      Parameters:
+             * -> source: the string to be hashed.
+             */
+
             var md5 = MD5.Create();
             var inputBytes = Encoding.ASCII.GetBytes(source);
             var hashBytes = md5.ComputeHash(inputBytes);
-            
+
             var sb = new StringBuilder();
             foreach (var t in hashBytes)
             {
@@ -102,14 +159,21 @@ namespace src.Storage
 
         public string RandomString()
         {
+            /*
+             *      Description:
+             * This function returns a 5-character string consisting of randomly selected characters from
+             * the Alphanumeric constant. It is mainly used during unique name generation of files, in
+             * particular when salt needs to be added to the string to be hashed.
+             */
+
             var str = "";
             for(var i =0; i<5; i++)
             {
-                var a = _random.Next(_alphanumeric.Length);
-                str = str + _alphanumeric.ElementAt(a);
+                var a = _random.Next(Alphanumeric.Length);
+                str += Alphanumeric.ElementAt(a);
             }
             return str;
         }
-        
+
     }
 }
