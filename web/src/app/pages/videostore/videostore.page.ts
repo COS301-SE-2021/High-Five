@@ -29,7 +29,8 @@ export class VideostorePage implements OnInit {
       this.images.push({
         id: img.toString(),
         url: 'https://i.pinimg.com/originals/2b/cf/66/2bcf66da8927dcd64e0203b8d1a9d55e.jpg',
-        title: 'Some Title'
+        title: 'Some Title',
+        analysed: false
       });
     }
   }
@@ -181,7 +182,7 @@ export class VideostorePage implements OnInit {
   }
 
   onDeleteImage(imageId: string) {
-
+    this.images = this.images.filter(img => img.id !== imageId);
   }
 
   uploadImage($event: Event) {

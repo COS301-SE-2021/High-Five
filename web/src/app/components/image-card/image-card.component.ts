@@ -14,4 +14,15 @@ export class ImageCardComponent implements OnInit {
 
   ngOnInit() {}
 
+  onDeleteImage(){
+    this.deleteImage.emit(this.image.id);
+  }
+
+  analyseImage() {
+    this.image.analysed=true;
+  }
+
+  viewAnalysedImage() {
+    this.image.analysed=false;
+  }
 }
