@@ -3,11 +3,8 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Mime;
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Org.OpenAPITools.Models;
@@ -57,7 +54,7 @@ namespace tests.IntegrationTests
         public async Task TestStoreValidVideo()
         {
             var basePath = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.ToString());
-            var file = File.OpenRead(basePath?.FullName + "\\IntegrationTests\\Setup\\MockVideo.mp4");
+            var file = File.OpenRead(basePath?.FullName + "/IntegrationTests/Setup/MockVideo.mp4");
             var streamContent = new StreamContent(file);
             streamContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
             var request = new MultipartFormDataContent {{streamContent, "file", "MockVideo"}};
@@ -141,7 +138,7 @@ namespace tests.IntegrationTests
         private async Task<string> UploadVideo()
         {
             var basePath = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.ToString());
-            var file = File.OpenRead(basePath?.FullName + "\\IntegrationTests\\Setup\\MockVideo.mp4");
+            var file = File.OpenRead(basePath?.FullName + "/IntegrationTests/Setup/MockVideo.mp4");
             var streamContent = new StreamContent(file);
             streamContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
             var storeRequest = new MultipartFormDataContent {{streamContent, "file", "MockVideo"}};
