@@ -1,6 +1,12 @@
-﻿using System.Net.Http;
+﻿using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Mime;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
 
@@ -46,16 +52,24 @@ namespace tests.IntegrationTests
         
         [Fact]
         [Trait("Category","IntegrationTests")]
-        public void TestStoreValidVideo()
+        public async Task TestStoreValidVideo()
         {
-            
+            var basePath = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.ToString());
+            var file = File.OpenRead(basePath?.FullName + "\\IntegrationTests\\Setup\\MockVideo.mp4");
+            var streamContent = new StreamContent(file);
+            streamContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+            var request = new MultipartFormDataContent {{streamContent, "file", "MockVideo"}};
+
+            var response = await _client.PostAsync("/media/storeVideo", request);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
         
         [Fact]
         [Trait("Category","IntegrationTests")]
-        public void TestStoreNullVideo()
+        public async Task TestStoreNullVideo()
         {
-            
+            var response = await _client.PostAsync("/media/storeVideo", null!);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
         
         [Fact]
@@ -92,6 +106,16 @@ namespace tests.IntegrationTests
         {
             
         }
-        
+
+        private async Task UploadVideo()
+        {
+            var basePath = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.ToString());
+            var file = File.OpenRead(basePath?.FullName + "\\IntegrationTests\\Setup\\MockVideo.mp4");
+            var streamContent = new StreamContent(file);
+            streamContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+            var request = new MultipartFormDataContent {{streamContent, "file", "MockVideo"}};
+
+            var response = await _client.PostAsync("/media/storeVideo", request);
+        }
     }
 }
