@@ -52,9 +52,8 @@ namespace tests.IntegrationTests
                 Tools = initialTools
             };
             var request = new CreatePipelineRequest { Pipeline = mockPipeline };
-            var bytes = ObjectToBytes(request);
 
-            var response = await _client.PostAsync("/pipelines/createPipeline", bytes);
+            var response = await _client.PostAsync("/pipelines/createPipeline", ObjectToBytes(request));
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
@@ -81,27 +80,75 @@ namespace tests.IntegrationTests
         }
 
         [Fact]
-        public void TestRemoveToolsFromExistingPipeline()
+        public async Task TestRemoveToolsFromExistingPipeline()
         {
-            
+            var tools = new List<string> {"CarRecognition", "CowRecognition"};
+            var validId = GetPipelineId().Result;
+            var request = new RemoveToolsRequest
+            {
+                PipelineId = validId,
+                Tools = tools
+            };
+
+            var response = await _client.PostAsync("/pipelines/removeTools", ObjectToBytes(request));
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            var responseObject = JsonConvert.DeserializeObject<EmptyObject>(responseBody);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.True(responseObject.Success);
         }
 
         [Fact]
-        public void TestRemoveToolsFromNonExistingPipeline()
+        public async Task TestRemoveToolsFromNonExistingPipeline()
         {
-            
+            var tools = new List<string> {"CarRecognition", "CowRecognition"};
+            var invalidId = "123";
+            var request = new RemoveToolsRequest
+            {
+                PipelineId = invalidId,
+                Tools = tools
+            };
+
+            var response = await _client.PostAsync("/pipelines/removeTools", ObjectToBytes(request));
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            var responseObject = JsonConvert.DeserializeObject<EmptyObject>(responseBody);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.False(responseObject.Success);
         }
 
         [Fact]
-        public void TestAddToolsToExistingPipeline()
+        public async Task TestAddToolsToExistingPipeline()
         {
-            
+            var tools = new List<string> {"CarRecognition", "CowRecognition"};
+            var validId = await GetPipelineId();
+            var request = new AddToolsRequest
+            {
+                PipelineId = validId,
+                Tools = tools
+            };
+
+            var response = await _client.PostAsync("/pipelines/addTools", ObjectToBytes(request));
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            var responseObject = JsonConvert.DeserializeObject<EmptyObject>(responseBody);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.True(responseObject.Success);
         }
 
         [Fact]
-        public void TestAddToolsToNonExistingPipeline()
+        public async Task TestAddToolsToNonExistingPipeline()
         {
-            
+            var tools = new List<string> {"CarRecognition", "CowRecognition"};
+            var invalidId = "123";
+            var request = new AddToolsRequest
+            {
+                PipelineId = invalidId,
+                Tools = tools
+            };
+
+            var response = await _client.PostAsync("/pipelines/addTools", ObjectToBytes(request));
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            var responseObject = JsonConvert.DeserializeObject<EmptyObject>(responseBody);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.False(responseObject.Success);
         }
 
         private ByteArrayContent ObjectToBytes(object requestObject)
@@ -122,9 +169,8 @@ namespace tests.IntegrationTests
                 Tools = initialTools
             };
             var request = new CreatePipelineRequest { Pipeline = mockPipeline };
-            var bytes = ObjectToBytes(request);
 
-            var response = await _client.PostAsync("/pipelines/createPipeline", bytes);
+            var response = await _client.PostAsync("/pipelines/createPipeline", ObjectToBytes(request));
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var responseObject = JsonConvert.DeserializeObject<CreatePipelineResponse>(responseBody);
             return responseObject.PipelineId;
