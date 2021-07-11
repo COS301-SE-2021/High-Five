@@ -1,7 +1,13 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Newtonsoft.Json;
+using Org.OpenAPITools.Models;
 using Xunit;
 
 namespace tests.IntegrationTests
@@ -37,15 +43,31 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
-        public void TestCreatePipeline()
+        public async Task TestCreatePipeline()
         {
-            
+            var initialTools = new List<string> {"CarCounting", "CarRecognition"};
+            var mockPipeline = new NewPipeline
+            {
+                Name = "MockPipeline",
+                Tools = initialTools
+            };
+            var request = new CreatePipelineRequest { Pipeline = mockPipeline };
+            var bytes = ObjectToBytes(request);
+
+            var response = await _client.PostAsync("/pipelines/createPipeline", bytes);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
-        public void TestGetAllPipelines()
+        public async Task TestGetAllPipelines()
         {
-            
+            await GetPipelineId();
+
+            var response = await _client.PostAsync("/pipelines/getPipelines", null!);
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            var responseObject = JsonConvert.DeserializeObject<GetPipelinesResponse>(responseBody);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(responseObject.Pipelines);
         }
 
         [Fact]
@@ -77,6 +99,31 @@ namespace tests.IntegrationTests
         {
             
         }
-        
+
+        private ByteArrayContent ObjectToBytes(object requestObject)
+        {
+            var jsonRequest = JsonConvert.SerializeObject(requestObject);
+            var buffer = System.Text.Encoding.UTF8.GetBytes(jsonRequest);
+            var byteContent = new ByteArrayContent(buffer);
+            byteContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+            return byteContent;
+        }
+
+        private async Task<string> GetPipelineId()
+        {
+            var initialTools = new List<string> {"CarCounting", "CarRecognition"};
+            var mockPipeline = new NewPipeline
+            {
+                Name = "MockPipeline",
+                Tools = initialTools
+            };
+            var request = new CreatePipelineRequest { Pipeline = mockPipeline };
+            var bytes = ObjectToBytes(request);
+
+            var response = await _client.PostAsync("/pipelines/createPipeline", bytes);
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            var responseObject = JsonConvert.DeserializeObject<CreatePipelineResponse>(responseBody);
+            return responseObject.PipelineId;
+        }
     }
 }
