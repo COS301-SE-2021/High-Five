@@ -47,7 +47,7 @@ namespace Org.OpenAPITools.Controllers
         [HttpPost]
         [Route("/media/getAllVideos")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(List<GetAllVideosResponse>))]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetAllVideosResponse))]
         public abstract IActionResult GetAllVideos();
 
         /// <summary>
