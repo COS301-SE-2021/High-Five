@@ -1,4 +1,4 @@
-﻿name: .NET Core Unit Tests
+name: .NET Core Unit Tests
 
 on:
   push:
@@ -27,10 +27,8 @@ jobs:
           
       - name: Build
         working-directory: ./backend/HighFive
-        run: dotnet build
-        #Note to developer, this --no-restore flag was added later and might cause problems.
+        run: dotnet build         
           
       - name: Run dotnet unit tests
         working-directory: ./backend/HighFive
         run: dotnet test --filter Category=UnitTests
-          
