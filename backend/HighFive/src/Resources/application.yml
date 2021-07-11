@@ -89,9 +89,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/getAllVideosResponse'
+                $ref: '#/components/schemas/getAllVideosResponse'
     
   /media/getVideo:
     post:
@@ -161,7 +159,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/emptyObject'
+                $ref: '#/components/schemas/createPipelineResponse'
                 
   /pipelines/getPipelines:
     post:
@@ -236,6 +234,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
+    
+  /pipelines/getAllTools:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Get All Tools use case
+      operationId: GetAllTools
+      responses:
+        "200":
+          description: All existing tools have been returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
   
   #==========================================================
   #     SCHEMAS
@@ -340,6 +354,12 @@ components:
       properties:
         pipeline:
           $ref: '#/components/schemas/newPipeline'
+    
+    createPipelineResponse:
+      type: object
+      properties:
+        pipelineId:
+          type: string
     
     getPipelinesResponse:
       type: object

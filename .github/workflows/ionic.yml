@@ -8,12 +8,12 @@ on:
     branches: 
       - 'development'
       - 'master'
-      - 'mobile-development'
+      - 'web-development'
   pull_request:
     branches: 
       - 'development'
       - 'master'
-      - 'mobile-development'
+      - 'web-development'
 
   workflow_dispatch:
 
