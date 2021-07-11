@@ -114,7 +114,7 @@ namespace src.Storage
              */
 
             _file = File.OpenRead(path);
-            
+
             if (!_container.Contains(this))
             {
                 _container.Add(this);
@@ -177,7 +177,11 @@ namespace src.Storage
             {
                 return Array.Empty<byte>();
             }
-            
+
+            if (!_file.CanSeek)
+            {
+                
+            }
             _file.Seek(0, SeekOrigin.Begin);
             var array = new byte[_file.Length];
             await _file.ReadAsync(array.AsMemory(0, array.Length));
