@@ -5,7 +5,7 @@ using src.Storage;
 using src.Subsystems.Pipelines;
 using Xunit;
 
-namespace tests.UnitTests.Subsystems
+namespace tests.UnitTests
 {
     [Trait("Category","UnitTests")]
     public class PipelinesUnitTest
@@ -98,8 +98,7 @@ namespace tests.UnitTests.Subsystems
         public void TestRemoveExistingToolFromValidPipeline()
         {
             var validId = GetValidPipelineId().Result;
-            var tools = new List<string>();
-            tools.Add("newTool");
+            var tools = new List<string> {"newTool"};
             var request = new RemoveToolsRequest
             {
                 PipelineId = validId,
@@ -113,8 +112,7 @@ namespace tests.UnitTests.Subsystems
         public void TestRemoveExistingToolFromInvalidPipeline()
         {
             var validId = "5";
-            var tools = new List<string>();
-            tools.Add("newTool");
+            var tools = new List<string> {"newTool"};
             var request = new RemoveToolsRequest
             {
                 PipelineId = validId,
@@ -142,8 +140,7 @@ namespace tests.UnitTests.Subsystems
         public void TestRemoveNonexistingToolFromInvalidPipeline()
         {
             var validId = "5";
-            var tools = new List<string>();
-            tools.Add("nonExistingTool");
+            var tools = new List<string> {"nonExistingTool"};
             var request = new RemoveToolsRequest
             {
                 PipelineId = validId,
