@@ -94,8 +94,10 @@ namespace src.Storage
              *      Parameters:
              * -> newFile: this parameter is the new file to be uploaded to the blob storage.
              */
-            
-            _file = newFile.OpenReadStream();
+
+            var ms = new MemoryStream();
+            await newFile.CopyToAsync(ms);
+            _file = ms;
             
             if (!_container.Contains(this))
             {
@@ -185,6 +187,7 @@ namespace src.Storage
             _file.Seek(0, SeekOrigin.Begin);
             var array = new byte[_file.Length];
             await _file.ReadAsync(array.AsMemory(0, array.Length));
+            _file.Seek(0, SeekOrigin.Begin);
             return array;
         }
 

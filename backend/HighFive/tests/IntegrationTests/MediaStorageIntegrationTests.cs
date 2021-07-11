@@ -15,7 +15,7 @@ using Xunit;
 
 namespace tests.IntegrationTests
 {
-    public class MediaStorageControllerTests
+    public class MediaStorageIntegrationTests
     {
         /*
          *      Description:
@@ -30,7 +30,7 @@ namespace tests.IntegrationTests
         private TestServer _server;
         private HttpClient _client;
 
-        public MediaStorageControllerTests()
+        public MediaStorageIntegrationTests()
         {
             /*
              *      Description:
