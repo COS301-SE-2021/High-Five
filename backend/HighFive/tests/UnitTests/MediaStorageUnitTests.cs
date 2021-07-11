@@ -84,7 +84,7 @@ namespace tests.UnitTests
         public async Task TestGetVideoValidVideoId()
         {
             var basePath = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.ToString());
-            var file = File.OpenRead(basePath?.FullName + "\\IntegrationTests\\Setup\\MockVideo.mp4");
+            var file = File.OpenRead(basePath?.FullName + "/IntegrationTests/Setup/MockVideo.mp4");
             var validVideo = new FormFile(file, 0, 1, "validVideo", "validVideo");
             await _mockMediaStorageService.StoreVideo(validVideo);
             var validVideoId = _mockMediaStorageService.GetAllVideos()[0].Id;
