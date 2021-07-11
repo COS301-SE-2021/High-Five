@@ -1,4 +1,4 @@
-﻿name: .NET Core Unit Tests
+name: .NET Core Unit Tests
 
 on:
   push:
