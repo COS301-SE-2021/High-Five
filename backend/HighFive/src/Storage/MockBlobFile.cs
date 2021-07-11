@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
 using BlobProperties = Microsoft.WindowsAzure.Storage.Blob.BlobProperties;
 using System;
 
@@ -131,8 +130,14 @@ namespace src.Storage
              *      Parameters:
              * -> text: the text file stored as a single string to be uploaded to the blob storage.
              */
+            
+            var baseDirectory = Path.GetTempFileName();
 
-            _file = File.Create(text);
+            _file = File.Create(baseDirectory);
+            var writer = new StreamWriter(_file);
+            await writer.WriteAsync(text);
+            writer.Close();
+            _file = File.OpenRead(baseDirectory);
             
             if (!_container.Contains(this))
             {
@@ -157,7 +162,7 @@ namespace src.Storage
              * This function returns a boolean indicating whether or not the contained CloudBlockBlob object
              * exists in the mocked storage.
              */
-
+            
             return _container.Contains(this);
         }
 
@@ -170,9 +175,10 @@ namespace src.Storage
 
             if (_file == null)
             {
-                return System.Array.Empty<byte>();
+                return Array.Empty<byte>();
             }
             
+            _file.Seek(0, SeekOrigin.Begin);
             var array = new byte[_file.Length];
             await _file.ReadAsync(array.AsMemory(0, array.Length));
             return array;
@@ -192,6 +198,7 @@ namespace src.Storage
                 return "{\"name\":\"Mock\",\"id\":\""+Name.Split(".")[0]+"\",\"tools\":[]}";
             }
 
+            _file.Seek(0, SeekOrigin.Begin);
             var reader = new StreamReader(_file);
             return await reader.ReadToEndAsync();
         }
