@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  unit-tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,12 +24,11 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.x
-          
+
       - name: Build
         working-directory: ./backend/HighFive
-        run: dotnet build         
-          
+        run: dotnet build
+
       - name: Run dotnet unit tests
         working-directory: ./backend/HighFive
         run: dotnet test --filter Category=UnitTests
-          
