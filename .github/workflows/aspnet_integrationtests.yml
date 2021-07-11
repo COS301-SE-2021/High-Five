@@ -1,4 +1,4 @@
-name: .NET Core Unit Tests
+name: .NET Core Integration Tests
 
 on:
   push:
