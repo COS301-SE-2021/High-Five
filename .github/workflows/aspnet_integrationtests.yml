@@ -3,9 +3,7 @@ name: .NET Core Integration Tests
 on:
   push:
     branches:
-      - 'development'
       - 'master'
-      - 'backend-development'
   pull_request:
     branches:
       - 'development'
