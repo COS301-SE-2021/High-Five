@@ -17,7 +17,7 @@ namespace src.Subsystems.Pipelines
         public override IActionResult AddTools(AddToolsRequest addToolsRequest)
         {
             var response = new EmptyObject {Success = true};
-            if (_pipelineService.AddTools(addToolsRequest))
+            if (_pipelineService.AddTools(addToolsRequest).Result)
             {
                 return StatusCode(200, response);
             }
@@ -29,8 +29,7 @@ namespace src.Subsystems.Pipelines
 
         public override IActionResult CreatePipeline(CreatePipelineRequest createPipelineRequest)
         {
-            _pipelineService.CreatePipeline(createPipelineRequest);
-            var response = new EmptyObject {Success = true};
+            var response = _pipelineService.CreatePipeline(createPipelineRequest).Result;
             return StatusCode(200, response);
         }
 
@@ -43,6 +42,12 @@ namespace src.Subsystems.Pipelines
             return StatusCode(400, response);
         }
 
+        public override IActionResult GetAllTools()
+        {
+            var response = _pipelineService.GetAllTools();
+            return StatusCode(200, response);
+        }
+
         public override IActionResult GetPipelines()
         {
             var response = _pipelineService.GetPipelines();
@@ -52,8 +57,14 @@ namespace src.Subsystems.Pipelines
         public override IActionResult RemoveTools(RemoveToolsRequest removeToolsRequest)
         {
             var response = new EmptyObject {Success = true};
-            _pipelineService.RemoveTools(removeToolsRequest);
-            return StatusCode(200, response);
+            if (_pipelineService.RemoveTools(removeToolsRequest).Result)
+            {
+                return StatusCode(200, response);
+            }
+            
+            response.Success = false;
+            response.Message = "Removal of tools from pipeline failed";
+            return StatusCode(400, response);
         }
     }
 }
