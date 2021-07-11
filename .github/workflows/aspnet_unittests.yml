@@ -32,5 +32,5 @@ jobs:
           
       - name: Run dotnet unit tests
         working-directory: ./backend/HighFive
-        run: dotnet test
+        run: dotnet test --filter Category=UnitTests
           
