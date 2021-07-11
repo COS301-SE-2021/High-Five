@@ -48,7 +48,7 @@ namespace tests.IntegrationTests
         [Trait("Category","IntegrationTests")]
         public void TestStoreValidVideo()
         {
-            
+      
         }
         
         [Fact]

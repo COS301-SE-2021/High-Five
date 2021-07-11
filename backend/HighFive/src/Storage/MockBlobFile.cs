@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Security.Policy;
+using System.IO;
 using System.Threading.Tasks;
-using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.WebUtilities;
 using BlobProperties = Microsoft.WindowsAzure.Storage.Blob.BlobProperties;
+using System;
 
 namespace src.Storage
 {
@@ -18,12 +19,14 @@ namespace src.Storage
          *      Attributes:
          * -> Properties: this variable contains the properties of the CloudBlockBlob from file
          * -> Name: this variable contains the name of the file.
+         * -> _file: this variable stores the contents of an uploaded file as a stream.
          * -> _metaData: an in-memory mock of the meta-data belonging to this mocked file.
          * -> _container: a reference to the container in which this mocked file is located. Will be handled
          *      externally by the StorageManager
         */
         
         public BlobProperties Properties { get; }
+        private Stream _file;
         public string Name { get; }
         
         //mock variables
@@ -35,8 +38,21 @@ namespace src.Storage
             _container = container;
             _metaData = new Hashtable();
             Properties = null;
+            _file = null;
             Name = name;
         }
+
+        ~MockBlobFile()
+        {
+            /*
+             *      Description:
+             * The MockBlobFile's finalizer is responsible for closing the filestream of the temporary mock
+             * object in the case that it contained data.
+             */
+            
+            _file?.Close();
+        }
+        
         public void AddMetadata(string key, string value)
         {
             /*
@@ -80,6 +96,8 @@ namespace src.Storage
              * -> newFile: this parameter is the new file to be uploaded to the blob storage.
              */
             
+            _file = newFile.OpenReadStream();
+            
             if (!_container.Contains(this))
             {
                 _container.Add(this);
@@ -95,6 +113,8 @@ namespace src.Storage
              *      Parameters:
              * -> path: the full path pointing to where the file is stored.
              */
+
+            _file = File.OpenRead(path);
             
             if (!_container.Contains(this))
             {
@@ -111,6 +131,8 @@ namespace src.Storage
              *      Parameters:
              * -> text: the text file stored as a single string to be uploaded to the blob storage.
              */
+
+            _file = File.Create(text);
             
             if (!_container.Contains(this))
             {
@@ -143,11 +165,17 @@ namespace src.Storage
         {
             /*
              *      Description:
-             * This function converts the contents of the blob storage into a byte array and returns it.
+             * This function converts the contents of the stored file into a byte array and returns it.
              */
-                        
-            var arr = new byte[5];
-            return arr;
+
+            if (_file == null)
+            {
+                return System.Array.Empty<byte>();
+            }
+            
+            var array = new byte[_file.Length];
+            await _file.ReadAsync(array.AsMemory(0, array.Length));
+            return array;
         }
 
         public async Task<string> ToText()
@@ -158,8 +186,14 @@ namespace src.Storage
              * from text or json files. In the mocked case it will return a simple string. The return value
              * is the specified json format of a stored pipeline.
              */
-                        
-            return "{\"name\":\"Mock\",\"id\":\""+Name.Split(".")[0]+"\",\"tools\":[]}";
+
+            if (_file == null)
+            {
+                return "{\"name\":\"Mock\",\"id\":\""+Name.Split(".")[0]+"\",\"tools\":[]}";
+            }
+
+            var reader = new StreamReader(_file);
+            return await reader.ReadToEndAsync();
         }
     }
 }
