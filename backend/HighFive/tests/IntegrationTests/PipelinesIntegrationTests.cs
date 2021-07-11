@@ -6,6 +6,7 @@ using Xunit;
 
 namespace tests.IntegrationTests
 {
+    [Trait("Category","IntegrationTests")]
     public class PipelinesIntegrationTests
     {
         /*
@@ -34,8 +35,7 @@ namespace tests.IntegrationTests
                 .UseStartup<TestStartup>());
             _client = _server.CreateClient();
         }
-
-        [Trait("Category","IntegrationTests")]
+        
         [Fact]
         public void TestCreatePipeline()
         {
@@ -43,42 +43,36 @@ namespace tests.IntegrationTests
         }
 
         [Fact]
-        [Trait("Category","IntegrationTests")]
         public void TestGetAllPipelines()
         {
             
         }
 
         [Fact]
-        [Trait("Category","IntegrationTests")]
         public void TestGetAllTools()
         {
             
         }
 
         [Fact]
-        [Trait("Category","IntegrationTests")]
         public void TestRemoveToolsFromExistingPipeline()
         {
             
         }
 
         [Fact]
-        [Trait("Category","IntegrationTests")]
         public void TestRemoveToolsFromNonExistingPipeline()
         {
             
         }
 
         [Fact]
-        [Trait("Category","IntegrationTests")]
         public void TestAddToolsToExistingPipeline()
         {
             
         }
 
         [Fact]
-        [Trait("Category","IntegrationTests")]
         public void TestAddToolsToNonExistingPipeline()
         {
             

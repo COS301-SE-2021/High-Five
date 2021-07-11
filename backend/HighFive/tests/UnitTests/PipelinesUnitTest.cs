@@ -7,6 +7,7 @@ using Xunit;
 
 namespace tests.UnitTests.Subsystems
 {
+    [Trait("Category","UnitTests")]
     public class PipelinesUnitTest
     {
         private readonly IPipelineService _mockPipelineService;
@@ -16,7 +17,6 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public void TestGetPipelines()
         {
             var pipelines = _mockPipelineService.GetPipelines().Pipelines;
@@ -24,7 +24,6 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public async Task TestCreatePipeline()
         {
             var newPipeline = new NewPipeline()
@@ -43,7 +42,6 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public void TestDeleteValidPipeline()
         {
             var validId = GetValidPipelineId().Result;
@@ -56,7 +54,6 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public void TestDeleteInvalidPipeline()
         {
             var invalidId = "5";
@@ -69,7 +66,6 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public void TestAddToolToValidPipeline()
         {
             var validId = GetValidPipelineId().Result;
@@ -84,7 +80,6 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public void TestAddToolToInvalidPipeline()
         {
             var invalidId = "5";
@@ -100,7 +95,6 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public void TestRemoveExistingToolFromValidPipeline()
         {
             var validId = GetValidPipelineId().Result;
@@ -116,7 +110,6 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public void TestRemoveExistingToolFromInvalidPipeline()
         {
             var validId = "5";
@@ -132,7 +125,6 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public void TestRemoveNonexistingToolFromValidPipeline()
         {
             var validId = GetValidPipelineId().Result;
@@ -147,7 +139,6 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public void TestRemoveNonexistingToolFromInvalidPipeline()
         {
             var validId = "5";

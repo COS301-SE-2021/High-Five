@@ -15,6 +15,7 @@ using Xunit;
 
 namespace tests.IntegrationTests
 {
+    [Trait("Category","IntegrationTests")]
     public class MediaStorageIntegrationTests
     {
         /*
@@ -45,7 +46,6 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
-        [Trait("Category","IntegrationTests")]
         public async Task Test()
         {
             var response = await _client.PostAsync("/test/ping", null!);
@@ -54,7 +54,6 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
-        [Trait("Category","IntegrationTests")]
         public async Task TestStoreValidVideo()
         {
             var basePath = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.ToString());
@@ -68,7 +67,6 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
-        [Trait("Category","IntegrationTests")]
         public async Task TestStoreNullVideo()
         {
             var response = await _client.PostAsync("/media/storeVideo", null!);
@@ -76,7 +74,6 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
-        [Trait("Category","IntegrationTests")]
         public async Task TestGetAllVideos()
         {
 
@@ -90,7 +87,6 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
-        [Trait("Category","IntegrationTests")]
         public async Task TestGetExistingVideo()
         {
             var validId = await UploadVideo();
@@ -100,7 +96,6 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
-        [Trait("Category","IntegrationTests")]
         public async Task TestGetNonExistingVideo()
         {
             const string invalidId = "123";
@@ -110,7 +105,6 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
-        [Trait("Category","IntegrationTests")]
         public async Task TestDeleteExistingVideo()
         {
             var validId = await UploadVideo();
@@ -128,7 +122,6 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
-        [Trait("Category","IntegrationTests")]
         public async Task TestDeleteNonExistingVideo()
         {
             var invalidId = "123";

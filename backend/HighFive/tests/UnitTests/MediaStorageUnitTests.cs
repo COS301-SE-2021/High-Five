@@ -9,6 +9,7 @@ using Xunit;
 
 namespace tests.UnitTests.Subsystems
 {
+    [Trait("Category","UnitTests")]
     public class MediaStorageUnitTests 
     {
         private readonly IMediaStorageService _mockMediaStorageService;
@@ -20,7 +21,6 @@ namespace tests.UnitTests.Subsystems
         }
 
         [Fact]
-        [Trait("Category","UnitTests")]
         public async Task TestStoreValidVideo()
         {
             var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
@@ -31,7 +31,6 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public void TestStoreNullVideo()
         {
             var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
@@ -42,7 +41,6 @@ namespace tests.UnitTests.Subsystems
         }
 
         [Fact]
-        [Trait("Category","UnitTests")]
         public void TestGetAllVideos()
         {
             var response = _mockMediaStorageService.GetAllVideos();
@@ -50,7 +48,6 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public void TestDeleteVideoValidVideoId()
         {
             var allVids = _mockMediaStorageService.GetAllVideos();
@@ -70,7 +67,6 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public void TestDeleteVideoInvalidVideoId()
         {
             var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
@@ -85,10 +81,11 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public async Task TestGetVideoValidVideoId()
         {
-            var validVideo = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validVideo", "validVideo");
+            var basePath = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.ToString());
+            var file = File.OpenRead(basePath?.FullName + "\\IntegrationTests\\Setup\\MockVideo.mp4");
+            var validVideo = new FormFile(file, 0, 1, "validVideo", "validVideo");
             await _mockMediaStorageService.StoreVideo(validVideo);
             var validVideoId = _mockMediaStorageService.GetAllVideos()[0].Id;
             var getController = new GetVideoController(_mockStorageManager);
@@ -97,7 +94,6 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
-        [Trait("Category","UnitTests")]
         public void TestGetVideoInvalidVideoId()
         {
             const string invalidVideoId = "5";
