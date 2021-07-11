@@ -71,9 +71,13 @@ namespace tests.IntegrationTests
         }
 
         [Fact]
-        public void TestGetAllTools()
+        public async Task TestGetAllTools()
         {
-            
+            var response = await _client.PostAsync("/pipelines/getAllTools", null!);
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            var responseObject = JsonConvert.DeserializeObject<List<string>>(responseBody);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(responseObject);
         }
 
         [Fact]
