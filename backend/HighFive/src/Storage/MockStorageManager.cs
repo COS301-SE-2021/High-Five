@@ -54,6 +54,13 @@ namespace src.Storage
              *      or may not be in mocked storage. The creation of the file itself will be handled by the
              *      CreateNewFile function.
              */
+
+            if (container.Equals("public"))
+            {
+                var toolsFile = new MockBlobFile(new List<IBlobFile>(), "tools.txt");
+                await toolsFile.UploadText("CarRecognitions\nCarFollowing");
+                return toolsFile;
+            }
             
             IBlobFile file = null;
             foreach (var blobFile in _mockContainer)
