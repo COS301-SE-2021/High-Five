@@ -1,13 +1,7 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
-using src;
-using src.Storage;
-using src.Subsystems.MediaStorage;
-using src.Subsystems.Pipelines;
 using Xunit;
 
 namespace tests.IntegrationTests
@@ -42,11 +36,61 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
+        [Trait("Category","IntegrationTests")]
         public async Task Test()
         {
             var response = await _client.PostAsync("/test/ping", null!);
             var jsonResponse = await response.Content.ReadAsStringAsync();
             var responseCode = response.StatusCode;
+        }
+        
+        [Fact]
+        [Trait("Category","IntegrationTests")]
+        public void TestStoreValidVideo()
+        {
+            
+        }
+        
+        [Fact]
+        [Trait("Category","IntegrationTests")]
+        public void TestStoreNullVideo()
+        {
+            
+        }
+        
+        [Fact]
+        [Trait("Category","IntegrationTests")]
+        public void TestGetAllVideos()
+        {
+            
+        }
+        
+        [Fact]
+        [Trait("Category","IntegrationTests")]
+        public void TestGetExistingVideo()
+        {
+            
+        }
+        
+        [Fact]
+        [Trait("Category","IntegrationTests")]
+        public void TestGetNonExistingVideo()
+        {
+            
+        }
+        
+        [Fact]
+        [Trait("Category","IntegrationTests")]
+        public void TestDeleteExistingVideo()
+        {
+            
+        }
+        
+        [Fact]
+        [Trait("Category","IntegrationTests")]
+        public void TestDeleteNonExistingVideo()
+        {
+            
         }
         
     }

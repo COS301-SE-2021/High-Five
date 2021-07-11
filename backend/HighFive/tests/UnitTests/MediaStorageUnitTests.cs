@@ -20,6 +20,7 @@ namespace tests.UnitTests.Subsystems
         }
 
         [Fact]
+        [Trait("Category","UnitTests")]
         public async Task TestStoreValidVideo()
         {
             var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
@@ -30,6 +31,7 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
+        [Trait("Category","UnitTests")]
         public void TestStoreNullVideo()
         {
             var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
@@ -40,6 +42,7 @@ namespace tests.UnitTests.Subsystems
         }
 
         [Fact]
+        [Trait("Category","UnitTests")]
         public void TestGetAllVideos()
         {
             var response = _mockMediaStorageService.GetAllVideos();
@@ -47,6 +50,7 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
+        [Trait("Category","UnitTests")]
         public void TestDeleteVideoValidVideoId()
         {
             var allVids = _mockMediaStorageService.GetAllVideos();
@@ -66,6 +70,7 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
+        [Trait("Category","UnitTests")]
         public void TestDeleteVideoInvalidVideoId()
         {
             var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
@@ -80,6 +85,7 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
+        [Trait("Category","UnitTests")]
         public async Task TestGetVideoValidVideoId()
         {
             var validVideo = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validVideo", "validVideo");
@@ -91,6 +97,7 @@ namespace tests.UnitTests.Subsystems
         }
         
         [Fact]
+        [Trait("Category","UnitTests")]
         public void TestGetVideoInvalidVideoId()
         {
             const string invalidVideoId = "5";
