@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
 import com.bdpsolutions.highfive.models.login.LoginRepository
-import com.bdpsolutions.highfive.models.login.Result
+import com.bdpsolutions.highfive.utils.Result
 
 import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.view.views.LoggedInUserView

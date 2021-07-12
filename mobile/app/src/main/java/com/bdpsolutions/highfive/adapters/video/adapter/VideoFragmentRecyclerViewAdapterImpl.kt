@@ -42,6 +42,12 @@ class VideoFragmentRecyclerViewAdapterImpl @Inject constructor():
     }
 
     // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = dataSet!!.size
+    override fun getItemCount() : Int {
+        return if (dataSet != null) {
+            dataSet!!.size
+        } else {
+            0
+        }
+    }
 
 }

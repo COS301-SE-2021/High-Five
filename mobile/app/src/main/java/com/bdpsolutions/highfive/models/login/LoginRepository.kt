@@ -2,6 +2,7 @@ package com.bdpsolutions.highfive.models.login
 
 import com.bdpsolutions.highfive.models.login.model.User
 import com.bdpsolutions.highfive.models.login.source.LoginDataSource
+import com.bdpsolutions.highfive.utils.Result
 
 /**
  * Class that requests authentication and user information from the remote data source and
