@@ -1,25 +1,25 @@
 <ion-card>
-    <ion-item>
-      <ion-img src="{{image.url}}" alt="{{alt}}"></ion-img>
-    </ion-item>
-    <ion-card-content>
-      <ion-card-title class="ion-text-center">
-        {{image.title}}
-      </ion-card-title>
-      <ion-card-subtitle class="ion-text-center">
-        Some Random text here that is not useful
-      </ion-card-subtitle>
-      <ion-buttons class="ion-justify-content-center">
-        <ion-button *ngIf="!image.analysed" (click)="analyseImage()">
-          <ion-icon name="search-outline" slot="icon-only"></ion-icon>
-        </ion-button>
-        <ion-button *ngIf="image.analysed" (click)="viewAnalysedImage()">
-          <ion-icon name="eye-outline" slot="icon-only"></ion-icon>
-        </ion-button>
-        <ion-button (click)="onDeleteImage()" color="danger">
-          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-        </ion-button>
-      </ion-buttons>
+  <ion-item>
+    <ion-img src="{{image.url}}" alt="{{alt}}"></ion-img>
+  </ion-item>
+  <ion-card-content>
+    <ion-card-title class="ion-text-center">
+      {{image.title}}
+    </ion-card-title>
+    <ion-card-subtitle class="ion-text-center">
+      Some Random text here that is not useful
+    </ion-card-subtitle>
+    <ion-buttons class="ion-justify-content-center">
+      <ion-button *ngIf="!image.analysed" (click)="analyseImage()">
+        <ion-icon name="search-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="image.analysed" (click)="viewAnalysedImage()">
+        <ion-icon name="eye-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button (click)="onDeleteImage()" color="danger">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
 
 
   </ion-card-content>
