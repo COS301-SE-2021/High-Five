@@ -18,15 +18,15 @@ export class ImageCardComponent implements OnInit {
     // No ngOnInit body defined as redux patter has not yet been implemented
   }
 
-  onDeleteImage(){
+  public onDeleteImage(){
     this.deleteImage.emit(this.image.id);
   }
 
-  analyseImage() {
+  public analyseImage() {
     this.image.analysed=true;
   }
 
-  viewAnalysedImage() {
+  public viewAnalysedImage() {
     return; // Todo : show a modal containing the analysed image
   }
 }
