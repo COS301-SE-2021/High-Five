@@ -10,9 +10,13 @@ export class ImageCardComponent implements OnInit {
   @Input() image: Image;
   @Output() deleteImage:  EventEmitter<string> = new EventEmitter<string>();
   public alt = '../../../assists/images/defaultprofile.svg';
-  constructor() { }
+  constructor() {
+    // No constructor body needed as properties are retrieved from angular input
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+    // No ngOnInit body defined as redux patter has not yet been implemented
+  }
 
   onDeleteImage(){
     this.deleteImage.emit(this.image.id);
@@ -23,6 +27,6 @@ export class ImageCardComponent implements OnInit {
   }
 
   viewAnalysedImage() {
-    this.image.analysed=false;
+    return; // Todo : show a modal containing the analysed image
   }
 }
