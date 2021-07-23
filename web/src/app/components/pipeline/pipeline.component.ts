@@ -128,10 +128,17 @@ export class PipelineComponent implements OnInit {
   }
 
   public async presentAddToolPopover(ev: any) {
+    /**
+     * A popover which contains all the tools that the user can add to the current pipeline
+     */
     const addToolPopover = await this.popoverController.create({
       component: AddToolComponent,
       event: ev,
       translucent: true,
+      /**
+       * By filtering the available tools, we ensure that the user cannot add duplicate tools to a pipeline on the
+       * frontend (backend validation also exists)
+       */
       componentProps: {
         availableTools: this.availableTools.filter(tool => !this.pipeline.tools.includes(tool))
       }
