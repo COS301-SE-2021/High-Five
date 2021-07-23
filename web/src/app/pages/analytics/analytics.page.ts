@@ -63,7 +63,6 @@ export class AnalyticsPage implements OnInit {
 
 
   async openAddPipelineModal() {
-
     const modal = await this.modalController.create({
       component: AddPipelineComponent,
       cssClass: 'add-pipeline-modal',

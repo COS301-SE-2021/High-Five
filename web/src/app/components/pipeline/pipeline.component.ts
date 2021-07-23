@@ -74,14 +74,21 @@ export class PipelineComponent implements OnInit {
 
   public async onAddTool(tools: string[]) {
     this.pipeline.tools = this.pipeline.tools.concat(tools);
+
     this.pipelinesService.addTools({
       pipelineId: this.pipeline.id,
       tools: this.pipeline.tools
-    }).subscribe(this.updateToolColours);
+    }).subscribe(
+      () => {
+        this.platform.ready().then(() => {
+          this.updateToolColours();
+        });
+      }
+    );
   }
 
   /**
-   * A function that will emit an event to indicate that the pipepline should be removed from the parent page, in this
+   * A function that will emit an event to indicate that the pipeline should be removed from the parent page, in this
    * case the analytics page
    */
   public async onDeletePipeline() {
@@ -138,15 +145,13 @@ export class PipelineComponent implements OnInit {
   }
 
   /**
-   * Function that will assign each tool in he pipeline component a different colour, purely used to make the ui more
-   * interesting, an unfortunate bug is that all the pipeline's tools' colours are updated if a single pipeline's
-   * updateToolColours function is called.
-   * TODO : Find a different way of giving each tool a unique colour
+   * Function that will assign each tool in he pipeline component a different colour, used to make the ui more
+   * interesting
    *
    * @private
    */
   private updateToolColours() {
-    const temp = Array.from(document.getElementsByClassName('tool-chip') as HTMLCollectionOf<HTMLElement>);
+    const temp = Array.from(document.getElementsByClassName(this.pipeline.id + '-tool-chip') as HTMLCollectionOf<HTMLElement>);
     temp.forEach(value => {
       value.style.borderColor = '#' + ('000000' +
         Math.floor(0x1000000 * Math.random()).toString(16)).slice(-6);
