@@ -26,6 +26,11 @@ export class AnalyticsPage implements OnInit {
     });
   }
 
+  /**
+   * Deletes a pipeline from the local pipelines array and sends a qpi request to remove the pipeline
+   *
+   * @param id the id of the pipeline that should be removed
+   */
   deletePipeline(id: string) {
     this.pipelines = this.pipelines.filter(pipeline => pipeline.id !== id);
     const toast = this.toastController.create({
@@ -71,7 +76,7 @@ export class AnalyticsPage implements OnInit {
     });
     modal.onWillDismiss().then(data => {
       if (data.data.pipeline) {
-        if (data.data.pipeline.name) {
+        if (data.data.pipeline.name && data.data.pipeline.tools) { //Data validation
           const newPipeline: NewPipeline = {
             name: data.data.pipeline.name,
             tools: data.data.pipeline.tools
@@ -79,15 +84,28 @@ export class AnalyticsPage implements OnInit {
           const createPipelineRequest: CreatePipelineRequest = {
             pipeline: newPipeline
           };
+          this.pipelines.push(data.data.pipeline); // Optimistic update
+          this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
           this.pipelinesService.createPipeline(createPipelineRequest).subscribe(response => {
-            this.pipelines.push(data.data.pipeline);
-            this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
+            /**
+             * If the response receives no id , it can be assumed that the request to the backend server failed,
+             * therefore we will undo the optimistic update
+             */
+            if (response.pipelineId == null) {
+              this.pipelines = this.pipelines.filter(pipeline => pipeline.id !== data.data.pipeline.id);
+            }
           });
         } else {
+          const toast = this.toastController.create({
+            message: 'All necessary data of the pipeline was not present, please try again',
+            duration: 1000,
+            translucent: true,
+            position: 'bottom'
+          }).then(m => m.present());
         }
       }
     });
-    return await modal.present();
+    return modal.present();
   }
 
   private async updatePipelines(): Promise<boolean> {

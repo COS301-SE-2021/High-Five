@@ -34,30 +34,52 @@ export class PipelineComponent implements OnInit {
   }
 
   async onRemoveTool(tool: string) {
-    if(this.pipeline.tools.length===1){
+    if (this.pipeline.tools.length === 1) {
       await this.onDeletePipeline();
+    } else {
+      const removeToolRequest: RemoveToolsRequest = {
+        pipelineId: this.pipeline.id,
+        tools: [tool]
+      };
+      try {
+        this.pipeline.tools = this.pipeline.tools.filter(t => t !== tool); // Optimistic update
+        const rest = this.pipelinesService.removeTools(removeToolRequest).subscribe(response => {
+          /**
+           * If the request to the backend fails, re add the tool to the pipeline on frontend, 'undo-ing' the optimistic
+           * update
+           */
+          if (!response.success) {
+            this.pipeline.tools.push(tool);
+            /**
+             * Toast to indicatet that the tool could not successfully be removed
+             */
+            this.toastController.create({
+              message: 'Removal of tool from pipeline failed, request to backend failed ',
+              duration: 2000
+            }).then(t => {
+              t.present();
+            });
+          } else {
+            this.removeTool.emit(this.pipeline);
+          }
+        });
+      } catch (e) {
+        const toast = await this.toastController.create({
+          message: 'Removal of tool from pipeline failed',
+          duration: 2000
+        });
+        await toast.present();
+      }
     }
-    const removeToolRequest: RemoveToolsRequest = {
-      pipelineId: this.pipeline.id,
-      tools: [tool]
-    };
-    try {
-      const rest = this.pipelinesService.removeTools(removeToolRequest).subscribe(response => {
-        this.pipeline.tools = this.pipeline.tools.filter(t => t !== tool);
-        this.removeTool.emit(this.pipeline);
-      });
-    } catch (e) {
-      const toast = await this.toastController.create({
-        message: 'Removal of tool from pipeline failed',
-        duration: 2000
-      });
-      await toast.present();
-    }
+
   }
 
   async onAddTool(tools: string[]) {
-    this.pipeline.tools= this.pipeline.tools.concat(tools);
-    this.pipelinesService.addTools({pipelineId: this.pipeline.id,tools : this.pipeline.tools}).subscribe(this.updateToolColours);
+    this.pipeline.tools = this.pipeline.tools.concat(tools);
+    this.pipelinesService.addTools({
+      pipelineId: this.pipeline.id,
+      tools: this.pipeline.tools
+    }).subscribe(this.updateToolColours);
   }
 
   async onDeletePipeline() {
@@ -99,13 +121,13 @@ export class PipelineComponent implements OnInit {
     });
     await addToolPopover.present();
     await addToolPopover.onDidDismiss().then(
-      data=>{
+      data => {
         this.onAddTool(data.data.tools);
       }
-  );
+    );
   }
 
-  private updateToolColours(){
+  private updateToolColours() {
     const temp = Array.from(document.getElementsByClassName('tool-chip') as HTMLCollectionOf<HTMLElement>);
     temp.forEach(value => {
       value.style.borderColor = '#' + ('000000' +
