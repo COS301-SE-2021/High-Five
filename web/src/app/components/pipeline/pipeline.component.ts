@@ -1,8 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Pipeline} from '../../models/pipeline';
-import {convertNodeSourceSpanToLoc} from '@angular-eslint/template-parser/dist/convert-source-span-to-loc';
 import {LoadingController, Platform, PopoverController, ToastController} from '@ionic/angular';
-import {element} from 'protractor';
 import {PipelinesService} from '../../apis/pipelines.service';
 import {DeletePipelineRequest} from '../../models/deletePipelineRequest';
 import {RemoveToolsRequest} from '../../models/removeToolsRequest';
@@ -33,7 +31,7 @@ export class PipelineComponent implements OnInit {
     });
   }
 
-  async onRemoveTool(tool: string) {
+  public async onRemoveTool(tool: string) {
     if (this.pipeline.tools.length === 1) {
       await this.onDeletePipeline();
     } else {
@@ -43,7 +41,7 @@ export class PipelineComponent implements OnInit {
       };
       try {
         this.pipeline.tools = this.pipeline.tools.filter(t => t !== tool); // Optimistic update
-        const rest = this.pipelinesService.removeTools(removeToolRequest).subscribe(response => {
+        this.pipelinesService.removeTools(removeToolRequest).subscribe(response => {
           /**
            * If the request to the backend fails, re add the tool to the pipeline on frontend, 'undo-ing' the optimistic
            * update
@@ -74,7 +72,7 @@ export class PipelineComponent implements OnInit {
 
   }
 
-  async onAddTool(tools: string[]) {
+  public async onAddTool(tools: string[]) {
     this.pipeline.tools = this.pipeline.tools.concat(tools);
     this.pipelinesService.addTools({
       pipelineId: this.pipeline.id,
@@ -82,7 +80,14 @@ export class PipelineComponent implements OnInit {
     }).subscribe(this.updateToolColours);
   }
 
-  async onDeletePipeline() {
+  /**
+   * A function that will emit an event to indicate that the pipepline should be removed from the parent page, in this
+   * case the analytics page
+   */
+  public async onDeletePipeline() {
+    /**
+     * Display a loading animation
+     */
     const loading = await this.loadingController.create({
       spinner: 'dots',
       animated: true,
@@ -93,8 +98,16 @@ export class PipelineComponent implements OnInit {
       pipelineId: this.pipeline.id
     };
     try {
-      const res = this.pipelinesService.deletePipeline(deletePipelineRequest).subscribe(response => {
+      this.pipelinesService.deletePipeline(deletePipelineRequest).subscribe(response => {
+        /**
+         * Resolve the loading animation once a response has been received from the backend
+         */
         loading.dismiss();
+        /**
+         * Emit the event to indicate that the pipeline should be removed, optimistic updates aren't used here
+         * since a disappearing pipeline that reappears shortly again if the request fails, will provide for an
+         * unwanted user experience
+         */
         this.deletePipeline.emit(this.pipeline.id);
       });
     } catch (e) {
@@ -105,12 +118,9 @@ export class PipelineComponent implements OnInit {
       await loading.dismiss();
       await toast.present();
     }
-    await loading.dismiss();
-
-    this.deletePipeline.emit(this.pipeline.id);
   }
 
-  async presentAddToolPopover(ev: any) {
+  public async presentAddToolPopover(ev: any) {
     const addToolPopover = await this.popoverController.create({
       component: AddToolComponent,
       event: ev,
@@ -127,6 +137,14 @@ export class PipelineComponent implements OnInit {
     );
   }
 
+  /**
+   * Function that will assign each tool in he pipeline component a different colour, purely used to make the ui more
+   * interesting, an unfortunate bug is that all the pipeline's tools' colours are updated if a single pipeline's
+   * updateToolColours function is called.
+   * TODO : Find a different way of giving each tool a unique colour
+   *
+   * @private
+   */
   private updateToolColours() {
     const temp = Array.from(document.getElementsByClassName('tool-chip') as HTMLCollectionOf<HTMLElement>);
     temp.forEach(value => {
