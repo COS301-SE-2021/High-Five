@@ -1,8 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Image} from '../../models/image';
 import {ModalController} from '@ionic/angular';
-import {EditPipelineComponent} from '../edit-pipeline/edit-pipeline.component';
-import {FullscreenImageComponent} from '../fullscreen-image/fullscreen-image.component';
 
 @Component({
   selector: 'app-image-card',
@@ -35,15 +33,8 @@ export class ImageCardComponent implements OnInit {
   }
 
   async viewImageFullScreen() {
-    const modal = await this.modalController.create({
-      component: FullscreenImageComponent,
-      cssClass: 'viewFullScreenImage',
-      componentProps: {
-        imageSrc: this.image.url
-      }
-    });
-    modal.style.backgroundColor = 'rgba(0,0,0,0.85)';
-    return modal.present();
+    const newWindow = window.open(this.image.url,'_system');
+    newWindow.focus();
 
   }
 }
