@@ -15,6 +15,6 @@ namespace src.Subsystems.MediaStorage
         public Task<bool> DeleteVideo(DeleteVideoRequest request);
         public Task StoreImage(IFormFile image);
         public List<GetImageResponse> GetAllImages();
-        public bool DeleteImage(DeleteImageRequest request);
+        public Task<bool> DeleteImage(DeleteImageRequest request);
     }
 }

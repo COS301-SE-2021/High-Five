@@ -212,13 +212,13 @@ namespace src.Subsystems.MediaStorage
             {
                 throw new InvalidDataException("Invalid extension provided."); 
             }
-            var imageBlob = _storageManager.CreateNewFile(generatedName + extension, _imageContainerName).Result;
+            var imageBlob = _storageManager.CreateNewFile(generatedName + ".img", _imageContainerName).Result;
             var salt = "";
             while (imageBlob == null)
             {
                 salt += _storageManager.RandomString();
                 generatedName = _storageManager.HashMd5(image.FileName+salt);
-                imageBlob = _storageManager.CreateNewFile(generatedName + extension, _imageContainerName).Result;
+                imageBlob = _storageManager.CreateNewFile(generatedName + ".img", _imageContainerName).Result;
             }
 
             imageBlob.AddMetadata("originalName", image.FileName);
@@ -247,8 +247,8 @@ namespace src.Subsystems.MediaStorage
             var currentImage = new GetImageResponse();
             foreach(var listBlobItem in allFiles)
             {
-                currentImage.Id = listBlobItem.Name.Replace(".jpg", "");
-                if (listBlobItem.Properties != null && listBlobItem.Properties.LastModified != null)
+                currentImage.Id = listBlobItem.Name.Replace(".img", "");
+                if (listBlobItem.Properties is {LastModified: { }})
                     currentImage.DateStored = listBlobItem.Properties.LastModified.Value.DateTime;
                 var oldName = listBlobItem.GetMetaData("originalName");
                 currentImage.Name = oldName;
@@ -258,9 +258,26 @@ namespace src.Subsystems.MediaStorage
             return resultList;
         }
 
-        public bool DeleteImage(DeleteImageRequest request)
+        public async Task<bool> DeleteImage(DeleteImageRequest request)
         {
-            throw new NotImplementedException();
+            /*
+             *      Description:
+             * This function will attempt to delete an image with details as passed through by the request object.
+             * True is returned if the image was deleted successfully, false is returned if there exists no image
+             * with the details specified in the request object.
+             *
+             *      Parameters:
+             * -> request: the request object for this service contract.
+             */
+            
+            var imageFile = _storageManager.GetFile(request.Id + ".img",_videoContainerName).Result;
+            if (imageFile == null)
+            {
+                return false;
+            }
+            
+            await imageFile.Delete();
+            return true;
         }
         
     }
