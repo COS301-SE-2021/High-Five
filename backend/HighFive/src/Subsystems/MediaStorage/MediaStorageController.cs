@@ -20,7 +20,8 @@ namespace src.Subsystems.MediaStorage
 
         public override IActionResult GetAllImages()
         {
-            throw new NotImplementedException();
+            var result = _mediaStorageService.GetAllImages();
+            return StatusCode(200, result);
         }
 
         public override IActionResult GetAllVideos()
@@ -91,7 +92,11 @@ namespace src.Subsystems.MediaStorage
 
         public override IActionResult DeleteImage(DeleteImageRequest deleteImageRequest)
         {
-            throw new NotImplementedException();
+            var response = new EmptyObject {Success = true};
+            if (_mediaStorageService.DeleteImage(deleteImageRequest).Result) return StatusCode(200, response);
+            response.Success = false;
+            response.Message = "Video could not be deleted.";
+            return StatusCode(400, response);
         }
 
         public override IActionResult DeleteVideo(DeleteVideoRequest deleteVideoRequest)
