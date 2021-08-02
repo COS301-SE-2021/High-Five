@@ -202,13 +202,23 @@ namespace src.Subsystems.MediaStorage
             }
             //create storage name for file
             var generatedName = _storageManager.HashMd5(image.FileName);
-            var imageBlob = _storageManager.CreateNewFile(generatedName + ".jpg", _imageContainerName).Result;
+            var splitName = image.FileName.Split('.');
+            if (splitName.Length < 2)
+            {
+                throw new InvalidDataException("No file extension provided.");
+            }
+            var extension = "." + splitName[1];
+            if(!(extension.Equals(".jpg") || extension.Equals(".jpeg") || extension.Equals(".png")))
+            {
+                throw new InvalidDataException("Invalid extension provided."); 
+            }
+            var imageBlob = _storageManager.CreateNewFile(generatedName + extension, _imageContainerName).Result;
             var salt = "";
             while (imageBlob == null)
             {
                 salt += _storageManager.RandomString();
                 generatedName = _storageManager.HashMd5(image.FileName+salt);
-                imageBlob = _storageManager.CreateNewFile(generatedName + ".jpg", _imageContainerName).Result;
+                imageBlob = _storageManager.CreateNewFile(generatedName + extension, _imageContainerName).Result;
             }
 
             imageBlob.AddMetadata("originalName", image.FileName);
