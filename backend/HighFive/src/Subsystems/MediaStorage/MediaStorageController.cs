@@ -18,6 +18,11 @@ namespace src.Subsystems.MediaStorage
             _mediaStorageService = mediaStorageService;
         }
 
+        public override IActionResult GetAllImages()
+        {
+            throw new NotImplementedException();
+        }
+
         public override IActionResult GetAllVideos()
         {
             var result = _mediaStorageService.GetAllVideos();
@@ -36,7 +41,12 @@ namespace src.Subsystems.MediaStorage
              return StatusCode(400, fail);
          }
 
-        public override async Task<IActionResult> StoreVideo(IFormFile file)
+         public override IActionResult StoreImage(StoreImageRequest storeImageRequest)
+         {
+             throw new NotImplementedException();
+         }
+
+         public override async Task<IActionResult> StoreVideo(IFormFile file)
         {
             try
             {
@@ -59,7 +69,12 @@ namespace src.Subsystems.MediaStorage
                 return StatusCode(500, response500);
             }
         }
-        
+
+        public override IActionResult DeleteImage(DeleteImageRequest deleteImageRequest)
+        {
+            throw new NotImplementedException();
+        }
+
         public override IActionResult DeleteVideo(DeleteVideoRequest deleteVideoRequest)
         {
             var response = new EmptyObject {Success = true};
