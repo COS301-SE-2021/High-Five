@@ -54,7 +54,7 @@ paths:
                 $ref: '#/components/schemas/pingResponse'
 
   #==========================================================
-  #     VIDEO STORAGE SUBSYSTEM PATHING
+  #     MEDIA STORAGE SUBSYSTEM PATHING
   #==========================================================
 
   /media/storeVideo:
@@ -90,7 +90,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getAllVideosResponse'
-    
+
   /media/getVideo:
     post:
       tags:
@@ -118,12 +118,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
-  
+
   /media/deleteVideo:
     post:
       tags:
         - "MediaStorage"
-      description: Endpoint for Get Videos use case
+      description: Endpoint for Delete Video use case
       operationId: DeleteVideo
       requestBody:
         required: true
@@ -139,10 +139,64 @@ paths:
               schema:
                 $ref: '#/components/schemas/emptyObject'
 
+  /media/storeImage:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Store Image use case
+      operationId: StoreImage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/storeImageRequest'
+      responses:
+        "200":
+          description: Image has been stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/storeImageResponse'
+
+  /media/getAllImages:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Get All Images use case
+      operationId: GetAllImages
+      responses:
+        "200":
+          description: Returns a list of images in the blob storage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllImagesResponse'
+
+  /media/deleteImage:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Delete Image use case
+      operationId: DeleteImage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteImageRequest'
+      responses:
+        "200":
+          description: Image successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+  
   #==========================================================
   #     PIPELINES SUBSYSTEM PATHING
   #==========================================================
-  
+
   /pipelines/createPipeline:
     post:
       tags:
@@ -162,7 +216,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/createPipelineResponse'
-                
+
   /pipelines/getPipelines:
     post:
       tags:
@@ -176,7 +230,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getPipelinesResponse'
-                
+
   /pipelines/addTools:
     post:
       tags:
@@ -196,7 +250,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
-                
+
   /pipelines/removeTools:
     post:
       tags:
@@ -236,7 +290,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
-    
+
   /pipelines/getAllTools:
     post:
       tags:
@@ -252,7 +306,7 @@ paths:
                 type: array
                 items:
                   type: string
-  
+
   #==========================================================
   #     SCHEMAS
   #==========================================================
@@ -276,7 +330,7 @@ components:
           type: string
 
     #==========================================================
-    #     VIDEO STORAGE COMPONENTS
+    #     MEDIA STORAGE COMPONENTS
     #==========================================================
 
     storeVideoRequest:
@@ -285,6 +339,21 @@ components:
         file:
           type: string
           format: binary
+
+    storeImageRequest:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+
+    storeImageResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        imageId:
+          type: string
 
     storeVideoResponse:
       type: object
@@ -299,7 +368,7 @@ components:
       properties:
         fileName:
           type: string
-    
+
     getAllVideosResponse:
       type: object
       properties:
@@ -307,15 +376,30 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/videoMetaData'
-    
+
+    getAllImagesResponse:
+      type: object
+      properties:
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/getImageResponse'
+
     getVideoRequest:
       type: object
       properties:
         id:
           type: string
           description: unique id assossciated with a certain video stored on the blob storage
-    
+
     getVideoResponse:
+      type: object
+      properties:
+        file:
+          type: string
+          format: byte
+
+    getImageResponse:
       type: object
       properties:
         file:
@@ -347,22 +431,29 @@ components:
           type: string
           description: unique id assossciated with a certain video stored on the blob storage
 
+    deleteImageRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique id assossciated with a certain image stored on the blob storage
+
     #==========================================================
     #     PIPELINES COMPONENTS
     #==========================================================
-    
+
     createPipelineRequest:
       type: object
       properties:
         pipeline:
           $ref: '#/components/schemas/newPipeline'
-    
+
     createPipelineResponse:
       type: object
       properties:
         pipelineId:
           type: string
-    
+
     getPipelinesResponse:
       type: object
       properties:
@@ -370,7 +461,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/pipeline'
-    
+
     newPipeline:
       type: object
       properties:
@@ -381,7 +472,7 @@ components:
           items:
             type: string
             description: All the tools stored as strings
-    
+
     pipeline:
       type: object
       properties:
@@ -395,7 +486,7 @@ components:
           items:
             type: string
             description: All the tools stored as strings
-            
+
     addToolsRequest:
       type: object
       properties:
@@ -415,13 +506,13 @@ components:
           type: array
           items:
             type: string
-    
+
     deletePipelineRequest:
       type: object
       properties:
         pipelineId:
           type: string
-          
+
     #==========================================================
     #     GENERIC COMPONENTS
     #==========================================================
