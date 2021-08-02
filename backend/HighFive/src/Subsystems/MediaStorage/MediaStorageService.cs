@@ -22,7 +22,7 @@ namespace src.Subsystems.MediaStorage
 
         private IStorageManager _storageManager;
         private string _videoContainerName = "demo2videos";
-        private string _imageContainerName = "does not yet exist";
+        private string _imageContainerName = "demo2images";
 
         public MediaStorageService(IStorageManager storageManager)
         {
@@ -260,7 +260,7 @@ namespace src.Subsystems.MediaStorage
              * -> request: the request object for this service contract.
              */
             
-            var imageFile = _storageManager.GetFile(request.Id + ".img",_videoContainerName).Result;
+            var imageFile = _storageManager.GetFile(request.Id + ".img",_imageContainerName).Result;
             if (imageFile == null)
             {
                 return false;
