@@ -188,4 +188,5 @@ export class VideostorePage implements OnInit {
   uploadImage($event: Event) {
 
   }
+
 }

@@ -1,10 +1,5 @@
 <ion-content>
   <ion-segment [(ngModel)]="segment">
-    <ion-segment-button value="all">
-      <ion-label>
-        All
-      </ion-label>
-    </ion-segment-button>
     <ion-segment-button value="videos">
       <ion-label>
         Videos
@@ -18,9 +13,6 @@
   </ion-segment>
 
   <div [ngSwitch]="segment">
-    <div *ngSwitchCase="'all'">
-
-    </div>
     <div *ngSwitchCase="'videos'">
       <ion-list *ngIf="videosFetched">
         <ion-grid>
