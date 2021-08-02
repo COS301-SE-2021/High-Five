@@ -133,6 +133,9 @@ describe('ImageCardComponent', () => {
     expect(component.image.analysed).toBe(!analysed);
   });
 
+  /**
+   * Checks that the viewImageFullScreen image function is called once the button to open the image is clicked
+   */
   it('should call viewImageFullScreen method of component', () => {
     spyOn(component, 'viewImageFullScreen');
     const openImageFullScreenButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[1];
