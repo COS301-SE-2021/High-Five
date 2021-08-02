@@ -10,7 +10,7 @@ using Xunit;
 namespace tests.UnitTests
 {
     [Trait("Category","UnitTests")]
-    public class MediaStorageUnitTests 
+    public class MediaStorageUnitTests
     {
         private readonly IMediaStorageService _mockMediaStorageService;
         private readonly IStorageManager _mockStorageManager;
@@ -29,7 +29,7 @@ namespace tests.UnitTests
             var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
             Assert.NotEqual(videoCountBeforeInsert, videoCountAfterInsert);
         }
-        
+
         [Fact]
         public void TestStoreNullVideo()
         {
@@ -46,7 +46,7 @@ namespace tests.UnitTests
             var response = _mockMediaStorageService.GetAllVideos();
             Assert.NotNull(response);
         }
-        
+
         [Fact]
         public void TestDeleteVideoValidVideoId()
         {
@@ -65,7 +65,7 @@ namespace tests.UnitTests
             var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
             Assert.Equal(videoCountBeforeInsert, videoCountAfterInsert);
         }
-        
+
         [Fact]
         public void TestDeleteVideoInvalidVideoId()
         {
@@ -79,7 +79,7 @@ namespace tests.UnitTests
             var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
             Assert.Equal(videoCountBeforeInsert, videoCountAfterInsert);
         }
-        
+
         [Fact]
         public async Task TestGetVideoValidVideoId()
         {
@@ -92,7 +92,7 @@ namespace tests.UnitTests
             var response = getController.GetVideo(validVideoId);
             Assert.NotEmpty(response.FileContents);
         }
-        
+
         [Fact]
         public void TestGetVideoInvalidVideoId()
         {
@@ -101,6 +101,6 @@ namespace tests.UnitTests
             var response = getController.GetVideo(invalidVideoId);
             Assert.Empty(response.FileContents);
         }
-        
+
     }
 }
