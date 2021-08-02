@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Org.OpenAPITools.Models;
 using src.Storage;
 using static System.String;
@@ -30,9 +23,6 @@ namespace src.Subsystems.MediaStorage
         private IStorageManager _storageManager;
         private string _videoContainerName = "demo2videos";
         private string _imageContainerName = "does not yet exist";
-
-        //mock variables
-        private bool _mocked;
 
         public MediaStorageService(IStorageManager storageManager)
         {

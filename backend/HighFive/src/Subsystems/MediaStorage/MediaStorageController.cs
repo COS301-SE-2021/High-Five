@@ -41,9 +41,28 @@ namespace src.Subsystems.MediaStorage
              return StatusCode(400, fail);
          }
 
-         public override IActionResult StoreImage(StoreImageRequest storeImageRequest)
+         public override async Task<IActionResult> StoreImage(IFormFile file)
          {
-             throw new NotImplementedException();
+             try
+             {
+                 if (file == null)
+                 {
+                     var response400 = new EmptyObject() {Success = false, Message = "The uploaded file is null."};
+                     return StatusCode(400, response400);
+                 }
+
+                 var response = new StoreVideoResponse
+                 {
+                     Message = "Image stored successfully", Success = true
+                 };
+                 await _mediaStorageService.StoreImage(file);
+                 return StatusCode(200, response);
+             }
+             catch (Exception e)
+             {
+                 var response500 = new EmptyObject() {Success = false, Message = e.ToString()};
+                 return StatusCode(500, response500);
+             }
          }
 
          public override async Task<IActionResult> StoreVideo(IFormFile file)
