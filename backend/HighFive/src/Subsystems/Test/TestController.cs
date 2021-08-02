@@ -5,7 +5,7 @@ using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.Test
 {
-    [Authorize]
+    //[Authorize]
     public class TestController: TestApiController
     {
         public override IActionResult Echo(EchoRequest echoRequest)
