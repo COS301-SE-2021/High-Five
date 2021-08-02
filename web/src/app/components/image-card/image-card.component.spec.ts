@@ -64,7 +64,7 @@ describe('ImageCardComponent', () => {
    */
   it('should call onDeleteImage method', () => {
     spyOn(component, 'onDeleteImage');
-    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[1];
+    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[2];
     deleteButton.click();
     expect(component.onDeleteImage).toHaveBeenCalled();
   });
@@ -74,7 +74,7 @@ describe('ImageCardComponent', () => {
    */
   it('should emit the deleteImage event on click', () => {
     spyOn(component.deleteImage, 'emit');
-    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[1];
+    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[2];
     deleteButton.click();
     expect(component.deleteImage.emit).toHaveBeenCalled();
   });
@@ -84,7 +84,7 @@ describe('ImageCardComponent', () => {
    */
   it('deleteImage event should contain correct payload', () => {
     spyOn(component.deleteImage, 'emit');
-    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[1];
+    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[2];
     deleteButton.click();
     expect(component.deleteImage.emit).toHaveBeenCalledWith(mockImageModelNotAnalysed.id);
   });
@@ -131,6 +131,12 @@ describe('ImageCardComponent', () => {
     const analysed = component.image.analysed;
     component.analyseImage();
     expect(component.image.analysed).toBe(!analysed);
+  });
 
+  it('should call viewImageFullScreen method of component', () => {
+    spyOn(component, 'viewImageFullScreen');
+    const openImageFullScreenButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[1];
+    openImageFullScreenButton.click();
+    expect(component.viewImageFullScreen).toHaveBeenCalled();
   });
 });
