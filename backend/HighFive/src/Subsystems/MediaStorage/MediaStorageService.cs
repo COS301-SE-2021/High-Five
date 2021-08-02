@@ -28,7 +28,8 @@ namespace src.Subsystems.MediaStorage
          */
 
         private IStorageManager _storageManager;
-        private string _containerName = "demo2videos";
+        private string _videoContainerName = "demo2videos";
+        private string _imageContainerName = "does not yet exist";
 
         //mock variables
         private bool _mocked;
@@ -55,13 +56,13 @@ namespace src.Subsystems.MediaStorage
             }
             //create storage name for file
             var generatedName = _storageManager.HashMd5(video.FileName);
-            var videoBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
+            var videoBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _videoContainerName).Result;
             var salt = "";
             while (videoBlob == null)
             {
                 salt += _storageManager.RandomString();
                 generatedName = _storageManager.HashMd5(video.FileName+salt);
-                videoBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
+                videoBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _videoContainerName).Result;
             }
 
             videoBlob.AddMetadata("originalName", video.FileName);
@@ -91,7 +92,7 @@ namespace src.Subsystems.MediaStorage
             {
                 File.Create(thumbnailPath).Close();
             }
-            var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", _containerName).Result;
+            var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", _videoContainerName).Result;
             await thumbnailBlob.UploadFile(thumbnailPath);
 
             //get video duration in seconds
@@ -115,7 +116,7 @@ namespace src.Subsystems.MediaStorage
              */
 
             var videoId = request.Id + ".mp4";
-            var file = _storageManager.GetFile(videoId, _containerName).Result;
+            var file = _storageManager.GetFile(videoId, _videoContainerName).Result;
             if (file == null) return null;
             var videoFile = file.ToByteArray().Result;
             var response = new GetVideoResponse {File = videoFile};
@@ -130,7 +131,7 @@ namespace src.Subsystems.MediaStorage
              * This function will return all videos that a user has stored in the cloud storage.
              */
 
-            var allFiles = _storageManager.GetAllFilesInContainer(_containerName).Result;
+            var allFiles = _storageManager.GetAllFilesInContainer(_videoContainerName).Result;
             if (allFiles == null)
             {
                 return new List<VideoMetaData>();
@@ -172,13 +173,13 @@ namespace src.Subsystems.MediaStorage
              * -> request: the request object for this service contract.
              */
 
-            var videoFile = _storageManager.GetFile(request.Id + ".mp4",_containerName).Result;
+            var videoFile = _storageManager.GetFile(request.Id + ".mp4",_videoContainerName).Result;
             if (videoFile == null)
             {
                 return false;
             }
 
-            var thumbnail = _storageManager.GetFile(request.Id + "-thumbnail.jpg", _containerName).Result;
+            var thumbnail = _storageManager.GetFile(request.Id + "-thumbnail.jpg", _videoContainerName).Result;
             await videoFile.Delete();
             await thumbnail.Delete();
             return true;
@@ -201,13 +202,13 @@ namespace src.Subsystems.MediaStorage
             }
             //create storage name for file
             var generatedName = _storageManager.HashMd5(image.FileName);
-            var imageBlob = _storageManager.CreateNewFile(generatedName + ".jpg", _containerName).Result;
+            var imageBlob = _storageManager.CreateNewFile(generatedName + ".jpg", _imageContainerName).Result;
             var salt = "";
             while (imageBlob == null)
             {
                 salt += _storageManager.RandomString();
                 generatedName = _storageManager.HashMd5(image.FileName+salt);
-                imageBlob = _storageManager.CreateNewFile(generatedName + ".jpg", _containerName).Result;
+                imageBlob = _storageManager.CreateNewFile(generatedName + ".jpg", _imageContainerName).Result;
             }
 
             imageBlob.AddMetadata("originalName", image.FileName);
@@ -227,7 +228,7 @@ namespace src.Subsystems.MediaStorage
              * This function will return all images that a user has stored in the cloud storage.
              */
 
-            var allFiles = _storageManager.GetAllFilesInContainer(_containerName).Result;
+            var allFiles = _storageManager.GetAllFilesInContainer(_imageContainerName).Result;
             if (allFiles == null)
             {
                 return new List<GetImageResponse>();
@@ -251,10 +252,6 @@ namespace src.Subsystems.MediaStorage
         {
             throw new NotImplementedException();
         }
-
-        public void SetContainer(string container)
-        {
-            _containerName = container;
-        }
+        
     }
 }
