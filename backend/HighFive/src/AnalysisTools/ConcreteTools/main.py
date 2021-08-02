@@ -6,12 +6,12 @@ import matplotlib.pyplot as plt
 
 def draw(img, bbox, labels):
     for i, label in enumerate(labels):
+        if label=='car':
+            cv2.rectangle(img, (bbox[i][0],bbox[i][1]), (bbox[i][2],bbox[i][3]), (0,0,255), 6)
 
-        cv2.rectangle(img, (bbox[i][0],bbox[i][1]), (bbox[i][2],bbox[i][3]), (0,0,255), 6)
+            cv2.putText(img, label, (bbox[i][0],bbox[i][1]-10), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0,0,255), 6)
 
-        cv2.putText(img, label, (bbox[i][0],bbox[i][1]-10), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0,0,255), 6)
-
-        cv2.putText(img, "Car count: "+str(labels.count('car')), (10, 75), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 0, 255), 8)
+            cv2.putText(img, "Car count: "+str(labels.count('car')), (10, 75), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 0, 255), 8)
     return img
 
 
