@@ -184,6 +184,52 @@ namespace src.Subsystems.MediaStorage
             return true;
         }
 
+        public async Task StoreImage(IFormFile image)
+        {
+             /*
+             *      Description:
+             * This function will create a new blob file, containing the data from a provided image, and store
+             * it to the cloud storage.
+             *
+             *      Parameters:
+             * -> image: the image that will be stored on the cloud storage.
+             */
+
+            if (image == null)
+            {
+                return;
+            }
+            //create storage name for file
+            var generatedName = _storageManager.HashMd5(image.FileName);
+            var imageBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
+            var salt = "";
+            while (imageBlob == null)
+            {
+                salt += _storageManager.RandomString();
+                generatedName = _storageManager.HashMd5(image.FileName+salt);
+                imageBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
+            }
+
+            imageBlob.AddMetadata("originalName", image.FileName);
+            if (!IsNullOrEmpty(salt))
+            {
+                imageBlob.AddMetadata("salt", salt);
+            }
+
+            //upload to Azure Blob Storage
+            await imageBlob.UploadFile(image);
+        }
+
+        public List<GetImageResponse> GetAllImages()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteImage(DeleteImageRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SetContainer(string container)
         {
             _containerName = container;
