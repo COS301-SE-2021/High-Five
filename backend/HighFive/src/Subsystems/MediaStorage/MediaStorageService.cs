@@ -201,13 +201,13 @@ namespace src.Subsystems.MediaStorage
             }
             //create storage name for file
             var generatedName = _storageManager.HashMd5(image.FileName);
-            var imageBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
+            var imageBlob = _storageManager.CreateNewFile(generatedName + ".jpg", _containerName).Result;
             var salt = "";
             while (imageBlob == null)
             {
                 salt += _storageManager.RandomString();
                 generatedName = _storageManager.HashMd5(image.FileName+salt);
-                imageBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
+                imageBlob = _storageManager.CreateNewFile(generatedName + ".jpg", _containerName).Result;
             }
 
             imageBlob.AddMetadata("originalName", image.FileName);
@@ -222,7 +222,29 @@ namespace src.Subsystems.MediaStorage
 
         public List<GetImageResponse> GetAllImages()
         {
-            throw new NotImplementedException();
+            /*
+             *      Description:
+             * This function will return all images that a user has stored in the cloud storage.
+             */
+
+            var allFiles = _storageManager.GetAllFilesInContainer(_containerName).Result;
+            if (allFiles == null)
+            {
+                return new List<GetImageResponse>();
+            }
+            var resultList = new List<GetImageResponse>();
+            var currentImage = new GetImageResponse();
+            foreach(var listBlobItem in allFiles)
+            {
+                currentImage.Id = listBlobItem.Name.Replace(".jpg", "");
+                if (listBlobItem.Properties != null && listBlobItem.Properties.LastModified != null)
+                    currentImage.DateStored = listBlobItem.Properties.LastModified.Value.DateTime;
+                var oldName = listBlobItem.GetMetaData("originalName");
+                currentImage.Name = oldName;
+                currentImage.File = listBlobItem.ToByteArray().Result;
+                resultList.Add(currentImage);
+            }
+            return resultList;
         }
 
         public bool DeleteImage(DeleteImageRequest request)
