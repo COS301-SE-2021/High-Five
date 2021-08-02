@@ -5,7 +5,7 @@ import {Endpoints} from '../../../constants/endpoints';
 @Injectable({
   providedIn: 'root'
 })
-export class VideouploadService {
+export class MediaService {
 
   constructor(private http: HttpClient, private endpoints: Endpoints) { }
 
@@ -46,7 +46,7 @@ export class VideouploadService {
       'Content-Type' : 'application/json'
     });
 
-    this.http.post<any>(this.endpoints.labels.deleteVideo, JSON.stringify({id: vidId}), {headers}).subscribe(data => {
+    this.http.post<any>(this.endpoints.labels.deleteVideo,{id: vidId}, {headers}).subscribe(data => {
       subscription(data);
     });
   }
