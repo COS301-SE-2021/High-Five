@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Org.OpenAPITools.Models;
 using src.Storage;
 using static System.String;
@@ -28,10 +21,8 @@ namespace src.Subsystems.MediaStorage
          */
 
         private IStorageManager _storageManager;
-        private string _containerName = "demo2videos";
-
-        //mock variables
-        private bool _mocked;
+        private string _videoContainerName = "demo2videos";
+        private string _imageContainerName = "demo2images";
 
         public MediaStorageService(IStorageManager storageManager)
         {
@@ -55,13 +46,13 @@ namespace src.Subsystems.MediaStorage
             }
             //create storage name for file
             var generatedName = _storageManager.HashMd5(video.FileName);
-            var videoBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
+            var videoBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _videoContainerName).Result;
             var salt = "";
             while (videoBlob == null)
             {
                 salt += _storageManager.RandomString();
                 generatedName = _storageManager.HashMd5(video.FileName+salt);
-                videoBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _containerName).Result;
+                videoBlob = _storageManager.CreateNewFile(generatedName + ".mp4", _videoContainerName).Result;
             }
 
             videoBlob.AddMetadata("originalName", video.FileName);
@@ -91,7 +82,7 @@ namespace src.Subsystems.MediaStorage
             {
                 File.Create(thumbnailPath).Close();
             }
-            var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", _containerName).Result;
+            var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", _videoContainerName).Result;
             await thumbnailBlob.UploadFile(thumbnailPath);
 
             //get video duration in seconds
@@ -115,7 +106,7 @@ namespace src.Subsystems.MediaStorage
              */
 
             var videoId = request.Id + ".mp4";
-            var file = _storageManager.GetFile(videoId, _containerName).Result;
+            var file = _storageManager.GetFile(videoId, _videoContainerName).Result;
             if (file == null) return null;
             var videoFile = file.ToByteArray().Result;
             var response = new GetVideoResponse {File = videoFile};
@@ -130,7 +121,7 @@ namespace src.Subsystems.MediaStorage
              * This function will return all videos that a user has stored in the cloud storage.
              */
 
-            var allFiles = _storageManager.GetAllFilesInContainer(_containerName).Result;
+            var allFiles = _storageManager.GetAllFilesInContainer(_videoContainerName).Result;
             if (allFiles == null)
             {
                 return new List<VideoMetaData>();
@@ -172,30 +163,112 @@ namespace src.Subsystems.MediaStorage
              * -> request: the request object for this service contract.
              */
 
-            var videoFile = _storageManager.GetFile(request.Id + ".mp4",_containerName).Result;
+            var videoFile = _storageManager.GetFile(request.Id + ".mp4",_videoContainerName).Result;
             if (videoFile == null)
             {
                 return false;
             }
 
-            var thumbnail = _storageManager.GetFile(request.Id + "-thumbnail.jpg", _containerName).Result;
+            var thumbnail = _storageManager.GetFile(request.Id + "-thumbnail.jpg", _videoContainerName).Result;
             await videoFile.Delete();
             await thumbnail.Delete();
             return true;
         }
 
-        public void Mock(bool mocked)
+        public async Task StoreImage(IFormFile image)
+        {
+             /*
+             *      Description:
+             * This function will create a new blob file, containing the data from a provided image, and store
+             * it to the cloud storage.
+             *
+             *      Parameters:
+             * -> image: the image that will be stored on the cloud storage.
+             */
+
+            if (image == null)
+            {
+                return;
+            }
+            //create storage name for file
+            var generatedName = _storageManager.HashMd5(image.FileName);
+            var splitName = image.FileName.Split('.');
+            if (splitName.Length < 2)
+            {
+                throw new InvalidDataException("No file extension provided.");
+            }
+            var extension = "." + splitName[1];
+            if(!(extension.Equals(".jpg") || extension.Equals(".jpeg") || extension.Equals(".png")))
+            {
+                throw new InvalidDataException("Invalid extension provided.");
+            }
+            var imageBlob = _storageManager.CreateNewFile(generatedName + ".img", _imageContainerName).Result;
+            var salt = "";
+            while (imageBlob == null)
+            {
+                salt += _storageManager.RandomString();
+                generatedName = _storageManager.HashMd5(image.FileName+salt);
+                imageBlob = _storageManager.CreateNewFile(generatedName + ".img", _imageContainerName).Result;
+            }
+
+            imageBlob.AddMetadata("originalName", image.FileName);
+            if (!IsNullOrEmpty(salt))
+            {
+                imageBlob.AddMetadata("salt", salt);
+            }
+
+            //upload to Azure Blob Storage
+            await imageBlob.UploadFile(image);
+        }
+
+        public List<GetImageResponse> GetAllImages()
         {
             /*
              *      Description:
-             * This function will replace the service's storage manager with a mocked storage manager that will
-             * work with a mocked in-memory storage instead of the actual cloud storage. Will be used during testing.
+             * This function will return all images that a user has stored in the cloud storage.
              */
+
+            var allFiles = _storageManager.GetAllFilesInContainer(_imageContainerName).Result;
+            if (allFiles == null)
+            {
+                return new List<GetImageResponse>();
+            }
+            var resultList = new List<GetImageResponse>();
+            var currentImage = new GetImageResponse();
+            foreach(var listBlobItem in allFiles)
+            {
+                currentImage.Id = listBlobItem.Name.Replace(".img", "");
+                if (listBlobItem.Properties is {LastModified: { }})
+                    currentImage.DateStored = listBlobItem.Properties.LastModified.Value.DateTime;
+                var oldName = listBlobItem.GetMetaData("originalName");
+                currentImage.Name = oldName;
+                currentImage.File = listBlobItem.ToByteArray().Result;
+                resultList.Add(currentImage);
+            }
+            return resultList;
         }
 
-        public void SetContainer(string container)
+        public async Task<bool> DeleteImage(DeleteImageRequest request)
         {
-            _containerName = container;
+            /*
+             *      Description:
+             * This function will attempt to delete an image with details as passed through by the request object.
+             * True is returned if the image was deleted successfully, false is returned if there exists no image
+             * with the details specified in the request object.
+             *
+             *      Parameters:
+             * -> request: the request object for this service contract.
+             */
+
+            var imageFile = _storageManager.GetFile(request.Id + ".img",_imageContainerName).Result;
+            if (imageFile == null)
+            {
+                return false;
+            }
+
+            await imageFile.Delete();
+            return true;
         }
+
     }
 }
