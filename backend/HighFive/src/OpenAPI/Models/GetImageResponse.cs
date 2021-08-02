@@ -27,6 +27,25 @@ namespace Org.OpenAPITools.Models
     public class GetImageResponse : IEquatable<GetImageResponse>
     {
         /// <summary>
+        /// Gets or Sets Id
+        /// </summary>
+        [DataMember(Name="id", EmitDefaultValue=false)]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Name
+        /// </summary>
+        [DataMember(Name="name", EmitDefaultValue=false)]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Zring
+        /// </summary>
+        /// <value>The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Zring</value>
+        [DataMember(Name="dateStored", EmitDefaultValue=false)]
+        public DateTime DateStored { get; set; }
+
+        /// <summary>
         /// Gets or Sets File
         /// </summary>
         [DataMember(Name="file", EmitDefaultValue=false)]
@@ -40,6 +59,9 @@ namespace Org.OpenAPITools.Models
         {
             var sb = new StringBuilder();
             sb.Append("class GetImageResponse {\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  DateStored: ").Append(DateStored).Append("\n");
             sb.Append("  File: ").Append(File).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -78,6 +100,21 @@ namespace Org.OpenAPITools.Models
 
             return 
                 (
+                    Id == other.Id ||
+                    Id != null &&
+                    Id.Equals(other.Id)
+                ) && 
+                (
+                    Name == other.Name ||
+                    Name != null &&
+                    Name.Equals(other.Name)
+                ) && 
+                (
+                    DateStored == other.DateStored ||
+                    DateStored != null &&
+                    DateStored.Equals(other.DateStored)
+                ) && 
+                (
                     File == other.File ||
                     File != null &&
                     File.Equals(other.File)
@@ -94,6 +131,12 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
+                    if (Id != null)
+                    hashCode = hashCode * 59 + Id.GetHashCode();
+                    if (Name != null)
+                    hashCode = hashCode * 59 + Name.GetHashCode();
+                    if (DateStored != null)
+                    hashCode = hashCode * 59 + DateStored.GetHashCode();
                     if (File != null)
                     hashCode = hashCode * 59 + File.GetHashCode();
                 return hashCode;
