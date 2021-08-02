@@ -27,8 +27,7 @@ namespace src.Utils.Controller
         
         public override FileContentResult GetVideo(string videoId)
         {
-            var file = GetFileBlob(videoId).Result;
-            
+            var file = GetFileBlob(videoId).Result ?? Array.Empty<byte>();
             return File(file, "application/octet-stream");
             //byte[] decodedByteArray =Convert.FromBase64String (Encoding.ASCII.GetString (file));
             //return decodedByteArray;

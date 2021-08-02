@@ -12,7 +12,7 @@ namespace src.Storage
         public string GetMetaData(string key);
         public Task UploadFile(IFormFile newFile);
         public Task UploadFile(string path);
-        public void UploadText(string text);
+        public Task UploadText(string text);
         public Task Delete();
         public Task<bool> Exists();
         public Task<byte[]> ToByteArray();

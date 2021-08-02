@@ -58,7 +58,7 @@ namespace src.Subsystems.Pipelines
             return response;
         }
 
-        public CreatePipelineResponse CreatePipeline(CreatePipelineRequest request)
+        public async Task<CreatePipelineResponse> CreatePipeline(CreatePipelineRequest request)
         {
             /*
              *      Description:
@@ -91,8 +91,8 @@ namespace src.Subsystems.Pipelines
                 Name = pipeline.Name,
                 Tools = pipeline.Tools
             };
-            UploadPipelineToStorage(newPipeline, blobFile);
-            
+            await UploadPipelineToStorage(newPipeline, blobFile);
+
             var response = new CreatePipelineResponse()
             {
                 PipelineId = generatedName
@@ -100,7 +100,7 @@ namespace src.Subsystems.Pipelines
             return response;
         }
 
-        public bool AddTools(AddToolsRequest request)
+        public async Task<bool> AddTools(AddToolsRequest request)
         {
             /*
              *      Description:
@@ -122,11 +122,11 @@ namespace src.Subsystems.Pipelines
             var pipelineToolset = pipeline.Tools;
             pipelineToolset.AddRange(request.Tools);
             pipeline.Tools = pipelineToolset.Distinct().ToList();
-            UploadPipelineToStorage(pipeline, file);
+            await UploadPipelineToStorage(pipeline, file);
             return true;
         }
 
-        public bool RemoveTools(RemoveToolsRequest request)
+        public async Task<bool> RemoveTools(RemoveToolsRequest request)
         {
             /*
              *      Description:
@@ -151,7 +151,7 @@ namespace src.Subsystems.Pipelines
                 pipelineToolset.Remove(tool);
             }
             pipeline.Tools = pipelineToolset;
-            UploadPipelineToStorage(pipeline, file);
+            await UploadPipelineToStorage(pipeline, file);
             return true;
         }
 
@@ -197,7 +197,7 @@ namespace src.Subsystems.Pipelines
             return JsonConvert.DeserializeObject<Pipeline>(jsonData);
         }
 
-        private static void UploadPipelineToStorage(Pipeline pipeline, IBlobFile blobFile)
+        private static async Task UploadPipelineToStorage(Pipeline pipeline, IBlobFile blobFile)
         {
             /*
              *      Description:
@@ -211,7 +211,7 @@ namespace src.Subsystems.Pipelines
              */
 
             var jsonData = JsonConvert.SerializeObject(pipeline);
-            blobFile.UploadText(jsonData);
+            await blobFile.UploadText(jsonData);
         }
 
 
