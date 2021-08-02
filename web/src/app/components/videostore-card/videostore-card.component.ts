@@ -2,8 +2,8 @@ import {Component, Input, OnInit} from '@angular/core';
 import {AlertController, ModalController, Platform, ToastController} from '@ionic/angular';
 import {VideostreamCardComponent} from '../videostream-card/videostream-card.component';
 import {VideoMetaData} from '../../models/videoMetaData';
-import {VideouploadService} from '../../services/videoupload/videoupload.service';
 import {VideoStoreCardConstants} from '../../../constants/components/videostore-card-constants';
+import {MediaService} from '../../services/media/media.service';
 
 @Component({
   selector: 'app-videostore-card',
@@ -15,7 +15,7 @@ export class VideostoreCardComponent implements OnInit {
   @Input() deleter: any;
 
   constructor(public platform: Platform, private modal: ModalController,
-              private videoService: VideouploadService, private alertController: AlertController,
+              private mediaService: MediaService, private alertController: AlertController,
               private toastController: ToastController,
               private constants: VideoStoreCardConstants) { }
 
@@ -65,7 +65,7 @@ export class VideostoreCardComponent implements OnInit {
     const { role } = await alert.onDidDismiss();
 
     if (role === this.constants.alertLabels.buttonsYes.role) {
-      this.videoService.deleteVideo(vidId, async data => {
+      this.mediaService.deleteVideo(vidId, async data => {
         console.log(data);
         const toast = await this.toastController.create({
           cssClass: 'alert-style',
