@@ -7,8 +7,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WelcomeCardComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+    //Nothing added here yet
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+    //Nothing added here yet
+
+  }
 
 }
