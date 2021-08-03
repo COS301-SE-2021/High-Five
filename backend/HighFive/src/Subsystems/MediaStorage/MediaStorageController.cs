@@ -12,7 +12,7 @@ using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.MediaStorage
 {
-    [Authorize]
+    //[Authorize]
     public class MediaStorageController : MediaStorageApiController
     {
         private readonly IMediaStorageService _mediaStorageService;
@@ -147,6 +147,8 @@ namespace src.Subsystems.MediaStorage
             var tokenString = HttpContext.GetTokenAsync("access_token").Result;
             if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
             {
+                _mediaStorageService.SetBaseContainer("demo2"); // This line of code is for contingency's sake, to not break code still working on the old Storage system.
+                //TODO: Remove above code when front-end is compatible with new storage structure.
                 return;
             }
             var handler = new JwtSecurityTokenHandler();

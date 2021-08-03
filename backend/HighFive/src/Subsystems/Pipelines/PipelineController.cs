@@ -8,7 +8,7 @@ using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.Pipelines
 {
-    [Authorize]
+    //[Authorize]
     public class PipelineController: PipelinesApiController
     {
         private readonly IPipelineService _pipelineService;
@@ -102,6 +102,8 @@ namespace src.Subsystems.Pipelines
             var tokenString = HttpContext.GetTokenAsync("access_token").Result;
             if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
             {
+                _pipelineService.SetBaseContainer("demo2"); // This line of code is for contingency's sake, to not break code still working on the old Storage system.
+                //TODO: Remove above code when front-end is compatible with new storage structure.
                 return;
             }
             var handler = new JwtSecurityTokenHandler();

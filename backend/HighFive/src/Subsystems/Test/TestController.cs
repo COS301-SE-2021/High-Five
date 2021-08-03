@@ -7,7 +7,7 @@ using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.Test
 {
-    [Authorize]
+    //[Authorize]
     public class TestController: TestApiController
     {
         public override IActionResult Echo(EchoRequest echoRequest)
@@ -26,6 +26,7 @@ namespace src.Subsystems.Test
             }
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
+            response.Message += " User id: " + jsonToken.Subject;
             return StatusCode(200, response);
         }
         
