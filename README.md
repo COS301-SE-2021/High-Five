@@ -113,11 +113,11 @@ High Five is a real-time image analysis platform for images and videos taken by 
 
 | **Team Member** | **Profiles** | **Skills/Interest** 
 | :-----: | :-----: | :-----: |  
-| ![Ruan Bieldt](https://media-exp1.licdn.com/dms/image/C5603AQE9cfut8cq9Xw/profile-displayphoto-shrink_200_200/0/1617882468520?e=1624492800&v=beta&t=k51kjWqwab9nIQnd3AxnhpOTVN6gsYmDcTm2s-v7tBs "Ruan Bieldt") <br/> Ruan Bieldt <br/> u13145992 <br/> (Team Leader) | [GitHub](https://github.com/ruan-bieldt) <br/> [Profile Page](https://ruan-bieldt.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/ruan-bieldt-9473ab91/) <br/> | <ul>Electronics<li>IoT</li>DataStructures and Algorithms<li>Coding</li><li>Problem Solving</li><li>Swimming</li></ul> |
+| ![Ruan Bieldt](https://media-exp1.licdn.com/dms/image/C5603AQE9cfut8cq9Xw/profile-displayphoto-shrink_200_200/0/1617882468520?e=1631145600&v=beta&t=q7KveO7Zf6YoACJZG6gyE6s7LlZV3RqFKxUewU18RgA "Ruan Bieldt") <br/> Ruan Bieldt <br/> u13145992 <br/> (Team Leader) | [GitHub](https://github.com/ruan-bieldt) <br/> [Profile Page](https://ruan-bieldt.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/ruan-bieldt-9473ab91/) <br/> | <ul>Electronics<li>IoT</li>DataStructures and Algorithms<li>Coding</li><li>Problem Solving</li><li>Swimming</li></ul> |
 | ![Hannes Kirsten](https://media-exp1.licdn.com/dms/image/C4D03AQHm-LyvastazQ/profile-displayphoto-shrink_200_200/0/1619127993907?e=1628121600&v=beta&t=vXTsVSzCSSZpE9wlICpK_5pSZu-vIxuu4Xg9Hn4i5hY "Hannes Kirsten") <br/> Hannes Kirsten <br/> u19049014 | [GitHub](https://github.com/NJHKirsten) <br/> [Profile Page](https://njhkirsten.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/nicolaas-kirsten-362a7020b/) <br/> | -Artificial Intelligence<br/>-Mathematics<br/>-System Design |
 | ![Firstname Lastname](https://media-exp1.licdn.com/dms/image/C5603AQE55Xwc59w5xg/profile-displayphoto-shrink_200_200/0/1548346645069?e=1628121600&v=beta&t=1XSvyk2OLGvT3qe10dRgh9RX-h3anHLf6pWSBm-5Doo "Kyle Barry") <br/> Kyle Barry <br/> u19232510 | [GitHub](https://github.com/darthcerellius) <br/> [Profile Page](https://newideassolutions.com) <br/> [LinkedIn](https://www.linkedin.com/in/kyle-barry-886237179/) <br/> | Python, Java and Javascript programming <br> Docker <br> Linux <br> Ionic frontend development|
-| ![Jeanré du Plessis](https://media-exp1.licdn.com/dms/image/C4D03AQH0JfygrUsB6A/profile-displayphoto-shrink_200_200/0/1571296535690?e=1628121600&v=beta&t=0hq_3qBvVLCF_5rVeMiHtJMzmJJjPeXghWa_66YD9Go "Jeanré du Plessis") <br/> Jeanré du Plessis <br/> u19017970 <br/>| [GitHub](https://github.com/JayXD-2K) <br/> [Profile Page](https://jayxd-2k.github.io/)  <br/> [LinkedIn](https://www.linkedin.com/in/jdp2k/) <br/> | - MTB <br/> - Road Cycling <br/> - Playing Around With Django <br/> - Golfing <br/> |
-| ![Firstname Lastname](https://media-exp1.licdn.com/dms/image/C4D03AQGC-ldtLJjoow/profile-displayphoto-shrink_200_200/0/1618479763493?e=1623888000&v=beta&t=WVhTWbYzzf_wrM30LllQCd7zzSq-_wekgdbfFQIfCcQ "Marco Oosthuizen") <br/> Marco Oosthuizen <br/> u19012013 | [GitHub](https://github.com/Marco-Oosthuizen) <br/> [Profile Page](https://marco-oosthuizen.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/marco-oosthuizen-369b9320b/) <br/> | Artificial Intelligence, Theoretical Computer Science, Complexity Theory, Discrete Mathematics |
+| ![Jeanré du Plessis](https://media-exp1.licdn.com/dms/image/C4D03AQEl8wcA51FtFA/profile-displayphoto-shrink_200_200/0/1624563981161?e=1631145600&v=beta&t=iLdc_dkifiIcgqgKItv0BpkQJg5SBXnRKo6OifHJeHo "Jeanré du Plessis") <br/> Jeanré du Plessis <br/> u19017970 <br/>| [GitHub](https://github.com/JayXD-2K) <br/> [Profile Page](https://jayxd-2k.github.io/)  <br/> [LinkedIn](https://www.linkedin.com/in/jdp2k/) <br/> | - MTB <br/> - Road Cycling <br/> - Playing Around With Django <br/> - Golfing <br/> |
+| ![Marco Oosthuizen](https://media-exp1.licdn.com/dms/image/C4D03AQGC-ldtLJjoow/profile-displayphoto-shrink_200_200/0/1618479763493?e=1631145600&v=beta&t=6IiQ2QegUibMlPqoiVKwq-tfWya4VK_Ra9kXtJNqmoE "Marco Oosthuizen") <br/> Marco Oosthuizen <br/> u19012013 | [GitHub](https://github.com/Marco-Oosthuizen) <br/> [Profile Page](https://marco-oosthuizen.github.io/) <br/> [LinkedIn](https://www.linkedin.com/in/marco-oosthuizen-369b9320b/) <br/> | Artificial Intelligence, Theoretical Computer Science, Complexity Theory, Discrete Mathematics |
 
 ---
 
@@ -145,11 +145,18 @@ of concerns. Feature branches are used for both front-end and back-end to develo
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]<br><br>
+
+#### Builds
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Ionic%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/ionic.yml)
 <br>
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/.NET%20Core%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/aspnet.yml)
 <br>
+#### Testing
+[![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/.NET%20Core%20Unit%20Tests/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/aspnet_unittests.yml)
 <br>
+[![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/.NET%20Core%20Integration%20Tests/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/aspnet_integrationtests.yml)
+<br>
+#### Monitoring
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fdiscord.com%2Fchannels%2F841566124087705620%2F841566124087705625%2F848982894759641118)](https://high5app.azurewebsites.net/)
 <br>
 <!-- MARKDOWN LINKS & IMAGES -->

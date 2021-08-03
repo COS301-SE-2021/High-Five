@@ -8,7 +8,10 @@ import {Platform} from '@ionic/angular';
 })
 export class ScreenSizeServiceService {
   private isDesktop = new BehaviorSubject(false);
-  constructor() { }
+  constructor() {
+    //Nothing added here yet
+
+  }
 
   onPlatformChange(platform: Platform){
     if (platform.is('desktop')){
