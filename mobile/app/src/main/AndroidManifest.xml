@@ -17,7 +17,8 @@
             android:label="@string/title_activity_login" />
         <activity
             android:name=".view.activities.SplashActivity"
-            android:theme="@style/Theme.HighFive.Splash">
+            android:theme="@style/Theme.HighFive.Splash"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +27,8 @@
         </activity>
         <activity
             android:name=".view.activities.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

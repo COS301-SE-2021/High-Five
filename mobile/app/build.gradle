@@ -65,7 +65,13 @@ dependencies {
     implementation "com.google.devtools.ksp:symbol-processing-api:$ksp_version"
     implementation "androidx.legacy:legacy-support-v4:$legacy_version"
     implementation "com.android.volley:volley:$volley_version"
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_converter_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit_version"
     //kapt 'groupId:artifactId:version'
+
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$junit_ext_version"

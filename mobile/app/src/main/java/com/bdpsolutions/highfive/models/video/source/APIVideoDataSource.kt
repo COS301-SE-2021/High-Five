@@ -1,41 +1,52 @@
 package com.bdpsolutions.highfive.models.video.source
 
-import com.android.volley.Request
-import com.android.volley.toolbox.*
+import android.util.Log
+import com.bdpsolutions.highfive.constants.Endpoints
 import com.bdpsolutions.highfive.models.video.model.VideoPreview
+import com.bdpsolutions.highfive.models.video.source.retrofit.VideoPreviewSource
 import com.bdpsolutions.highfive.utils.*
-import java.lang.Exception
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.collections.ArrayList
+import com.google.gson.*
+import retrofit2.*
+import retrofit2.converter.gson.GsonConverterFactory
 
 class APIVideoDataSource : VideoDataSource {
     override fun getVideoPreviewData(callback: (Result<List<VideoPreview>>) -> Unit) {
 
-        val request = JsonArrayRequest(Request.Method.POST, "https://high5api.azurewebsites.net/media/getAllVideos", null,
-            { response ->
-                val videoData = ArrayList<VideoPreview>()
-                val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        // create a deserializer to create the VideoPreview objects
+        val gson = GsonBuilder()
+            .registerTypeHierarchyAdapter(
+                VideoPreview::class.java,
+                RetrofitDeserializers.VideoPreviewDeserializer
+            ).create()
 
-                for (i in 0..response.length()-1) {
-                    videoData.add(
-                        VideoPreview(
-                            id = response.getJSONObject(i).getString("id"),
-                            name = response.getJSONObject(i).getString("name"),
-                            duration = response.getJSONObject(i).getLong("duration"),
-                            dateStored = format.parse(response.getJSONObject(i).getString("dateStored"))!!,
-                            thumbnail = response.getJSONObject(i).getString("thumbnail")
-                        )
-                    )
+        // create Retrofit object and fetch data
+        val retrofit = Retrofit.Builder()
+            .baseUrl(Endpoints.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+
+        val videoSource = retrofit.create(VideoPreviewSource::class.java)
+        val call = videoSource.getVideoPreviewData()
+
+        // Enqueue callback object that will call the callback function passed to this function
+        call.enqueue(object : Callback<List<VideoPreview>> {
+
+            override fun onResponse(
+                call: Call<List<VideoPreview>>,
+                response: Response<List<VideoPreview>>
+            ) {
+
+                if (response.isSuccessful) {
+                    callback(Result.Success(response.body()!!))
+                } else {
+                    Log.e("Error", response.message())
                 }
+            }
 
-                callback(Result.Success(videoData))
-            },
-            { error -> Result.Error(Exception(error.message)) })
-
-        VolleyNetworkManager.getInstance(null).addToRequestQueue(request)
+            override fun onFailure(call: Call<List<VideoPreview>>, t: Throwable) {
+                throw t
+            }
+        })
     }
 
     override fun addPreviewData(vararg data: VideoPreview) {

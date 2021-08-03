@@ -18,6 +18,7 @@ sealed class Result<out T : Any> {
 
     fun getResult(): T {
         if (this is Success<*>) {
+            @Suppress("UNCHECKED_CAST")
             return data as T
         }
         throw java.lang.Exception("Cannot get data from failed result")

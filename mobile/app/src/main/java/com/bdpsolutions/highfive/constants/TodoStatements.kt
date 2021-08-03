@@ -1,5 +1,5 @@
 package com.bdpsolutions.highfive.constants
 
 object TodoStatements {
-    val NOT_YET_IMPLEMENTED: String = "Not yet implemented"
+    const val NOT_YET_IMPLEMENTED: String = "Not yet implemented"
 }
