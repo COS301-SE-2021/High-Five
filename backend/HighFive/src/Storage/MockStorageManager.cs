@@ -160,6 +160,15 @@ namespace src.Storage
             return true;
         }
 
+        public string GetCurrentContainer()
+        {
+            /*
+             *      Description:
+             * Returns the current baseContainer. Or in the case of this mock, simply an empty string.
+             */
+            return "";
+        }
+
         public string RandomString()
         {
             /*

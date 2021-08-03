@@ -68,8 +68,11 @@ namespace src.Storage
              *      or may not be in storage. The creation of the file itself will be handled by the
              *      CreateNewFile function.
              */
-            fileName = container + "/" + fileName;
-            
+            if (!container.Equals(""))
+            {
+                fileName = container + "/" + fileName;
+            }
+
             if (create)
             {
                 return new BlobFile(_cloudBlobContainer.GetBlockBlobReference(fileName));
@@ -190,6 +193,16 @@ namespace src.Storage
              * This function returns whether or not the storage manager's base container has been set yet.
              */
             return !_baseContainer.Equals("unset");
+        }
+
+        public string GetCurrentContainer()
+        {
+            /*
+             *      Description:
+             * Returns the current baseContainer;
+             */
+            
+            return _baseContainer;
         }
 
         public string RandomString()
