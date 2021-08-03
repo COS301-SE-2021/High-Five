@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Org.OpenAPITools.Models;
 using src.Storage;
@@ -268,6 +270,24 @@ namespace src.Subsystems.MediaStorage
             
             await imageFile.Delete();
             return true;
+        }
+        
+        public void SetBaseContainer(string id)
+        {
+            /*
+             *      Description:
+             * This function tests if a baseContainer has been set yet, it will be called before any of the
+             * other StorageManager method code executes. If a base container has already been set, this code
+             * will do nothing, else it will set the base container to the user's Azure AD B2C unique object
+             * id - hence pointing towards the user's own container within the storage.
+             *
+             *      Parameters:
+             * -> id: the user's id that will be used as the container name.
+             */
+            if (!_storageManager.IsContainerSet())
+            {
+                _storageManager.SetBaseContainer(id);
+            }
         }
         
     }

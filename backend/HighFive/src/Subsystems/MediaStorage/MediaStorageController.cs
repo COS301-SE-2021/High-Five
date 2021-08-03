@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
@@ -16,6 +18,10 @@ namespace src.Subsystems.MediaStorage
         public MediaStorageController(IMediaStorageService mediaStorageService)
         {
             _mediaStorageService = mediaStorageService;
+            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
+            mediaStorageService.SetBaseContainer(jsonToken.Subject);
         }
 
         public override IActionResult GetAllImages()
