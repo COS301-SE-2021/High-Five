@@ -5,6 +5,6 @@ import com.bdpsolutions.highfive.utils.Result
 
 interface VideoDataSource {
     fun getVideoPreviewData(callback: (Result<List<VideoPreview>>) -> Unit)
-    fun addPreviewData(vararg data: VideoPreview)
-    fun deletePreviewData(id: String)
+    fun addPreviewData(vararg data: VideoPreview) {}
+    fun deletePreviewData(id: String) {}
 }

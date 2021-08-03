@@ -14,8 +14,8 @@ import com.bdpsolutions.highfive.utils.Result
  * source is used for caching data so that API calls do not have to be made
  * every time the view is loaded.
  *
- * As API calls use the Volley library, this class takes in callback functions instead of
- * returning data, as Volley takes callback functions and passes the data to the function.
+ * As API calls need to happen asynchronously, the data sources will fetch data asynchronously.
+ * As such, this repository takes in callback functions, which will run once data are fetched.
  *
  * To remain consistent, database access will use the same behaviour.
  *

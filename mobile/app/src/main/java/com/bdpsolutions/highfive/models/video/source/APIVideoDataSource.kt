@@ -9,7 +9,17 @@ import com.google.gson.*
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * API implementation for the VideoDataSource. This class fetches data from the backend service.
+ */
 class APIVideoDataSource : VideoDataSource {
+
+    /**
+     * Fetches video preview data from the backend service. This data is passed to a callback
+     * function
+     *
+     * @param callback Callback function that will run once the data are fetched
+     */
     override fun getVideoPreviewData(callback: (Result<List<VideoPreview>>) -> Unit) {
 
         // create a deserializer to create the VideoPreview objects
@@ -47,13 +57,5 @@ class APIVideoDataSource : VideoDataSource {
                 throw t
             }
         })
-    }
-
-    override fun addPreviewData(vararg data: VideoPreview) {
-        TODO("Not yet implemented")
-    }
-
-    override fun deletePreviewData(id: String) {
-        TODO("Not yet implemented")
     }
 }
