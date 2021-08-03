@@ -151,6 +151,15 @@ namespace src.Storage
             return true;
         }
 
+        public bool IsContainerSet()
+        {
+            /*
+             *      Description:
+             * This function returns whether or not the storage manager's base container has been set yet.
+             */            
+            return true;
+        }
+
         public string RandomString()
         {
             /*

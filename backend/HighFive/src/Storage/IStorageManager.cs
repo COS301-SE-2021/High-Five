@@ -17,5 +17,6 @@ namespace src.Storage
         public string RandomString();
         public string HashMd5(string source);
         public bool SetBaseContainer(string container);
+        public bool IsContainerSet();
     }
 }

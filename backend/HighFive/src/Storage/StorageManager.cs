@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Security.Cryptography;
@@ -44,7 +45,7 @@ namespace src.Storage
 
         public StorageManager(IConfiguration config)
         {
-            SetBaseContainer("public");
+            SetBaseContainer("unset");//This initial value indicates that the initial container has not yet been set
             var connectionString = config.GetConnectionString("StorageConnection");
             _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             _random = new Random();
@@ -180,6 +181,15 @@ namespace src.Storage
             _cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
 
             return _cloudBlobContainer.ExistsAsync().Result;
+        }
+
+        public bool IsContainerSet()
+        {
+            /*
+             *      Description:
+             * This function returns whether or not the storage manager's base container has been set yet.
+             */
+            return !_baseContainer.Equals("unset");
         }
 
         public string RandomString()
