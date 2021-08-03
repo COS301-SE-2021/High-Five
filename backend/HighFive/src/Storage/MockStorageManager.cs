@@ -134,6 +134,23 @@ namespace src.Storage
             return sb.ToString();
         }
 
+        public bool SetBaseContainer(string container)
+        {
+            /*
+             *      Description:
+             * This function will set the base container of the StorageManager. It will usually be set to the
+             * user's unique Azure Active Directory ID (obtained from the JWT authentication token), or it
+             * will be set to "public" if publicly accessible data must be retrieved.
+             * The function will return true if the provided container exists and false if the provided base
+             * container does not exist.
+             *
+             *      Parameters:
+             * -> container: the name of the new base container.
+             */
+
+            return true;
+        }
+
         public string RandomString()
         {
             /*
