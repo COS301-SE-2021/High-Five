@@ -3,7 +3,7 @@ package com.bdpsolutions.highfive.models.video.source
 import android.util.Log
 import com.bdpsolutions.highfive.constants.Endpoints
 import com.bdpsolutions.highfive.models.video.model.VideoPreview
-import com.bdpsolutions.highfive.models.video.source.retrofit.VideoPreviewSource
+import com.bdpsolutions.highfive.models.video.model.VideoPreviewDao
 import com.bdpsolutions.highfive.utils.*
 import com.google.gson.*
 import retrofit2.*
@@ -35,7 +35,7 @@ class APIVideoDataSource : VideoDataSource {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
-        val videoSource = retrofit.create(VideoPreviewSource::class.java)
+        val videoSource = retrofit.create(VideoPreviewDao::class.java)
         val call = videoSource.getVideoPreviewData()
 
         // Enqueue callback object that will call the callback function passed to this function
