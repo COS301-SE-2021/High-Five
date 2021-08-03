@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { VideostorePage } from './videostore.page';
-import {VideouploadService} from '../../services/videoupload/videoupload.service';
+import {MediaService} from '../../services/media/media.service';
 import {IonicModule} from '@ionic/angular';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {HttpClient} from '@angular/common/http';
@@ -31,7 +31,7 @@ describe('VideostorePage', () => {
 
   describe('general',()=>{
     setBeforeEach([IonicModule.forRoot()], [
-      {provide: VideouploadService, useValue: mockVideouploadService},
+      {provide: MediaService, useValue: mockVideouploadService},
       {provide: HttpClient, useValue: HttpClientTestingModule}
     ]);
 

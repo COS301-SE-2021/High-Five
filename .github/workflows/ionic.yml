@@ -46,34 +46,4 @@ jobs:
         working-directory: ./web
         run: ionic build
 
-  frontend-tests:
-    runs-on: ubuntu-latest
-
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 14.17.0
-
-      - name: install @angular/cli
-        run: npm install -i -D -E @angular/cli
-
-      - name: install ionic
-        run: npm install -g @ionic/cli
-
-      - name: install npm dependencies
-        working-directory: ./web
-        run: npm install
-
-      - name: link angular
-        working-directory: ./web
-        run: npm link @angular/cli
-
-      - name: run tests
-        working-directory: ./web
-        run: npm run test:prod
-
  
