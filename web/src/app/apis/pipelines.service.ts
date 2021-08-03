@@ -10,24 +10,23 @@
  * Do not edit the class manually.
  *//* tslint:disable:no-unused-variable member-ordering */
 
-import {Inject, Injectable, Optional} from '@angular/core';
-import {
-  HttpClient, HttpHeaders,
-  HttpResponse, HttpEvent
-} from '@angular/common/http';
+import { Inject, Injectable, Optional }                      from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams,
+         HttpResponse, HttpEvent }                           from '@angular/common/http';
+import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
-import {Observable} from 'rxjs';
+import { Observable }                                        from 'rxjs';
 
-import {AddToolsRequest} from '../models/addToolsRequest';
-import {CreatePipelineRequest} from '../models/createPipelineRequest';
+import { AddToolsRequest } from '../models/addToolsRequest';
+import { CreatePipelineRequest } from '../models/createPipelineRequest';
+import { DeletePipelineRequest } from '../models/deletePipelineRequest';
+import { EmptyObject } from '../models/emptyObject';
+import { GetPipelinesResponse } from '../models/getPipelinesResponse';
+import { RemoveToolsRequest } from '../models/removeToolsRequest';
 import {CreatePipelineResponse} from '../models/createPipelineResponse';
-import {DeletePipelineRequest} from '../models/deletePipelineRequest';
-import {EmptyObject} from '../models/emptyObject';
-import {GetPipelinesResponse} from '../models/getPipelinesResponse';
-import {RemoveToolsRequest} from '../models/removeToolsRequest';
 
-import {BASE_PATH, COLLECTION_FORMATS} from '../variables';
-import {Configuration} from '../configuration';
+import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
+import { Configuration }                                     from '../configuration';
 
 
 @Injectable()

@@ -158,8 +158,7 @@ export class PipelineComponent implements OnInit {
    * @private
    */
   private updateToolColours() {
-    const temp = Array.from(document.getElementsByClassName(this.pipeline.id + '-tool-chip') as HTMLCollectionOf<HTMLElement>);
-    temp.forEach(value => {
+    Array.from(document.getElementsByClassName(this.pipeline.id + '-tool-chip') as HTMLCollectionOf<HTMLElement>).forEach(value => {
       value.style.borderColor = '#' + ('000000' +
         Math.floor(0x1000000 * Math.random()).toString(16)).slice(-6);
     });
