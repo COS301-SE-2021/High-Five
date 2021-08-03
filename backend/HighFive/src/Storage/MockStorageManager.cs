@@ -19,11 +19,16 @@ namespace src.Storage
          * -> _random: this is a random object that is used to generate unique id's for uploaded files.
          * -> Alphanumeric: this is a simple alphanumeric string used to generate salt during the process
          *      where uploaded files are granted unique id's.
+         * -> _baseContainer: the name of the base container from which the blobs will be retrieved. It will
+         *      usually be the user's Azure AD B2C object Id, or "public". All other "container" parameters that
+         *      are passed through in methods will be sub-containers within the baseContainer. Sub-container in
+         *      this context simply refers to a prefix naming convention of the blob files.
          */
         
-        private List<IBlobFile> _mockContainer;
+        private readonly List<IBlobFile> _mockContainer;
         private readonly Random _random;
         private const string Alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
+        private string _baseContainer;
         
         public MockStorageManager()
         {
@@ -32,7 +37,8 @@ namespace src.Storage
              * The default constructor of the class will instantiate a new mockContainer list that will
              * serve as the mocked cloud storage.
              */
-            
+
+            _baseContainer = "unset";
             _mockContainer = new List<IBlobFile>();
             _random = new Random();
         }
@@ -55,7 +61,7 @@ namespace src.Storage
              *      CreateNewFile function.
              */
 
-            if (container.Equals("public"))
+            if (_baseContainer.Equals("public"))
             {
                 var toolsFile = new MockBlobFile(new List<IBlobFile>(), "tools.txt");
                 await toolsFile.UploadText("CarRecognitions\nCarFollowing");
@@ -147,7 +153,8 @@ namespace src.Storage
              *      Parameters:
              * -> container: the name of the new base container.
              */
-
+            _baseContainer = container;
+            
             return true;
         }
 
@@ -166,7 +173,7 @@ namespace src.Storage
              *      Description:
              * Returns the current baseContainer. Or in the case of this mock, simply an empty string.
              */
-            return "";
+            return _baseContainer;
         }
 
         public string RandomString()

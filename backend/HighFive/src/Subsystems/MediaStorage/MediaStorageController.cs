@@ -145,6 +145,10 @@ namespace src.Subsystems.MediaStorage
         private void ConfigureStorageManager()
         {
             var tokenString = HttpContext.GetTokenAsync("access_token").Result;
+            if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
+            {
+                return;
+            }
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
             _mediaStorageService.SetBaseContainer(jsonToken.Subject);
