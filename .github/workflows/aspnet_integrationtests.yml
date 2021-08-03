@@ -1,0 +1,35 @@
+name: .NET Core Integration Tests
+
+on:
+  push:
+    branches:
+      - 'development'
+      - 'master'
+      - 'backend-development'
+  pull_request:
+    branches:
+      - 'development'
+      - 'master'
+      - 'backend-development'
+
+  workflow_dispatch:
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.x
+          
+      - name: Build
+        working-directory: ./backend/HighFive
+        run: dotnet build
+        #Note to developer, this --no-restore flag was added later and might cause problems.
+          
+      - name: Run dotnet unit tests
+        working-directory: ./backend/HighFive
+        run: dotnet test --filter Category=IntegrationTests

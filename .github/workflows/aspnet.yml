@@ -1,11 +1,11 @@
 ﻿name: .NET Core Build
 
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches:
       - 'development'
       - 'master'
+      - 'backend-development'
   pull_request:
     branches:
       - 'development'
