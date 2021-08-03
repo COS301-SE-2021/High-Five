@@ -37,7 +37,11 @@ namespace src.Storage
 
             _file = file;
             Properties = file.Properties;
-            Name = file.Name;
+            var splitName = file.Name.Split("/");
+            if (splitName.Length >= 2)
+            {
+                Name = splitName[1];
+            }
         }
 
         public void AddMetadata(string key, string value)

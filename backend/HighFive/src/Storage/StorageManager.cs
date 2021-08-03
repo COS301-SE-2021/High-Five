@@ -174,16 +174,29 @@ namespace src.Storage
              * user's unique Azure Active Directory ID (obtained from the JWT authentication token), or it
              * will be set to "public" if publicly accessible data must be retrieved.
              * The function will return true if the provided container exists and false if the provided base
-             * container does not exist.
+             * container does not initially exist.
+             * If the container does not initially exist, a new container will be made for this user in the
+             * cloud storage.
              *
              *      Parameters:
              * -> container: the name of the new base container.
              */
+            
             _baseContainer = container;
+            if (_baseContainer.Equals("unset"))
+            {
+                return false;
+            }
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
             _cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
 
-            return _cloudBlobContainer.ExistsAsync().Result;
+            var created = _cloudBlobContainer.ExistsAsync().Result;
+            if (created) return true;
+            
+            /*the following code will create a new container for the user and will be called when a new user first
+                tries to access the cloud storage. */
+            _cloudBlobContainer.CreateAsync(); //TODO: this not being called with Async may cause problems later.
+            return false;
         }
 
         public bool IsContainerSet()
