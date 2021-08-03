@@ -44,23 +44,7 @@ namespace src.Subsystems.MediaStorage
             return StatusCode(200, result);
         }
 
-         public override IActionResult GetVideo(GetVideoRequest getVideoRequest)
-         {
-             if (!_baseContainerSet)
-             {
-                 ConfigureStorageManager();
-             }
-             var response = _mediaStorageService.GetVideo(getVideoRequest);
-             if (response != null) return StatusCode(200, response);
-             var fail = new EmptyObject
-             {
-                 Success = false,
-                 Message = "No video exists associated with video id: " + getVideoRequest.Id
-             };
-             return StatusCode(400, fail);
-         }
-
-         public override async Task<IActionResult> StoreImage(IFormFile file)
+        public override async Task<IActionResult> StoreImage(IFormFile file)
          {
              if (!_baseContainerSet)
              {
@@ -76,7 +60,7 @@ namespace src.Subsystems.MediaStorage
 
                  var response = new StoreVideoResponse
                  {
-                     Message = "Image stored successfully", Success = true
+                     VideoId = "Image stored successfully", Success = true
                  };
                  await _mediaStorageService.StoreImage(file);
                  return StatusCode(200, response);
@@ -104,7 +88,7 @@ namespace src.Subsystems.MediaStorage
 
                 var response = new StoreVideoResponse
                 {
-                    Message = "Video stored successfully", Success = true
+                    VideoId = "Video stored successfully.", Success = true
                 };
                 await _mediaStorageService.StoreVideo(file);
                 return StatusCode(200, response);
