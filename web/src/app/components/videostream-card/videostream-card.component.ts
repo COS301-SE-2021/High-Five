@@ -11,7 +11,10 @@ export class VideostreamCardComponent implements OnInit {
   @Input() vidId: string;
   constructor(public readonly endpoints: Endpoints) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    //Nothing added here yet
+
+  }
 
   /**
    * Dismisses the video playback modal.

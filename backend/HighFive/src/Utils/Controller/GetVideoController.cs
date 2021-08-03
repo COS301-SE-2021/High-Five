@@ -27,8 +27,7 @@ namespace src.Utils.Controller
         
         public override FileContentResult GetVideo(string videoId)
         {
-            var file = GetFileBlob(videoId).Result;
-            
+            var file = GetFileBlob(videoId).Result ?? Array.Empty<byte>();
             return File(file, "application/octet-stream");
             //byte[] decodedByteArray =Convert.FromBase64String (Encoding.ASCII.GetString (file));
             //return decodedByteArray;
@@ -38,18 +37,8 @@ namespace src.Utils.Controller
         {
             var videoId = vidId + ".mp4";
             var file = _storageManager.GetFile(videoId, ContainerName).Result;
-            if (file != null)
-            {
-                var videoFile = new byte[file.Properties.Length];
-                for (int k = 0; k < file.Properties.Length; k++)
-                {
-                    videoFile[k] = 0x20;
-                }
-
-                await file.DownloadToByteArrayAsync(videoFile, 0);
-                return videoFile;
-            }
-            return null;
+            var videoFile = file?.ToByteArray().Result;
+            return videoFile;
         }
     }
 }

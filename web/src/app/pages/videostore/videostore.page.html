@@ -1,10 +1,20 @@
 <ion-content>
+  <ion-segment [(ngModel)]="segment">
+    <ion-segment-button value="videos">
+      <ion-label>
+        Videos
+      </ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="images">
+      <ion-label>
+        Images
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
 
-  <div class="ion-padding">
-    <h1>Recorded Videos</h1>
-
-    <div *ngIf="videosFetched">
-      <ion-list>
+  <div [ngSwitch]="segment">
+    <div *ngSwitchCase="'videos'">
+      <ion-list *ngIf="videosFetched">
         <ion-grid>
           <ion-row *ngFor="let item of items; let i=index;">
             <ion-col size-xl="6" size-lg="6" size-md="6" size="6">
@@ -16,16 +26,38 @@
           </ion-row>
         </ion-grid>
       </ion-list>
+      <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+        <ion-infinite-scroll-content
+          loadingSpinner="bubbles"
+          loadingText="Loading more data...">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
     </div>
-    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-      <ion-infinite-scroll-content
-        loadingSpinner="bubbles"
-        loadingText="Loading more data...">
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
+    <div *ngSwitchCase="'images'">
+      <ion-grid>
+        <ion-row>
+          <ion-col *ngFor="let img of images; index as i" sizeXl="3" sizeXs="6">
+            <app-image-card (deleteImage)="onDeleteImage($event)" [image]="img"></app-image-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
   </div>
   <ion-fab slot="fixed" vertical="bottom" horizontal="end" style="margin-right: 2%; margin-bottom: 2%">
-    <ion-fab-button (click)="fileUpload.click()"><ion-icon name="add"></ion-icon></ion-fab-button>
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button color="tertiary" (click)="videoUpload.click()">
+        <ion-icon name="videocam-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="tertiary" (click)="imageUpload.click()">
+        <ion-icon name="image-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
   </ion-fab>
-  <input hidden type="file" accept="video/mp4" #fileUpload (change)="uploadVideo($event)">
+  <input hidden type="file" accept="video/mp4" #videoUpload (change)="uploadVideo($event)">
+  <input hidden type="file" accept=".png, .jpeg, .jpg" #imageUpload (change)="uploadImage($event)">
 </ion-content>
+

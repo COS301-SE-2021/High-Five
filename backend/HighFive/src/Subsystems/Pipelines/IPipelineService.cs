@@ -6,9 +6,10 @@ namespace src.Subsystems.Pipelines
     public interface IPipelineService
     {
         public GetPipelinesResponse GetPipelines();
-        public void CreatePipeline(CreatePipelineRequest request);
-        public bool AddTools(AddToolsRequest request);
-        public bool RemoveTools(RemoveToolsRequest request);
+        public Task<CreatePipelineResponse> CreatePipeline(CreatePipelineRequest request);
+        public Task<bool> AddTools(AddToolsRequest request);
+        public Task<bool> RemoveTools(RemoveToolsRequest request);
         public Task<bool> DeletePipeline(DeletePipelineRequest request);
+        public string[] GetAllTools();
     }
 }
