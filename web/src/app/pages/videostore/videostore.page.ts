@@ -1,8 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {IonInfiniteScroll, LoadingController, ModalController, ToastController} from '@ionic/angular';
-import {VideouploadService} from '../../services/videoupload/videoupload.service';
 import {VideoMetaData} from '../../models/videoMetaData';
 import {VideoStoreConstants} from '../../../constants/pages/videostore-constants';
+import {MediaService} from '../../services/media/media.service';
+import {Image} from '../../models/image';
 
 @Component({
   selector: 'app-videostore',
@@ -15,15 +16,28 @@ export class VideostorePage implements OnInit {
 
   public items: VideoMetaData[][] = [];
   public videosFetched = false;
+  public segment;
+  public images: Image[] = [];
 
-  constructor(private modal: ModalController, private videoService: VideouploadService,
+  constructor(private modal: ModalController, private videoService: MediaService,
               public toastController: ToastController,
               private loadingController: LoadingController,
               private constants: VideoStoreConstants) {
     this.loadInitData().then();
+    this.segment = 'videos';
+    for (let img = 0; img < 10; img++) {
+      this.images.push({
+        id: img.toString(),
+        url: 'https://i.pinimg.com/originals/2b/cf/66/2bcf66da8927dcd64e0203b8d1a9d55e.jpg',
+        title: 'Some Title',
+        analysed: false
+      });
+    }
   }
 
   ngOnInit() {
+    //Nothing added here yet
+
   }
 
   /**
@@ -34,7 +48,7 @@ export class VideostorePage implements OnInit {
     // show the spinner before fetching the data
     const loading = await this.loadingController.create({
       spinner: 'circles',
-      animated:true,
+      animated: true,
     });
     await loading.present();
 
@@ -105,7 +119,7 @@ export class VideostorePage implements OnInit {
     // Load the spinner
     const loading = await this.loadingController.create({
       spinner: 'circles',
-      animated:true,
+      animated: true,
     });
     await loading.present();
 
@@ -168,4 +182,14 @@ export class VideostorePage implements OnInit {
       console.log(this.items);
     };
   }
+
+  onDeleteImage(imageId: string) {
+    this.images = this.images.filter(img => img.id !== imageId);
+  }
+
+  uploadImage($event: Event) {
+    //Nothing added here yet
+
+  }
+
 }
