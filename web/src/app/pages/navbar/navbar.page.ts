@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
-import {IonButton} from '@ionic/angular';
-import {Navigation, Router} from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -36,6 +35,8 @@ export class NavbarPage implements OnInit {
     };
   }
   ngOnInit() {
+    //Nothing added here yet
+
   }
 
   /**

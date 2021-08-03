@@ -10,9 +10,13 @@ export class LoginPage implements OnInit {
   password: string;
 
   constructor() {
+    //Nothing added here yet
+
   }
 
   ngOnInit() {
+    //Nothing added here yet
+
   }
 
 }

@@ -32,7 +32,7 @@ export class AnalyticsPage implements OnInit {
    */
   deletePipeline(id: string) {
     this.pipelines = this.pipelines.filter(pipeline => pipeline.id !== id);
-    const toast = this.toastController.create({
+   this.toastController.create({
       message: 'Successfully deleted pipeline',
       duration: 2000,
       translucent: true
@@ -40,7 +40,7 @@ export class AnalyticsPage implements OnInit {
   }
 
   removeTool(pipeline: Pipeline) {
-    const toast = this.toastController.create({
+    this.toastController.create({
       header: 'Success!',
       message: 'removed tool from ' + pipeline.name,
       duration: 2000,
@@ -94,7 +94,7 @@ export class AnalyticsPage implements OnInit {
             }
           });
         } else {
-          const toast = this.toastController.create({
+          this.toastController.create({
             message: 'All necessary data of the pipeline was not present, please try again',
             duration: 1000,
             translucent: true,

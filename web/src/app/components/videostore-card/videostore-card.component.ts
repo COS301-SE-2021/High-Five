@@ -20,6 +20,8 @@ export class VideostoreCardComponent implements OnInit {
               private constants: VideoStoreCardConstants) { }
 
   ngOnInit() {
+    //Nothing added here yet
+
   }
 
   /**

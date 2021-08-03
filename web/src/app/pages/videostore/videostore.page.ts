@@ -36,6 +36,8 @@ export class VideostorePage implements OnInit {
   }
 
   ngOnInit() {
+    //Nothing added here yet
+
   }
 
   /**
@@ -186,6 +188,7 @@ export class VideostorePage implements OnInit {
   }
 
   uploadImage($event: Event) {
+    //Nothing added here yet
 
   }
 
