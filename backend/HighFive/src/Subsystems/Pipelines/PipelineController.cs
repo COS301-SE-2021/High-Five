@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
 using Org.OpenAPITools.Models;
@@ -12,6 +14,10 @@ namespace src.Subsystems.Pipelines
         public PipelineController(IPipelineService pipelineService)
         {
             _pipelineService = pipelineService;
+            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
+            pipelineService.SetBaseContainer(jsonToken.Subject);
         }
         
         public override IActionResult AddTools(AddToolsRequest addToolsRequest)

@@ -214,10 +214,23 @@ namespace src.Subsystems.Pipelines
             await blobFile.UploadText(jsonData);
         }
 
-
-        public void SetContainer(string container)
+        public void SetBaseContainer(string id)
         {
-            _containerName = container;
+            /*
+             *      Description:
+             * This function tests if a baseContainer has been set yet, it will be called before any of the
+             * other StorageManager method code executes. If a base container has already been set, this code
+             * will do nothing, else it will set the base container to the user's Azure AD B2C unique object
+             * id - hence pointing towards the user's own container within the storage.
+             *
+             *      Parameters:
+             * -> id: the user's id that will be used as the container name.
+             */
+            if (!_storageManager.IsContainerSet())
+            {
+                _storageManager.SetBaseContainer(id);
+            }
         }
+        
     }
 }
