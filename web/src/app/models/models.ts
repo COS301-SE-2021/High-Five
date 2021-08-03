@@ -5,4 +5,5 @@ export * from './getPipelinesResponse';
 export * from './newPipeline';
 export * from './pipeline';
 export * from './removeToolsRequest';
+export * from './image';
 
