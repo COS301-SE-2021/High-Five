@@ -34,9 +34,12 @@ namespace src.AnalysisTools.ConcreteTools
  
         private void OnStart()
         {
+            //Load model here
             foreach (var frame in _frames.GetConsumingEnumerable(CancellationToken.None))
             {
                 Console.WriteLine(frame);
+                //Analyse images
+                //Add to output queue
             }
         }
     }
