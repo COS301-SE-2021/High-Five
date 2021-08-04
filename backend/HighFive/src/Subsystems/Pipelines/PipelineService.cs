@@ -262,7 +262,7 @@ namespace src.Subsystems.Pipelines
             return response;
         }
 
-        public Pipeline GetPipeline(GetPipelineRequest request)
+        public async Task<Pipeline> GetPipeline(GetPipelineRequest request)
         {
             /*
              *      Description:
@@ -272,6 +272,7 @@ namespace src.Subsystems.Pipelines
              * -> request: the request body containing the pipeline Id for the service contract.
              */
             var pipelineFile = _storageManager.GetFile(request.PipelineId + ".json", ContainerName).Result;
+            if (pipelineFile == null || !await pipelineFile.Exists()) return null;
             var pipeline = ConvertFileToPipeline(pipelineFile);
             return pipeline;
         }

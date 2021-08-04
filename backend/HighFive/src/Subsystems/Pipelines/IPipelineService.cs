@@ -13,6 +13,6 @@ namespace src.Subsystems.Pipelines
         public string[] GetAllTools();
         public void SetBaseContainer(string container);
         public GetPipelineIdsResponse GetPipelineIds();
-        public Pipeline GetPipeline(GetPipelineRequest request);
+        public Task<Pipeline> GetPipeline(GetPipelineRequest request);
     }
 }
