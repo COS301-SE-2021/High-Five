@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Org.OpenAPITools.Models;
 using src.Storage;
 using src.Subsystems.MediaStorage;
-using src.Utils.Controller;
 using Xunit;
 
 namespace tests.UnitTests

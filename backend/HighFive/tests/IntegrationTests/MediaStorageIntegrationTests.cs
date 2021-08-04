@@ -82,25 +82,7 @@ namespace tests.IntegrationTests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(responseObject);
         }
-        
-        [Fact]
-        public async Task TestGetExistingVideo()
-        {
-            var validId = await UploadVideo();
 
-            var response = await _client.GetAsync("/media/getVideo/" + validId);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-        
-        [Fact]
-        public async Task TestGetNonExistingVideo()
-        {
-            const string invalidId = "123";
-            var response = await _client.GetAsync("/media/getVideo/" + invalidId);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Empty(response.Content.ReadAsByteArrayAsync().Result);
-        }
-        
         [Fact]
         public async Task TestDeleteExistingVideo()
         {
