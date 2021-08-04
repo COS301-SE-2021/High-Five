@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
 import {Router} from '@angular/router';
-import {MsalService} from "@azure/msal-angular";
+import {MsalService} from '@azure/msal-angular';
 
 @Component({
   selector: 'app-navbar',
@@ -24,7 +24,7 @@ export class NavbarPage implements OnInit {
   private navPages;
 
 
-  constructor(private screenSizeService: ScreenSizeServiceService, private nav: Router, private msalService : MsalService) {
+  constructor(private screenSizeService: ScreenSizeServiceService, private nav: Router, private msalService: MsalService) {
     this.screenSizeService.isDesktopView().subscribe(isDesktop=>{
       this.isDesktop = isDesktop;
     });

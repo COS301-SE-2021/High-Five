@@ -11,21 +11,13 @@ export class LoginPage implements OnInit {
   password: string;
   isIframe = false;
 
-  constructor(private authService: MsalService) {
+  constructor() {
     //Nothing added here yet
     this.isIframe = window !== window.parent && !window.opener;
 
   }
 
   login() {
-    this.authService.loginPopup().subscribe(
-      {
-        next: (result) => {
-          console.log(result);
-        },
-        error: (error) => console.log(error)
-      }
-    );
   }
 
   ngOnInit() {
