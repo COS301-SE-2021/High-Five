@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Azure.Storage.Sas;
 using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -166,8 +168,27 @@ namespace src.Storage
              * This function converts the contents of a blob file to text. It is usually to return data
              * from text or json files.
              */
-
+            
             return await _file.DownloadTextAsync();
+        }
+
+        public string GetUrl()
+        {
+            /*
+             *      Description:
+             * This function will generate a SAS token for this blob file and return a temporary URL with
+             * the token to allow temporary viewing of the file.
+             */
+
+            var sasPermissions = new SharedAccessBlobPolicy
+            {
+                Permissions = SharedAccessBlobPermissions.Read,
+                SharedAccessStartTime = DateTimeOffset.Now,
+                SharedAccessExpiryTime = DateTimeOffset.Now.AddHours(3)
+            };
+            var token = _file.GetSharedAccessSignature(sasPermissions);
+            var uri = _file.Uri + token;
+            return uri;
         }
     }
 }

@@ -27,17 +27,16 @@ namespace Org.OpenAPITools.Models
     public class VideoMetaData : IEquatable<VideoMetaData>
     {
         /// <summary>
+        /// Gets or Sets Id
+        /// </summary>
+        [DataMember(Name="id", EmitDefaultValue=false)]
+        public string Id { get; set; }
+
+        /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-
-        /// <summary>
-        /// duration of the video in seconds
-        /// </summary>
-        /// <value>duration of the video in seconds</value>
-        [DataMember(Name="duration", EmitDefaultValue=false)]
-        public int Duration { get; set; }
 
         /// <summary>
         /// The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Z
@@ -47,10 +46,10 @@ namespace Org.OpenAPITools.Models
         public DateTime DateStored { get; set; }
 
         /// <summary>
-        /// Gets or Sets Id
+        /// Gets or Sets Url
         /// </summary>
-        [DataMember(Name="id", EmitDefaultValue=false)]
-        public string Id { get; set; }
+        [DataMember(Name="url", EmitDefaultValue=false)]
+        public string Url { get; set; }
 
         /// <summary>
         /// Gets or Sets Thumbnail
@@ -66,10 +65,10 @@ namespace Org.OpenAPITools.Models
         {
             var sb = new StringBuilder();
             sb.Append("class VideoMetaData {\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Duration: ").Append(Duration).Append("\n");
-            sb.Append("  DateStored: ").Append(DateStored).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  DateStored: ").Append(DateStored).Append("\n");
+            sb.Append("  Url: ").Append(Url).Append("\n");
             sb.Append("  Thumbnail: ").Append(Thumbnail).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -108,14 +107,14 @@ namespace Org.OpenAPITools.Models
 
             return 
                 (
+                    Id == other.Id ||
+                    Id != null &&
+                    Id.Equals(other.Id)
+                ) && 
+                (
                     Name == other.Name ||
                     Name != null &&
                     Name.Equals(other.Name)
-                ) && 
-                (
-                    Duration == other.Duration ||
-                    
-                    Duration.Equals(other.Duration)
                 ) && 
                 (
                     DateStored == other.DateStored ||
@@ -123,9 +122,9 @@ namespace Org.OpenAPITools.Models
                     DateStored.Equals(other.DateStored)
                 ) && 
                 (
-                    Id == other.Id ||
-                    Id != null &&
-                    Id.Equals(other.Id)
+                    Url == other.Url ||
+                    Url != null &&
+                    Url.Equals(other.Url)
                 ) && 
                 (
                     Thumbnail == other.Thumbnail ||
@@ -144,14 +143,14 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Name != null)
-                    hashCode = hashCode * 59 + Name.GetHashCode();
-                    
-                    hashCode = hashCode * 59 + Duration.GetHashCode();
-                    if (DateStored != null)
-                    hashCode = hashCode * 59 + DateStored.GetHashCode();
                     if (Id != null)
                     hashCode = hashCode * 59 + Id.GetHashCode();
+                    if (Name != null)
+                    hashCode = hashCode * 59 + Name.GetHashCode();
+                    if (DateStored != null)
+                    hashCode = hashCode * 59 + DateStored.GetHashCode();
+                    if (Url != null)
+                    hashCode = hashCode * 59 + Url.GetHashCode();
                     if (Thumbnail != null)
                     hashCode = hashCode * 59 + Thumbnail.GetHashCode();
                 return hashCode;
