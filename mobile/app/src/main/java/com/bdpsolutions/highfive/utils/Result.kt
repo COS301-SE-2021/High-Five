@@ -1,4 +1,4 @@
-package com.bdpsolutions.highfive.models.login
+package com.bdpsolutions.highfive.utils
 
 /**
  * A generic class that holds a value with its loading status.
@@ -14,5 +14,13 @@ sealed class Result<out T : Any> {
             is Success<*> -> "Success[data=$data]"
             is Error -> "Error[exception=$exception]"
         }
+    }
+
+    fun getResult(): T {
+        if (this is Success<*>) {
+            @Suppress("UNCHECKED_CAST")
+            return data as T
+        }
+        throw java.lang.Exception("Cannot get data from failed result")
     }
 }

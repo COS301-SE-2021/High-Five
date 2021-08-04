@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.Window
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
@@ -18,15 +19,20 @@ import com.bdpsolutions.highfive.view.views.LoggedInUserView
 import com.bdpsolutions.highfive.databinding.ActivityLoginBinding
 import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.viewmodel.login.LoginViewModel
-import com.bdpsolutions.highfive.viewmodel.login.LoginViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -36,7 +42,7 @@ class LoginActivity : AppCompatActivity() {
         val login = binding.login
         val loading = binding.loading
 
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
+        loginViewModel = ViewModelProvider(this, factory)
             .get(LoginViewModel::class.java)
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {

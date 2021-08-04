@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bdpsolutions.highfive.databinding.FragmentHomeBinding
+import com.bdpsolutions.highfive.databinding.AnalysisFragmentBinding
 import com.bdpsolutions.highfive.viewmodel.analysis.AnalysisViewModel
 
 class AnalysisFragment : Fragment() {
@@ -14,7 +14,7 @@ class AnalysisFragment : Fragment() {
     private lateinit var viewModel: AnalysisViewModel
 
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: AnalysisFragmentBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -28,7 +28,7 @@ class AnalysisFragment : Fragment() {
         viewModel =
             ViewModelProvider(this).get(AnalysisViewModel::class.java)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = AnalysisFragmentBinding.inflate(inflater, container, false)
         val root: View = binding.root
         
         return root
