@@ -165,7 +165,7 @@ namespace src.Subsystems.Pipelines
              * -> request: the request object for this use case that contains the pipeline id to be deleted.
              */
 
-            var blobFile = _storageManager.GetFile(request.PipelineId + ".json", _containerName).Result;
+            var blobFile = _storageManager.GetFile(request.PipelineId + ".json", ContainerName).Result;
             if (blobFile == null)
             {
                 return false;
