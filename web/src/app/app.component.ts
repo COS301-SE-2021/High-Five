@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
       res => {
         if (res != null && res.account != null) {
           this.msalService.instance.setActiveAccount(res.account);
-          this.authService.jwt = res.idToken;
+          localStorage.setItem('jwt', res.idToken);
           this.router.navigate(['/navbar/landing']);
         }
       }

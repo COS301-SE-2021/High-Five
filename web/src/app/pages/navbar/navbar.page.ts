@@ -25,23 +25,25 @@ export class NavbarPage implements OnInit {
 
 
   constructor(private screenSizeService: ScreenSizeServiceService, private nav: Router, private msalService: MsalService) {
-    this.screenSizeService.isDesktopView().subscribe(isDesktop=>{
+    this.screenSizeService.isDesktopView().subscribe(isDesktop => {
       this.isDesktop = isDesktop;
     });
     this.navPages = {
-      homeNav : this.homeLink,
-      analyticsNav : this.analyticsLink,
-      videoNav : this.videoLink,
-      controlsNav : this.controlsLink
+      homeNav: this.homeLink,
+      analyticsNav: this.analyticsLink,
+      videoNav: this.videoLink,
+      controlsNav: this.controlsLink
     };
   }
+
   ngOnInit() {
     //Nothing added here yet
 
   }
 
-  logout(){
+  logout() {
     this.msalService.logout();
+    localStorage.removeItem('jwt');
   }
 
   /**

@@ -38,7 +38,7 @@ export class PipelinesService {
 
   protected basePath = 'https://high5api.azurewebsites.net';
 
-  public defaultHeaders = new HttpHeaders();
+  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('jwt'));
   public configuration = new Configuration();
 
   constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string,
@@ -49,9 +49,6 @@ export class PipelinesService {
     if (configuration) {
       this.configuration = configuration;
       this.basePath = basePath || configuration.basePath || this.basePath;
-    }
-    if (environment.production) {
-      this.defaultHeaders.set('Authorization', 'Bearer ' + this.authService.jwt);
     }
   }
 
@@ -96,7 +93,6 @@ export class PipelinesService {
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     if (httpHeaderAcceptSelected != undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
-      headers.append('Authorization ', 'Bearer ' + 'TOKEN HERE');
     }
 
     // to determine the Content-Type header
@@ -273,7 +269,7 @@ export class PipelinesService {
     if (httpHeaderAcceptSelected != undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
-
+    console.log(headers)
     // to determine the Content-Type header
     const consumes: string[] = [];
 
