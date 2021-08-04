@@ -1,12 +1,13 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
 
-import { LandingPage } from './landing.page';
+import {LandingPage} from './landing.page';
+import {MsalGuard} from '../../services/msal-guard/msal-guard';
 
 const routes: Routes = [
   {
     path: '',
-    component: LandingPage
+    component: LandingPage,
   }
 ];
 
@@ -14,4 +15,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class LandingPageRoutingModule {}
+export class LandingPageRoutingModule {
+}
