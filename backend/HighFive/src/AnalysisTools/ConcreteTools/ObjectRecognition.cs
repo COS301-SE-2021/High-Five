@@ -16,31 +16,20 @@ using Microsoft.ML.OnnxRuntime.Tensors;
 
 namespace src.AnalysisTools.ConcreteTools
 {
-    public class ObjectRecognition
+    public class ObjectRecognition: ITool
     {
-        private BlockingCollection<object> _frames = new BlockingCollection<object>();
- 
+        private const string modelPath = @"car_detection.onnx";
+        private InferenceSession model;
+        private string modelInputLayerName;
         public ObjectRecognition()
         {
-            var thread = new Thread(new ThreadStart(OnStart));
-            thread.IsBackground = true;
-            thread.Start();
+            //Load object recognition model and get ready for analysis
+            model = new InferenceSession(modelPath);
+            modelInputLayerName = model.InputMetadata.Keys.Single();
         }
- 
-        public void Enqueue(object job)
+        public object AnalyseFrame(object frame)
         {
-            _frames.Add(job);
-        }
- 
-        private void OnStart()
-        {
-            //Load model here
-            foreach (var frame in _frames.GetConsumingEnumerable(CancellationToken.None))
-            {
-                Console.WriteLine(frame);
-                //Analyse images
-                //Add to output queue
-            }
+            return null;
         }
     }
 }
