@@ -16,12 +16,12 @@ using Microsoft.ML.OnnxRuntime.Tensors;
 
 namespace src.AnalysisTools.ConcreteTools
 {
-    public class ObjectRecognition: ITool
+    public class CarRecognition: ITool
     {
         private const string modelPath = @"car_detection.onnx";
         private InferenceSession model;
         private string modelInputLayerName;
-        public ObjectRecognition()
+        public CarRecognition()
         {
             //Load object recognition model and get ready for analysis
             model = new InferenceSession(modelPath);
