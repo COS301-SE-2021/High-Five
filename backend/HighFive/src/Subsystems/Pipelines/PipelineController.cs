@@ -70,14 +70,24 @@ namespace src.Subsystems.Pipelines
             return StatusCode(200, response);
         }
 
-        public override IActionResult GetPipeline(GetPipelineRequest getPipelineRequest)
+        public override IActionResult GetPipeline(GetPipelineRequest request)
         {
-            throw new NotImplementedException();
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            var response = _pipelineService.GetPipeline(request);
+            return StatusCode(200, response);
         }
 
         public override IActionResult GetPipelineIds()
         {
-            throw new NotImplementedException();
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            var response = _pipelineService.GetPipelineIds();
+            return StatusCode(200, response);
         }
 
         public override IActionResult GetPipelines()
