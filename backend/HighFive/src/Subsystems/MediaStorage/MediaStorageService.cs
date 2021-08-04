@@ -125,6 +125,7 @@ namespace src.Subsystems.MediaStorage
                         currentVideo.DateStored = listBlobItem.Properties.LastModified.Value.DateTime;
                     var oldName = listBlobItem.GetMetaData("originalName");
                     currentVideo.Name = oldName;
+                    currentVideo.Url = listBlobItem.GetUrl();
                     resultList.Add(currentVideo);
                 }
             }
@@ -214,15 +215,13 @@ namespace src.Subsystems.MediaStorage
                 return new List<ImageMetaData>();
             }
             var resultList = new List<ImageMetaData>();
-            var currentImage = new ImageMetaData();
             foreach(var listBlobItem in allFiles)
             {
-                currentImage.Id = listBlobItem.Name.Replace(".img", "");
+                var currentImage = new ImageMetaData {Id = listBlobItem.Name.Replace(".img", "")};
                 if (listBlobItem.Properties is {LastModified: { }})
                     currentImage.DateStored = listBlobItem.Properties.LastModified.Value.DateTime;
-                var oldName = listBlobItem.GetMetaData("originalName");
-                currentImage.Name = oldName;
-                //currentImage.File = listBlobItem.ToByteArray().Result;
+                currentImage.Name = listBlobItem.GetMetaData("originalName");
+                currentImage.Url = listBlobItem.GetUrl();
                 resultList.Add(currentImage);
             }
             return resultList;

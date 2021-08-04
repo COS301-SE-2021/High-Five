@@ -77,21 +77,6 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <remarks>Endpoint for Get Videos use case</remarks>
-        /// <param name="getVideoRequest"></param>
-        /// <response code="200">Returns a list of the filenames of all videos</response>
-        /// <response code="400">Invalid video id provided</response>
-        [HttpPost]
-        [Route("/media/getVideo")]
-        [Consumes("application/json")]
-        [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(GetVideoResponse))]
-        [ProducesResponseType(statusCode: 400, type: typeof(EmptyObject))]
-        public abstract IActionResult GetVideo([FromBody]GetVideoRequest getVideoRequest);
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <remarks>Endpoint for Store Image use case</remarks>
         /// <param name="file"></param>
         /// <response code="200">Image has been stored</response>
