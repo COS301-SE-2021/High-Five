@@ -33,10 +33,10 @@ namespace Org.OpenAPITools.Models
         public bool Success { get; set; }
 
         /// <summary>
-        /// Gets or Sets Message
+        /// Gets or Sets VideoId
         /// </summary>
-        [DataMember(Name="message", EmitDefaultValue=false)]
-        public string Message { get; set; }
+        [DataMember(Name="videoId", EmitDefaultValue=false)]
+        public string VideoId { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -47,7 +47,7 @@ namespace Org.OpenAPITools.Models
             var sb = new StringBuilder();
             sb.Append("class StoreVideoResponse {\n");
             sb.Append("  Success: ").Append(Success).Append("\n");
-            sb.Append("  Message: ").Append(Message).Append("\n");
+            sb.Append("  VideoId: ").Append(VideoId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -90,9 +90,9 @@ namespace Org.OpenAPITools.Models
                     Success.Equals(other.Success)
                 ) && 
                 (
-                    Message == other.Message ||
-                    Message != null &&
-                    Message.Equals(other.Message)
+                    VideoId == other.VideoId ||
+                    VideoId != null &&
+                    VideoId.Equals(other.VideoId)
                 );
         }
 
@@ -108,8 +108,8 @@ namespace Org.OpenAPITools.Models
                 // Suitable nullity checks etc, of course :)
                     
                     hashCode = hashCode * 59 + Success.GetHashCode();
-                    if (Message != null)
-                    hashCode = hashCode * 59 + Message.GetHashCode();
+                    if (VideoId != null)
+                    hashCode = hashCode * 59 + VideoId.GetHashCode();
                 return hashCode;
             }
         }
