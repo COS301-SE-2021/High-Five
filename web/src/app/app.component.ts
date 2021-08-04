@@ -3,6 +3,7 @@ import {Platform} from '@ionic/angular';
 import {ScreenSizeServiceService} from './services/screen-size-service.service';
 import {MsalService} from '@azure/msal-angular';
 import {Router} from '@angular/router';
+import {AuthService} from './services/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ import {Router} from '@angular/router';
 })
 export class AppComponent implements OnInit {
   constructor(private platform: Platform, private screenSizeService: ScreenSizeServiceService, private msalService: MsalService,
-              private router: Router) {
+              private router: Router, private authService: AuthService) {
     this.initializeApp();
   }
 
@@ -33,7 +34,7 @@ export class AppComponent implements OnInit {
       res => {
         if (res != null && res.account != null) {
           this.msalService.instance.setActiveAccount(res.account);
-          sessionStorage.setItem('token', res.idToken);
+          this.authService.jwt = res.idToken;
           this.router.navigate(['/navbar/landing']);
         }
       }

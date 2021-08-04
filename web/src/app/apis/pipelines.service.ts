@@ -29,23 +29,29 @@ import {CreatePipelineResponse} from '../models/createPipelineResponse';
 
 import {BASE_PATH, COLLECTION_FORMATS} from '../variables';
 import {Configuration} from '../configuration';
-import {MsalService} from '@azure/msal-angular';
+import {AuthService} from '../services/auth/auth.service';
+import {environment} from '../../environments/environment';
 
 
 @Injectable()
 export class PipelinesService {
 
   protected basePath = 'https://high5api.azurewebsites.net';
+
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
 
-  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration, private msalService: MsalService) {
+  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string,
+              @Optional() configuration: Configuration, private authService: AuthService) {
     if (basePath) {
       this.basePath = basePath;
     }
     if (configuration) {
       this.configuration = configuration;
       this.basePath = basePath || configuration.basePath || this.basePath;
+    }
+    if (environment.production) {
+      this.defaultHeaders.set('Authorization', 'Bearer ' + this.authService.jwt);
     }
   }
 
