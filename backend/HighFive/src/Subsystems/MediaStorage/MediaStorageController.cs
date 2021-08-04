@@ -67,8 +67,8 @@ namespace src.Subsystems.MediaStorage
              }
              catch (Exception e)
              {
-                 var response500 = new EmptyObject() {Success = false, Message = e.ToString()};
-                 return StatusCode(500, response500);
+                 var response400 = new EmptyObject() {Success = false, Message = "Invalid format provided."};
+                 return StatusCode(400, response400);
              }
          }
 
