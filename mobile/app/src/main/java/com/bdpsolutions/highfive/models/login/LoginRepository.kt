@@ -9,7 +9,7 @@ import com.bdpsolutions.highfive.utils.Result
  * maintains an in-memory cache of login status and user credentials information.
  */
 
-class LoginRepository(val loginSource: LoginDataSource) {
+class LoginRepository(private val loginSource: LoginDataSource) {
 
     // in-memory cache of the loggedInUser object
     var user: User? = null

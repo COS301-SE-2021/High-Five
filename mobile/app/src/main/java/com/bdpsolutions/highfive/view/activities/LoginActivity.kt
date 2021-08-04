@@ -18,12 +18,16 @@ import com.bdpsolutions.highfive.view.views.LoggedInUserView
 import com.bdpsolutions.highfive.databinding.ActivityLoginBinding
 import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.viewmodel.login.LoginViewModel
-import com.bdpsolutions.highfive.viewmodel.login.LoginViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
         val login = binding.login
         val loading = binding.loading
 
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
+        loginViewModel = ViewModelProvider(this, factory)
             .get(LoginViewModel::class.java)
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
