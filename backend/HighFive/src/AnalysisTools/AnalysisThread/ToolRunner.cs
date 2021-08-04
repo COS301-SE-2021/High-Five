@@ -6,26 +6,33 @@ namespace src.AnalysisTools.AnalysisThread
     public class ToolRunner
     {
         private BlockingCollection<object> _frames = new BlockingCollection<object>();
+        private ITool Tool;
+        private object OutputQueue;//Type may change
  
-        public ToolRunner()
+        public ToolRunner(ITool tool, object outputQueue)
         {
+            OutputQueue = outputQueue;
+            Tool = tool;
             var thread = new Thread(new ThreadStart(OnStart));
             thread.IsBackground = true;
             thread.Start();
         }
  
-        public void Enqueue(object job)
+        public void Enqueue(object frame)
         {
-            _frames.Add(job);
+            //Used by main thread to add new frames
+            _frames.Add(frame);
         }
  
         private void OnStart()
         {
-            //Load model here
+            //Loop keeps checking queue for new frames to analyse
             foreach (var frame in _frames.GetConsumingEnumerable(CancellationToken.None))
             {
                 //Analyse images
+                var analysedFrame=Tool.AnalyseFrame(frame);
                 //Add to output queue
+                //OutputQueue.Enqueue(analysedFrame);
             }
         }
     }
