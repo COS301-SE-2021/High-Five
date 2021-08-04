@@ -38,8 +38,7 @@ namespace tests.IntegrationTests
             
             services.AddMvc().AddApplicationPart(typeof(Org.OpenAPITools.Controllers.TestApiController).Assembly)
                 .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.MediaStorageApiController).Assembly)
-                .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.PipelinesApiController).Assembly)
-                .AddApplicationPart(typeof(src.Utils.Controller.GetVideoApiController).Assembly);
+                .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.PipelinesApiController).Assembly);
 
             // Configuring of Azure AD B2C Authentication
             services.AddAuthentication(options =>
