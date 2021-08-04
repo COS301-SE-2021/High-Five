@@ -63,6 +63,7 @@ namespace src.AnalysisTools.ConcreteTools
             //
             // var result = session.Run(modelInput);
             // return ((DenseTensor<float>) result.Single().Value).ToArray();
+            return null;
         }
     }
 }
