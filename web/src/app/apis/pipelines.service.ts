@@ -15,7 +15,6 @@ import {
   HttpClient, HttpHeaders, HttpParams,
   HttpResponse, HttpEvent
 } from '@angular/common/http';
-import {CustomHttpUrlEncodingCodec} from '../encoder';
 
 import {Observable} from 'rxjs';
 
@@ -29,8 +28,6 @@ import {CreatePipelineResponse} from '../models/createPipelineResponse';
 
 import {BASE_PATH, COLLECTION_FORMATS} from '../variables';
 import {Configuration} from '../configuration';
-import {AuthService} from '../services/auth/auth.service';
-import {environment} from '../../environments/environment';
 
 
 @Injectable()
@@ -42,7 +39,7 @@ export class PipelinesService {
   public configuration = new Configuration();
 
   constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string,
-              @Optional() configuration: Configuration, private authService: AuthService) {
+              @Optional() configuration: Configuration) {
     if (basePath) {
       this.basePath = basePath;
     }

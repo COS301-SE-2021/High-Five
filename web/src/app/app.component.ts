@@ -3,7 +3,6 @@ import {Platform} from '@ionic/angular';
 import {ScreenSizeServiceService} from './services/screen-size-service.service';
 import {MsalService} from '@azure/msal-angular';
 import {Router} from '@angular/router';
-import {AuthService} from './services/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +11,7 @@ import {AuthService} from './services/auth/auth.service';
 })
 export class AppComponent implements OnInit {
   constructor(private platform: Platform, private screenSizeService: ScreenSizeServiceService, private msalService: MsalService,
-              private router: Router, private authService: AuthService) {
+              private router: Router) {
     this.initializeApp();
   }
 
