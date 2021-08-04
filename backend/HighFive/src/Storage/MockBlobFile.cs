@@ -209,5 +209,15 @@ namespace src.Storage
             var reader = new StreamReader(_file);
             return await reader.ReadToEndAsync();
         }
+
+        public string GetUrl()
+        {
+            /*
+             *      Description:
+             * This function will generate a SAS token for this blob file and return a temporary URL with
+             * the token to allow temporary viewing of the file.
+             */
+            return "https://notarealurl.com";
+        }
     }
 }

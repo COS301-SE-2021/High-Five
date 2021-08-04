@@ -96,26 +96,6 @@ namespace src.Subsystems.MediaStorage
             await videoBlob.UploadFile(video);
         }
 
-        public GetVideoResponse GetVideo(GetVideoRequest request)
-        {
-            /*
-             *      Description:
-             * This function will attempt to retrieve a video from blob storage and return the video if it
-             * exists, null otherwise.
-             *
-             *      Parameters:
-             * -> request: the request object for this service contract.
-             */
-
-            var videoId = request.Id + ".mp4";
-            var file = _storageManager.GetFile(videoId, VideoContainerName).Result;
-            if (file == null) return null;
-            var videoFile = file.ToByteArray().Result;
-            var response = new GetVideoResponse {File = videoFile};
-            return response;
-            //else cloudBlockBlob does not exist
-        }
-
         public List<VideoMetaData> GetAllVideos()
         {
             /*
@@ -143,10 +123,9 @@ namespace src.Subsystems.MediaStorage
                     currentVideo.Id = listBlobItem.Name.Replace(".mp4", "");
                     if (listBlobItem.Properties != null && listBlobItem.Properties.LastModified != null)
                         currentVideo.DateStored = listBlobItem.Properties.LastModified.Value.DateTime;
-                    var time = listBlobItem.GetMetaData("duration");
-                    currentVideo.Duration = int.Parse(time ?? Empty);
                     var oldName = listBlobItem.GetMetaData("originalName");
                     currentVideo.Name = oldName;
+                    currentVideo.Url = listBlobItem.GetUrl();
                     resultList.Add(currentVideo);
                 }
             }
@@ -223,7 +202,7 @@ namespace src.Subsystems.MediaStorage
             await imageBlob.UploadFile(image);
         }
 
-        public List<GetImageResponse> GetAllImages()
+        public List<ImageMetaData> GetAllImages()
         {
             /*
              *      Description:
@@ -233,18 +212,16 @@ namespace src.Subsystems.MediaStorage
             var allFiles = _storageManager.GetAllFilesInContainer(ImageContainerName).Result;
             if (allFiles == null)
             {
-                return new List<GetImageResponse>();
+                return new List<ImageMetaData>();
             }
-            var resultList = new List<GetImageResponse>();
-            var currentImage = new GetImageResponse();
+            var resultList = new List<ImageMetaData>();
             foreach(var listBlobItem in allFiles)
             {
-                currentImage.Id = listBlobItem.Name.Replace(".img", "");
+                var currentImage = new ImageMetaData {Id = listBlobItem.Name.Replace(".img", "")};
                 if (listBlobItem.Properties is {LastModified: { }})
                     currentImage.DateStored = listBlobItem.Properties.LastModified.Value.DateTime;
-                var oldName = listBlobItem.GetMetaData("originalName");
-                currentImage.Name = oldName;
-                currentImage.File = listBlobItem.ToByteArray().Result;
+                currentImage.Name = listBlobItem.GetMetaData("originalName");
+                currentImage.Url = listBlobItem.GetUrl();
                 resultList.Add(currentImage);
             }
             return resultList;

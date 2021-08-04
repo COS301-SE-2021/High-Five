@@ -17,5 +17,6 @@ namespace src.Storage
         public Task<bool> Exists();
         public Task<byte[]> ToByteArray();
         public Task<string> ToText();
+        public string GetUrl();
     }
 }
