@@ -16,5 +16,8 @@ namespace src.Storage
         public Task<IBlobFile> CreateNewFile(string name, string container);
         public string RandomString();
         public string HashMd5(string source);
+        public bool SetBaseContainer(string container);
+        public bool IsContainerSet();
+        public string GetCurrentContainer();
     }
 }

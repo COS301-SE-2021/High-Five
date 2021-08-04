@@ -29,7 +29,7 @@ namespace src.Subsystems.Pipelines
          */
 
         private readonly IStorageManager _storageManager;
-        private string _containerName = "demo2pipelines";
+        private const string ContainerName = "pipeline";
 
         public PipelineService(IStorageManager storageManager)
         {
@@ -43,7 +43,7 @@ namespace src.Subsystems.Pipelines
              * This function will return all the pipelines belonging to this user in the cloud storage.
              */
 
-            var allFiles = _storageManager.GetAllFilesInContainer(_containerName);
+            var allFiles = _storageManager.GetAllFilesInContainer(ContainerName);
             if (allFiles.Result == null)
             {
                 return new GetPipelinesResponse{Pipelines = new List<Pipeline>()};
@@ -71,13 +71,13 @@ namespace src.Subsystems.Pipelines
 
             var pipeline = request.Pipeline;
             var generatedName = _storageManager.HashMd5(pipeline.Name);
-            var blobFile = _storageManager.CreateNewFile(generatedName + ".json", _containerName).Result;
+            var blobFile = _storageManager.CreateNewFile(generatedName + ".json", ContainerName).Result;
             var salt = "";
             while (blobFile == null)
             {
                 salt += _storageManager.RandomString();
                 generatedName = _storageManager.HashMd5(pipeline.Name+salt);
-                blobFile = _storageManager.CreateNewFile(generatedName + ".json", _containerName).Result;
+                blobFile = _storageManager.CreateNewFile(generatedName + ".json", ContainerName).Result;
             }
 
             blobFile.AddMetadata("originalName", pipeline.Name);
@@ -92,7 +92,7 @@ namespace src.Subsystems.Pipelines
                 Tools = pipeline.Tools
             };
             await UploadPipelineToStorage(newPipeline, blobFile);
-            
+
             var response = new CreatePipelineResponse()
             {
                 PipelineId = generatedName
@@ -112,7 +112,7 @@ namespace src.Subsystems.Pipelines
              * as a list of tools to be added.
              */
 
-            var file =_storageManager.GetFile(request.PipelineId+".json", _containerName).Result;
+            var file =_storageManager.GetFile(request.PipelineId+".json", ContainerName).Result;
             if (file == null)
             {
                 return false;
@@ -138,7 +138,7 @@ namespace src.Subsystems.Pipelines
              *      modified as well as a list of tools to be removed from the pipeline.
              */
 
-            var file =_storageManager.GetFile(request.PipelineId+".json", _containerName).Result;
+            var file =_storageManager.GetFile(request.PipelineId+".json", ContainerName).Result;
             if (file == null)
             {
                 return false;
@@ -157,7 +157,15 @@ namespace src.Subsystems.Pipelines
 
         public async Task<bool> DeletePipeline(DeletePipelineRequest request)
         {
-            var blobFile = _storageManager.GetFile(request.PipelineId + ".json", _containerName).Result;
+            /*
+             *      Description:
+             * This function will delete a pipeline by a specific pipeline id.
+             *
+             *      Parameters:
+             * -> request: the request object for this use case that contains the pipeline id to be deleted.
+             */
+
+            var blobFile = _storageManager.GetFile(request.PipelineId + ".json", ContainerName).Result;
             if (blobFile == null)
             {
                 return false;
@@ -171,13 +179,13 @@ namespace src.Subsystems.Pipelines
             /*
              *      Description:
              * This function will return all the existing tools as stored in a singular text file in the
-             * cloud storage.
+             * cloud storage under a public container.
              */
 
-            var oldContainer = _containerName;
-            _containerName = "public";
-            var toolsFile = _storageManager.GetFile("tools.txt", _containerName).Result;
-            _containerName = oldContainer;
+            var oldContainer = _storageManager.GetCurrentContainer();
+            _storageManager.SetBaseContainer("public");
+            var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
+            _storageManager.SetBaseContainer(oldContainer);
             var toolsArray = toolsFile.ToText().Result.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
             //the above line splits the text file's contents by newlines into an array
             return toolsArray;
@@ -214,10 +222,59 @@ namespace src.Subsystems.Pipelines
             await blobFile.UploadText(jsonData);
         }
 
-
-        public void SetContainer(string container)
+        public void SetBaseContainer(string id)
         {
-            _containerName = container;
+            /*
+             *      Description:
+             * This function tests if a baseContainer has been set yet, it will be called before any of the
+             * other StorageManager method code executes. If a base container has already been set, this code
+             * will do nothing, else it will set the base container to the user's Azure AD B2C unique object
+             * id - hence pointing towards the user's own container within the storage.
+             *
+             *      Parameters:
+             * -> id: the user's id that will be used as the container name.
+             */
+            if (!_storageManager.IsContainerSet())
+            {
+                _storageManager.SetBaseContainer(id);
+            }
+        }
+
+        public GetPipelineIdsResponse GetPipelineIds()
+        {
+            /*
+             *      Description:
+             * This function will return the unique id of every pipeline belonging to this user.
+             */
+
+            var allFiles = _storageManager.GetAllFilesInContainer(ContainerName);
+            if (allFiles.Result == null)
+            {
+                return new GetPipelineIdsResponse{PipelineIds = new List<string>()};
+            }
+            var idList = new List<string>();
+            foreach(var listBlobItem in allFiles.Result)
+            {
+                var currentPipeline = ConvertFileToPipeline(listBlobItem);
+                idList.Add(currentPipeline.Id);
+            }
+            var response = new GetPipelineIdsResponse {PipelineIds = idList};
+            return response;
+        }
+
+        public async Task<Pipeline> GetPipeline(GetPipelineRequest request)
+        {
+            /*
+             *      Description:
+             * This function will return a pipeline based off a provided pipeline id.
+             *
+             *      Parameters:
+             * -> request: the request body containing the pipeline Id for the service contract.
+             */
+            var pipelineFile = _storageManager.GetFile(request.PipelineId + ".json", ContainerName).Result;
+            if (pipelineFile == null || !await pipelineFile.Exists()) return null;
+            var pipeline = ConvertFileToPipeline(pipelineFile);
+            return pipeline;
         }
     }
 }
