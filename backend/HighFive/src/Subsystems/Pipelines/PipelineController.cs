@@ -76,8 +76,8 @@ namespace src.Subsystems.Pipelines
             {
                 ConfigureStorageManager();
             }
-            var response = _pipelineService.GetPipeline(request);
-            return StatusCode(200, response);
+            var response = _pipelineService.GetPipeline(request).Result;
+            return response == null ? StatusCode(404, null) : StatusCode(200, response);
         }
 
         public override IActionResult GetPipelineIds()
