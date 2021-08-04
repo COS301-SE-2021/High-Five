@@ -3,7 +3,25 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  clientId: 'undefined',
+  authorityId: 'undefined',
+  redirectUri: 'undefined',
+  b2cPolicies: {
+    names: {
+      signUpSignIn: 'undefined',
+      editProfile: 'undefined'
+    },
+    authorities: {
+      signUpSignIn: {
+        authority: 'undefined',
+      },
+      editProfile: {
+        authority: 'undefined'
+      }
+    },
+    authorityDomain: 'undefined'
+  }
 };
 
 /*
