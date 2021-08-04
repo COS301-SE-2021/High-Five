@@ -9,9 +9,8 @@ import {AppRoutingModule} from './app-routing.module';
 import {HttpClientModule} from '@angular/common/http';
 import {VideoPlayer} from '@ionic-native/video-player/ngx';
 import {PipelinesService} from './apis/pipelines.service';
-import {MsalModule} from '@azure/msal-angular';
-import {PublicClientApplication} from '@azure/msal-browser';
-import {MsalGuard} from './services/msal-guard/msal-guard';
+import {MsalGuard, MsalModule} from '@azure/msal-angular';
+import {InteractionType, PublicClientApplication} from '@azure/msal-browser';
 import {environment} from '../environments/environment';
 
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
@@ -29,9 +28,15 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
     },
     cache: {
       cacheLocation: 'sessionStorage',
-      storeAuthStateInCookie: isIE
+      storeAuthStateInCookie: false
     }
-  }), null, null)],
+  }), {
+    interactionType: InteractionType.Redirect,
+    authRequest: {
+      scopes:['user.read']
+    },
+    loginFailedRoute: '/welcome'
+  }, null)],
   providers: [{
     provide: RouteReuseStrategy,
     useClass: IonicRouteStrategy

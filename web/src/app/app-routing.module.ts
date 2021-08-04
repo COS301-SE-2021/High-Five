@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
-import {MsalGuard} from './services/msal-guard/msal-guard';
+import {MsalGuard} from "@azure/msal-angular";
 
 const routes: Routes = [
 
@@ -17,7 +17,7 @@ const routes: Routes = [
 
     path: 'navbar',
     loadChildren: () => import('./pages/navbar/navbar.module').then(m => m.NavbarPageModule),
-    canActivate: [MsalGuard]
+    canLoad: [MsalGuard]
   },
 
 ];

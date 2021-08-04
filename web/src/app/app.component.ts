@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
       res => {
         if (res != null && res.account != null) {
           this.msalService.instance.setActiveAccount(res.account);
-          console.log(res.account.idTokenClaims['given_name']);
+          sessionStorage.setItem('token', res.idToken);
           this.router.navigate(['/navbar/landing']);
         }
       }

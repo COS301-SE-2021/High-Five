@@ -10,23 +10,26 @@
  * Do not edit the class manually.
  *//* tslint:disable:no-unused-variable member-ordering */
 
-import { Inject, Injectable, Optional }                      from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent }                           from '@angular/common/http';
-import { CustomHttpUrlEncodingCodec }                        from '../encoder';
+import {Inject, Injectable, Optional} from '@angular/core';
+import {
+  HttpClient, HttpHeaders, HttpParams,
+  HttpResponse, HttpEvent
+} from '@angular/common/http';
+import {CustomHttpUrlEncodingCodec} from '../encoder';
 
-import { Observable }                                        from 'rxjs';
+import {Observable} from 'rxjs';
 
-import { AddToolsRequest } from '../models/addToolsRequest';
-import { CreatePipelineRequest } from '../models/createPipelineRequest';
-import { DeletePipelineRequest } from '../models/deletePipelineRequest';
-import { EmptyObject } from '../models/emptyObject';
-import { GetPipelinesResponse } from '../models/getPipelinesResponse';
-import { RemoveToolsRequest } from '../models/removeToolsRequest';
+import {AddToolsRequest} from '../models/addToolsRequest';
+import {CreatePipelineRequest} from '../models/createPipelineRequest';
+import {DeletePipelineRequest} from '../models/deletePipelineRequest';
+import {EmptyObject} from '../models/emptyObject';
+import {GetPipelinesResponse} from '../models/getPipelinesResponse';
+import {RemoveToolsRequest} from '../models/removeToolsRequest';
 import {CreatePipelineResponse} from '../models/createPipelineResponse';
 
-import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
-import { Configuration }                                     from '../configuration';
+import {BASE_PATH, COLLECTION_FORMATS} from '../variables';
+import {Configuration} from '../configuration';
+import {MsalService} from '@azure/msal-angular';
 
 
 @Injectable()
@@ -36,7 +39,7 @@ export class PipelinesService {
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
 
-  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration, private msalService: MsalService) {
     if (basePath) {
       this.basePath = basePath;
     }
@@ -87,6 +90,7 @@ export class PipelinesService {
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     if (httpHeaderAcceptSelected != undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
+      headers.append('Authorization ', 'Bearer ' + 'TOKEN HERE');
     }
 
     // to determine the Content-Type header
