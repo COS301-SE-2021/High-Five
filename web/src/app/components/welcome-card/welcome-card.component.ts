@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {MsalService} from '@azure/msal-angular';
+import {AuthenticationResult} from '@azure/msal-browser';
 
 @Component({
   selector: 'app-welcome-card',
@@ -7,13 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WelcomeCardComponent implements OnInit {
 
-  constructor() {
+  constructor(private msalService: MsalService) {
     //Nothing added here yet
   }
 
   ngOnInit() {
     //Nothing added here yet
 
+  }
+
+  login() {
+    this.msalService.loginRedirect();
   }
 
 }

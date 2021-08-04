@@ -6,7 +6,7 @@
   </ion-list-header>
   <ion-item *ngFor="let t of availableTools; index as i">
     <ion-label>{{t}}</ion-label>
-    <ion-checkbox slot="end" (ionChange)="changeCheckbox($event.detail.checked, t)"></ion-checkbox>
+    <ion-checkbox slot="end" (ionChange)="changeCheckbox($event['detail'].checked, t)"></ion-checkbox>
   </ion-item>
   <ion-button expand="full" (click)="addTools()" color="success">
     Confirm
