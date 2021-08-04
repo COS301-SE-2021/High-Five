@@ -27,17 +27,17 @@ internal class JsonElementConverterFactoryKtTest {
         }
 
         @Test
-        fun `convert Json Element to String`() {
+        fun `convert Json Element to String`() { //NOSONAR
             assertThat(jsonElementConverterFactory<String>(jsonObject["string"])).isInstanceOf(String::class.java)
         }
 
         @Test
-        fun `convert Json Element to Long`() {
+        fun `convert Json Element to Long`() { //NOSONAR
             assertThat(jsonElementConverterFactory<Long>(jsonObject["long"])).isInstanceOf(java.lang.Long::class.java)
         }
 
         @Test
-        fun `convert Json Element to Date`() {
+        fun `convert Json Element to Date`() { //NOSONAR
             assertThat(jsonElementConverterFactory<Date>(jsonObject["date"])).isInstanceOf(Date::class.java)
         }
     }
@@ -53,12 +53,12 @@ internal class JsonElementConverterFactoryKtTest {
         }
 
         @Test
-        fun `converting to this class returns null`() {
+        fun `converting to this class returns null`() { //NOSONAR
             assertThat(jsonElementConverterFactory<FailedConversions>(jsonObject["int"])).isNull()
         }
 
         @Test
-        fun `accessing non-existent type returns null`() {
+        fun `accessing non-existent type returns null`() { //NOSONAR
             assertThat(jsonElementConverterFactory<String>(jsonObject["none"])).isNull()
         }
     }

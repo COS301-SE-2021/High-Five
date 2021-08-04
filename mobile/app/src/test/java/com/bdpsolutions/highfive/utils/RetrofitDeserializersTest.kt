@@ -6,8 +6,6 @@ import com.google.gson.JsonObject
 import org.junit.Test
 import java.text.SimpleDateFormat
 import java.util.*
-//IMPORTANT: the //NOSONAR comments are to disable code smell checking for these unit test
-// functions. This is due to the naming convention of the unit tests, which SonarCloud does not like.
 
 internal class RetrofitDeserializersTest {
 
