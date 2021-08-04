@@ -40,9 +40,9 @@ class VideoFragment: Fragment() {
                         for (item in result.getResult()) {
                             itemViews.add(
                                 VideoItemView(
-                                    videoName = item.name,
-                                    videoId = item.id,
-                                    videoDate = item.dateStored.toString()
+                                    videoName = item.name!!,
+                                    videoId = item.id!!,
+                                    videoDate = item.dateStored!!.toString()
                             ))
                         }
                         adapter.setData(itemViews.toTypedArray())
