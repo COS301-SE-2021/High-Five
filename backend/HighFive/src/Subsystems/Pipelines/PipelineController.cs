@@ -70,6 +70,16 @@ namespace src.Subsystems.Pipelines
             return StatusCode(200, response);
         }
 
+        public override IActionResult GetPipeline(GetPipelineRequest getPipelineRequest)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IActionResult GetPipelineIds()
+        {
+            throw new NotImplementedException();
+        }
+
         public override IActionResult GetPipelines()
         {
             if (!_baseContainerSet)

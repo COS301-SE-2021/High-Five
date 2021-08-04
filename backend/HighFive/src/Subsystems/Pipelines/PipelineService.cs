@@ -240,5 +240,40 @@ namespace src.Subsystems.Pipelines
             }
         }
 
+        public GetPipelineIdsResponse GetPipelineIds()
+        {
+            /*
+             *      Description:
+             * This function will return the unique id of every pipeline belonging to this user.
+             */
+
+            var allFiles = _storageManager.GetAllFilesInContainer(ContainerName);
+            if (allFiles.Result == null)
+            {
+                return new GetPipelineIdsResponse{PipelineIds = new List<string>()};
+            }
+            var idList = new List<string>();
+            foreach(var listBlobItem in allFiles.Result)
+            {
+                var currentPipeline = ConvertFileToPipeline(listBlobItem);
+                idList.Add(currentPipeline.Id);
+            }
+            var response = new GetPipelineIdsResponse {PipelineIds = idList};
+            return response;
+        }
+
+        public Pipeline GetPipeline(GetPipelineRequest request)
+        {
+            /*
+             *      Description:
+             * This function will return a pipeline based off a provided pipeline id.
+             *
+             *      Parameters:
+             * -> request: the request body containing the pipeline Id for the service contract.
+             */
+            var pipelineFile = _storageManager.GetFile(request.PipelineId + ".json", ContainerName).Result;
+            var pipeline = ConvertFileToPipeline(pipelineFile);
+            return pipeline;
+        }
     }
 }
