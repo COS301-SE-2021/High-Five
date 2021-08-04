@@ -6,11 +6,13 @@ import com.google.gson.JsonObject
 import org.junit.Test
 import java.text.SimpleDateFormat
 import java.util.*
+//IMPORTANT: the //NOSONAR comments are to disable code smell checking for these unit test
+// functions. This is due to the naming convention of the unit tests, which SonarCloud does not like.
 
 internal class RetrofitDeserializersTest {
 
     @Test
-    fun `deserialize a VideoPreview object from a JSON object`() {
+    fun `deserialize a VideoPreview object from a JSON object`() { //NOSONAR
 
         val jsonObject = JsonObject()
         jsonObject.addProperty("id", "ID001")
@@ -32,7 +34,7 @@ internal class RetrofitDeserializersTest {
     }
 
     @Test
-    fun `deserialize an incomplete JSON object`() {
+    fun `deserialize an incomplete JSON object`() { //NOSONAR
         val jsonObject = JsonObject()
         jsonObject.addProperty("id", "ID001")
         jsonObject.addProperty("name", "TestOBJ")
@@ -50,7 +52,7 @@ internal class RetrofitDeserializersTest {
     }
 
     @Test
-    fun `deserialize an empty JSON object`() {
+    fun `deserialize an empty JSON object`() { //NOSONAR
         val jsonObject = JsonObject()
         val expected = VideoPreview(
             id = null,
