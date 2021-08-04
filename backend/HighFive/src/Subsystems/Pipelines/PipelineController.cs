@@ -8,7 +8,7 @@ using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.Pipelines
 {
-    //[Authorize]
+    [Authorize]
     public class PipelineController: PipelinesApiController
     {
         private readonly IPipelineService _pipelineService;

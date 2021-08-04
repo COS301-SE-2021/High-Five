@@ -12,7 +12,7 @@ using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.MediaStorage
 {
-    //[Authorize]
+    [Authorize]
     public class MediaStorageController : MediaStorageApiController
     {
         private readonly IMediaStorageService _mediaStorageService;
