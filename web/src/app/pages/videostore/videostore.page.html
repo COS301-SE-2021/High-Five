@@ -14,21 +14,13 @@
 
   <div [ngSwitch]="segment">
     <div *ngSwitchCase="'videos'">
-<!--      <ion-list *ngIf="videosFetched">-->
         <ion-grid>
-          <ion-row *ngFor="let item of videos; let i=index;">
-            <ion-col size-xl="6" size-lg="6" size-md="6" size="6">
+          <ion-row *ngFor="let item of videos; index as i">
+            <ion-col size-xl="3">
               <app-videostore-card [video]=item (onDeleteVideo)="deleteVideo($event)"></app-videostore-card>
             </ion-col>
           </ion-row>
         </ion-grid>
-<!--      </ion-list>-->
-<!--      <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">-->
-<!--        <ion-infinite-scroll-content-->
-<!--          loadingSpinner="bubbles"-->
-<!--          loadingText="Loading more data...">-->
-<!--        </ion-infinite-scroll-content>-->
-<!--      </ion-infinite-scroll>-->
     </div>
     <div *ngSwitchCase="'images'">
       <ion-grid>

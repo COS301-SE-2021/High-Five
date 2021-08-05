@@ -1,21 +1,23 @@
 <ion-card>
-  <table><tr>
-    <td class="imageBox">
-      <img width="100px" height="100px" alt="preview" test="desktopImage" src="https://i.pinimg.com/originals/dc/eb/cb/dcebcb563b403620ddbfc1a147b5bcc2.jpg" *ngIf="this.platform.width() >= 700">
-    </td>
-    <td class="contentBox">
-      <img width="100px" height="100px" alt="" test="mobileImage" src="{{video.url}}" *ngIf="this.platform.width() < 700">
-      <ion-card-header class="header">
-        <div class="details">
-          <ion-card-title test="videoTitle">{{video.name}}</ion-card-title>
-          <ion-button test="playBtn" (click)="playVideo(video.id)"><ion-icon slot="start" name="play-circle-outline"></ion-icon>Play</ion-button>
-          <ion-button test="playBtn" color="danger" (click)="deleteVideo(video.id)"><ion-icon slot="start" name="trash-outline"></ion-icon>Delete</ion-button>
-        </div>
-      </ion-card-header>
+  <ion-item>
+    <ion-img src="{{video.url}}" alt="preview"></ion-img>
+  </ion-item>
+  <ion-card-content>
+    <ion-card-title class="ion-text-center">
+      {{video.name}}
+    </ion-card-title>
+    <ion-card-subtitle class="ion-text-center">
+      Some Random text here that is not useful
+    </ion-card-subtitle>
+    <ion-buttons class="ion-justify-content-center">
+      <ion-button color="primary" (click)="playVideo(video.id)">
+        <ion-icon name="expand-outline"  slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button (click)="deleteVideo(video.id)" color="danger">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-card-content>
 
-      <ion-card-content test="recordedDate">
-        {{video.dateStored}}
-      </ion-card-content>
-    </td>
-  </tr></table>
 </ion-card>
+
