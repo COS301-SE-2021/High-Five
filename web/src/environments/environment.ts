@@ -4,26 +4,26 @@
 
 export const environment = {
   production: false,
-  clientId: 'undefined',
-  authorityId: 'undefined',
-  redirectUri: 'undefined',
+  clientId: '315e72e5-4305-47d2-bd7b-406155e610d0',
+  authorityId: '607eec4d-ca5f-417d-a9d3-6f794248e805',
+  redirectUri: 'http://localhost:8100/navbar/landing',
   b2cPolicies: {
     names: {
-      signUpSignIn: 'undefined',
-      editProfile: 'undefined'
+      signUpSignIn: 'B2C_1_signupsignin1',
+      editProfile: 'B2C_1_profileediting1'
     },
     authorities: {
       signUpSignIn: {
-        authority: 'undefined',
+        // authority: 'https://fabrikamb2c.b2clogin.com/fabrikamb2c.onmicrosoft.com/b2c_1_susi',
+        authority: 'https://highfiveactivedirectory.b2clogin.com/highfiveactivedirectory.onmicrosoft.com/B2C_1_signupsignin1',
       },
       editProfile: {
-        authority: 'undefined'
+        authority: 'https://highfiveactivedirectory.b2clogin.com/highfiveactivedirectory.onmicrosoft.com/B2C_1_profileediting1'
       }
     },
-    authorityDomain: 'undefined'
+    authorityDomain: 'highfiveactivedirectory.b2clogin.com'
   }
 };
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

@@ -24,14 +24,13 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class GetVideoRequest : IEquatable<GetVideoRequest>
+    public class GetPipelineRequest : IEquatable<GetPipelineRequest>
     {
         /// <summary>
-        /// unique id assossciated with a certain video stored on the blob storage
+        /// Gets or Sets PipelineId
         /// </summary>
-        /// <value>unique id assossciated with a certain video stored on the blob storage</value>
-        [DataMember(Name="id", EmitDefaultValue=false)]
-        public string Id { get; set; }
+        [DataMember(Name="pipelineId", EmitDefaultValue=false)]
+        public string PipelineId { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -40,8 +39,8 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class GetVideoRequest {\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("class GetPipelineRequest {\n");
+            sb.Append("  PipelineId: ").Append(PipelineId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -64,24 +63,24 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((GetVideoRequest)obj);
+            return obj.GetType() == GetType() && Equals((GetPipelineRequest)obj);
         }
 
         /// <summary>
-        /// Returns true if GetVideoRequest instances are equal
+        /// Returns true if GetPipelineRequest instances are equal
         /// </summary>
-        /// <param name="other">Instance of GetVideoRequest to be compared</param>
+        /// <param name="other">Instance of GetPipelineRequest to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(GetVideoRequest other)
+        public bool Equals(GetPipelineRequest other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    Id == other.Id ||
-                    Id != null &&
-                    Id.Equals(other.Id)
+                    PipelineId == other.PipelineId ||
+                    PipelineId != null &&
+                    PipelineId.Equals(other.PipelineId)
                 );
         }
 
@@ -95,8 +94,8 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Id != null)
-                    hashCode = hashCode * 59 + Id.GetHashCode();
+                    if (PipelineId != null)
+                    hashCode = hashCode * 59 + PipelineId.GetHashCode();
                 return hashCode;
             }
         }
@@ -104,12 +103,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(GetVideoRequest left, GetVideoRequest right)
+        public static bool operator ==(GetPipelineRequest left, GetPipelineRequest right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(GetVideoRequest left, GetVideoRequest right)
+        public static bool operator !=(GetPipelineRequest left, GetPipelineRequest right)
         {
             return !Equals(left, right);
         }
