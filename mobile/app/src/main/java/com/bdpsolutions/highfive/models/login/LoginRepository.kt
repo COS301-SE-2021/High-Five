@@ -29,9 +29,9 @@ class LoginRepository(private val loginSource: LoginDataSource) {
         loginSource.logout()
     }
 
-    fun login(username: String, password: String): Result<User> {
+    fun login(successCallback: (String) -> Unit, failCallback: (String) -> Unit): Result<User> {
         // handle login
-        val result = loginSource.login(username, password)
+        val result = loginSource.login(successCallback, failCallback)
 
         if (result is Result.Success) {
             setLoggedInUser(result.data)

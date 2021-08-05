@@ -26,6 +26,7 @@ buildscript {
     ext.retrofit_converter_version = "2.8.1"
     ext.mockito_version = "3.11.2"
     ext.masl_version = "2.1.0"
+    ext.commons_io_version = "2.11.0"
 
 
     repositories {
@@ -58,7 +59,6 @@ allprojects {
                 password System.getenv("ENV_VSTS_MVN_ANDROIDADAL_ACCESSTOKEN") != null ? System.getenv("ENV_VSTS_MVN_ANDROIDADAL_ACCESSTOKEN") : project.findProperty("vstsMavenAccessToken")
             }
         }
-        mavenCentral()
     }
 }
 

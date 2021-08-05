@@ -1,0 +1,12 @@
+{
+  "client_id" : "",
+  "authorization_user_agent" : "DEFAULT",
+  "redirect_uri" : "",
+  "authorities" : [
+    {
+      "type": "B2C",
+      "authority_url": "",
+      "default": true
+    }
+  ]
+}

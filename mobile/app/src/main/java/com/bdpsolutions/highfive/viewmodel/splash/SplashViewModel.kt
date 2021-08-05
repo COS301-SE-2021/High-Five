@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.bdpsolutions.highfive.view.activities.MainActivity
 import com.bdpsolutions.highfive.view.activities.LoginActivity
 import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
+import com.bdpsolutions.highfive.utils.ContextHolder
 import com.bdpsolutions.highfive.utils.DatabaseHandler
 import com.bdpsolutions.highfive.utils.VolleyNetworkManager
 import kotlinx.coroutines.delay
@@ -25,13 +26,14 @@ class SplashViewModel : ViewModel() {
      *
      * @param context Application context passed for the database
      */
-    fun redirectActivity(context: Context) {
+    fun redirectActivity(context: Activity) {
 
         ConcurrencyExecutor.execute {
 
             //Initialising managers
             VolleyNetworkManager.getInstance(context)
             DatabaseHandler.getDatabase(context)
+            ContextHolder.appContext = context
 
             // check if the user has saved details. If there are no details, redirect to login
             val user = DatabaseHandler.getDatabase(context).userDao().getUser()

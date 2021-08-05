@@ -7,6 +7,6 @@ import com.bdpsolutions.highfive.models.login.model.User
  * Interface for the login/logout functionality. Will allow mocking for unit tests.
  */
 interface LoginDataSource {
-    fun login(username: String, password: String): Result<User>
+    fun login(successCallback: (String) -> Unit, failCallback: (String) -> Unit): Result<User>
     fun logout()
 }

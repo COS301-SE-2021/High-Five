@@ -1,9 +1,11 @@
 package com.bdpsolutions.highfive.viewmodel.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
+import com.bdpsolutions.highfive.BuildConfig
 import com.bdpsolutions.highfive.models.login.LoginRepository
 import com.bdpsolutions.highfive.utils.Result
 
@@ -18,16 +20,23 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(username: String, password: String) {
+    fun login() {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
+        val result = loginRepository.login(
+            {
+                Log.d("TOKEN", it)
+            },
+            {
+                Log.e("TOKEN", it)
+            }
+        )
 
-        if (result is Result.Success) {
-            _loginResult.value =
-                LoginResult(success = LoggedInUserView(displayName = "Hello"))
-        } else {
-            _loginResult.value = LoginResult(error = R.string.login_failed)
-        }
+//        if (result is Result.Success) {
+//            _loginResult.value =
+//                LoginResult(success = LoggedInUserView(displayName = "Hello"))
+//        } else {
+//            _loginResult.value = LoginResult(error = R.string.login_failed)
+//        }
     }
 
     fun loginDataChanged(username: String, password: String) {

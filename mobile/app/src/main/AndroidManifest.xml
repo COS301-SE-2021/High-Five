@@ -12,6 +12,24 @@
         android:roundIcon="@mipmap/logo1_2round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HighFive" >
+        <activity android:name="com.microsoft.identity.client.BrowserTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+<!--                <data-->
+<!--                    android:host="com.bdpsolutions.highfive"-->
+<!--                    android:path="/8xfF8yWXQD1qb4RvLmvBb0bfl0c="-->
+<!--                    android:scheme="msauth" />-->
+                <data
+                    android:host="localhost"
+                    android:path="/test"
+                    android:scheme="http">
+
+                </data>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".view.activities.LoginActivity"
             android:label="@string/title_activity_login"
