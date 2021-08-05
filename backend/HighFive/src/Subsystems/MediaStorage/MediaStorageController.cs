@@ -12,12 +12,12 @@ using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.MediaStorage
 {
-    //[Authorize]
+    [Authorize]
     public class MediaStorageController : MediaStorageApiController
     {
         private readonly IMediaStorageService _mediaStorageService;
         private bool _baseContainerSet;
-        
+
         public MediaStorageController(IMediaStorageService mediaStorageService)
         {
             _mediaStorageService = mediaStorageService;
@@ -30,7 +30,11 @@ namespace src.Subsystems.MediaStorage
             {
                 ConfigureStorageManager();
             }
-            var result = _mediaStorageService.GetAllImages();
+            var resultList = _mediaStorageService.GetAllImages();
+            var result = new GetAllImagesResponse
+            {
+                Images = resultList
+            };
             return StatusCode(200, result);
         }
 
@@ -40,7 +44,11 @@ namespace src.Subsystems.MediaStorage
             {
                 ConfigureStorageManager();
             }
-            var result = _mediaStorageService.GetAllVideos();
+            var resultList = _mediaStorageService.GetAllVideos();
+            var result = new GetAllVideosResponse
+            {
+                Videos = resultList
+            };
             return StatusCode(200, result);
         }
 
