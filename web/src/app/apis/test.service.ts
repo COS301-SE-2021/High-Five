@@ -27,8 +27,8 @@ import { Configuration }                                     from '../configurat
 @Injectable()
 export class TestService {
 
-    protected basePath = '/';
-    public defaultHeaders = new HttpHeaders();
+    protected basePath =  'https://high5api.azurewebsites.net';
+    public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('jwt'));
     public configuration = new Configuration();
 
     constructor(protected httpClient: HttpClient, @Optional()@Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {

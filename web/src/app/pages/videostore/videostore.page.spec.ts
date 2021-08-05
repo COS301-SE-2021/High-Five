@@ -41,9 +41,9 @@ describe('VideostorePage', () => {
 
     it('get stored videos', () => {
       component.loadMoreData();
-      expect(component.items[0][0].name).toBe('testVideoName');
-      expect(component.items[0][0].dateStored.toDateString()).toBe((new Date(2021,6,21)).toDateString());
-      expect(component.items[0][0].id).toBe('testID');
+      expect(component.videos[0][0].name).toBe('testVideoName');
+      expect(component.videos[0][0].dateStored.toDateString()).toBe((new Date(2021,6,21)).toDateString());
+      expect(component.videos[0][0].id).toBe('testID');
     });
   });
 

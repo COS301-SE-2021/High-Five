@@ -37,8 +37,9 @@ import {Configuration} from '../configuration';
 @Injectable()
 export class PipelinesService {
 
-  protected basePath = '/';
-  public defaultHeaders = new HttpHeaders();
+  protected basePath =  'https://high5api.azurewebsites.net';
+  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('jwt'));
+
   public configuration = new Configuration();
 
   constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
@@ -49,7 +50,6 @@ export class PipelinesService {
       this.configuration = configuration;
       this.basePath = basePath || configuration.basePath || this.basePath;
     }
-    this.defaultHeaders.set('Authorization', 'Bearer ' + localStorage.getItem('jwt'));
 
   }
 
@@ -234,7 +234,6 @@ export class PipelinesService {
     if (httpHeaderAcceptSelected != undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
-
     // to determine the Content-Type header
     const consumes: string[] = [];
 

@@ -14,35 +14,31 @@
 
   <div [ngSwitch]="segment">
     <div *ngSwitchCase="'videos'">
-      <ion-list *ngIf="videosFetched">
+<!--      <ion-list *ngIf="videosFetched">-->
         <ion-grid>
-          <ion-row *ngFor="let item of items; let i=index;">
+          <ion-row *ngFor="let item of videos; let i=index;">
             <ion-col size-xl="6" size-lg="6" size-md="6" size="6">
-              <app-videostore-card [data]=item[0] [deleter]="getDeleteFunction()"></app-videostore-card>
-            </ion-col>
-            <ion-col size-xl="6" size-lg="6" size-md="6" size="6" *ngIf="item[1] !== undefined">
-              <app-videostore-card [data]=item[1] [deleter]="getDeleteFunction()"></app-videostore-card>
+              <app-videostore-card [video]=item (onDeleteVideo)="deleteVideo($event)"></app-videostore-card>
             </ion-col>
           </ion-row>
         </ion-grid>
-      </ion-list>
-      <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-        <ion-infinite-scroll-content
-          loadingSpinner="bubbles"
-          loadingText="Loading more data...">
-        </ion-infinite-scroll-content>
-      </ion-infinite-scroll>
+<!--      </ion-list>-->
+<!--      <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">-->
+<!--        <ion-infinite-scroll-content-->
+<!--          loadingSpinner="bubbles"-->
+<!--          loadingText="Loading more data...">-->
+<!--        </ion-infinite-scroll-content>-->
+<!--      </ion-infinite-scroll>-->
     </div>
     <div *ngSwitchCase="'images'">
       <ion-grid>
         <ion-row>
-          <ion-col *ngFor="let img of images; index as i" sizeXl="3" sizeXs="6">
+          <ion-col *ngFor="let img of images; index as i" size-xl="3">
             <app-image-card (deleteImage)="onDeleteImage($event)" [image]="img"></app-image-card>
           </ion-col>
         </ion-row>
       </ion-grid>
     </div>
-
   </div>
   <ion-fab slot="fixed" vertical="bottom" horizontal="end" style="margin-right: 2%; margin-bottom: 2%">
     <ion-fab-button>

@@ -12,6 +12,7 @@ import {PipelinesService} from './apis/pipelines.service';
 import {MsalGuard, MsalModule} from '@azure/msal-angular';
 import {InteractionType, PublicClientApplication} from '@azure/msal-browser';
 import {environment} from '../environments/environment';
+import {MediaStorageService} from './apis/mediaStorage.service';
 
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
@@ -40,7 +41,7 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
   providers: [{
     provide: RouteReuseStrategy,
     useClass: IonicRouteStrategy
-  }, VideoPlayer, PipelinesService, MsalGuard],
+  }, VideoPlayer, PipelinesService, MsalGuard, MediaStorageService],
   bootstrap: [AppComponent],
 })
 export class AppModule {

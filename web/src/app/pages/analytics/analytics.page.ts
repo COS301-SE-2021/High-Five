@@ -32,7 +32,7 @@ export class AnalyticsPage implements OnInit {
    */
   deletePipeline(id: string) {
     this.pipelines = this.pipelines.filter(pipeline => pipeline.id !== id);
-   this.toastController.create({
+    this.toastController.create({
       message: 'Successfully deleted pipeline',
       duration: 2000,
       translucent: true

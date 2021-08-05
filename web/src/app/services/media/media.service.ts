@@ -9,22 +9,6 @@ export class MediaService {
 
   constructor(private http: HttpClient, private endpoints: Endpoints) { }
 
-  /**
-   * Retrieves a list of videos from the backend API and runs a callback function, passing in the
-   * retrieved data.
-   *
-   * @param subscription A function to run once the request is completed
-   */
-  getAllVideos(subscription: any) {
-    const headers = new HttpHeaders({
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      'Content-Type' : 'text/plain',
-    });
-    this.http.post<any>(this.endpoints.labels.getAllVideos,{},{headers}).subscribe(data => {
-      subscription(data);
-    });
-  }
-
   storeVideo(vidName: string, vidData: any, subscription: any) {
     const formData = new FormData();
     formData.append('file', vidData);
@@ -37,16 +21,14 @@ export class MediaService {
     });
   }
 
-  deleteVideo(vidId: string, subscription: any) {
+  storeImage(imageName: string, imageData: any, subscription: any) {
     const formData = new FormData();
-    formData.append('id', vidId);
-
+    formData.append('file', imageData);
     const headers = new HttpHeaders({
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      'Content-Type' : 'application/json'
+      'Content-Type' : 'multipart/form-data'
     });
-
-    this.http.post<any>(this.endpoints.labels.deleteVideo,{id: vidId}, {headers}).subscribe(data => {
+    this.http.post<any>(this.endpoints.labels.storeImage, formData, {}).subscribe(data => {
       subscription(data);
     });
   }

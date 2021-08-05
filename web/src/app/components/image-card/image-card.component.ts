@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Image} from '../../models/image';
 import {ModalController} from '@ionic/angular';
+import {ImageMetaData} from '../../models/imageMetaData';
 
 @Component({
   selector: 'app-image-card',
@@ -8,7 +9,7 @@ import {ModalController} from '@ionic/angular';
   styleUrls: ['./image-card.component.scss'],
 })
 export class ImageCardComponent implements OnInit {
-  @Input() image: Image;
+  @Input() image: ImageMetaData;
   @Output() deleteImage: EventEmitter<string> = new EventEmitter<string>();
   public alt = '../../../assists/images/defaultprofile.svg';
 
@@ -24,9 +25,9 @@ export class ImageCardComponent implements OnInit {
     this.deleteImage.emit(this.image.id);
   }
 
-  public analyseImage() {
-    this.image.analysed = true;
-  }
+  // public analyseImage() {
+  //   this.image.analysed = true;
+  // }
 
   public viewAnalysedImage() {
     return; // Todo : show a modal containing the analysed image

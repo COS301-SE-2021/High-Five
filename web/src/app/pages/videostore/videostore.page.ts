@@ -3,7 +3,8 @@ import {IonInfiniteScroll, LoadingController, ModalController, ToastController} 
 import {VideoMetaData} from '../../models/videoMetaData';
 import {VideoStoreConstants} from '../../../constants/pages/videostore-constants';
 import {MediaService} from '../../services/media/media.service';
-import {Image} from '../../models/image';
+import {ImageMetaData} from '../../models/imageMetaData';
+import {MediaStorageService} from '../../apis/mediaStorage.service';
 
 @Component({
   selector: 'app-videostore',
@@ -14,121 +15,55 @@ export class VideostorePage implements OnInit {
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
-  public items: VideoMetaData[][] = [];
+  public videos: VideoMetaData[] = [];
   public videosFetched = false;
-  public segment;
-  public images: Image[] = [];
+  public segment: string;
+  public images: ImageMetaData[] = [];
 
   constructor(private modal: ModalController, private videoService: MediaService,
               public toastController: ToastController,
               private loadingController: LoadingController,
-              private constants: VideoStoreConstants) {
-    this.loadInitData().then();
-    this.segment = 'videos';
-    for (let img = 0; img < 10; img++) {
-      this.images.push({
-        id: img.toString(),
-        url: 'https://i.pinimg.com/originals/2b/cf/66/2bcf66da8927dcd64e0203b8d1a9d55e.jpg',
-        title: 'Some Title',
-        analysed: false
-      });
-    }
+              private constants: VideoStoreConstants, private mediaStorageService: MediaStorageService) {
+    this.segment = 'images';
   }
 
   ngOnInit() {
     //Nothing added here yet
-
-  }
-
-  /**
-   * Loads data from the backend once the 'video store' page has been loaded.
-   */
-  async loadInitData() {
-
-    // show the spinner before fetching the data
-    const loading = await this.loadingController.create({
-      spinner: 'circles',
-      animated: true,
+    this.updateImages().then(() => {
+      console.log(this.videos);
     });
-    await loading.present();
-
-    // load the data, and pass in a callback function to close the spinner
-    this.loadMoreData(async () => {
-      await loading.dismiss();
+    this.updateVideos().then(() => {
+      console.log(this.videos);
     });
   }
 
-  /**
-   * Called when Ionic's infinite scroll wants to load more data.
-   *
-   * @param event
-   */
-  loadData(event) {
-    setTimeout(async () => {
-      this.loadMoreData();
-      event.target.complete();
-    }, 500);
-  }
 
-  /**
-   * Fetches video metadata from the backend and adds the data to the 'item' list.
-   *
-   * @param func An optional callback function for when data is loaded.
-   */
-  loadMoreData(func: any = null) {
-    this.videoService.getAllVideos(data => {
-      // eslint-disable-next-line guard-for-in
-      let row = true;
-      let counter = 0; // keeps track of the current row
-      for (const item of data) {
-
-        // cards are presented as two-column rows. Therefore we swap between the first and second row
-        // when populating the page.
-        if (row) {
-          this.items.push([Object.assign(new VideoMetaData(), item)]);
-          row = false; //moves to the second column
-        } else {
-          this.items[counter].push(Object.assign(new VideoMetaData(), item));
-          counter++; //moves to the next row
-          row = true; //resets to the first column
-        }
-      }
-
-      // If there is an odd number of items, then set the second column of the
-      // last row to be undefined. Angular will not render it, as there is a check for an undefined column.
-      if (!row) {
-        this.items[counter].push(undefined);
-      }
-
-      this.videosFetched = true; // tell Angular to show the items.
-
-      // calls the callback function if it has been set.
-      if (func !== null) {
-        func();
-      }
+  deleteVideo(videoId: string) {
+    this.videos = this.videos.filter(video => video.id !== videoId);
+    this.mediaStorageService.deleteVideo({id: videoId}).subscribe(() => {
+      this.toastController.create({
+        message: 'Successfully deleted video',
+        duration: 2000,
+        translucent: true
+      }).then(m => m.present());
     });
+
   }
 
   /**
    * Sends an uploaded video to the backend using the VideoUpload service.
    *
-   * @param fileData
+   * @param video
    */
-  async uploadVideo(fileData: any) {
+  async uploadVideo(video: any) {
 
-    // Load the spinner
     const loading = await this.loadingController.create({
       spinner: 'circles',
       animated: true,
     });
     await loading.present();
-
-    // upload the video
-    this.videoService.storeVideo(fileData.target.files[0].name, fileData.target.files[0], data => {
-      console.log(data);
-      this.presentAlert().then();
-      this.items = [];
-      this.loadMoreData();
+    this.mediaStorageService.storeVideoForm(video.target.files[0]).subscribe(() => {
+      this.updateVideos();
       loading.dismiss();
     });
   }
@@ -143,53 +78,52 @@ export class VideostorePage implements OnInit {
       message: this.constants.toastLabels.message,
       buttons: this.constants.toastLabels.buttons
     });
-
     await alert.present();
-  }
-
-  /**
-   * Returns an anonymous functions for the child component to use when deleting itself.
-   */
-  getDeleteFunction() {
-    return (vidId: string) => {
-
-      // Updated list of videos
-      const tmp: VideoMetaData[][] = [];
-      let flip = false; // determines to which column the video goes to
-      let counter = 0;
-      for (const item of this.items) {
-        for (const vid of item) {
-
-          //Only add a video if it's id does not match the given ID.
-          if (vid !== undefined && vid.id !== vidId) {
-            if (!flip) {
-              tmp.push([vid]);
-              flip = true;
-            } else {
-              tmp[counter].push(vid);
-              counter++;
-              flip = false;
-            }
-          }
-        }
-      }
-
-      // add an 'undefined' item so that Angular knows not to try add an empty column
-      if (flip) {
-        tmp[counter].push(undefined);
-      }
-      this.items = tmp;
-      console.log(this.items);
-    };
   }
 
   onDeleteImage(imageId: string) {
     this.images = this.images.filter(img => img.id !== imageId);
+    this.mediaStorageService.deleteImage({id: imageId}).subscribe(() => {
+      this.toastController.create({
+        message: 'Successfully deleted video',
+        duration: 2000,
+        translucent: true
+      }).then(m => m.present());
+    });
   }
 
-  uploadImage($event: Event) {
+  async uploadImage(image: any) {
+    const loading = await this.loadingController.create({
+      spinner: 'circles',
+      animated: true,
+    });
+    await loading.present();
+    this.mediaStorageService.storeImageForm(image.target.files[0]).subscribe(() => {
+      this.updateImages();
+      loading.dismiss();
+    });
     //Nothing added here yet
 
+  }
+
+  private async updateImages(): Promise<boolean> {
+    this.mediaStorageService.getAllImages().subscribe(response => {
+      console.log(response);
+      this.images = response.images;
+      this.images.sort((a, b) => a.name.localeCompare(b.name));
+      return true;
+    });
+    return false;
+  }
+
+  private async updateVideos(): Promise<boolean> {
+    this.mediaStorageService.getAllVideos().subscribe(response => {
+      console.log(response);
+      this.videos = response.videos;
+      this.videos.sort((a, b) => a.name.localeCompare(b.name));
+      return true;
+    });
+    return false;
   }
 
 }
