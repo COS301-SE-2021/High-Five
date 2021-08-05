@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
@@ -15,7 +17,7 @@ namespace src.Subsystems.MediaStorage
     {
         private readonly IMediaStorageService _mediaStorageService;
         private bool _baseContainerSet;
-        
+
         public MediaStorageController(IMediaStorageService mediaStorageService)
         {
             _mediaStorageService = mediaStorageService;
@@ -28,7 +30,11 @@ namespace src.Subsystems.MediaStorage
             {
                 ConfigureStorageManager();
             }
-            var result = _mediaStorageService.GetAllImages();
+            var resultList = _mediaStorageService.GetAllImages();
+            var result = new GetAllImagesResponse
+            {
+                Images = resultList
+            };
             return StatusCode(200, result);
         }
 
@@ -38,7 +44,11 @@ namespace src.Subsystems.MediaStorage
             {
                 ConfigureStorageManager();
             }
-            var result = _mediaStorageService.GetAllVideos();
+            var resultList = _mediaStorageService.GetAllVideos();
+            var result = new GetAllVideosResponse
+            {
+                Videos = resultList
+            };
             return StatusCode(200, result);
         }
 

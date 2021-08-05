@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,13 +13,13 @@ namespace src.Subsystems.Pipelines
     {
         private readonly IPipelineService _pipelineService;
         private bool _baseContainerSet;
-        
+
         public PipelineController(IPipelineService pipelineService)
         {
             _pipelineService = pipelineService;
             _baseContainerSet = false;
         }
-        
+
         public override IActionResult AddTools(AddToolsRequest addToolsRequest)
         {
             if (!_baseContainerSet)
@@ -110,12 +111,12 @@ namespace src.Subsystems.Pipelines
             {
                 return StatusCode(200, response);
             }
-            
+
             response.Success = false;
             response.Message = "Removal of tools from pipeline failed";
             return StatusCode(400, response);
         }
-        
+
         private void ConfigureStorageManager()
         {
             var tokenString = HttpContext.GetTokenAsync("access_token").Result;

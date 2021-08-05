@@ -1,4 +1,4 @@
-import {Component, OnInit, Renderer2} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-welcome',
@@ -7,10 +7,11 @@ import {Component, OnInit, Renderer2} from '@angular/core';
 })
 export class WelcomePage implements OnInit {
 
-  hills: any;
-  constructor(public renderer: Renderer2) { }
+  constructor() {
+  }
 
   ngOnInit() {
+
     //Nothing added here yet
 
   }
