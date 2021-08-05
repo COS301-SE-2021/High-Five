@@ -90,6 +90,19 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Store Image use case</remarks>
+        /// <param name="file"></param>
+        /// <response code="200">Image has been stored</response>
+        [HttpPost]
+        [Route("/media/storeImage")]
+        [Consumes("multipart/form-data")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(StoreImageResponse))]
+        public abstract Task<IActionResult> StoreImage(IFormFile file);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Store Video use case</remarks>
         /// <param name="file"></param>
         /// <response code="200">Video has been stored</response>
