@@ -92,7 +92,7 @@ namespace src.Subsystems.Pipelines
                 Tools = pipeline.Tools
             };
             await UploadPipelineToStorage(newPipeline, blobFile);
-            
+
             var response = new CreatePipelineResponse()
             {
                 PipelineId = generatedName
@@ -157,6 +157,14 @@ namespace src.Subsystems.Pipelines
 
         public async Task<bool> DeletePipeline(DeletePipelineRequest request)
         {
+            /*
+             *      Description:
+             * This function will delete a pipeline by a specific pipeline id.
+             *
+             *      Parameters:
+             * -> request: the request object for this use case that contains the pipeline id to be deleted.
+             */
+
             var blobFile = _storageManager.GetFile(request.PipelineId + ".json", ContainerName).Result;
             if (blobFile == null)
             {
@@ -231,6 +239,42 @@ namespace src.Subsystems.Pipelines
                 _storageManager.SetBaseContainer(id);
             }
         }
-        
+
+        public GetPipelineIdsResponse GetPipelineIds()
+        {
+            /*
+             *      Description:
+             * This function will return the unique id of every pipeline belonging to this user.
+             */
+
+            var allFiles = _storageManager.GetAllFilesInContainer(ContainerName);
+            if (allFiles.Result == null)
+            {
+                return new GetPipelineIdsResponse{PipelineIds = new List<string>()};
+            }
+            var idList = new List<string>();
+            foreach(var listBlobItem in allFiles.Result)
+            {
+                var currentPipeline = ConvertFileToPipeline(listBlobItem);
+                idList.Add(currentPipeline.Id);
+            }
+            var response = new GetPipelineIdsResponse {PipelineIds = idList};
+            return response;
+        }
+
+        public async Task<Pipeline> GetPipeline(GetPipelineRequest request)
+        {
+            /*
+             *      Description:
+             * This function will return a pipeline based off a provided pipeline id.
+             *
+             *      Parameters:
+             * -> request: the request body containing the pipeline Id for the service contract.
+             */
+            var pipelineFile = _storageManager.GetFile(request.PipelineId + ".json", ContainerName).Result;
+            if (pipelineFile == null || !await pipelineFile.Exists()) return null;
+            var pipeline = ConvertFileToPipeline(pipelineFile);
+            return pipeline;
+        }
     }
 }

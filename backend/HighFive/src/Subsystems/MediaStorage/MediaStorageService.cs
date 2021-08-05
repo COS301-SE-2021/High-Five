@@ -18,7 +18,7 @@ namespace src.Subsystems.MediaStorage
          * for retrieving, creating and deleting videos from a user's blob storage.
          *
          *      Attributes:
-         * -> _storageManager: an reference to the storage manager, used to access the blob storage.
+         * -> _storageManager: a reference to the storage manager, used to access the blob storage.
          * -> _containerName: the name of the container in which a user's videos are stored.
          */
 

@@ -8,18 +8,18 @@ using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.Pipelines
 {
-    //[Authorize]
+    [Authorize]
     public class PipelineController: PipelinesApiController
     {
         private readonly IPipelineService _pipelineService;
         private bool _baseContainerSet;
-        
+
         public PipelineController(IPipelineService pipelineService)
         {
             _pipelineService = pipelineService;
             _baseContainerSet = false;
         }
-        
+
         public override IActionResult AddTools(AddToolsRequest addToolsRequest)
         {
             if (!_baseContainerSet)
@@ -70,6 +70,26 @@ namespace src.Subsystems.Pipelines
             return StatusCode(200, response);
         }
 
+        public override IActionResult GetPipeline(GetPipelineRequest request)
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            var response = _pipelineService.GetPipeline(request).Result;
+            return response == null ? StatusCode(404, null) : StatusCode(200, response);
+        }
+
+        public override IActionResult GetPipelineIds()
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            var response = _pipelineService.GetPipelineIds();
+            return StatusCode(200, response);
+        }
+
         public override IActionResult GetPipelines()
         {
             if (!_baseContainerSet)
@@ -91,12 +111,12 @@ namespace src.Subsystems.Pipelines
             {
                 return StatusCode(200, response);
             }
-            
+
             response.Success = false;
             response.Message = "Removal of tools from pipeline failed";
             return StatusCode(400, response);
         }
-        
+
         private void ConfigureStorageManager()
         {
             var tokenString = HttpContext.GetTokenAsync("access_token").Result;

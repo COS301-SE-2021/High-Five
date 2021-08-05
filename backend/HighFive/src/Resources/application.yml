@@ -202,6 +202,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getPipelinesResponse'
+                
+  /pipelines/getPipelineIds:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Get Pipeline Ids use case
+      operationId: GetPipelineIds
+      responses:
+        "200":
+          description: All pipeline Id's have been returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getPipelineIdsResponse'
+
+  /pipelines/getPipeline:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Get Pipeline use case
+      operationId: GetPipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/getPipelineRequest'
+      responses:
+        "200":
+          description: Returns a pipeline for a given Id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pipeline'
 
   /pipelines/addTools:
     post:
@@ -466,6 +500,20 @@ components:
             type: string
 
     deletePipelineRequest:
+      type: object
+      properties:
+        pipelineId:
+          type: string
+          
+    getPipelineIdsResponse:
+      type: object
+      properties:
+        pipelineIds:
+          type: array
+          items:
+            type: string
+
+    getPipelineRequest:
       type: object
       properties:
         pipelineId:
