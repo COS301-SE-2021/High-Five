@@ -35,23 +35,33 @@ import com.microsoft.identity.client.IPublicClientApplication.LoadAccountsCallba
  */
 class APILogin : LoginDataSource {
 
-    private var mSingleAccountApp: ISingleAccountPublicClientApplication? = null
-    private val SCOPES = arrayOf("https://graph.microsoft.com/offline_access", "https://graph.microsoft.com/openid")
+    private var mSingleAccountApp: IPublicClientApplication? = null
+    private val SCOPES = arrayOf("https://graph.windows.net/user.read")
 
     override fun login(successCallback: (String) -> Unit, failCallback: (String) -> Unit): Result<User> {
         try {
             // TODO: handle loggedInUser authentication
             val fakeUser = User(0, "xxxx")
-            PublicClientApplication.createSingleAccountPublicClientApplication(ContextHolder.appContext!!,
+            PublicClientApplication.create(ContextHolder.appContext!!,
                 R.raw.auth_config_single_account,
-                object : ISingleAccountApplicationCreatedListener {
-                    override fun onCreated(application: ISingleAccountPublicClientApplication) {
+                object : IPublicClientApplication.ApplicationCreatedListener {
+                    override fun onCreated(application: IPublicClientApplication) {
                         /**
                          * This test app assumes that the app is only going to support one account.
                          * This requires "account_mode" : "SINGLE" in the config json file.
                          */
                         mSingleAccountApp = application
-                        mSingleAccountApp?.signIn(ContextHolder.appContext!!, null, SCOPES, getAuthInteractiveCallback())
+                        val parameters = AcquireTokenParameters.Builder()
+                            .startAuthorizationFromActivity(ContextHolder.appContext!!)
+                            .fromAuthority(
+                                "https://highfiveactivedirectory.b2clogin.com/highfiveactivedirectory.onmicrosoft.com/B2C_1_signupsignin1/"
+                            )
+                            .withScopes(SCOPES.toMutableList())
+                            .withPrompt(Prompt.LOGIN)
+                            .withCallback(getAuthInteractiveCallback())
+                            .build()
+                        mSingleAccountApp?.acquireToken(parameters)
+                        //mSingleAccountApp?.signIn(ContextHolder.appContext!!, null, SCOPES, getAuthInteractiveCallback())
                         //loadAccount()
                     }
 
