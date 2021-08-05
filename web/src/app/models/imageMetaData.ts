@@ -9,8 +9,13 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { VideoMetaData } from './videoMetaData';
 
-export interface GetAllVideosResponse {
-    videos?: Array<VideoMetaData>;
+export interface ImageMetaData {
+    id?: string;
+    name?: string;
+    /**
+     * The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Zring
+     */
+    dateStored?: Date;
+    url?: string;
 }

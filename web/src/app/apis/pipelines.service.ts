@@ -15,16 +15,20 @@ import {
   HttpClient, HttpHeaders, HttpParams,
   HttpResponse, HttpEvent
 } from '@angular/common/http';
+import {CustomHttpUrlEncodingCodec} from '../encoder';
 
 import {Observable} from 'rxjs';
 
 import {AddToolsRequest} from '../models/addToolsRequest';
 import {CreatePipelineRequest} from '../models/createPipelineRequest';
+import {CreatePipelineResponse} from '../models/createPipelineResponse';
 import {DeletePipelineRequest} from '../models/deletePipelineRequest';
 import {EmptyObject} from '../models/emptyObject';
+import {GetPipelineIdsResponse} from '../models/getPipelineIdsResponse';
+import {GetPipelineRequest} from '../models/getPipelineRequest';
 import {GetPipelinesResponse} from '../models/getPipelinesResponse';
+import {Pipeline} from '../models/pipeline';
 import {RemoveToolsRequest} from '../models/removeToolsRequest';
-import {CreatePipelineResponse} from '../models/createPipelineResponse';
 
 import {BASE_PATH, COLLECTION_FORMATS} from '../variables';
 import {Configuration} from '../configuration';
@@ -33,13 +37,11 @@ import {Configuration} from '../configuration';
 @Injectable()
 export class PipelinesService {
 
-  protected basePath = 'https://high5api.azurewebsites.net';
-
-  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('jwt'));
+  protected basePath = '/';
+  public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
 
-  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string,
-              @Optional() configuration: Configuration) {
+  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
     if (basePath) {
       this.basePath = basePath;
     }
@@ -47,6 +49,8 @@ export class PipelinesService {
       this.configuration = configuration;
       this.basePath = basePath || configuration.basePath || this.basePath;
     }
+    this.defaultHeaders.set('Authorization', 'Bearer ' + localStorage.getItem('jwt'));
+
   }
 
   /**
@@ -246,6 +250,90 @@ export class PipelinesService {
 
   /**
    *
+   * Endpoint for Get Pipeline use case
+   *
+   * @param body
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getPipeline(body: GetPipelineRequest, observe?: 'body', reportProgress?: boolean): Observable<Pipeline>;
+  public getPipeline(body: GetPipelineRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Pipeline>>;
+  public getPipeline(body: GetPipelineRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Pipeline>>;
+  public getPipeline(body: GetPipelineRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    if (body === null || body === undefined) {
+      throw new Error('Required parameter body was null or undefined when calling getPipeline.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+      'application/json'
+    ];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected != undefined) {
+      headers = headers.set('Content-Type', httpContentTypeSelected);
+    }
+
+    return this.httpClient.request<Pipeline>('post', `${this.basePath}/pipelines/getPipeline`,
+      {
+        body,
+        withCredentials: this.configuration.withCredentials,
+        headers,
+        observe,
+        reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   * Endpoint for Get Pipeline Ids use case
+   *
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getPipelineIds(observe?: 'body', reportProgress?: boolean): Observable<GetPipelineIdsResponse>;
+  public getPipelineIds(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GetPipelineIdsResponse>>;
+  public getPipelineIds(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GetPipelineIdsResponse>>;
+  public getPipelineIds(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    let headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [];
+
+    return this.httpClient.request<GetPipelineIdsResponse>('post', `${this.basePath}/pipelines/getPipelineIds`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers,
+        observe,
+        reportProgress
+      }
+    );
+  }
+
+  /**
+   *
    * Endpoint for Get Pipelines use case
    *
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -266,7 +354,7 @@ export class PipelinesService {
     if (httpHeaderAcceptSelected != undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
-    console.log(headers)
+
     // to determine the Content-Type header
     const consumes: string[] = [];
 

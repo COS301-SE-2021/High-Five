@@ -9,8 +9,7 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { VideoMetaData } from './videoMetaData';
 
-export interface GetAllVideosResponse {
-    videos?: Array<VideoMetaData>;
+export interface EchoRequest {
+    message?: string;
 }
