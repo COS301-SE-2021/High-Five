@@ -81,6 +81,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_converter_version"
     implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit_version"
+    implementation "com.microsoft.identity.client:msal:$masl_version"
     //kapt 'groupId:artifactId:version'
 
     kapt "com.github.bumptech.glide:compiler:$glide_version"

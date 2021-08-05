@@ -25,6 +25,7 @@ buildscript {
     ext.retrofit_version = "2.9.0"
     ext.retrofit_converter_version = "2.8.1"
     ext.mockito_version = "3.11.2"
+    ext.masl_version = "2.1.0"
 
 
     repositories {
@@ -43,7 +44,20 @@ buildscript {
 
 allprojects {
     repositories {
+        mavenCentral()
         google()
+        mavenLocal()
+        maven {
+            url 'https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1'
+        }
+        maven {
+            name "vsts-maven-adal-android"
+            url "https://identitydivision.pkgs.visualstudio.com/_packaging/AndroidADAL/maven/v1"
+            credentials {
+                username System.getenv("ENV_VSTS_MVN_ANDROIDADAL_USERNAME") != null ? System.getenv("ENV_VSTS_MVN_ANDROIDADAL_USERNAME") : project.findProperty("vstsUsername")
+                password System.getenv("ENV_VSTS_MVN_ANDROIDADAL_ACCESSTOKEN") != null ? System.getenv("ENV_VSTS_MVN_ANDROIDADAL_ACCESSTOKEN") : project.findProperty("vstsMavenAccessToken")
+            }
+        }
         mavenCentral()
     }
 }
