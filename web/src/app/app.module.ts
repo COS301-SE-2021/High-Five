@@ -14,7 +14,6 @@ import {InteractionType, PublicClientApplication} from '@azure/msal-browser';
 import {environment} from '../environments/environment';
 import {MediaStorageService} from './apis/mediaStorage.service';
 
-const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
 
 @NgModule({

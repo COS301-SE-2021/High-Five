@@ -12,7 +12,7 @@ import {MediaService} from '../../services/media/media.service';
 })
 export class VideostoreCardComponent implements OnInit {
   @Input() video: VideoMetaData;
-  @Output() onDeleteVideo: EventEmitter<string> = new EventEmitter<string>();
+  @Output() deleteVideo: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(public platform: Platform, private modal: ModalController,
               private mediaService: MediaService, private alertController: AlertController,
@@ -47,7 +47,7 @@ export class VideostoreCardComponent implements OnInit {
    *
    * @param vidId
    */
-  async deleteVideo(vidId: string) {
-    this.onDeleteVideo.emit(this.video.id);
+  async onDeleteVideo(vidId: string) {
+    this.deleteVideo.emit(this.video.id);
   }
 }

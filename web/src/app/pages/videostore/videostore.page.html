@@ -14,19 +14,19 @@
 
   <div [ngSwitch]="segment">
     <div *ngSwitchCase="'videos'">
-        <ion-grid>
-          <ion-row *ngFor="let item of videos; index as i">
-            <ion-col size-xl="3">
-              <app-videostore-card [video]=item (onDeleteVideo)="deleteVideo($event)"></app-videostore-card>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
+      <ion-grid>
+        <ion-row>
+          <ion-col *ngFor="let video of videos; index as i" size-xl="3">
+            <app-videostore-card (deleteVideo)="deleteVideo($event)" [video]="video"></app-videostore-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </div>
     <div *ngSwitchCase="'images'">
       <ion-grid>
         <ion-row>
           <ion-col *ngFor="let img of images; index as i" size-xl="3">
-            <app-image-card (deleteImage)="onDeleteImage($event)" [image]="img"></app-image-card>
+            <app-image-card (deleteImage)="deleteImage($event)" [image]="img"></app-image-card>
           </ion-col>
         </ion-row>
       </ion-grid>

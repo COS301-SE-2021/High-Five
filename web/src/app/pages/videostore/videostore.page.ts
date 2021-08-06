@@ -81,15 +81,33 @@ export class VideostorePage implements OnInit {
     await alert.present();
   }
 
-  onDeleteImage(imageId: string) {
+  /**
+   * This function will delete an image from the user's account, optimistic loading updates are used and in the event
+   * and error is thrown, the image is added back and an appropriate toast is shown
+   *
+   * @param imageId the ID of the image we wish to delete
+   */
+  deleteImage(imageId: string) {
     this.images = this.images.filter(img => img.id !== imageId);
-    this.mediaStorageService.deleteImage({id: imageId}).subscribe(() => {
+    const image : ImageMetaData = this.images.filter(img => img.id === imageId)[0];
+    try{
+      this.mediaStorageService.deleteImage({id: imageId}).subscribe(() => {
+        this.toastController.create({
+          message: 'Successfully deleted image',
+          duration: 2000,
+          translucent: true
+        }).then(m => m.present());
+      });
+    }catch (e) {
       this.toastController.create({
-        message: 'Successfully deleted video',
+        message: 'Error occurred while deleting image',
         duration: 2000,
         translucent: true
       }).then(m => m.present());
-    });
+      this.images.concat([image]);
+      this.images.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
   }
 
   async uploadImage(image: any) {
@@ -103,7 +121,6 @@ export class VideostorePage implements OnInit {
       loading.dismiss();
     });
     //Nothing added here yet
-
   }
 
   private async updateImages(): Promise<boolean> {
