@@ -36,7 +36,7 @@ import com.microsoft.identity.client.IPublicClientApplication.LoadAccountsCallba
 class APILogin : LoginDataSource {
 
     private var mSingleAccountApp: IPublicClientApplication? = null
-    private val SCOPES = arrayOf("https://graph.windows.net/user.read")
+    private val SCOPES = arrayOf("openid", "offline_access", "profile")
 
     override fun login(successCallback: (String) -> Unit, failCallback: (String) -> Unit): Result<User> {
         try {
@@ -54,7 +54,7 @@ class APILogin : LoginDataSource {
                         val parameters = AcquireTokenParameters.Builder()
                             .startAuthorizationFromActivity(ContextHolder.appContext!!)
                             .fromAuthority(
-                                "https://highfiveactivedirectory.b2clogin.com/highfiveactivedirectory.onmicrosoft.com/B2C_1_signupsignin1/"
+                                ""
                             )
                             .withScopes(SCOPES.toMutableList())
                             .withPrompt(Prompt.LOGIN)

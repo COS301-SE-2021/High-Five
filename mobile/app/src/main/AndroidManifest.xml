@@ -3,6 +3,7 @@
     package="com.bdpsolutions.highfive" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application
         android:name=".HighFiveApplication"
@@ -20,7 +21,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:host="com.bdpsolutions.highfive"
-                    android:path="/8xfF8yWXQD1qb4RvLmvBb0bfl0c="
+                    android:path="/ir0B7pbm7QPY55pweHqmH9Azr/s="
                     android:scheme="msauth" />
 
             </intent-filter>
