@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import {IonicModule, ModalController, Platform} from '@ionic/angular';
+import {IonicModule, ModalController} from '@ionic/angular';
 
 import { VideostoreCardComponent } from './videostore-card.component';
-import createSpyObj = jasmine.createSpyObj;
 import {HttpClient} from '@angular/common/http';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 
@@ -20,7 +19,7 @@ const mockVideoDetail = jasmine.createSpyObj('VideoMetaData', [ ],
 
 
 
-const mockModalController = createSpyObj('ModalController', ['create', 'present'], ['style']);
+const mockModalController = jasmine.createSpyObj('ModalController', ['create', 'present'], ['style']);
 
 /**
  * Runs all test suites for the VideostoreCardComponent
@@ -37,7 +36,7 @@ describe('VideostoreCardComponent', () => {
 
       fixture = TestBed.createComponent(VideostoreCardComponent);
       component = fixture.componentInstance;
-      component.data = mockVideoDetail;
+      component.video = mockVideoDetail;
       fixture.detectChanges();
     }));
   };

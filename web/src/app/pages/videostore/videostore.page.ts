@@ -30,10 +30,8 @@ export class VideostorePage implements OnInit {
   ngOnInit() {
     //Nothing added here yet
     this.updateImages().then(() => {
-      console.log(this.videos);
     });
     this.updateVideos().then(() => {
-      console.log(this.videos);
     });
   }
 
@@ -125,7 +123,6 @@ export class VideostorePage implements OnInit {
 
   private async updateImages(): Promise<boolean> {
     this.mediaStorageService.getAllImages().subscribe(response => {
-      console.log(response);
       this.images = response.images;
       this.images.sort((a, b) => a.name.localeCompare(b.name));
       return true;
@@ -135,7 +132,6 @@ export class VideostorePage implements OnInit {
 
   private async updateVideos(): Promise<boolean> {
     this.mediaStorageService.getAllVideos().subscribe(response => {
-      console.log(response);
       this.videos = response.videos;
       this.videos.sort((a, b) => a.name.localeCompare(b.name));
       return true;

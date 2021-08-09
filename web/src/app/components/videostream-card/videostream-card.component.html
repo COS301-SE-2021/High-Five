@@ -8,7 +8,7 @@
 <ion-content>
   <vg-player>
     <video [vgMedia]="$any(media)" #media id="singleVideo" preload="auto" controls>
-      <source src="{{endpoints.labels.getVideo}}/{{vidId}}" type="video/mp4">
+      <source src="{{videoUrl}}" type="video/mp4">
     </video>
   </vg-player>
 </ion-content>
