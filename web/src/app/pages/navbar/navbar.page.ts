@@ -24,7 +24,7 @@ export class NavbarPage implements OnInit {
   private navPages;
 
 
-  constructor(private screenSizeService: ScreenSizeServiceService, private nav: Router, private msalService: MsalService) {
+  constructor(private screenSizeService: ScreenSizeServiceService, private router: Router, private msalService: MsalService) {
     this.screenSizeService.isDesktopView().subscribe(isDesktop => {
       this.isDesktop = isDesktop;
     });
@@ -42,8 +42,10 @@ export class NavbarPage implements OnInit {
   }
 
   logout() {
-    this.msalService.logout();
-    localStorage.removeItem('jwt');
+    this.router.navigate(['/welcome']).then(()=>{
+      localStorage.removeItem('jwt');
+      this.msalService.logoutRedirect();
+    });
   }
 
   /**
@@ -63,7 +65,7 @@ export class NavbarPage implements OnInit {
         value[0] = 'active-link';
       }
     }
-    this.nav.navigate([url]);
+    this.router.navigate([url]);
   }
 
 }
