@@ -27,7 +27,6 @@ export class VideostorePage implements OnInit {
   }
 
   ngOnInit() {
-    //Nothing added here yet
     this.updateImages().then(() => {
     });
     this.updateVideos().then(() => {
@@ -85,6 +84,9 @@ export class VideostorePage implements OnInit {
    * @param imageId the ID of the image we wish to delete
    */
   deleteImage(imageId: string) {
+    if(this.images.length==0){
+      return;
+    }
     this.images = this.images.filter(img => img.id !== imageId);
     const image: ImageMetaData = this.images.filter(img => img.id === imageId)[0];
     try {
@@ -102,7 +104,9 @@ export class VideostorePage implements OnInit {
         translucent: true
       }).then(m => m.present());
       this.images.concat([image]);
-      this.images.sort((a, b) => a.name.localeCompare(b.name));
+      if(this.images != undefined && this.images.length>1){
+        this.images.sort((a, b) => a.name.localeCompare(b.name));
+      }
     }
 
   }
@@ -123,7 +127,9 @@ export class VideostorePage implements OnInit {
   private async updateImages(): Promise<boolean> {
     this.mediaStorageService.getAllImages().subscribe(response => {
       this.images = response.images;
-      this.images.sort((a, b) => a.name.localeCompare(b.name));
+      if(this.images != undefined  && this.images.length>1){
+        this.images.sort((a, b) => a.name.localeCompare(b.name));
+      }
       return true;
     });
     return false;
@@ -132,7 +138,9 @@ export class VideostorePage implements OnInit {
   private async updateVideos(): Promise<boolean> {
     this.mediaStorageService.getAllVideos().subscribe(response => {
       this.videos = response.videos;
-      this.videos.sort((a, b) => a.name.localeCompare(b.name));
+      if(this.videos != undefined  && this.videos.length>1){
+        this.videos.sort((a, b) => a.name.localeCompare(b.name));
+      }
       return true;
     });
     return false;
