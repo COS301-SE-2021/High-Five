@@ -2,7 +2,6 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {IonInfiniteScroll, LoadingController, ModalController, ToastController} from '@ionic/angular';
 import {VideoMetaData} from '../../models/videoMetaData';
 import {VideoStoreConstants} from '../../../constants/pages/videostore-constants';
-import {MediaService} from '../../services/media/media.service';
 import {ImageMetaData} from '../../models/imageMetaData';
 import {MediaStorageService} from '../../apis/mediaStorage.service';
 
@@ -20,7 +19,7 @@ export class VideostorePage implements OnInit {
   public segment: string;
   public images: ImageMetaData[] = [];
 
-  constructor(private modal: ModalController, private videoService: MediaService,
+  constructor(private modal: ModalController,
               public toastController: ToastController,
               private loadingController: LoadingController,
               private constants: VideoStoreConstants, private mediaStorageService: MediaStorageService) {
@@ -87,8 +86,8 @@ export class VideostorePage implements OnInit {
    */
   deleteImage(imageId: string) {
     this.images = this.images.filter(img => img.id !== imageId);
-    const image : ImageMetaData = this.images.filter(img => img.id === imageId)[0];
-    try{
+    const image: ImageMetaData = this.images.filter(img => img.id === imageId)[0];
+    try {
       this.mediaStorageService.deleteImage({id: imageId}).subscribe(() => {
         this.toastController.create({
           message: 'Successfully deleted image',
@@ -96,7 +95,7 @@ export class VideostorePage implements OnInit {
           translucent: true
         }).then(m => m.present());
       });
-    }catch (e) {
+    } catch (e) {
       this.toastController.create({
         message: 'Error occurred while deleting image',
         duration: 2000,

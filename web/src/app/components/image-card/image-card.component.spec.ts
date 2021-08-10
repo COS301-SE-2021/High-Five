@@ -6,18 +6,9 @@ import {ImageCardComponent} from './image-card.component';
 /**
  * Mock image model to be used in the component to represent an image that has not been analysed
  */
-const mockImageModelNotAnalysed = jasmine.createSpyObj('image', [], {
+const mockImageMetadataModel = jasmine.createSpyObj('image', [], {
   id: 'test_id', url: 'test_url',
-  title: 'test_title', analysed: false, analysedId: 'test_analysedId'
-});
-
-
-/**
- * Mock image model to be used in the component to represent an image that has been analysed
- */
-const mockImageModelAnalysed = jasmine.createSpyObj('image', [], {
-  id: 'test_id', url: 'test_url',
-  title: 'test_title', analysed: false, analysedId: 'test_analysedId'
+  name: 'test_name', dateStored : new Date(2017, 4, 4, 17, 23, 42, 11)
 });
 
 describe('ImageCardComponent', () => {
@@ -32,7 +23,7 @@ describe('ImageCardComponent', () => {
 
     fixture = TestBed.createComponent(ImageCardComponent);
     component = fixture.componentInstance;
-    component.image = mockImageModelNotAnalysed;
+    component.image = mockImageMetadataModel;
     fixture.detectChanges();
   }));
 
@@ -48,15 +39,15 @@ describe('ImageCardComponent', () => {
    */
   it('should show correct image', () => {
     const imageUrl = fixture.debugElement.nativeElement.querySelector('ion-img').src;
-    expect(imageUrl).toBe(mockImageModelNotAnalysed.url);
+    expect(imageUrl).toBe(mockImageMetadataModel.url);
   });
 
   /**
-   * Checks that the image tittle matches the mock image model's title
+   * Checks that the image name matches the mock image model's name
    */
-  it('should show correct title', () => {
-    const cardTitle = fixture.debugElement.nativeElement.querySelector('ion-card-title').innerText.trim();
-    expect(cardTitle).toBe(mockImageModelNotAnalysed.title);
+  it('should show correct name', () => {
+    const cardname = fixture.debugElement.nativeElement.querySelector('ion-card-title').innerText.trim();
+    expect(cardname).toBe(mockImageMetadataModel.name);
   });
 
   /**
@@ -86,7 +77,7 @@ describe('ImageCardComponent', () => {
     spyOn(component.deleteImage, 'emit');
     const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[2];
     deleteButton.click();
-    expect(component.deleteImage.emit).toHaveBeenCalledWith(mockImageModelNotAnalysed.id);
+    expect(component.deleteImage.emit).toHaveBeenCalledWith(mockImageMetadataModel.id);
   });
 
 
@@ -94,7 +85,7 @@ describe('ImageCardComponent', () => {
    * Checks that the view analysed image button is present if the analysed property of the image model = true
    */
   it('should create view analysed image button', () => {
-    component.image = mockImageModelAnalysed;
+    component.image = mockImageMetadataModel;
     const viewAnalysedImageButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[0];
     expect(viewAnalysedImageButton).toBeTruthy();
   });
@@ -113,24 +104,7 @@ describe('ImageCardComponent', () => {
    * Checks that the view analysed image button press calls the correct function in the component
    */
   it('should call viewAnalysedImage method in the component', () => {
-    mockImageModelNotAnalysed.analysed = true;
-    component.image = mockImageModelNotAnalysed;
-  });
-
-
-  /**
-   * Checks that the analyse image button press changes the analysed value of the image model, the component's image
-   * object needs to be set explicitly here as the spy objects that are defined at the start of the unit tests, will
-   * not be able to be manipulated (their properties can't be changed) causing the test to fail.
-   */
-  it('should change analysed value of image model', () => {
-    component.image = {
-      id: 'test_id', url: 'test_url',
-      title: 'test_title', analysed: false, analysedId: 'test_analysedId'
-    };
-    const analysed = component.image.analysed;
-    component.analyseImage();
-    expect(component.image.analysed).toBe(!analysed);
+    component.image = mockImageMetadataModel;
   });
 
   /**
