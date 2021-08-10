@@ -55,7 +55,7 @@ describe('ImageCardComponent', () => {
    */
   it('should call onDeleteImage method', () => {
     spyOn(component, 'onDeleteImage');
-    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[2];
+    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[1];
     deleteButton.click();
     expect(component.onDeleteImage).toHaveBeenCalled();
   });
@@ -65,7 +65,7 @@ describe('ImageCardComponent', () => {
    */
   it('should emit the deleteImage event on click', () => {
     spyOn(component.deleteImage, 'emit');
-    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[2];
+    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[1];
     deleteButton.click();
     expect(component.deleteImage.emit).toHaveBeenCalled();
   });
@@ -75,7 +75,7 @@ describe('ImageCardComponent', () => {
    */
   it('deleteImage event should contain correct payload', () => {
     spyOn(component.deleteImage, 'emit');
-    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[2];
+    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[1];
     deleteButton.click();
     expect(component.deleteImage.emit).toHaveBeenCalledWith(mockImageMetadataModel.id);
   });
@@ -83,8 +83,10 @@ describe('ImageCardComponent', () => {
 
   /**
    * Checks that the view analysed image button is present if the analysed property of the image model = true
+   *
+   *    * Currently ignored in unit test, since analyse Image has not yet been finalised
    */
-  it('should create view analysed image button', () => {
+  xit('should create view analysed image button', () => {
     component.image = mockImageMetadataModel;
     const viewAnalysedImageButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[0];
     expect(viewAnalysedImageButton).toBeTruthy();
@@ -92,8 +94,10 @@ describe('ImageCardComponent', () => {
 
   /**
    * Checks that the analyse image button press calls the correct function in the component
+   *
+   * Currently ignored in unit test, since analyse Image has not yet been finalised
    */
-  it('should call correct component function once pressed', () => {
+  xit('should call correct component function once pressed', () => {
     spyOn(component, 'analyseImage');
     const analyseImageButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[0];
     analyseImageButton.click();
@@ -112,7 +116,7 @@ describe('ImageCardComponent', () => {
    */
   it('should call viewImageFullScreen method of component', () => {
     spyOn(component, 'viewImageFullScreen');
-    const openImageFullScreenButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[1];
+    const openImageFullScreenButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[0];
     openImageFullScreenButton.click();
     expect(component.viewImageFullScreen).toHaveBeenCalled();
   });
