@@ -10,7 +10,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {VideoPlayer} from '@ionic-native/video-player/ngx';
 import {PipelinesService} from './apis/pipelines.service';
 import {MsalGuard, MsalModule} from '@azure/msal-angular';
-import {BrowserCacheLocation, InteractionType, PublicClientApplication} from '@azure/msal-browser';
+import {InteractionType, PublicClientApplication} from '@azure/msal-browser';
 import {environment} from '../environments/environment';
 import {MediaStorageService} from './apis/mediaStorage.service';
 
@@ -26,7 +26,7 @@ import {MediaStorageService} from './apis/mediaStorage.service';
       redirectUri: environment.redirectUri,
     },
     cache: {
-      cacheLocation: BrowserCacheLocation.MemoryStorage,
+      cacheLocation: 'localStorage',
       storeAuthStateInCookie: false
     }
   }), {
