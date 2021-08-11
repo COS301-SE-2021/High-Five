@@ -1,30 +1,33 @@
 package com.bdpsolutions.highfive.utils.appauth
 
+import com.bdpsolutions.highfive.utils.factories.authConverterFactory
+
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
-import com.bdpsolutions.highfive.utils.factories.authConverterFactory
+
 import net.openid.appauth.connectivity.ConnectionBuilder
 import net.openid.appauth.connectivity.DefaultConnectionBuilder
+
 import okio.Buffer
-import okio.Okio
-import org.json.JSONException
-import org.json.JSONObject
-import java.io.IOException
+
 import java.lang.Exception
 import java.lang.ref.WeakReference
-import java.nio.charset.Charset
 
 
 /**
  * Reads and validates the demo app configuration from `res/raw/auth_config.json`. Configuration
  * changes are detected by comparing the hash of the last known configuration to the read
  * configuration. When a configuration change is detected, the app state is reset.
+ *
+ * This class is adapted from the original Configuration class in the OpenID AppAuth demo
+ * https://github.com/openid/AppAuth-Android/blob/master/app/README.md
+ *
+ *
  */
 class Configuration(private val mContext: Context) {
     private val mPrefs: SharedPreferences = mContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -116,13 +119,21 @@ class Configuration(private val mContext: Context) {
         } else {
             discoveryUri = getRequiredConfigWebUri("discovery_uri")
         }
+
+        // Change to class.
         isHttpsRequired = getConfigBool("https_required")!!
     }
 
+    /**
+     * Fetches a string value from an authConverterFactory
+     */
     private fun getConfigString(propName: String): String? {
         return authConverterFactory<String>(propName, mBundle)
     }
 
+    /**
+     * Fetches a boolean value from an authConverterFactory
+     */
     private fun getConfigBool(propName: String) : Boolean? {
         return authConverterFactory<Boolean>(propName, mBundle)
     }

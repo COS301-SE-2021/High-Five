@@ -8,9 +8,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Factory function to convert a JSON element to a given type.
- *
- * Returns null if the JSON element is null or the given type is unsupported
+ * Factory function to read a value from a Bundle.
  */
 inline fun <reified T> authConverterFactory (name: String, bundle: Bundle) :T? {
 

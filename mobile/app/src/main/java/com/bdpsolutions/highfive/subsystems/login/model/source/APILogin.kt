@@ -2,14 +2,13 @@ package com.bdpsolutions.highfive.subsystems.login.model.source
 
 import com.bdpsolutions.highfive.utils.ContextHolder
 import com.bdpsolutions.highfive.utils.appauth.Configuration
-import net.openid.appauth.*
-import android.content.Intent
-import net.openid.appauth.AuthorizationService
+import com.bdpsolutions.highfive.constants.Settings
 import androidx.activity.result.ActivityResultLauncher
-import net.openid.appauth.AuthorizationException
+import android.content.Intent
+import net.openid.appauth.*
 
 /**
- * Class that handles authentication w/ login credentials and retrieves user information.
+ * Class that logs in a user using Azure AD.
  */
 class APILogin : LoginDataSource {
 
@@ -18,6 +17,7 @@ class APILogin : LoginDataSource {
 
         val mConfiguration = Configuration.getInstance(ContextHolder.appContext!!)
 
+        // Perform authentication
         AuthorizationServiceConfiguration.fetchFromUrl(
             mConfiguration.discoveryUri!!,
             { config: AuthorizationServiceConfiguration?, ex: AuthorizationException? ->
@@ -28,7 +28,7 @@ class APILogin : LoginDataSource {
                     mConfiguration.redirectUri
                 )
                     .setScope(mConfiguration.scope)
-                    .setPrompt("login")
+                    .setPrompt(Settings.PROMPT)
                 val authService = AuthorizationService(ContextHolder.appContext!!)
                 val authIntent = authService.getAuthorizationRequestIntent(authRequestBuilder.build())
                 resultLauncher.launch(authIntent)
