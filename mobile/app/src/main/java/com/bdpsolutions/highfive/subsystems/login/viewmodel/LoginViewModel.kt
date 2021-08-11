@@ -1,15 +1,23 @@
 package com.bdpsolutions.highfive.subsystems.login.viewmodel
 
+import android.app.Activity
+import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
+import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import com.bdpsolutions.highfive.subsystems.login.model.LoginRepository
 
 import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.subsystems.login.view.LoggedInUserView
+import com.bdpsolutions.highfive.utils.ContextHolder
 import com.bdpsolutions.highfive.utils.Result
+import net.openid.appauth.AuthorizationException
+import net.openid.appauth.AuthorizationResponse
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
@@ -19,23 +27,40 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
+    private var mRegisterLoginResult: ActivityResultLauncher<Intent>? = null
+
+    fun registerLoginResult(activity: ComponentActivity) {
+        mRegisterLoginResult = activity.registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // There are no request codes
+                val data: Intent? = result.data
+                val resp = AuthorizationResponse.fromIntent(data!!)
+                val ex = AuthorizationException.fromIntent(data)
+
+                run handleResult@ {
+                    resp?.let {
+                        Log.d("TOKEN", "User successfully logged in: ${it.authorizationCode}")
+                        //TODO: Get the user's first name and set the display name to that.
+                        _loginResult.value = LoginResult(success = LoggedInUserView(displayName = "Hello"))
+                        return@handleResult
+                    }
+
+                    ex?.let {
+                        Log.e("TOKEN", "Failed to log in: ${it.message}")
+                        _loginResult.value = LoginResult(error = R.string.login_failed)
+                        return@handleResult
+                    }
+                }
+            }
+        }
+    }
+
+
     fun login() {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(
-            {
-                Log.d("TOKEN", it)
-            },
-            {
-                Log.e("TOKEN", it)
-            }
-        )
-
-        if (result is Result.Success) {
-            _loginResult.value =
-                LoginResult(success = LoggedInUserView(displayName = "Hello"))
-        } else {
-            _loginResult.value = LoginResult(error = R.string.login_failed)
-        }
+        loginRepository.login(mRegisterLoginResult!!)
     }
 
     fun loginDataChanged(username: String, password: String) {
