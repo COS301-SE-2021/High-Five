@@ -1,36 +1,31 @@
-import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
+import {MsalGuard} from '@azure/msal-angular';
 
 const routes: Routes = [
 
   {
     path: '',
     redirectTo: 'welcome',
-    pathMatch:'full'
-  },
-  {
-    path: 'register',
-    loadChildren: () => import('./pages/register/register.module').then( m => m.RegisterPageModule)
-  },
-  {
-     path: 'login',
-    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+    pathMatch: 'full'
   },
   {
     path: 'welcome',
-    loadChildren: () => import('./pages/welcome/welcome.module').then( m => m.WelcomePageModule)
+    loadChildren: () => import('./pages/welcome/welcome.module').then(m => m.WelcomePageModule)
   },
   {
 
-    path:'navbar',
-    loadChildren: () => import('./pages/navbar/navbar.module').then(m => m.NavbarPageModule)
+    path: 'navbar',
+    loadChildren: () => import('./pages/navbar/navbar.module').then(m => m.NavbarPageModule),
+    canLoad: [MsalGuard]
   },
 
 ];
+const isIframe = window !== window.parent && !window.opener;
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules, initialNavigation: !isIframe ? 'enabled' : 'disabled'})
   ],
   exports: [RouterModule]
 })

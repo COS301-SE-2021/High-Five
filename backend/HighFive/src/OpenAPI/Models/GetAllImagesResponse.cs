@@ -30,7 +30,7 @@ namespace Org.OpenAPITools.Models
         /// Gets or Sets Images
         /// </summary>
         [DataMember(Name="images", EmitDefaultValue=false)]
-        public List<GetImageResponse> Images { get; set; }
+        public List<ImageMetaData> Images { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

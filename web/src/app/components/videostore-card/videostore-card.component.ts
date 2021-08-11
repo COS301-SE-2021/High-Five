@@ -1,9 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {AlertController, ModalController, Platform, ToastController} from '@ionic/angular';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ModalController, Platform} from '@ionic/angular';
 import {VideostreamCardComponent} from '../videostream-card/videostream-card.component';
 import {VideoMetaData} from '../../models/videoMetaData';
-import {VideoStoreCardConstants} from '../../../constants/components/videostore-card-constants';
-import {MediaService} from '../../services/media/media.service';
+
 
 @Component({
   selector: 'app-videostore-card',
@@ -11,13 +10,11 @@ import {MediaService} from '../../services/media/media.service';
   styleUrls: ['./videostore-card.component.scss'],
 })
 export class VideostoreCardComponent implements OnInit {
-  @Input() data: VideoMetaData;
-  @Input() deleter: any;
+  @Input() video: VideoMetaData;
+  @Output() deleteVideo: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(public platform: Platform, private modal: ModalController,
-              private mediaService: MediaService, private alertController: AlertController,
-              private toastController: ToastController,
-              private constants: VideoStoreCardConstants) { }
+  constructor(public platform: Platform, private modal: ModalController) {
+  }
 
   ngOnInit() {
     //Nothing added here yet
@@ -28,12 +25,12 @@ export class VideostoreCardComponent implements OnInit {
    * This function creates a modal where the recorded drone footage can be
    * replayed to the user.
    */
-  async playVideo(vidId: string) {
+  async playVideo() {
     const videoModal = await this.modal.create({
       component: VideostreamCardComponent,
       componentProps: {
         modal: this.modal,
-        vidId
+        videoUrl: this.video.url
       }
     });
     videoModal.style.backgroundColor = 'rgba(0,0,0,0.85)'; //make the background for the modal darker.
@@ -42,43 +39,9 @@ export class VideostoreCardComponent implements OnInit {
   }
 
   /**
-   * Deletes a video by the ID passed to the function.
-   *
-   * @param vidId
+   * Deletes this video by emitting the deleteVideo event
    */
-  async deleteVideo(vidId: string) {
-    const alert = await this.alertController.create({
-      cssClass: 'alerter',
-      header: this.constants.alertLabels.header,
-      message: this.constants.alertLabels.message,
-      buttons: [
-        {
-          text: this.constants.alertLabels.buttonsYes.text,
-          role: this.constants.alertLabels.buttonsYes.role
-        }, {
-          text: this.constants.alertLabels.buttonsNo.text,
-          role: this.constants.alertLabels.buttonsNo.role
-        }
-      ]
-    });
-
-    await alert.present();
-
-    const { role } = await alert.onDidDismiss();
-
-    if (role === this.constants.alertLabels.buttonsYes.role) {
-      this.mediaService.deleteVideo(vidId, async data => {
-        console.log(data);
-        const toast = await this.toastController.create({
-          cssClass: 'alert-style',
-          header: this.constants.toastLabels.header,
-          message: this.constants.toastLabels.message,
-          buttons: this.constants.toastLabels.buttons
-        });
-
-        await toast.present();
-        this.deleter(vidId);
-      });
-    }
+  async onDeleteVideo() {
+    this.deleteVideo.emit(this.video.id);
   }
 }

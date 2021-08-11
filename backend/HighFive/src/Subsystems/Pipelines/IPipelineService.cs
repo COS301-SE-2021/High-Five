@@ -11,5 +11,8 @@ namespace src.Subsystems.Pipelines
         public Task<bool> RemoveTools(RemoveToolsRequest request);
         public Task<bool> DeletePipeline(DeletePipelineRequest request);
         public string[] GetAllTools();
+        public void SetBaseContainer(string container);
+        public GetPipelineIdsResponse GetPipelineIds();
+        public Task<Pipeline> GetPipeline(GetPipelineRequest request);
     }
 }
