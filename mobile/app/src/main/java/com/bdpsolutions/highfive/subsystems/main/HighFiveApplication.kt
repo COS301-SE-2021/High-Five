@@ -1,7 +1,14 @@
 package com.bdpsolutions.highfive.subsystems.main
 
 import android.app.Application
+import android.content.Context
+import com.secneo.sdk.Helper
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class HighFiveApplication : Application()
+class HighFiveApplication : Application(){
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        Helper.install(this@HighFiveApplication)
+    }
+}
