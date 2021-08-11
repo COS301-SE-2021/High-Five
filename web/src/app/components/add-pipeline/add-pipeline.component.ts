@@ -40,12 +40,18 @@ export class AddPipelineComponent implements OnInit {
       event: ev,
       translucent: true,
       componentProps: {
-        availableItems: this.availableTools.filter(tool => !this.tools.includes(tool))
+        availableItems: this.availableTools.filter(tool => !this.tools.includes(tool)),
+        title : 'Add Tools'
       }
     });
     await addToolPopover.present();
     await addToolPopover.onDidDismiss().then(data =>{
-      this.tools = this.tools.concat(data.data.tools);
+      if(data.data != undefined){
+        if(data.data.items != undefined){
+          console.log(this.tools);
+          this.tools = this.tools.concat(data.data.items);
+        }
+      }
     });
   }
 

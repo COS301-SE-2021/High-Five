@@ -76,7 +76,7 @@ export class PipelineComponent implements OnInit {
     this.pipeline.tools = this.pipeline.tools.concat(tools);
     this.pipelinesService.addTools({
       pipelineId: this.pipeline.id,
-      tools: this.pipeline.tools
+      tools: tools
     }).subscribe(
       () => {
         this.platform.ready().then(() => {
@@ -146,7 +146,20 @@ export class PipelineComponent implements OnInit {
     await addToolPopover.present();
     await addToolPopover.onDidDismiss().then(
       data => {
-        this.onAddTool(data.data.items);
+        if(data.data!=undefined){
+          if (data.data.items!= undefined){
+            this.loadingController.create({
+              spinner: 'dots',
+              animated: true,
+              message: 'Adding tools'
+            }).then((e)=>{
+              e.present();
+              this.onAddTool(data.data.items);
+              e.dismiss();
+            });
+
+          }
+        }
       }
     );
   }

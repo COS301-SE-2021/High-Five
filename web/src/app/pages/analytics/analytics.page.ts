@@ -73,6 +73,7 @@ export class AnalyticsPage implements OnInit {
       }
     });
     modal.onWillDismiss().then(data => {
+
       if (data.data.pipeline) {
         if (data.data.pipeline.name && data.data.pipeline.tools) { //Data validation
           const newPipeline: NewPipeline = {
@@ -84,15 +85,20 @@ export class AnalyticsPage implements OnInit {
           };
           this.pipelines.push(data.data.pipeline); // Optimistic update
           this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
-          this.pipelinesService.createPipeline(createPipelineRequest).subscribe(response => {
-            /**
-             * If the response receives no id , it can be assumed that the request to the backend server failed,
-             * therefore we will undo the optimistic update
-             */
-            if (response.pipelineId == null) {
-              this.pipelines = this.pipelines.filter(pipeline => pipeline.id !== data.data.pipeline.id);
-            }
-          });
+          try{
+            this.pipelinesService.createPipeline(createPipelineRequest).subscribe(response => {
+              /**
+               * If the response receives no id , it can be assumed that the request to the backend server failed,
+               * therefore we will undo the optimistic update
+               */
+              if (response.pipelineId == null) {
+                this.pipelines = this.pipelines.filter(pipeline => pipeline.id !== data.data.pipeline.id);
+              }
+            });
+          }catch (e){
+            console.log(e);
+          }
+
         } else {
           this.toastController.create({
             message: 'All necessary data of the pipeline was not present, please try again',
