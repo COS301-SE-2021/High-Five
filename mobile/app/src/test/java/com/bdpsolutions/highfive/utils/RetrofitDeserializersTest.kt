@@ -1,6 +1,6 @@
 package com.bdpsolutions.highfive.utils
 
-import com.bdpsolutions.highfive.models.video.model.VideoPreview
+import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.JsonObject
 import org.junit.Test

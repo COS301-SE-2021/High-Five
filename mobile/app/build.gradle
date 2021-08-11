@@ -32,6 +32,9 @@ android {
                 arguments = ["androidManifestFile": "$projectDir/src/main/AndroidManifest.xml".toString()]
             }
         }
+        manifestPlaceholders = [
+                'appAuthRedirectScheme': 'com.bdpsolutions.highfive'
+        ]
     }
 
     buildTypes {
@@ -83,8 +86,8 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_converter_version"
     implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit_version"
-    implementation "com.microsoft.identity.client:msal:$masl_version"
     implementation "commons-io:commons-io:$commons_io_version"
+    implementation "net.openid:appauth:$appauth_version"
 
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 
