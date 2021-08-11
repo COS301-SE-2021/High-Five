@@ -494,7 +494,7 @@ components:
     getAnalyzedVideosResponse:
       type: object
       properties:
-        images:
+        videos:
           type: array
           items:
             $ref: '#/components/schemas/analyzedVideoMetaData'

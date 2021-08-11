@@ -296,5 +296,61 @@ namespace src.Subsystems.MediaStorage
             
             return _storageManager.GetFile(videoId + ".mp4", VideoContainerName).Result;
         }
+
+        public GetAnalyzedImagesResponse GetAnalyzedImages()
+        {
+            /*
+             *      Description:
+             * This function will return all images that a user has analyzed and that has been stored in the
+             * cloud.
+             */
+
+            var allFiles = _storageManager.GetAllFilesInContainer("analyzed/" + ImageContainerName).Result;
+            if (allFiles == null)
+            {
+                return new GetAnalyzedImagesResponse{Images = new List<AnalyzedImageMetaData>()};
+            }
+            var resultList = new List<AnalyzedImageMetaData>();
+            foreach(var listBlobItem in allFiles)
+            {
+                var currentImage = new AnalyzedImageMetaData {Id = listBlobItem.Name.Replace(".img", "")};
+                if (listBlobItem.Properties is {LastModified: { }})
+                    currentImage.DateAnalyzed = listBlobItem.Properties.LastModified.Value.DateTime;
+                currentImage.ImageId = listBlobItem.GetMetaData("mediaId");
+                currentImage.PipelineId = listBlobItem.GetMetaData("pipelineId");
+                currentImage.Url = listBlobItem.GetUrl();
+                resultList.Add(currentImage);
+            }
+
+            return new GetAnalyzedImagesResponse {Images = resultList};
+        }
+
+        public GetAnalyzedVideosResponse GetAnalyzedVideos()
+        {
+            /*
+             *      Description:
+             * This function will return all videos that a user has analyzed and that has been stored in the
+             * cloud.
+             */
+
+            var allFiles = _storageManager.GetAllFilesInContainer("analyzed/" + ImageContainerName).Result;
+            if (allFiles == null)
+            {
+                return new GetAnalyzedVideosResponse{Videos = new List<AnalyzedVideoMetaData>()};
+            }
+            var resultList = new List<AnalyzedVideoMetaData>();
+            foreach(var listBlobItem in allFiles)
+            {
+                var currentImage = new AnalyzedVideoMetaData {Id = listBlobItem.Name.Replace(".mp4", "")};
+                if (listBlobItem.Properties is {LastModified: { }})
+                    currentImage.DateAnalyzed = listBlobItem.Properties.LastModified.Value.DateTime;
+                currentImage.VideoId = listBlobItem.GetMetaData("mediaId");
+                currentImage.PipelineId = listBlobItem.GetMetaData("pipelineId");
+                currentImage.Url = listBlobItem.GetUrl();
+                resultList.Add(currentImage);
+            }
+
+            return new GetAnalyzedVideosResponse {Videos = resultList};
+        }
     }
 }

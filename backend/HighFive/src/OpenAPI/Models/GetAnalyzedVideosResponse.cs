@@ -27,10 +27,10 @@ namespace Org.OpenAPITools.Models
     public class GetAnalyzedVideosResponse : IEquatable<GetAnalyzedVideosResponse>
     {
         /// <summary>
-        /// Gets or Sets Images
+        /// Gets or Sets Videos
         /// </summary>
-        [DataMember(Name="images", EmitDefaultValue=false)]
-        public List<AnalyzedVideoMetaData> Images { get; set; }
+        [DataMember(Name="videos", EmitDefaultValue=false)]
+        public List<AnalyzedVideoMetaData> Videos { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -40,7 +40,7 @@ namespace Org.OpenAPITools.Models
         {
             var sb = new StringBuilder();
             sb.Append("class GetAnalyzedVideosResponse {\n");
-            sb.Append("  Images: ").Append(Images).Append("\n");
+            sb.Append("  Videos: ").Append(Videos).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -78,10 +78,10 @@ namespace Org.OpenAPITools.Models
 
             return 
                 (
-                    Images == other.Images ||
-                    Images != null &&
-                    other.Images != null &&
-                    Images.SequenceEqual(other.Images)
+                    Videos == other.Videos ||
+                    Videos != null &&
+                    other.Videos != null &&
+                    Videos.SequenceEqual(other.Videos)
                 );
         }
 
@@ -95,8 +95,8 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Images != null)
-                    hashCode = hashCode * 59 + Images.GetHashCode();
+                    if (Videos != null)
+                    hashCode = hashCode * 59 + Videos.GetHashCode();
                 return hashCode;
             }
         }
