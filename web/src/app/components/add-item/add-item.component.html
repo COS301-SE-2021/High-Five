@@ -1,0 +1,15 @@
+<ion-list>
+  <ion-list-header>
+    <ion-label>
+      {{title}}
+    </ion-label>
+  </ion-list-header>
+  <ion-item *ngFor="let i of availableItems; index as index">
+    <ion-label>{{i}}</ion-label>
+    <ion-checkbox slot="end" (ionChange)="changeCheckbox($event['detail'].checked, i)"></ion-checkbox>
+  </ion-item>
+  <ion-button expand="full" (click)="addItems()" color="success">
+    Confirm
+  </ion-button>
+</ion-list>
+

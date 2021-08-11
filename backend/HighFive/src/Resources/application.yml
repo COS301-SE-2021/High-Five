@@ -91,34 +91,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/getAllVideosResponse'
 
-  /media/getVideo:
-    post:
-      tags:
-        - "MediaStorage"
-      description: Endpoint for Get Videos use case
-      operationId: GetVideo
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/getVideoRequest'
-            example:
-              id: 166E8063E69164B056918CFE1CFF6B6E
-      responses:
-        "200":
-          description: Returns a list of the filenames of all videos
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getVideoResponse'
-        "400":
-          description: Invalid video id provided
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
-
   /media/deleteVideo:
     post:
       tags:
@@ -230,6 +202,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getPipelinesResponse'
+                
+  /pipelines/getPipelineIds:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Get Pipeline Ids use case
+      operationId: GetPipelineIds
+      responses:
+        "200":
+          description: All pipeline Id's have been returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getPipelineIdsResponse'
+
+  /pipelines/getPipeline:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Get Pipeline use case
+      operationId: GetPipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/getPipelineRequest'
+      responses:
+        "200":
+          description: Returns a pipeline for a given Id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pipeline'
 
   /pipelines/addTools:
     post:
@@ -339,6 +345,14 @@ components:
         file:
           type: string
           format: binary
+          
+    storeVideoResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        videoId:
+          type: string
 
     storeImageRequest:
       type: object
@@ -355,20 +369,6 @@ components:
         imageId:
           type: string
 
-    storeVideoResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-
-    retrieveVideosResponse:
-      type: object
-      properties:
-        fileName:
-          type: string
-
     getAllVideosResponse:
       type: object
       properties:
@@ -383,23 +383,9 @@ components:
         images:
           type: array
           items:
-            $ref: '#/components/schemas/getImageResponse'
+            $ref: '#/components/schemas/imageMetaData'
 
-    getVideoRequest:
-      type: object
-      properties:
-        id:
-          type: string
-          description: unique id assossciated with a certain video stored on the blob storage
-
-    getVideoResponse:
-      type: object
-      properties:
-        file:
-          type: string
-          format: byte
-
-    getImageResponse:
+    imageMetaData:
       type: object
       properties:
         id:
@@ -410,23 +396,21 @@ components:
           type: string
           format: date-time
           description: The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Zring
-        file:
+        url:
           type: string
-          format: byte
 
     videoMetaData:
       type: object
       properties:
+        id:
+          type: string
         name:
           type: string
-        duration:
-          type: integer
-          description: duration of the video in seconds
         dateStored:
           type: string
           format: date-time
           description: The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Z
-        id:
+        url:
           type: string
         thumbnail:
           type: string
@@ -516,6 +500,20 @@ components:
             type: string
 
     deletePipelineRequest:
+      type: object
+      properties:
+        pipelineId:
+          type: string
+          
+    getPipelineIdsResponse:
+      type: object
+      properties:
+        pipelineIds:
+          type: array
+          items:
+            type: string
+
+    getPipelineRequest:
       type: object
       properties:
         pipelineId:

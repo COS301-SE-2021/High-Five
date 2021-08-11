@@ -8,7 +8,7 @@ import { VideostorePageRoutingModule } from './videostore-routing.module';
 
 import { VideostorePage } from './videostore.page';
 import {CustomComponentsModule} from '../../components/components.module';
-import {ImageCardComponent} from "../../components/image-card/image-card.component";
+import {ImageCardComponent} from '../../components/image-card/image-card.component';
 
 @NgModule({
   imports: [
