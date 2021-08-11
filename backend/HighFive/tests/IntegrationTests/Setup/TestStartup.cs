@@ -39,7 +39,8 @@ namespace tests.IntegrationTests
             
             services.AddMvc().AddApplicationPart(typeof(Org.OpenAPITools.Controllers.TestApiController).Assembly)
                 .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.MediaStorageApiController).Assembly)
-                .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.PipelinesApiController).Assembly);
+                .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.PipelinesApiController).Assembly)
+                .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.AnalysisApiController).Assembly);
 
             // Configuring of Azure AD B2C Authentication
             services.AddAuthentication(options =>
@@ -67,7 +68,6 @@ namespace tests.IntegrationTests
             services.AddScoped<IMediaStorageService, MediaStorageService>();
             services.AddScoped<IPipelineService, PipelineService>();
             services.AddScoped<IAnalysisService, AnalysisService>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
