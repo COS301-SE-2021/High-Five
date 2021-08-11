@@ -84,6 +84,8 @@ namespace src.Subsystems.Analysis
             }
 
             var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
+            analyzedFile.AddMetadata("mediaId", request.MediaId);
+            analyzedFile.AddMetadata("pipelineId", request.PipelineId);
             analyzedFile.UploadFile(analyzedMediaTemporaryLocation);
             return analyzedFile.GetUrl();
         }

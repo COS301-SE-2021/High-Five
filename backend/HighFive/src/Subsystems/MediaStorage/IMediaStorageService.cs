@@ -17,5 +17,7 @@ namespace src.Subsystems.MediaStorage
         public void SetBaseContainer(string containerName);
         public IBlobFile GetImage(string imageId);
         public IBlobFile GetVideo(string videoId);
+        public GetAnalyzedImagesResponse GetAnalyzedImages();
+        public GetAnalyzedVideosResponse GetAnalyzedVideos();
     }
 }
