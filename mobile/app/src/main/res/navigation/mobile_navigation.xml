@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.bdpsolutions.highfive.view.fragments.HomeFragment"
+        android:name="com.bdpsolutions.highfive.subsystems.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_analysis"
-        android:name="com.bdpsolutions.highfive.view.fragments.AnalysisFragment"
+        android:name="com.bdpsolutions.highfive.subsystems.analysis.AnalysisFragment"
         android:label="@string/analysis_fragment"
         tools:layout="@layout/analysis_fragment" />
 
     <fragment
         android:id="@+id/navigation_video"
-        android:name="com.bdpsolutions.highfive.view.fragments.VideoFragment"
+        android:name="com.bdpsolutions.highfive.subsystems.video.fragment.VideoFragment"
         android:label="@string/video_fragment"
         tools:layout="@layout/fragment_video" />
 </navigation>

@@ -2,14 +2,14 @@ package com.bdpsolutions.highfive.helpers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.bdpsolutions.highfive.models.login.LoginRepository
-import com.bdpsolutions.highfive.models.login.model.User
-import com.bdpsolutions.highfive.models.login.source.APILogin
-import com.bdpsolutions.highfive.models.video.VideoDataRepository
-import com.bdpsolutions.highfive.models.video.source.APIVideoDataSource
+import com.bdpsolutions.highfive.subsystems.login.model.LoginRepository
+import com.bdpsolutions.highfive.subsystems.login.model.dataclass.User
+import com.bdpsolutions.highfive.subsystems.login.model.source.APILogin
+import com.bdpsolutions.highfive.subsystems.video.model.VideoDataRepository
+import com.bdpsolutions.highfive.subsystems.video.model.source.APIVideoDataSource
 import com.bdpsolutions.highfive.utils.Result
-import com.bdpsolutions.highfive.viewmodel.login.LoginViewModel
-import com.bdpsolutions.highfive.viewmodel.video.VideoViewModel
+import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
+import com.bdpsolutions.highfive.subsystems.video.viewmodel.VideoViewModel
 import org.mockito.Mockito.*
 import org.mockito.Mockito.`when`
 
@@ -21,9 +21,9 @@ class ViewModelMockRepositoryFactory : ViewModelProvider.Factory {
 
             val mockAPI = mock(APILogin::class.java)
 
-            `when`(mockAPI.login("hello", "world")).thenReturn(
-                Result.Success(User(0, "xxxx"))
-            )
+//            `when`(mockAPI.login("hello", "world")).thenReturn(
+//                Result.Success(User(0, "xxxx"))
+//            )
 
             return LoginViewModel(
                 loginRepository = LoginRepository(

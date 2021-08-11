@@ -25,6 +25,8 @@ buildscript {
     ext.retrofit_version = "2.9.0"
     ext.retrofit_converter_version = "2.8.1"
     ext.mockito_version = "3.11.2"
+    ext.commons_io_version = "2.11.0"
+    ext.appauth_version = "0.9.1"
 
 
     repositories {
@@ -43,8 +45,9 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
         mavenCentral()
+        google()
+        mavenLocal()
     }
 }
 

@@ -1,10 +1,9 @@
 package com.bdpsolutions.highfive.utils
 
-import com.bdpsolutions.highfive.models.video.model.VideoPreview
+import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
 import com.bdpsolutions.highfive.utils.factories.jsonElementConverterFactory
 import com.google.gson.*;
 import java.lang.reflect.Type
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**

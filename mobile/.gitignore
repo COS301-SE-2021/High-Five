@@ -10,6 +10,7 @@
 .DS_Store
 /build
 /captures
+/res/raw/auth_config_single_account.json
 .externalNativeBuild
 .cxx
 local.properties

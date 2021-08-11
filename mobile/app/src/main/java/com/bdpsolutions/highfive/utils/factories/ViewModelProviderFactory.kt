@@ -2,12 +2,12 @@ package com.bdpsolutions.highfive.utils.factories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.bdpsolutions.highfive.models.login.LoginRepository
-import com.bdpsolutions.highfive.models.login.source.APILogin
-import com.bdpsolutions.highfive.models.video.VideoDataRepository
-import com.bdpsolutions.highfive.models.video.source.APIVideoDataSource
-import com.bdpsolutions.highfive.viewmodel.login.LoginViewModel
-import com.bdpsolutions.highfive.viewmodel.video.VideoViewModel
+import com.bdpsolutions.highfive.subsystems.login.model.LoginRepository
+import com.bdpsolutions.highfive.subsystems.login.model.source.APILogin
+import com.bdpsolutions.highfive.subsystems.video.model.VideoDataRepository
+import com.bdpsolutions.highfive.subsystems.video.model.source.APIVideoDataSource
+import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
+import com.bdpsolutions.highfive.subsystems.video.viewmodel.VideoViewModel
 import javax.inject.Inject
 
 
