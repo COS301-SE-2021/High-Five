@@ -103,7 +103,7 @@ export class VideostorePage implements OnInit {
         duration: 2000,
         translucent: true
       }).then(m => m.present());
-      this.images.concat([image]);
+      this.images = this.images.concat([image]);
       if(this.images != undefined && this.images.length>1){
         this.images.sort((a, b) => a.name.localeCompare(b.name));
       }
