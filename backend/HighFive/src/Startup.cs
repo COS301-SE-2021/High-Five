@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using src.Storage;
+using src.Subsystems.Analysis;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
 
@@ -74,6 +75,7 @@ namespace src
             services.AddScoped<IStorageManager, StorageManager>();
             services.AddScoped<IMediaStorageService, MediaStorageService>();
             services.AddScoped<IPipelineService, PipelineService>();
+            services.AddScoped<IAnalysisService, AnalysisService>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
