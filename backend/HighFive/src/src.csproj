@@ -22,6 +22,7 @@
 
     <ItemGroup>
       <Folder Include="OpenAPI" />
+      <Folder Include="Subsystems\Analysis" />
     </ItemGroup>
 
     <ItemGroup>

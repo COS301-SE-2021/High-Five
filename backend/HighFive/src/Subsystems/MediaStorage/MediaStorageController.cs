@@ -52,6 +52,16 @@ namespace src.Subsystems.MediaStorage
             return StatusCode(200, result);
         }
 
+        public override IActionResult GetAnalyzedImages()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IActionResult GetAnalyzedVideos()
+        {
+            throw new NotImplementedException();
+        }
+
         public override async Task<IActionResult> StoreImage(IFormFile file)
          {
              if (!_baseContainerSet)

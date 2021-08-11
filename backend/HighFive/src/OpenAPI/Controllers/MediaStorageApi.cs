@@ -77,6 +77,28 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Get Analyzed Images use case</remarks>
+        /// <response code="200">All previously analyzed images are returned</response>
+        [HttpPost]
+        [Route("/media/getAnalyzedImages")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetAllImagesResponse))]
+        public abstract IActionResult GetAnalyzedImages();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Get Analyzed Videos use case</remarks>
+        /// <response code="200">All previously analyzed videos are returned</response>
+        [HttpPost]
+        [Route("/media/getAnalyzedVideos")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetAllVideosResponse))]
+        public abstract IActionResult GetAnalyzedVideos();
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Store Image use case</remarks>
         /// <param name="file"></param>
         /// <response code="200">Image has been stored</response>
