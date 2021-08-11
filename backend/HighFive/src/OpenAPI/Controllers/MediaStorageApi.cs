@@ -29,7 +29,20 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <remarks>Endpoint for Get Videos use case</remarks>
+        /// <remarks>Endpoint for Delete Image use case</remarks>
+        /// <param name="deleteImageRequest"></param>
+        /// <response code="200">Image successfully deleted</response>
+        [HttpPost]
+        [Route("/media/deleteImage")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult DeleteImage([FromBody]DeleteImageRequest deleteImageRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Delete Video use case</remarks>
         /// <param name="deleteVideoRequest"></param>
         /// <response code="200">Video successfully deleted</response>
         [HttpPost]
@@ -42,28 +55,37 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Get All Images use case</remarks>
+        /// <response code="200">Returns a list of images in the blob storage</response>
+        [HttpPost]
+        [Route("/media/getAllImages")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetAllImagesResponse))]
+        public abstract IActionResult GetAllImages();
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Get All Videos use case</remarks>
         /// <response code="200">Returns a list of metadata objects of all the videos in the blob storage</response>
         [HttpPost]
         [Route("/media/getAllVideos")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(List<GetAllVideosResponse>))]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetAllVideosResponse))]
         public abstract IActionResult GetAllVideos();
 
         /// <summary>
         /// 
         /// </summary>
-        /// <remarks>Endpoint for Get Videos use case</remarks>
-        /// <param name="getVideoRequest"></param>
-        /// <response code="200">Returns a list of the filenames of all videos</response>
-        /// <response code="400">Invalid video id provided</response>
+        /// <remarks>Endpoint for Store Image use case</remarks>
+        /// <param name="file"></param>
+        /// <response code="200">Image has been stored</response>
         [HttpPost]
-        [Route("/media/getVideo")]
-        [Consumes("application/json")]
+        [Route("/media/storeImage")]
+        [Consumes("multipart/form-data")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(GetVideoResponse))]
-        [ProducesResponseType(statusCode: 400, type: typeof(EmptyObject))]
-        public abstract IActionResult GetVideo([FromBody]GetVideoRequest getVideoRequest);
+        [ProducesResponseType(statusCode: 200, type: typeof(StoreImageResponse))]
+        public abstract Task<IActionResult> StoreImage(IFormFile file);
 
         /// <summary>
         /// 

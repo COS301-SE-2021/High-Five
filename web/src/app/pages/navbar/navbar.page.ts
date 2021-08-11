@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
-import {IonButton} from '@ionic/angular';
-import {Navigation, Router} from '@angular/router';
+import {Router} from '@angular/router';
+import {MsalService} from '@azure/msal-angular';
 
 @Component({
   selector: 'app-navbar',
@@ -24,18 +24,26 @@ export class NavbarPage implements OnInit {
   private navPages;
 
 
-  constructor(private screenSizeService: ScreenSizeServiceService, private nav: Router) {
-    this.screenSizeService.isDesktopView().subscribe(isDesktop=>{
+  constructor(private screenSizeService: ScreenSizeServiceService, private nav: Router, private msalService: MsalService) {
+    this.screenSizeService.isDesktopView().subscribe(isDesktop => {
       this.isDesktop = isDesktop;
     });
     this.navPages = {
-      homeNav : this.homeLink,
-      analyticsNav : this.analyticsLink,
-      videoNav : this.videoLink,
-      controlsNav : this.controlsLink
+      homeNav: this.homeLink,
+      analyticsNav: this.analyticsLink,
+      videoNav: this.videoLink,
+      controlsNav: this.controlsLink
     };
   }
+
   ngOnInit() {
+    //Nothing added here yet
+
+  }
+
+  logout() {
+    this.msalService.logout();
+    localStorage.removeItem('jwt');
   }
 
   /**

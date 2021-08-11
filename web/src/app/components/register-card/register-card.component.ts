@@ -13,7 +13,10 @@ export class RegisterCardComponent implements OnInit {
 
   constructor(public constants: RegisterConstants, private platform: Platform) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    //Nothing added here yet
+
+  }
 
   /**
    * Determines the size of the device's screen and adjusts the given size accordingly.
