@@ -249,7 +249,7 @@ namespace src.Subsystems.MediaStorage
             return true;
         }
 
-        public void SetBaseContainer(string id)
+        public void SetBaseContainer(string containerName)
         {
             /*
              *      Description:
@@ -263,7 +263,7 @@ namespace src.Subsystems.MediaStorage
              */
             if (!_storageManager.IsContainerSet())
             {
-                _storageManager.SetBaseContainer(id);
+                _storageManager.SetBaseContainer(containerName);
             }
         }
 

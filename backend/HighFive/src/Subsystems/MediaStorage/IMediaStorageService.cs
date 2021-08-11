@@ -13,6 +13,6 @@ namespace src.Subsystems.MediaStorage
         public Task StoreImage(IFormFile image);
         public List<ImageMetaData> GetAllImages();
         public Task<bool> DeleteImage(DeleteImageRequest request);
-        public void SetBaseContainer(string id);
+        public void SetBaseContainer(string containerName);
     }
 }

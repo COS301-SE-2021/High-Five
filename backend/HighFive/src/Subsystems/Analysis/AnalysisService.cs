@@ -15,19 +15,16 @@ namespace src.Subsystems.Analysis
          * in the provided pipeline.
          *
          *      Attributes:
-         * -> _storageManager: a reference to the storage manager, used to access the blob storage.
          * -> _mediaStorageService: service used to retrieve raw media and store analyzed media.
          * -> _pipelineService: service used to retrieve tools from a provided pipeline.
          */
         
-        private readonly IStorageManager _storageManager;
         private readonly IMediaStorageService _mediaStorageService;
         private readonly IPipelineService _pipelineService;
 
         public AnalysisService(IStorageManager storageManager, IMediaStorageService mediaStorageService,
             IPipelineService pipelineService)
         {
-            _storageManager = storageManager;
             _mediaStorageService = mediaStorageService;
             _pipelineService = pipelineService;
         }
@@ -61,12 +58,33 @@ namespace src.Subsystems.Analysis
         
         private string AnalyzeImage(string imageId, Pipeline analysisPipeline)
         {
-
+            /*
+             *      Description:
+             * This function will call the functions necessary to analyze an image belonging to imageId with
+             * the analysis tools present within analysisPipeline.
+             *
+             *      Parameters:
+             * -> imageId: the id of the image to be analyzed
+             * -> analysisPipeline: the pipeline object containing the tools that will be applied to the image
+             *      during the analysis phase.
+             */
+            
             throw new System.NotImplementedException();
         }
 
         private string AnalyzeVideo(string videoId ,Pipeline analysisPipeline)
         {
+            /*
+             *      Description:
+             * This function will call the functions necessary to analyze a video belonging to videoId with
+             * the analysis tools present within analysisPipeline.
+             *
+             *      Parameters:
+             * -> videoId: the id of the video to be analyzed
+             * -> analysisPipeline: the pipeline object containing the tools that will be applied to the video
+             *      during the analysis phase.
+             */
+            
             throw new System.NotImplementedException();
         }
     }
