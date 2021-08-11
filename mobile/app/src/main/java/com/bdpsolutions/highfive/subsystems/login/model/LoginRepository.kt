@@ -1,5 +1,7 @@
 package com.bdpsolutions.highfive.subsystems.login.model
 
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.User
 import com.bdpsolutions.highfive.subsystems.login.model.source.LoginDataSource
 import com.bdpsolutions.highfive.utils.Result
@@ -29,20 +31,8 @@ class LoginRepository(private val loginSource: LoginDataSource) {
         loginSource.logout()
     }
 
-    fun login(successCallback: (String) -> Unit, failCallback: (String) -> Unit): Result<User> {
+    fun login(resultLauncher: ActivityResultLauncher<Intent>) {
         // handle login
-        val result = loginSource.login(successCallback, failCallback)
-
-        if (result is Result.Success) {
-            setLoggedInUser(result.data)
-        }
-
-        return result
-    }
-
-    private fun setLoggedInUser(loggedInUser: User) {
-        this.user = loggedInUser
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
+        loginSource.login(resultLauncher)
     }
 }

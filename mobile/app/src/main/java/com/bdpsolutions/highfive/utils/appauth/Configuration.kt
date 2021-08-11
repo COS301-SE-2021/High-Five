@@ -8,6 +8,7 @@ import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
+import com.bdpsolutions.highfive.utils.factories.authConverterFactory
 import net.openid.appauth.connectivity.ConnectionBuilder
 import net.openid.appauth.connectivity.DefaultConnectionBuilder
 import okio.Buffer
@@ -115,16 +116,15 @@ class Configuration(private val mContext: Context) {
         } else {
             discoveryUri = getRequiredConfigWebUri("discovery_uri")
         }
-        isHttpsRequired = getRequiredConfigString("https_required").toBoolean()
+        isHttpsRequired = getConfigBool("https_required")!!
     }
 
-    fun getConfigString(propName: String?): String? {
-        var value = mBundle.getString(propName) ?: return null
-        value = value.trim { it <= ' ' }
-        value = value.replace("&&&", " ")
-        return if (TextUtils.isEmpty(value)) {
-            null
-        } else value
+    private fun getConfigString(propName: String): String? {
+        return authConverterFactory<String>(propName, mBundle)
+    }
+
+    private fun getConfigBool(propName: String) : Boolean? {
+        return authConverterFactory<Boolean>(propName, mBundle)
     }
 
     @Throws(InvalidConfigurationException::class)
