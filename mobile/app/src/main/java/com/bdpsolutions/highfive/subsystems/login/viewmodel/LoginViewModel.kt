@@ -8,6 +8,8 @@ import android.util.Patterns
 import com.bdpsolutions.highfive.subsystems.login.model.LoginRepository
 
 import com.bdpsolutions.highfive.R
+import com.bdpsolutions.highfive.subsystems.login.view.LoggedInUserView
+import com.bdpsolutions.highfive.utils.Result
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
@@ -28,12 +30,12 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
             }
         )
 
-//        if (result is Result.Success) {
-//            _loginResult.value =
-//                LoginResult(success = LoggedInUserView(displayName = "Hello"))
-//        } else {
-//            _loginResult.value = LoginResult(error = R.string.login_failed)
-//        }
+        if (result is Result.Success) {
+            _loginResult.value =
+                LoginResult(success = LoggedInUserView(displayName = "Hello"))
+        } else {
+            _loginResult.value = LoginResult(error = R.string.login_failed)
+        }
     }
 
     fun loginDataChanged(username: String, password: String) {

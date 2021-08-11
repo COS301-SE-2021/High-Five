@@ -24,23 +24,23 @@ class APILogin : LoginDataSource {
 
     override fun login(successCallback: (String) -> Unit, failCallback: (String) -> Unit): Result<User> {
 
-        val mAuthStateManager = AuthStateManager.getInstance(ContextHolder.appContext!!)
-        val mConfiguration = Configuration.getInstance(ContextHolder.appContext!!)
-        val authService = createAuthorizationService(mConfiguration)
-
-        AuthorizationServiceConfiguration.fetchFromUrl(
-            mConfiguration.discoveryUri!!,
-            { config: AuthorizationServiceConfiguration?, ex: AuthorizationException? ->
-                this.handleConfigurationRetrievalResult(
-                    config,
-                    authService,
-                    mConfiguration,
-                    mAuthStateManager,
-                    ex!!
-                )
-            },
-            mConfiguration.connectionBuilder
-        )
+//        val mAuthStateManager = AuthStateManager.getInstance(ContextHolder.appContext!!)
+//        val mConfiguration = Configuration.getInstance(ContextHolder.appContext!!)
+//        val authService = createAuthorizationService(mConfiguration)
+//
+//        AuthorizationServiceConfiguration.fetchFromUrl(
+//            mConfiguration.discoveryUri!!,
+//            { config: AuthorizationServiceConfiguration?, ex: AuthorizationException? ->
+//                this.handleConfigurationRetrievalResult(
+//                    config,
+//                    authService,
+//                    mConfiguration,
+//                    mAuthStateManager,
+//                    ex!!
+//                )
+//            },
+//            mConfiguration.connectionBuilder
+//        )
 
         try {
             // TODO: handle loggedInUser authentication
