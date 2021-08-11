@@ -9,6 +9,7 @@ tags:
   - name: "MediaStorage"
   - name: "Test"
   - name: "Pipelines"
+  - name: "Analysis"
 
   #==========================================================
   #     PATHS
@@ -164,7 +165,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
-  
+
+  /media/getAnalyzedImages:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Get Analyzed Images use case
+      operationId: GetAnalyzedImages
+      responses:
+        "200":
+          description: All previously analyzed images are returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllImagesResponse'
+
+  /media/getAnalyzedVideos:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Get Analyzed Videos use case
+      operationId: GetAnalyzedVideos
+      responses:
+        "200":
+          description: All previously analyzed videos are returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllVideosResponse'
   #==========================================================
   #     PIPELINES SUBSYSTEM PATHING
   #==========================================================
@@ -202,7 +230,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getPipelinesResponse'
-                
+
   /pipelines/getPipelineIds:
     post:
       tags:
@@ -303,6 +331,12 @@ paths:
         - "Pipelines"
       description: Endpoint for Get All Tools use case
       operationId: GetAllTools
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deletePipelineRequest'
       responses:
         "200":
           description: All existing tools have been returned
@@ -312,6 +346,31 @@ paths:
                 type: array
                 items:
                   type: string
+
+  #==========================================================
+  #     ANALYSIS SUBSYSTEM PATHING
+  #==========================================================
+
+  /analysis/analyzeMedia:
+    post:
+      tags:
+        - "Analysis"
+      description: Endpoint for Analyze Media use case
+      operationId: AnalyzeMedia
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/analyzeMediaRequest'
+      responses:
+        "200":
+          description: A url of the analyzed media is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/analyzeMediaResponse'
+
 
   #==========================================================
   #     SCHEMAS
@@ -345,7 +404,7 @@ components:
         file:
           type: string
           format: binary
-          
+
     storeVideoResponse:
       type: object
       properties:
@@ -504,7 +563,7 @@ components:
       properties:
         pipelineId:
           type: string
-          
+
     getPipelineIdsResponse:
       type: object
       properties:
@@ -519,6 +578,28 @@ components:
         pipelineId:
           type: string
 
+    #==========================================================
+    #     ANALYSIS COMPONENTS
+    #==========================================================
+
+    analyzeMediaRequest:
+      type: object
+      properties:
+        mediaId:
+          type: string
+        pipelineId:
+          type: string
+        mediaType:
+          type: string
+          enum: [image, video]
+          description: This string can only be "image" or "video"
+
+    analyzeMediaResponse:
+      type: object
+      properties:
+        url:
+          type: string      
+        
     #==========================================================
     #     GENERIC COMPONENTS
     #==========================================================
