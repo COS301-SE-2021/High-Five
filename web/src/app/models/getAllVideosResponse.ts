@@ -11,6 +11,6 @@
  */
 import { VideoMetaData } from './videoMetaData';
 
-export class GetAllVideosResponse {
+export interface GetAllVideosResponse {
     videos?: Array<VideoMetaData>;
 }

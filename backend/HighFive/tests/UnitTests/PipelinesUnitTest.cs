@@ -149,6 +149,38 @@ namespace tests.UnitTests
             var response = _mockPipelineService.RemoveTools(request).Result;
             Assert.False(response);
         }
+        
+        [Fact]
+        public async Task TestGetPipelineIds()
+        {
+            await GetValidPipelineId();
+            var pipelineIds = _mockPipelineService.GetPipelines().Pipelines;
+            Assert.NotEmpty(pipelineIds);
+        }
+        
+        [Fact]
+        public void TestGetPipelineValidId()
+        {
+            var validId = GetValidPipelineId().Result;
+            var request = new GetPipelineRequest
+            {
+                PipelineId = validId
+            };
+            var response = _mockPipelineService.GetPipeline(request).Result;
+            Assert.NotNull(response);
+        }
+        
+        [Fact]
+        public void TestGetPipelineInvalidId()
+        {
+            var invalidId = "5";
+            var request = new GetPipelineRequest
+            {
+                PipelineId = invalidId
+            };
+            var response = _mockPipelineService.GetPipeline(request).Result;
+            Assert.Null(response);
+        }
 
         private async Task<string> GetValidPipelineId()
         {

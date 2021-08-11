@@ -78,6 +78,30 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Get Pipeline use case</remarks>
+        /// <param name="getPipelineRequest"></param>
+        /// <response code="200">Returns a pipeline for a given Id</response>
+        [HttpPost]
+        [Route("/pipelines/getPipeline")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(Pipeline))]
+        public abstract IActionResult GetPipeline([FromBody]GetPipelineRequest getPipelineRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Get Pipeline Ids use case</remarks>
+        /// <response code="200">All pipeline Id&#39;s have been returned</response>
+        [HttpPost]
+        [Route("/pipelines/getPipelineIds")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetPipelineIdsResponse))]
+        public abstract IActionResult GetPipelineIds();
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Get Pipelines use case</remarks>
         /// <response code="200">All pipelines have been returned</response>
         [HttpPost]

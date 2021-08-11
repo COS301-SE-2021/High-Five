@@ -3,8 +3,7 @@ import {IonicModule, LoadingController, Platform, PopoverController, ToastContro
 
 import {PipelineComponent} from './pipeline.component';
 import {PipelinesService} from '../../apis/pipelines.service';
-import {HttpClient, HttpHandler} from '@angular/common/http';
-import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('PipelineComponent', () => {
   let component: PipelineComponent;

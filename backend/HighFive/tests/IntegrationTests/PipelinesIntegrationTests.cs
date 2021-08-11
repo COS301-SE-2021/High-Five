@@ -150,6 +150,43 @@ namespace tests.IntegrationTests
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.False(responseObject.Success);
         }
+        
+        [Fact]
+        public async Task TestGetPipelineIds()
+        {
+            await GetPipelineId();
+            var response = await _client.PostAsync("/pipelines/getPipelineIds", null!);
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            var responseObject = JsonConvert.DeserializeObject<GetPipelineIdsResponse>(responseBody);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(responseObject.PipelineIds);
+        }
+        
+        [Fact]
+        public async Task TestGetPipelineValidId()
+        {
+            var validId = GetPipelineId().Result;
+            var request = new GetPipelineRequest
+            {
+                PipelineId = validId
+            };
+
+            var response = await _client.PostAsync("/pipelines/getPipeline", ObjectToBytes(request));
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+        
+        [Fact]
+        public async Task TestGetPipelineInvalidId()
+        {
+            var invalidId = "5";
+            var request = new GetPipelineRequest
+            {
+                PipelineId = invalidId
+            };
+
+            var response = await _client.PostAsync("/pipelines/getPipeline", ObjectToBytes(request));
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
 
         private ByteArrayContent ObjectToBytes(object requestObject)
         {
