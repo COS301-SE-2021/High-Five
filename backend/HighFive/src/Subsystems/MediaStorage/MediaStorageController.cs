@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Threading.Tasks;
+using System.Web.Http;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
@@ -9,35 +12,80 @@ using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.MediaStorage
 {
+    [Authorize]
     public class MediaStorageController : MediaStorageApiController
     {
         private readonly IMediaStorageService _mediaStorageService;
+        private bool _baseContainerSet;
         
         public MediaStorageController(IMediaStorageService mediaStorageService)
         {
             _mediaStorageService = mediaStorageService;
+            _baseContainerSet = false;
+        }
+
+        public override IActionResult GetAllImages()
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            var resultList = _mediaStorageService.GetAllImages();
+            var result = new GetAllImagesResponse
+            {
+                Images = resultList
+            };
+            return StatusCode(200, result);
         }
 
         public override IActionResult GetAllVideos()
         {
-            var result = _mediaStorageService.GetAllVideos().Result;
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            var resultList = _mediaStorageService.GetAllVideos();
+            var result = new GetAllVideosResponse
+            {
+                Videos = resultList
+            };
             return StatusCode(200, result);
         }
 
-         public override IActionResult GetVideo(GetVideoRequest getVideoRequest)
+        public override async Task<IActionResult> StoreImage(IFormFile file)
          {
-             var response = _mediaStorageService.GetVideo(getVideoRequest).Result;
-             if (response != null) return StatusCode(200, response);
-            var fail = new EmptyObject
+             if (!_baseContainerSet)
              {
-                 Success = false,
-                 Message = "No video exists associated with video id: " + getVideoRequest.Id
-             };
-             return StatusCode(400, fail);
+                 ConfigureStorageManager();
+             }
+             try
+             {
+                 if (file == null)
+                 {
+                     var response400 = new EmptyObject() {Success = false, Message = "The uploaded file is null."};
+                     return StatusCode(400, response400);
+                 }
+
+                 var response = new StoreVideoResponse
+                 {
+                     VideoId = "Image stored successfully", Success = true
+                 };
+                 await _mediaStorageService.StoreImage(file);
+                 return StatusCode(200, response);
+             }
+             catch (Exception e)
+             {
+                 var response400 = new EmptyObject() {Success = false, Message = "Invalid format provided."};
+                 return StatusCode(400, response400);
+             }
          }
 
-        public override async Task<IActionResult> StoreVideo(IFormFile file)
+         public override async Task<IActionResult> StoreVideo(IFormFile file)
         {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
             try
             {
                 if (file == null)
@@ -48,7 +96,7 @@ namespace src.Subsystems.MediaStorage
 
                 var response = new StoreVideoResponse
                 {
-                    Message = "Video stored successfully", Success = true
+                    VideoId = "Video stored successfully.", Success = true
                 };
                 await _mediaStorageService.StoreVideo(file);
                 return StatusCode(200, response);
@@ -59,14 +107,46 @@ namespace src.Subsystems.MediaStorage
                 return StatusCode(500, response500);
             }
         }
-        
+
+        public override IActionResult DeleteImage(DeleteImageRequest deleteImageRequest)
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            var response = new EmptyObject {Success = true};
+            if (_mediaStorageService.DeleteImage(deleteImageRequest).Result) return StatusCode(200, response);
+            response.Success = false;
+            response.Message = "Video could not be deleted.";
+            return StatusCode(400, response);
+        }
+
         public override IActionResult DeleteVideo(DeleteVideoRequest deleteVideoRequest)
         {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
             var response = new EmptyObject {Success = true};
             if (_mediaStorageService.DeleteVideo(deleteVideoRequest).Result) return StatusCode(200, response);
             response.Success = false;
             response.Message = "Video could not be deleted.";
             return StatusCode(400, response);
+        }
+
+        private void ConfigureStorageManager()
+        {
+            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
+            if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
+            {
+                _mediaStorageService.SetBaseContainer("demo2"); // This line of code is for contingency's sake, to not break code still working on the old Storage system.
+                //TODO: Remove above code when front-end is compatible with new storage structure.
+                return;
+            }
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
+            _mediaStorageService.SetBaseContainer(jsonToken.Subject);
+            _baseContainerSet = true;
         }
 
     }

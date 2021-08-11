@@ -24,7 +24,7 @@ export class VideostorePage implements OnInit {
               private loadingController: LoadingController,
               private constants: VideoStoreConstants) {
     this.loadInitData().then();
-    this.segment = 'all';
+    this.segment = 'videos';
     for (let img = 0; img < 10; img++) {
       this.images.push({
         id: img.toString(),
@@ -36,6 +36,8 @@ export class VideostorePage implements OnInit {
   }
 
   ngOnInit() {
+    //Nothing added here yet
+
   }
 
   /**
@@ -186,6 +188,7 @@ export class VideostorePage implements OnInit {
   }
 
   uploadImage($event: Event) {
+    //Nothing added here yet
 
   }
 
