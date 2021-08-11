@@ -32,7 +32,7 @@ export class AnalyticsPage implements OnInit {
    */
   deletePipeline(id: string) {
     this.pipelines = this.pipelines.filter(pipeline => pipeline.id !== id);
-   this.toastController.create({
+    this.toastController.create({
       message: 'Successfully deleted pipeline',
       duration: 2000,
       translucent: true
@@ -110,6 +110,7 @@ export class AnalyticsPage implements OnInit {
     this.pipelinesService.getPipelines().subscribe(response => {
       this.pipelines = response.pipelines;
       this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
+      localStorage.setItem('pipelines',JSON.stringify(this.availableTools));
       return true;
     });
     return false;
@@ -119,6 +120,7 @@ export class AnalyticsPage implements OnInit {
     this.pipelinesService.getAllTools().subscribe(response => {
       this.availableTools = response;
       this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
+      localStorage.setItem('pipelines',JSON.stringify(this.pipelines));
       return true;
     });
     return false;

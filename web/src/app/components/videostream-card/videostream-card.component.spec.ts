@@ -36,7 +36,7 @@ describe('VideostreamCardComponent', () => {
    */
   it('should dismiss', () => {
     spyOn(component, 'dismissModal');
-    const btn = fixture.debugElement.nativeElement.querySelector('ion-button[name="dismissBtn"]');
+    const btn = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[0];
     btn.click();
     expect(component.dismissModal).toHaveBeenCalled();
   });

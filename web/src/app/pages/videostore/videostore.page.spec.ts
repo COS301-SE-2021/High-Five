@@ -1,49 +1,62 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { VideostorePage } from './videostore.page';
-import {MediaService} from '../../services/media/media.service';
+import {VideostorePage} from './videostore.page';
 import {IonicModule} from '@ionic/angular';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {HttpClient} from '@angular/common/http';
+import {MediaStorageService} from "../../apis/mediaStorage.service";
+import {BehaviorSubject} from "rxjs";
+import {distinctUntilChanged} from "rxjs/operators";
 
-const mockVideouploadService = jasmine.createSpyObj('VideouploadService', [ 'getAllVideos']);
-mockVideouploadService.getAllVideos.and.callFake(
-  (func)=>func([{name: 'testVideoName',dateStored: new Date(2021,6,21),id: 'testID'}])
+const mockMediaStorageService = jasmine.createSpyObj('MediaStorageService', ['deleteImage', 'deleteVideo', 'getAllImages', 'getAllVideos', 'storeImageForm', 'storeVideoForm']);
+mockMediaStorageService.getAllVideos.and.callFake(
+  (func) => func([{
+    name: 'testVideoName',
+    dateStored: new Date(2021, 6, 21),
+    id: 'testID',
+    thumbnail: 'test_thumbnail'
+  }])
 );
+
+mockMediaStorageService.deleteImage.and.callFake(
+  (imageId: string = 'id') => ((new BehaviorSubject(false).asObservable().pipe(distinctUntilChanged())))
+);
+mockMediaStorageService.deleteVideo.and.callFake(
+  (videoId: string = 'id') => ((new BehaviorSubject(false).asObservable().pipe(distinctUntilChanged())))
+);
+
+mockMediaStorageService.getAllVideos.and.callFake(
+  () => ((new BehaviorSubject([]).asObservable().pipe(distinctUntilChanged())))
+);
+
+mockMediaStorageService.getAllImages.and.callFake(
+  () => ((new BehaviorSubject([]).asObservable().pipe(distinctUntilChanged())))
+);
+
 
 describe('VideostorePage', () => {
   let component: VideostorePage;
   let fixture: ComponentFixture<VideostorePage>;
 
-  const setBeforeEach=(imports, providers) =>{
+  const setBeforeEach = (imports, providers) => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ VideostorePage ],
-        imports,
-        providers
+        declarations: [VideostorePage],
+        imports: [IonicModule.forRoot()],
+        providers: [{provide: MediaStorageService, useValue: mockMediaStorageService}]
       }).compileComponents();
 
       fixture = TestBed.createComponent(VideostorePage);
       component = fixture.componentInstance;
+      component.videos = [];
+      component.images = [];
       fixture.detectChanges();
     }));
   };
 
-  describe('general',()=>{
-    setBeforeEach([IonicModule.forRoot()], [
-      {provide: MediaService, useValue: mockVideouploadService},
-      {provide: HttpClient, useValue: HttpClientTestingModule}
-    ]);
+  describe('general', () => {
+    setBeforeEach([IonicModule.forRoot()], []);
 
     it('should create', () => {
       expect(component).toBeTruthy();
-    });
-
-    it('get stored videos', () => {
-      component.loadMoreData();
-      expect(component.items[0][0].name).toBe('testVideoName');
-      expect(component.items[0][0].dateStored.toDateString()).toBe((new Date(2021,6,21)).toDateString());
-      expect(component.items[0][0].id).toBe('testID');
     });
   });
 

@@ -4,7 +4,7 @@ import {LoadingController, Platform, PopoverController, ToastController} from '@
 import {PipelinesService} from '../../apis/pipelines.service';
 import {DeletePipelineRequest} from '../../models/deletePipelineRequest';
 import {RemoveToolsRequest} from '../../models/removeToolsRequest';
-import {AddToolComponent} from '../add-tool/add-tool.component';
+import {AddItemComponent} from '../add-item/add-item.component';
 
 @Component({
   selector: 'app-pipeline',
@@ -74,7 +74,6 @@ export class PipelineComponent implements OnInit {
 
   public async onAddTool(tools: string[]) {
     this.pipeline.tools = this.pipeline.tools.concat(tools);
-
     this.pipelinesService.addTools({
       pipelineId: this.pipeline.id,
       tools: this.pipeline.tools
@@ -105,7 +104,7 @@ export class PipelineComponent implements OnInit {
       pipelineId: this.pipeline.id
     };
     try {
-      this.pipelinesService.deletePipeline(deletePipelineRequest).subscribe(response => {
+      this.pipelinesService.deletePipeline(deletePipelineRequest).subscribe(() => {
         /**
          * Resolve the loading animation once a response has been received from the backend
          */
@@ -132,7 +131,7 @@ export class PipelineComponent implements OnInit {
      * A popover which contains all the tools that the user can add to the current pipeline
      */
     const addToolPopover = await this.popoverController.create({
-      component: AddToolComponent,
+      component: AddItemComponent,
       event: ev,
       translucent: true,
       /**
@@ -140,13 +139,14 @@ export class PipelineComponent implements OnInit {
        * frontend (backend validation also exists)
        */
       componentProps: {
-        availableTools: this.availableTools.filter(tool => !this.pipeline.tools.includes(tool))
+        availableItems: this.availableTools.filter(tool => !this.pipeline.tools.includes(tool)),
+        title: "Add Tool"
       }
     });
     await addToolPopover.present();
     await addToolPopover.onDidDismiss().then(
       data => {
-        this.onAddTool(data.data.tools);
+        this.onAddTool(data.data.items);
       }
     );
   }

@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Image} from '../../models/image';
-import {ModalController} from '@ionic/angular';
+import {ImageMetaData} from '../../models/imageMetaData';
 
 @Component({
   selector: 'app-image-card',
@@ -8,11 +7,11 @@ import {ModalController} from '@ionic/angular';
   styleUrls: ['./image-card.component.scss'],
 })
 export class ImageCardComponent implements OnInit {
-  @Input() image: Image;
+  @Input() image: ImageMetaData;
   @Output() deleteImage: EventEmitter<string> = new EventEmitter<string>();
   public alt = '../../../assists/images/defaultprofile.svg';
 
-  constructor(private modalController: ModalController) {
+  constructor() {
     // No constructor body needed as properties are retrieved from angular input
   }
 
@@ -25,7 +24,7 @@ export class ImageCardComponent implements OnInit {
   }
 
   public analyseImage() {
-    this.image.analysed = true;
+    // Nothing added here
   }
 
   public viewAnalysedImage() {

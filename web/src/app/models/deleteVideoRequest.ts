@@ -9,8 +9,10 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { VideoMetaData } from './videoMetaData';
 
-export interface GetAllVideosResponse {
-    videos?: Array<VideoMetaData>;
+export interface DeleteVideoRequest {
+    /**
+     * unique id assossciated with a certain video stored on the blob storage
+     */
+    id?: string;
 }
