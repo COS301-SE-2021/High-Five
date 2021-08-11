@@ -259,7 +259,7 @@ namespace src.Subsystems.MediaStorage
              * id - hence pointing towards the user's own container within the storage.
              *
              *      Parameters:
-             * -> id: the user's id that will be used as the container name.
+             * -> containerName: the user's id that will be used as the container name.
              */
             if (!_storageManager.IsContainerSet())
             {

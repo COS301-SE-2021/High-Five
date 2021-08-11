@@ -119,12 +119,6 @@ namespace src.Subsystems.Pipelines
         private void ConfigureStorageManager()
         {
             var tokenString = HttpContext.GetTokenAsync("access_token").Result;
-            if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
-            {
-                _pipelineService.SetBaseContainer("demo2"); // This line of code is for contingency's sake, to not break code still working on the old Storage system.
-                //TODO: Remove above code when front-end is compatible with new storage structure.
-                return;
-            }
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
             _pipelineService.SetBaseContainer(jsonToken.Subject);
