@@ -52,12 +52,30 @@ namespace src.Subsystems.MediaStorage
 
         public override IActionResult GetAnalyzedImages()
         {
-            throw new NotImplementedException();
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            var resultList = _mediaStorageService.GetAnalyzedImages()?.Images;
+            var result = new GetAnalyzedImagesResponse
+            {
+                Images = resultList
+            };
+            return StatusCode(200, result);
         }
 
         public override IActionResult GetAnalyzedVideos()
         {
-            throw new NotImplementedException();
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            var resultList = _mediaStorageService.GetAnalyzedVideos().Videos;
+            var result = new GetAnalyzedVideosResponse
+            {
+                Videos = resultList
+            };
+            return StatusCode(200, result);
         }
 
         public override async Task<IActionResult> StoreImage(IFormFile file)
