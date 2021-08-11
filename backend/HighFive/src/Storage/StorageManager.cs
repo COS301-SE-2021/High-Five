@@ -56,7 +56,7 @@ namespace src.Storage
             /*
              *      Description:
              * This function returns a reference to an existing blob file in some container within the storage,
-             * or null if the searched file does not exist in the storage. A BlobFile object is returns which
+             * or null if the searched file does not exist in the storage. A BlobFile object is returned which
              * contains the CloudBlockBlob itself.
              *
              *      Parameters:

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Org.OpenAPITools.Models;
 using src.Storage;
 using src.Subsystems.MediaStorage;
@@ -50,13 +52,35 @@ namespace src.Subsystems.Analysis
             {
                 return string.Empty; //invalid pipelineId provided
             }
-
-            return request.MediaType switch
+            
+            /* First, check if the Media and Pipeline combination has already been analyzed and stored before.
+             * If this is the case, no analysis needs to be done. Simply return the url of the already analyzed
+             * media
+             */
+            analysisPipeline.Tools.Sort();
+            var storageContainer = request.MediaType.ToString();
+            var analyzedMediaName = _storageManager.HashMd5(request.MediaId + "|" + analysisPipeline.Tools);
+            var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
+            if (testFile != null) //This means the media has already been analyzed with this pipeline combination
             {
-                AnalyzeMediaRequest.MediaTypeEnum.ImageEnum => AnalyzeImage(request.MediaId, analysisPipeline),
-                AnalyzeMediaRequest.MediaTypeEnum.VideoEnum => AnalyzeVideo(request.MediaId, analysisPipeline),
-                _ => string.Empty //invalid media type provided
-            };
+                return testFile.GetUrl();
+            }
+            
+            var returnUrl = string.Empty;
+            string analyzedMediaTemporaryLocation;
+            switch (request.MediaType)
+            {
+                case AnalyzeMediaRequest.MediaTypeEnum.ImageEnum:
+                    analyzedMediaTemporaryLocation = AnalyzeImage(request.MediaId, analysisPipeline);
+                    break;
+                case AnalyzeMediaRequest.MediaTypeEnum.VideoEnum:
+                    analyzedMediaTemporaryLocation = AnalyzeVideo(request.MediaId, analysisPipeline);
+                    break;
+            }
+            
+            
+            
+            return returnUrl;
         }
 
         public void SetBaseContainer(string containerName)
@@ -85,12 +109,18 @@ namespace src.Subsystems.Analysis
              *      Description:
              * This function will call the functions necessary to analyze an image belonging to imageId with
              * the analysis tools present within analysisPipeline.
+             * A temporary file will be created in local storage containing the contents of the analyzed
+             * image, the path to this file will be returned.
              *
              *      Parameters:
              * -> imageId: the id of the image to be analyzed
              * -> analysisPipeline: the pipeline object containing the tools that will be applied to the image
              *      during the analysis phase.
              */
+            
+            var rawImage = _mediaStorageService.GetImage(imageId);
+
+            //TODO: Call analysis functions here
             
             throw new System.NotImplementedException();
         }
@@ -101,12 +131,18 @@ namespace src.Subsystems.Analysis
              *      Description:
              * This function will call the functions necessary to analyze a video belonging to videoId with
              * the analysis tools present within analysisPipeline.
-             *
+             * A temporary file will be created in local storage containing the contents of the analyzed
+             * video, the path to this file will be returned.
+             * 
              *      Parameters:
              * -> videoId: the id of the video to be analyzed
              * -> analysisPipeline: the pipeline object containing the tools that will be applied to the video
              *      during the analysis phase.
              */
+
+            var rawVideo = _mediaStorageService.GetVideo(videoId);
+            
+            //TODO: Perform analysis here
             
             throw new System.NotImplementedException();
         }
