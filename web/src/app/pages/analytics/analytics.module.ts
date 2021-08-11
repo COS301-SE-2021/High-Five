@@ -10,7 +10,7 @@ import {AnalyticsPage} from './analytics.page';
 import {SwiperModule} from 'swiper/angular';
 import {PipelineComponent} from '../../components/pipeline/pipeline.component';
 import {AddPipelineComponent} from '../../components/add-pipeline/add-pipeline.component';
-import {AddToolComponent} from '../../components/add-tool/add-tool.component';
+import {AddItemComponent} from '../../components/add-item/add-item.component';
 
 @NgModule({
   imports: [
@@ -19,7 +19,7 @@ import {AddToolComponent} from '../../components/add-tool/add-tool.component';
     IonicModule,
     AnalyticsPageRoutingModule,
     SwiperModule],
-  declarations: [AnalyticsPage, PipelineComponent, AddPipelineComponent, AddToolComponent],
+  declarations: [AnalyticsPage, PipelineComponent, AddPipelineComponent, AddItemComponent],
   entryComponents: [AddPipelineComponent]
 })
 export class AnalyticsPageModule {

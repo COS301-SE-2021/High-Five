@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
     this.loadingController.create({
       animated: true,
       spinner: 'circles',
-      backdropDismiss: true,
+      backdropDismiss: false,
       message: 'Redirecting',
     }).then((overlay: HTMLIonLoadingElement) => {
       this.loading = overlay;

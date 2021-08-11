@@ -42,9 +42,9 @@ export class NavbarPage implements OnInit {
   }
 
   logout() {
+    this.msalService.logoutPopup();
     this.router.navigate(['/welcome']).then(()=>{
       localStorage.removeItem('jwt');
-      this.msalService.logoutRedirect();
     });
   }
 
