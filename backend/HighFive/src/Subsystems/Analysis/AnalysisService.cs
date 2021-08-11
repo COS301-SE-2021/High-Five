@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc.Formatters;
+﻿using System.IO;
 using Org.OpenAPITools.Models;
 using src.Storage;
 using src.Subsystems.MediaStorage;
@@ -58,16 +56,23 @@ namespace src.Subsystems.Analysis
              * media
              */
             analysisPipeline.Tools.Sort();
-            var storageContainer = request.MediaType.ToString();
-            var analyzedMediaName = _storageManager.HashMd5(request.MediaId + "|" + analysisPipeline.Tools);
+            var storageContainer = "analyzed/" + request.MediaType;
+            var fileExtension = request.MediaType switch
+            {
+                AnalyzeMediaRequest.MediaTypeEnum.ImageEnum => ".img",
+                AnalyzeMediaRequest.MediaTypeEnum.VideoEnum => ".mp4",
+                _ => string.Empty
+            };
+            var analyzedMediaName = _storageManager.HashMd5(request.MediaId + "|" + analysisPipeline.Tools) + fileExtension;
             var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
             if (testFile != null) //This means the media has already been analyzed with this pipeline combination
             {
                 return testFile.GetUrl();
             }
             
-            var returnUrl = string.Empty;
-            string analyzedMediaTemporaryLocation;
+            //else this media and tool combination has not yet been analyzed. Proceed to the analysis phase.
+            
+            var analyzedMediaTemporaryLocation = string.Empty;
             switch (request.MediaType)
             {
                 case AnalyzeMediaRequest.MediaTypeEnum.ImageEnum:
@@ -77,30 +82,10 @@ namespace src.Subsystems.Analysis
                     analyzedMediaTemporaryLocation = AnalyzeVideo(request.MediaId, analysisPipeline);
                     break;
             }
-            
-            
-            
-            return returnUrl;
-        }
 
-        public void SetBaseContainer(string containerName)
-        {
-            /*
-             *      Description:
-             * This function tests if a baseContainer has been set yet, it will be called before any of the
-             * other StorageManager method code executes. If a base container has already been set, this code
-             * will do nothing, else it will set the base container to the user's Azure AD B2C unique object
-             * id - hence pointing towards the user's own container within the storage.
-             *
-             *      Parameters:
-             * -> containerName: the user's id that will be used as the container name.
-             */
-
-            if (_storageManager.IsContainerSet()) return;
-            
-            _storageManager.SetBaseContainer(containerName);
-            _pipelineService.SetBaseContainer(containerName);
-            _mediaStorageService.SetBaseContainer(containerName);
+            var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
+            analyzedFile.UploadFile(analyzedMediaTemporaryLocation);
+            return analyzedFile.GetUrl();
         }
 
         private string AnalyzeImage(string imageId, Pipeline analysisPipeline)
@@ -119,10 +104,16 @@ namespace src.Subsystems.Analysis
              */
             
             var rawImage = _mediaStorageService.GetImage(imageId);
-
-            //TODO: Call analysis functions here
             
-            throw new System.NotImplementedException();
+            //---------------------------------------------------------------------------------------
+            //-----------------------------TODO: PERFORM ANALYSIS HERE-------------------------------
+            //---------------------------------------------------------------------------------------
+            
+            var analyzedImageData = new byte[5];//replace this with actual returned byte array once analysis is implemented
+            
+            var tempDirectory = Directory.GetCurrentDirectory() + "\\analyzed" + rawImage.GetMetaData("originalName");
+            File.WriteAllBytes(tempDirectory, analyzedImageData);
+            return tempDirectory;
         }
 
         private string AnalyzeVideo(string videoId ,Pipeline analysisPipeline)
@@ -142,9 +133,31 @@ namespace src.Subsystems.Analysis
 
             var rawVideo = _mediaStorageService.GetVideo(videoId);
             
-            //TODO: Perform analysis here
+            //---------------------------------------------------------------------------------------
+            //-----------------------------TODO: PERFORM ANALYSIS HERE-------------------------------
+            //---------------------------------------------------------------------------------------
             
             throw new System.NotImplementedException();
+        }
+        
+        public void SetBaseContainer(string containerName)
+        {
+            /*
+             *      Description:
+             * This function tests if a baseContainer has been set yet, it will be called before any of the
+             * other StorageManager method code executes. If a base container has already been set, this code
+             * will do nothing, else it will set the base container to the user's Azure AD B2C unique object
+             * id - hence pointing towards the user's own container within the storage.
+             *
+             *      Parameters:
+             * -> containerName: the user's id that will be used as the container name.
+             */
+
+            if (_storageManager.IsContainerSet()) return;
+            
+            _storageManager.SetBaseContainer(containerName);
+            _pipelineService.SetBaseContainer(containerName);
+            _mediaStorageService.SetBaseContainer(containerName);
         }
     }
 }
