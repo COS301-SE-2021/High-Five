@@ -267,5 +267,32 @@ namespace src.Subsystems.MediaStorage
             }
         }
 
+        public IBlobFile GetImage(string imageId)
+        {
+            /*
+             *      Description:
+             * This function will retrieve a single, raw image from the blob storage belonging to imageId and
+             * return a BlobFile or null if it does not exist.
+             *
+             *      Parameters:
+             * -> imageId: the id of the image to be retrieved.
+             */
+
+            return _storageManager.GetFile(imageId + ".img", ImageContainerName).Result;
+        }
+
+        public IBlobFile GetVideo(string videoId)
+        {
+            /*
+             *      Description:
+             * This function will retrieve a single, raw video from the blob storage belonging to videoId and
+             * return a BlobFile or null if it does not exist.
+             *
+             *      Parameters:
+             * -> videoId: the id of the video to be retrieved.
+             */
+            
+            return _storageManager.GetFile(videoId + ".mp4", VideoContainerName).Result;
+        }
     }
 }

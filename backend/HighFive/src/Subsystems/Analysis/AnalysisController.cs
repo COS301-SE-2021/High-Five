@@ -28,7 +28,15 @@ namespace src.Subsystems.Analysis
             {
                 ConfigureStorageManager();
             }
-            throw new System.NotImplementedException();
+
+            var url = _analysisService.AnalyzeMedia(analyzeMediaRequest);
+            if (url.Equals(string.Empty))
+            {
+                return StatusCode(400, null);
+            }
+
+            var response = new AnalyzeMediaResponse {Url = url};
+            return StatusCode(200, response);
         }
         
         private void ConfigureStorageManager()
