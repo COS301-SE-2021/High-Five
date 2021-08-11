@@ -82,7 +82,7 @@ namespace Org.OpenAPITools.Controllers
         [HttpPost]
         [Route("/media/getAnalyzedImages")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(GetAllImagesResponse))]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetAnalyzedImagesResponse))]
         public abstract IActionResult GetAnalyzedImages();
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Org.OpenAPITools.Controllers
         [HttpPost]
         [Route("/media/getAnalyzedVideos")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(GetAllVideosResponse))]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetAnalyzedVideosResponse))]
         public abstract IActionResult GetAnalyzedVideos();
 
         /// <summary>

@@ -68,11 +68,9 @@ namespace Org.OpenAPITools.Controllers
         /// 
         /// </summary>
         /// <remarks>Endpoint for Get All Tools use case</remarks>
-        /// <param name="deletePipelineRequest"></param>
         /// <response code="200">All existing tools have been returned</response>
         [HttpPost]
         [Route("/pipelines/getAllTools")]
-        [Consumes("application/json")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(List<string>))]
         public abstract IActionResult GetAllTools();

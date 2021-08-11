@@ -178,7 +178,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getAllImagesResponse'
+                $ref: '#/components/schemas/getAnalyzedImagesResponse'
 
   /media/getAnalyzedVideos:
     post:
@@ -192,7 +192,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getAllVideosResponse'
+                $ref: '#/components/schemas/getAnalyzedVideosResponse'
   #==========================================================
   #     PIPELINES SUBSYSTEM PATHING
   #==========================================================
@@ -331,12 +331,6 @@ paths:
         - "Pipelines"
       description: Endpoint for Get All Tools use case
       operationId: GetAllTools
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/deletePipelineRequest'
       responses:
         "200":
           description: All existing tools have been returned
@@ -488,6 +482,55 @@ components:
         id:
           type: string
           description: unique id assossciated with a certain image stored on the blob storage
+          
+    getAnalyzedImagesResponse:
+      type: object
+      properties:
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/analyzedImageMetaData'
+
+    getAnalyzedVideosResponse:
+      type: object
+      properties:
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/analyzedVideoMetaData'
+
+    analyzedImageMetaData:
+      type: object
+      properties:
+        id:
+          type: string
+        dateAnalyzed:
+          type: string
+          format: date-time
+          description: The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Zring
+        url:
+          type: string
+        imageId:
+          type: string
+        pipelineId:
+          type: string
+
+    analyzedVideoMetaData:
+      type: object
+      properties:
+        id:
+          type: string
+        dateAnalyzed:
+          type: string
+          format: date-time
+          description: The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Zring
+        url:
+          type: string
+        videoId:
+          type: string
+        pipelineId:
+          type: string
+        
 
     #==========================================================
     #     PIPELINES COMPONENTS
@@ -599,7 +642,7 @@ components:
       properties:
         url:
           type: string      
-        
+
     #==========================================================
     #     GENERIC COMPONENTS
     #==========================================================
