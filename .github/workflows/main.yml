@@ -1,0 +1,32 @@
+# .github/workflows/runOnGitHub.yml
+# GitHub Actions documentation
+# => https://docs.github.com/en/actions
+name: Android Unit Tests
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches:
+      - 'development'
+      - 'master'
+      - 'mobile-development'
+  pull_request:
+    branches:
+      - 'development'
+      - 'master'
+      - 'mobile-development'
+
+  workflow_dispatch:
+
+jobs:
+  gradle:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-java@v1
+      with:
+        java-version: 8
+    - uses: gradle/gradle-build-action@v1
+      with:
+        arguments: testDebugUnitTest
