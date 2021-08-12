@@ -5,4 +5,8 @@ object Exceptions {
         const val NO_SUCH_VALUE = "No such value found"
         const val UNSUPPORTED_CLASS = "Unsupported class"
     }
+
+    object VIEWMODEL_PROVIDER_FACTORY {
+        const val UNKNOWN_VIEWMODEL = "Unknown ViewModel class"
+    }
 }

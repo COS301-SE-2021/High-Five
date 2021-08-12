@@ -8,6 +8,7 @@ import com.bdpsolutions.highfive.subsystems.video.model.VideoDataRepository
 import com.bdpsolutions.highfive.subsystems.video.model.source.APIVideoDataSource
 import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
 import com.bdpsolutions.highfive.subsystems.video.viewmodel.VideoViewModel
+import com.bdpsolutions.highfive.constants.Exceptions.VIEWMODEL_PROVIDER_FACTORY as vmf
 import javax.inject.Inject
 
 
@@ -30,6 +31,6 @@ class ViewModelProviderFactory @Inject constructor(): ViewModelProvider.Factory 
                 VideoDataRepository.create(APIVideoDataSource.create(), APIVideoDataSource.create())
             ) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        throw IllegalArgumentException(vmf.UNKNOWN_VIEWMODEL)
     }
 }

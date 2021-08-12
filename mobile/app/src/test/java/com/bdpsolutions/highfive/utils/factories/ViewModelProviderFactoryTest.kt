@@ -1,5 +1,6 @@
 package com.bdpsolutions.highfive.utils.factories
 
+import com.bdpsolutions.highfive.helpers.TestViewModel
 import com.bdpsolutions.highfive.subsystems.login.model.LoginRepository
 import com.bdpsolutions.highfive.subsystems.login.model.source.APILogin
 import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
@@ -7,6 +8,7 @@ import com.bdpsolutions.highfive.subsystems.video.model.VideoDataRepository
 import com.bdpsolutions.highfive.subsystems.video.model.source.APIVideoDataSource
 import com.bdpsolutions.highfive.subsystems.video.model.source.DatabaseVideoDataSource
 import com.bdpsolutions.highfive.subsystems.video.viewmodel.VideoViewModel
+import com.bdpsolutions.highfive.constants.Exceptions.VIEWMODEL_PROVIDER_FACTORY as vmf
 import com.google.common.truth.Truth
 
 import org.junit.Test
@@ -141,5 +143,15 @@ class ViewModelProviderFactoryTest {
         val factory = ViewModelProviderFactory()
         val viewModel = factory.create(VideoViewModel::class.java)
         Truth.assertThat(viewModel).isInstanceOf(VideoViewModel::class.java)
+    }
+
+    @Test
+    fun `Try create invalid ViewModel`() { //NOSONAR
+        try {
+            val factory = ViewModelProviderFactory()
+            factory.create(TestViewModel::class.java)
+        } catch (e: IllegalArgumentException) {
+            Truth.assertThat(e.message).isEqualTo(vmf.UNKNOWN_VIEWMODEL)
+        }
     }
 }
