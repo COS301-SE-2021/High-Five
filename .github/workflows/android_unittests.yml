@@ -18,6 +18,10 @@ on:
       - 'mobile-development'
 
   workflow_dispatch:
+  
+defaults:
+  run:
+    working-directory: ./mobile
 
 jobs:
   gradle:
