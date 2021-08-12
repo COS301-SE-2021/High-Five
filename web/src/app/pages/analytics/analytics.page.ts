@@ -110,7 +110,6 @@ export class AnalyticsPage implements OnInit {
     this.pipelinesService.getPipelines().subscribe(response => {
       this.pipelines = response.pipelines;
       this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
-      localStorage.setItem('pipelines',JSON.stringify(this.availableTools));
       return true;
     });
     return false;
@@ -120,7 +119,6 @@ export class AnalyticsPage implements OnInit {
     this.pipelinesService.getAllTools().subscribe(response => {
       this.availableTools = response;
       this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
-      localStorage.setItem('pipelines',JSON.stringify(this.pipelines));
       return true;
     });
     return false;
