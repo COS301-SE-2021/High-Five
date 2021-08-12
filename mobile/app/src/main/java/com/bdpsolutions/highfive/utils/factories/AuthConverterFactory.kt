@@ -2,10 +2,7 @@ package com.bdpsolutions.highfive.utils.factories
 
 import android.os.Bundle
 import android.text.TextUtils
-import com.google.gson.JsonElement
 import java.lang.Exception
-import java.text.SimpleDateFormat
-import java.util.*
 
 import com.bdpsolutions.highfive.constants.Exceptions.AUTH_CONVERTER_FACTORY as auth
 

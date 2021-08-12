@@ -19,9 +19,9 @@ class ViewModelProviderFactory @Inject constructor(): ViewModelProvider.Factory 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-            return LoginViewModel(
-                loginRepository = LoginRepository(
-                    loginSource = APILogin()
+            return LoginViewModel.create(
+                loginRepository = LoginRepository.create(
+                    loginSource = APILogin.create()
                 )
             ) as T
         }

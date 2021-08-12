@@ -10,8 +10,7 @@ import net.openid.appauth.*
 /**
  * Class that logs in a user using Azure AD.
  */
-class APILogin : LoginDataSource {
-
+class APILogin: LoginDataSource {
 
     override fun login(resultLauncher: ActivityResultLauncher<Intent>) {
 
@@ -40,5 +39,18 @@ class APILogin : LoginDataSource {
 
     override fun logout() {
         // TODO: revoke authentication
+    }
+
+    /**
+     * Companion object to create the actual class.
+     *
+     * This is to allow PowerMockito to mock this class when it is created by the
+     * ViewModelProviderFactory, by mocking this static method to return a mock
+     * class instead of the actual class.
+     */
+    companion object {
+        fun create(): APILogin {
+            return APILogin()
+        }
     }
 }

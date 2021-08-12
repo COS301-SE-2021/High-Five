@@ -136,6 +136,7 @@ dependencies {
     //Mockito
     testImplementation "org.mockito:mockito-core:$mockito_version"
     androidTestImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "org.mockito:mockito-inline:$mockito_version"
 
     //PowerMock
     testImplementation "org.powermock:powermock-api-mockito2:$powermock_version"

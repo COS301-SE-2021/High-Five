@@ -19,7 +19,7 @@ import com.bdpsolutions.highfive.utils.Result
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel private constructor(val loginRepository: LoginRepository) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
@@ -85,5 +85,18 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
+    }
+
+    /**
+     * Companion object to create the actual class.
+     *
+     * This is to allow PowerMockito to mock this class when it is created by the
+     * ViewModelProviderFactory, by mocking this static method to return a mock
+     * class instead of the actual class.
+     */
+    companion object {
+        fun create(loginRepository: LoginRepository?) : LoginViewModel {
+            return LoginViewModel(loginRepository!!)
+        }
     }
 }
