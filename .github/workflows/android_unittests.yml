@@ -34,9 +34,13 @@ jobs:
         working-directory: ./mobile
         run: chmod 777 ./gradlew
         
+      - name: Install Gradle
+        working-directory: ./mobile
+        run: sudo apt install -y gradle
+        
       - name: Create gradle wrapper
         working-directory: ./mobile
-        run: bash gradlew wrapper
+        run: gradle wrapper
 
       # Execute unit tests
       - name: Unit Test
