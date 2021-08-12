@@ -7,6 +7,8 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
+import com.bdpsolutions.highfive.constants.Exceptions.AUTH_CONVERTER_FACTORY as auth
+
 /**
  * Factory function to read a value from a Bundle.
  */
@@ -14,14 +16,14 @@ inline fun <reified T> authConverterFactory (name: String, bundle: Bundle) :T? {
 
     return when (T::class) {
         String::class -> {
-            var value = bundle.getString(name) ?: throw Exception("No such value found")
+            var value = bundle.getString(name) ?: throw Exception(auth.NO_SUCH_VALUE)
             value = value.trim { it <= ' ' }
             value = value.replace("&&&", " ")
             if (TextUtils.isEmpty(value)) {
                 "" as T
             } else value as T
         }
-        Boolean::class -> bundle.getBoolean(name) as T
-        else -> throw Exception("Unsupported class")
+        Boolean::class -> bundle.getBoolean(name) as T ?: throw Exception(auth.NO_SUCH_VALUE)
+        else -> throw Exception(auth.UNSUPPORTED_CLASS)
     }
 }
