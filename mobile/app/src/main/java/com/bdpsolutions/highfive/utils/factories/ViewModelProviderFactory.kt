@@ -26,8 +26,8 @@ class ViewModelProviderFactory @Inject constructor(): ViewModelProvider.Factory 
             ) as T
         }
         else if (modelClass.isAssignableFrom(VideoViewModel::class.java)) {
-            return VideoViewModel(
-                VideoDataRepository(APIVideoDataSource(), APIVideoDataSource())
+            return VideoViewModel.create(
+                VideoDataRepository.create(APIVideoDataSource.create(), APIVideoDataSource.create())
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

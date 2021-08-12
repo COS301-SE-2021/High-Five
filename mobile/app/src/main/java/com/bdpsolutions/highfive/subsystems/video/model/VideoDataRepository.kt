@@ -22,7 +22,7 @@ import com.bdpsolutions.highfive.utils.Result
  * @param apiVideoSource API endpoints to access data
  * @param dbVideoSource Database endpoints to access data
  */
-class VideoDataRepository(private val apiVideoSource: VideoDataSource,
+class VideoDataRepository private constructor(private val apiVideoSource: VideoDataSource,
                           private val dbVideoSource: VideoDataSource
 ) {
 
@@ -33,5 +33,12 @@ class VideoDataRepository(private val apiVideoSource: VideoDataSource,
      */
     fun refreshData(callback: (Result<List<VideoPreview>>) -> Unit) {
         apiVideoSource.getVideoPreviewData(callback)
+    }
+
+    companion object {
+        fun create(apiVideoSource: VideoDataSource,
+                   dbVideoSource: VideoDataSource): VideoDataRepository {
+            return VideoDataRepository(apiVideoSource, dbVideoSource)
+        }
     }
 }
