@@ -10,13 +10,11 @@ on:
     branches:
       - 'development'
       - 'master'
-      - 'web-development'
       - 'mobile-development'
   pull_request:
     branches:
       - 'development'
       - 'master'
-      - 'web-development'
       - 'mobile-development'
 
   workflow_dispatch:
