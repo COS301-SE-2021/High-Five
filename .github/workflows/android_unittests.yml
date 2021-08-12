@@ -32,7 +32,7 @@ jobs:
 
       - name: Make gradlew executable
         working-directory: ./mobile
-        run: chmod +x ./gradle
+        run: chmod 777 ./gradle
 
       # Execute unit tests
       - name: Unit Test
