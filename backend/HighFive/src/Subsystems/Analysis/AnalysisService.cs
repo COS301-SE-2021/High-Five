@@ -106,6 +106,7 @@ namespace src.Subsystems.Analysis
              */
             
             var rawImage = _mediaStorageService.GetImage(imageId);
+            var rawImageByteArray = rawImage.ToByteArray().Result;
             
             //---------------------------------------------------------------------------------------
             //-----------------------------TODO: PERFORM ANALYSIS HERE-------------------------------
@@ -134,6 +135,7 @@ namespace src.Subsystems.Analysis
              */
 
             var rawVideo = _mediaStorageService.GetVideo(videoId);
+            var rawVideoByteArray = rawVideo.ToByteArray().Result;
             
             //---------------------------------------------------------------------------------------
             //-----------------------------TODO: PERFORM ANALYSIS HERE-------------------------------
