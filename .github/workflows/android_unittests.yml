@@ -42,8 +42,18 @@ jobs:
           sudo unzip -d /opt/gradle /tmp/gradle-*.zip
           export GRADLE_HOME=/opt/gradle/gradle-7.0.2
           export PATH=${GRADLE_HOME}/bin:${PATH}
-          touch local.properties
           
+      - name: Create mock local.properties file
+        working-directory: ./mobile
+        run: |
+          touch local.properites
+          echo "CLIENT_ID=stub" >> local.properties
+          echo "DISCOVERY_URI=stub" >> local.properties
+          echo "TOKEN_URI=stub" >> local.properties
+          echo "REDIRECT_URI=stub" >> local.properties
+          echo "END_SESSION_REDIRECT_URI=stub" >> local.properties
+          echo "AUTHORIZATION_SCOPE=stub" >> local.properties
+          echo "HTTPS_REQUIRED=true" >> local.properties
 
       # Execute unit tests
       - name: Unit Test
