@@ -33,11 +33,15 @@ jobs:
       - name: Make gradlew executable
         working-directory: ./mobile
         run: chmod 777 ./gradlew
+        
+      - name: Create gradle wrapper
+        working-directory: ./mobile
+        run: bash gradlew wrapper
 
       # Execute unit tests
       - name: Unit Test
         working-directory: ./mobile
-        run: bash gradlew testDebugUnitTest
+        run: bash gradlew testDebug
 
       - name: Android Test Report
         uses: asadmansr/android-test-report-action@v1.2.0
