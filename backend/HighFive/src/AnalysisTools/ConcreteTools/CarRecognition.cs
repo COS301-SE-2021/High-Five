@@ -50,9 +50,36 @@ namespace src.AnalysisTools.ConcreteTools
             _model = new InferenceSession(ModelPath);
             _modelInputLayerName = _model.InputMetadata.Keys.Single();
         }
-        public object AnalyseFrame(object frame)
+        public byte[] AnalyseFrame(byte[] frame)
         {
-            return null;
+            //Convert from input type frame to 3D array
+            Image originalImage;
+            using (var ms = new MemoryStream(frame))
+            {
+                originalImage = Image.FromStream(ms);
+            }
+            
+            var image = PreprocessFrame(originalImage);
+            
+            int[] dimensions = {3, image[0].Length, image[0][0].Length};
+            var inputTensor = new DenseTensor<float>(image.Flatten().Flatten(),dimensions); //image.ToTensor();
+            
+            var modelInput = new List<NamedOnnxValue>
+            {
+                NamedOnnxValue.CreateFromTensor(_modelInputLayerName, inputTensor)
+            };
+            using var session = _model;
+            
+            var result = session.Run(modelInput);
+            
+            
+            var boxes=((DenseTensor<float>) result.ElementAtOrDefault(0).Value).ToArray();//Convert to output type
+            var labels=((DenseTensor<long>) result.ElementAtOrDefault(1).Value).ToArray();
+            var scores=((DenseTensor<float>) result.ElementAtOrDefault(2).Value).ToArray();
+            
+            
+            var output = PostProcessFrame(originalImage, boxes, labels, scores);
+            return output;
         }
 
         private float[][][] PreprocessFrame(Image image)
