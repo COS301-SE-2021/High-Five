@@ -14,7 +14,7 @@ import net.openid.appauth.connectivity.DefaultConnectionBuilder
 /**
  * Class that logs in a user using Azure AD.
  */
-class APILogin: LoginDataSource {
+class APILogin private constructor(): LoginDataSource {
 
     override fun login(resultLauncher: ActivityResultLauncher<Intent>) {
 

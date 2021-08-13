@@ -32,10 +32,7 @@ internal class AuthConverterFactoryKtTest {
         `when`(mBundleMock?.getString(auth.STRING_KEY)).thenReturn(auth.STRING_VAL)
         `when`(mBundleMock?.getBoolean(auth.BOOL_KEY)).thenReturn(auth.BOOL_VAL)
         `when`(mBundleMock?.getString(auth.INVALID_KEY)).thenReturn(auth.INVALID_VAL)
-    }
 
-    @Before
-    fun setUp() {
         PowerMockito.mockStatic(TextUtils::class.java)
         PowerMockito.`when`(TextUtils.isEmpty(any(CharSequence::class.java)))
             .thenAnswer { invocation ->
