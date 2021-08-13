@@ -18,18 +18,21 @@ namespace src.Subsystems.Analysis
          * -> _storageManager: a reference to the storage manager, used to access the blob storage.
          * -> _mediaStorageService: service used to retrieve raw media and store analyzed media.
          * -> _pipelineService: service used to retrieve tools from a provided pipeline.
+         * -> _analysisModels: this singleton contains all the models/tools that will be used during analysis.
          */
 
         private readonly IStorageManager _storageManager;
         private readonly IMediaStorageService _mediaStorageService;
         private readonly IPipelineService _pipelineService;
+        private readonly IAnalysisModels _analysisModels;
 
         public AnalysisService(IStorageManager storageManager, IMediaStorageService mediaStorageService,
-            IPipelineService pipelineService)
+            IPipelineService pipelineService, IAnalysisModels analysisModels)
         {
             _storageManager = storageManager;
             _mediaStorageService = mediaStorageService;
             _pipelineService = pipelineService;
+            _analysisModels = analysisModels;
         }
         
         public string AnalyzeMedia(AnalyzeMediaRequest request)
