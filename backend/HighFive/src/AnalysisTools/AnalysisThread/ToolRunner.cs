@@ -87,16 +87,15 @@ namespace src.AnalysisTools.AnalysisThread
                         Convert.ToInt32(output.Boxes[i * 4 + 2]),
                         Convert.ToInt32(output.Boxes[i * 4 + 3]));
                     g.DrawRectangle(pen, box);
-                    g.DrawString(output.Classes[i], font, brush, Convert.ToSingle(output.Boxes[i * 4]),
+                    g.DrawString(char.ToUpper(output.Classes[i][0]) + output.Classes[i].Substring(1), font, brush,
+                        Convert.ToSingle(output.Boxes[i * 4]),
                         Convert.ToSingle(output.Boxes[i * 4 + 1]) - boxHeadingHeight);
                 }
 
                 font = new Font(FontFamily.GenericSansSerif, fontSize * 2);
-                Graphics.FromImage(outputFrame).DrawString(
-                    char.ToUpper(output.Purpose[0]) + output.Purpose.Substring(1) + " Count: " + output.Classes.Count,
-                    font,
+                Graphics.FromImage(outputFrame).DrawString(output.Purpose + " Count: " + output.Classes.Count, font,
                     brush, 10, 10 + index * 50);
-            }
+            }//char.ToUpper(str[0]) + str.Substring(1)
 
 
             return outputFrame;
