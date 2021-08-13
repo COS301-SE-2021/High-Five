@@ -101,9 +101,9 @@ namespace tests.IntegrationTests
             await UploadVideo();
             var response = await _client.PostAsync("/media/getAllVideos", null!);
             var responseBody = response.Content.ReadAsStringAsync().Result;
-            var responseObject = JsonConvert.DeserializeObject<List<VideoMetaData>>(responseBody);
+            var responseObject = JsonConvert.DeserializeObject<GetAllVideosResponse>(responseBody);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotEmpty(responseObject);
+            Assert.NotEmpty(responseObject.Videos);
         }
         
         [Fact]
@@ -112,9 +112,9 @@ namespace tests.IntegrationTests
             await UploadImage();
             var response = await _client.PostAsync("/media/getAllImages", null!);
             var responseBody = response.Content.ReadAsStringAsync().Result;
-            var responseObject = JsonConvert.DeserializeObject<List<ImageMetaData>>(responseBody);
+            var responseObject = JsonConvert.DeserializeObject<GetAllImagesResponse>(responseBody);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotEmpty(responseObject);
+            Assert.NotEmpty(responseObject.Images);
         }
 
         [Fact]
@@ -196,8 +196,8 @@ namespace tests.IntegrationTests
             
             var response = await _client.PostAsync("/media/getAllVideos", null!);
             var responseBody = response.Content.ReadAsStringAsync().Result;
-            var responseObject = JsonConvert.DeserializeObject<List<VideoMetaData>>(responseBody);
-            var validId = responseObject[0].Id;
+            var responseObject = JsonConvert.DeserializeObject<GetAllVideosResponse>(responseBody);
+            var validId = responseObject.Videos[0].Id;
             return validId;
         }
         
@@ -212,8 +212,8 @@ namespace tests.IntegrationTests
             
             var response = await _client.PostAsync("/media/getAllImages", null!);
             var responseBody = response.Content.ReadAsStringAsync().Result;
-            var responseObject = JsonConvert.DeserializeObject<List<ImageMetaData>>(responseBody);
-            var validId = responseObject[0].Id;
+            var responseObject = JsonConvert.DeserializeObject<GetAllImagesResponse>(responseBody);
+            var validId = responseObject.Images[0].Id;
             return validId;
         }
     }
