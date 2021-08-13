@@ -70,12 +70,12 @@ namespace src.AnalysisTools.AnalysisThread
             var oldHeight = outputFrame.Height;
             //initialise drawing tools
             var penWidth = Convert.ToInt32(Math.Max(oldHeight, oldWidth) * (1.0 / 445));
-            var fontSize = Convert.ToSingle(Math.Max(oldHeight, oldWidth) * (1.0 / 89));
+            var fontSize = Convert.ToSingle(Math.Max(oldHeight, oldWidth) * (1.3 / 89));
             var boxHeadingHeight = Convert.ToSingle(Math.Max(oldHeight, oldWidth) * (15.0 / 890));
             var countTextHeight = Convert.ToSingle(Math.Max(oldHeight, oldWidth) * (11.0 / 445));
             var pen = new Pen(Color.Red,penWidth);
             var brush = Brushes.Red;
-            var countFont = new Font(FontFamily.GenericSansSerif, fontSize * 2);
+            var countFont = new Font(FontFamily.GenericSansSerif, fontSize * 2 / 1.3f);
             var font = new Font(FontFamily.GenericSansSerif,fontSize);
 
             for (var index = 0; index < outputs.Count; index++)
@@ -95,7 +95,7 @@ namespace src.AnalysisTools.AnalysisThread
                 }
                 
                 Graphics.FromImage(outputFrame).DrawString(output.Purpose + " Count: " + output.Classes.Count, countFont,
-                    brush, 10, 10 + index * 110);
+                    brush, 10, 10 + index * countTextHeight);
             }//char.ToUpper(str[0]) + str.Substring(1)
 
 
