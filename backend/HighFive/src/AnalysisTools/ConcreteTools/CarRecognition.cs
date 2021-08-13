@@ -24,7 +24,7 @@ namespace src.AnalysisTools.ConcreteTools
         private const long MinClass = 2;
         private const long MaxClass = 9;
         private readonly ImageFormat _frameFormat = ImageFormat.Jpeg;
-        private const string ToolPurpose = "Vehicle";
+        public const string ToolPurpose = "Vehicle";
         
         private readonly string[] _classes ={
             "__background", "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat",
@@ -123,6 +123,7 @@ namespace src.AnalysisTools.ConcreteTools
             var ratio = Convert.ToSingle(800.0 / Math.Min(oldWidth, oldHeight));
             
             var output = new AnalysisOutput();
+            output.Purpose = ToolPurpose;
             output.Boxes = new List<float>();
             output.Classes = new List<string>();
             for (int i = 0; i < labels.Count; i++)

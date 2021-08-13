@@ -49,7 +49,7 @@ namespace src.AnalysisTools.AnalysisThread
             }
         }
 
-        private Image DrawBoxes(byte[] frame,List<AnalysisOutput> outputs)
+        private static Image DrawBoxes(byte[] frame,List<AnalysisOutput> outputs)
         {
             Image outputFrame;
             using var ms = new MemoryStream(frame);
@@ -64,8 +64,9 @@ namespace src.AnalysisTools.AnalysisThread
             var brush = Brushes.Red;
             var font = new Font(FontFamily.GenericSansSerif,fontSize);
 
-            foreach (var output in outputs)
+            for (var index = 0; index < outputs.Count; index++)
             {
+                var output = outputs[index];
                 for (var i = 0; i < output.Classes.Count; i++)
                 {
                     using var g = Graphics.FromImage(outputFrame);
@@ -77,9 +78,13 @@ namespace src.AnalysisTools.AnalysisThread
                     g.DrawString(output.Classes[i], font, brush, Convert.ToSingle(output.Boxes[i * 4]),
                         Convert.ToSingle(output.Boxes[i * 4 + 1]) - 75);
                 }
+
+                font = new Font(FontFamily.GenericSansSerif, fontSize * 2);
+                Graphics.FromImage(outputFrame).DrawString(output.Purpose + " Count: " + output.Classes.Count, font,
+                    brush, 10, 10 + index * 100);
             }
-            
-            
+
+
             return outputFrame;
         }
     }
