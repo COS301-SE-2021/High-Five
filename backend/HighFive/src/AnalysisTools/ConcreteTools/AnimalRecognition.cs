@@ -131,8 +131,8 @@ namespace src.AnalysisTools.ConcreteTools
                 {
                     output.Boxes.Add(boxes[i*4] / ratio);
                     output.Boxes.Add(boxes[i*4+1] / ratio);
-                    output.Boxes.Add(boxes[i*4+2] / ratio);
-                    output.Boxes.Add(boxes[i*4+3] / ratio);
+                    output.Boxes.Add((boxes[i*4+2]-boxes[i*4]) / ratio);
+                    output.Boxes.Add((boxes[i*4+3]-boxes[i*4+1]) / ratio);
                     
                     output.Classes.Add(_classes[labels[i]]);
                 }
