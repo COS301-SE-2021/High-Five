@@ -70,8 +70,10 @@ namespace src
                 options.MultipartBodyLengthLimit = int.MaxValue;
             });
             
-            // Dependency Injections
+            // Singletons
             services.Add(new ServiceDescriptor(typeof(IConfiguration), Configuration));
+            services.Add(new ServiceDescriptor(typeof(IAnalysisModels), new AnalysisModels()));
+            // Dependency Injections
             services.AddScoped<IStorageManager, StorageManager>();
             services.AddScoped<IMediaStorageService, MediaStorageService>();
             services.AddScoped<IPipelineService, PipelineService>();
