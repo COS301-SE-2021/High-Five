@@ -82,7 +82,7 @@ namespace src.AnalysisTools.ConcreteTools
             return output;
         }
 
-        private float[][][] PreprocessFrame(Image image)
+        private static float[][][] PreprocessFrame(Image image)
         {
 
 

@@ -5,20 +5,20 @@ namespace src.AnalysisTools.AnalysisThread
 {
     public class ToolRunner
     {
-        private BlockingCollection<object> _frames = new BlockingCollection<object>();
+        private BlockingCollection<byte[]> _frames = new();
         private ITool Tool;
-        private object OutputQueue;//Type may change
+        private object _outputQueue;//Type may change
  
         public ToolRunner(ITool tool, object outputQueue)
         {
-            OutputQueue = outputQueue;
+            _outputQueue = outputQueue;
             Tool = tool;
             var thread = new Thread(new ThreadStart(OnStart));
             thread.IsBackground = true;
             thread.Start();
         }
  
-        public void Enqueue(object frame)//This function may not work if called from another thread and we will have to access the queue directly
+        public void Enqueue(byte[] frame)//This function may not work if called from another thread and we will have to access the queue directly
         {
             //Used by main thread to add new frames
             _frames.Add(frame);
