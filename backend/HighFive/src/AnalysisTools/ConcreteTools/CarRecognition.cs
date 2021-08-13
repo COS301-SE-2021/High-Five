@@ -1,24 +1,16 @@
 using System;
 using System.IO; 
 
-using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Threading;
-using Accord.Imaging;
 using Accord.Imaging.Converters;
 using Accord.Math;
-using Accord.Statistics.Kernels;
-using Accord.Statistics.Models.Fields.Features;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using Image = System.Drawing.Image;
-using Matrix = Accord.Math.Matrix;
 
 namespace src.AnalysisTools.ConcreteTools
 {
