@@ -1,6 +1,9 @@
-﻿namespace src.Subsystems.Analysis
+﻿using src.AnalysisTools;
+
+namespace src.Subsystems.Analysis
 {
-    public class IAnalysisModels
+    public interface IAnalysisModels
     {
+        public ITool GetTool(string toolName);
     }
 }

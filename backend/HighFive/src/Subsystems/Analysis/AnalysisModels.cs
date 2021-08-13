@@ -5,15 +5,30 @@ namespace src.Subsystems.Analysis
 {
     public class AnalysisModels: IAnalysisModels
     {
-        public ITool AnimalRecognition { get; }
-        public ITool VehicleRecognition { get; }
-        public ITool PersonRecognition { get;  }
+        private readonly ITool _animalRecognition;
+        private readonly ITool _vehicleRecognition;
+        private readonly ITool _personRecognition;
         
         public AnalysisModels()
         {
-            AnimalRecognition = new AnimalRecognition();
-            VehicleRecognition = new CarRecognition();
-            PersonRecognition = new PersonRecognition();
+            _animalRecognition = new AnimalRecognition();
+            _vehicleRecognition = new CarRecognition();
+            _personRecognition = new PersonRecognition();
+        }
+
+        public ITool GetTool(string toolName)
+        {
+            switch (toolName)
+            {
+                case "AnimalCounting":
+                    return _animalRecognition;
+                case "VehicleRecognition":
+                    return _vehicleRecognition;
+                case "PersonRecognition":
+                    return _personRecognition;
+                default:
+                    return null;
+            }
         }
     }
 }
