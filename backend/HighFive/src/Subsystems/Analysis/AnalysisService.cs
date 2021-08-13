@@ -65,8 +65,8 @@ namespace src.Subsystems.Analysis
             var storageContainer = "analyzed/" + request.MediaType;
             var fileExtension = request.MediaType switch
             {
-                AnalyzeMediaRequest.MediaTypeEnum.ImageEnum => ".img",
-                AnalyzeMediaRequest.MediaTypeEnum.VideoEnum => ".mp4",
+                "image" => ".img",
+                "video" => ".mp4",
                 _ => string.Empty
             };
             var analyzedMediaName = _storageManager.HashMd5(request.MediaId + "|" + analysisPipeline.Tools) + fileExtension;
@@ -81,10 +81,10 @@ namespace src.Subsystems.Analysis
             var analyzedMediaTemporaryLocation = string.Empty;
             switch (request.MediaType)
             {
-                case AnalyzeMediaRequest.MediaTypeEnum.ImageEnum:
+                case "image":
                     analyzedMediaTemporaryLocation = AnalyzeImage(request.MediaId, analysisPipeline);
                     break;
-                case AnalyzeMediaRequest.MediaTypeEnum.VideoEnum:
+                case "video":
                     analyzedMediaTemporaryLocation = AnalyzeVideo(request.MediaId, analysisPipeline);
                     break;
             }

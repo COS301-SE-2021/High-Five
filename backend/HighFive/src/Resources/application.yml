@@ -634,7 +634,6 @@ components:
           type: string
         mediaType:
           type: string
-          enum: [image, video]
           description: This string can only be "image" or "video"
 
     analyzeMediaResponse:

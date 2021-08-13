@@ -38,35 +38,12 @@ namespace Org.OpenAPITools.Models
         [DataMember(Name="pipelineId", EmitDefaultValue=false)]
         public string PipelineId { get; set; }
 
-
-        /// <summary>
-        /// This string can only be \"image\" or \"video\"
-        /// </summary>
-        /// <value>This string can only be \"image\" or \"video\"</value>
-        [TypeConverter(typeof(CustomEnumConverter<MediaTypeEnum>))]
-        [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public enum MediaTypeEnum
-        {
-            
-            /// <summary>
-            /// Enum ImageEnum for image
-            /// </summary>
-            [EnumMember(Value = "image")]
-            ImageEnum = 1,
-            
-            /// <summary>
-            /// Enum VideoEnum for video
-            /// </summary>
-            [EnumMember(Value = "video")]
-            VideoEnum = 2
-        }
-
         /// <summary>
         /// This string can only be \&quot;image\&quot; or \&quot;video\&quot;
         /// </summary>
         /// <value>This string can only be \&quot;image\&quot; or \&quot;video\&quot;</value>
         [DataMember(Name="mediaType", EmitDefaultValue=false)]
-        public MediaTypeEnum MediaType { get; set; }
+        public string MediaType { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -127,7 +104,7 @@ namespace Org.OpenAPITools.Models
                 ) && 
                 (
                     MediaType == other.MediaType ||
-                    
+                    MediaType != null &&
                     MediaType.Equals(other.MediaType)
                 );
         }
@@ -146,7 +123,7 @@ namespace Org.OpenAPITools.Models
                     hashCode = hashCode * 59 + MediaId.GetHashCode();
                     if (PipelineId != null)
                     hashCode = hashCode * 59 + PipelineId.GetHashCode();
-                    
+                    if (MediaType != null)
                     hashCode = hashCode * 59 + MediaType.GetHashCode();
                 return hashCode;
             }
