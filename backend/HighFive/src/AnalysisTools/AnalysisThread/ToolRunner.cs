@@ -92,7 +92,7 @@ namespace src.AnalysisTools.AnalysisThread
 
                 font = new Font(FontFamily.GenericSansSerif, fontSize * 2);
                 Graphics.FromImage(outputFrame).DrawString(output.Purpose + " Count: " + output.Classes.Count, font,
-                    brush, 10, 10 + index * 100);
+                    brush, 10, 10 + index * 50);
             }
 
 
