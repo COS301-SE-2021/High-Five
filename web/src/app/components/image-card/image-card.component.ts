@@ -51,7 +51,7 @@ export class ImageCardComponent implements OnInit {
       event: ev,
       translucent: true,
       componentProps: {
-        availableItems: ['x','xc'],
+        availableItems: this.pipelines.map(a => a.name),
         title: "Choose pipeline"
       }
     });
