@@ -54,5 +54,66 @@ namespace src.AnalysisTools.ConcreteTools
         {
             return null;
         }
+        
+        private float[][][] PreprocessFrame(Image image)
+        {
+            
+            
+            var oldWidth = image.Width;
+            var oldHeight = image.Height;
+            var ratio = 800.0 / Math.Min(oldWidth, oldHeight);
+            var width = Convert.ToInt32(ratio * oldWidth);
+            var height = Convert.ToInt32(ratio * oldHeight);
+            width = width + 32 - (width % 32);
+            height = height + 32 - (height % 32);
+            
+            var bImage = ResizeImage(image, width, height);
+            
+            
+            var processedFrame=new float[3][][];
+            var converter = new ImageToMatrix();
+            
+            converter.Channel = 0;
+            converter.Convert(bImage,out processedFrame[2]);
+            converter.Channel = 1;
+            converter.Convert(bImage,out processedFrame[1]);
+            converter.Channel = 2;
+            converter.Convert(bImage,out processedFrame[0]);
+            
+            float[] colourMeans ={ Convert.ToSingle(102.9801), Convert.ToSingle(115.9465), Convert.ToSingle(122.7717) };
+            
+            for (var i = 0; i < processedFrame[0].Length; i++)//Might replace with parallel for loop
+            {
+                for (var j = 0; j < processedFrame[0][0].Length; j++)
+                {
+                    processedFrame[0][i][j] = processedFrame[0][i][j] * 255 - colourMeans[0];
+                    processedFrame[1][i][j] = processedFrame[1][i][j] * 255 - colourMeans[1];
+                    processedFrame[2][i][j] = processedFrame[2][i][j] * 255 - colourMeans[2];
+                }
+            }
+            return processedFrame;
+        }
+        
+        
+        private static Bitmap ResizeImage(Image image, int width, int height)
+        {
+            var destRect = new Rectangle(0, 0, width, height);
+            var destImage = new Bitmap(width, height);
+
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using var graphics = Graphics.FromImage(destImage);
+            graphics.CompositingMode = CompositingMode.SourceCopy;
+            graphics.CompositingQuality = CompositingQuality.HighQuality;
+            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
+            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            using var wrapMode = new ImageAttributes();
+            wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+            graphics.DrawImage(image, destRect, 0, 0, image.Width,image.Height, GraphicsUnit.Pixel, wrapMode);
+
+            return destImage;
+        }
     }
 }
