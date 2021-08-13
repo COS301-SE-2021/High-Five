@@ -71,7 +71,7 @@ namespace src.AnalysisTools.AnalysisThread
             //initialise drawing tools
             var penWidth = Convert.ToInt32(Math.Max(oldHeight, oldWidth) * (1.0 / 445));
             var fontSize = Convert.ToSingle(Math.Max(oldHeight, oldWidth) * (1.0 / 89));
-            var boxHeadingHeight = Convert.ToSingle(Math.Max(oldHeight, oldWidth) * (15.0 / 89));
+            var boxHeadingHeight = Convert.ToSingle(Math.Max(oldHeight, oldWidth) * (15.0 / 890));
             var pen = new Pen(Color.Red,penWidth);
             var brush = Brushes.Red;
             var font = new Font(FontFamily.GenericSansSerif,fontSize);
