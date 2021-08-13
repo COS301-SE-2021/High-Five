@@ -2,6 +2,7 @@ package com.bdpsolutions.highfive.subsystems.login.model
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
+import com.bdpsolutions.highfive.BuildConfig
 import com.bdpsolutions.highfive.constants.Settings
 import com.bdpsolutions.highfive.constants.TodoStatements
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.User
@@ -40,7 +41,7 @@ class LoginRepository private constructor(private val apiLogin: LoginDataSource)
     fun resumeSession(callback: () -> Unit) {
 
         //login regardless of whether an auth token is set or not.
-        if (Settings.DEVELOPMENT) {
+        if (Settings.DEVELOPMENT && BuildConfig.DEBUG) {
             callback()
             return
         }
