@@ -16,8 +16,8 @@ namespace src.AnalysisTools.AnalysisThread
         private BlockingCollection<byte[]> _frames = new();
         private readonly IAnalysisModels _tools;
         private Pipeline _pipeline;
-        private BlockingCollection<byte[]> _outputQueue;//Type may change
-        private readonly ImageFormat _frameFormat = ImageFormat.Jpeg;//May change
+        private BlockingCollection<byte[]> _outputQueue;
+        private readonly ImageFormat _frameFormat = ImageFormat.Jpeg;//Format of output is changed here
  
         public ToolRunner(IAnalysisModels tools, BlockingCollection<byte[]> outputQueue, Pipeline pipeline)
         {
@@ -29,7 +29,7 @@ namespace src.AnalysisTools.AnalysisThread
             thread.Start();
         }
  
-        public void Enqueue(byte[] frame)//This function may not work if called from another thread and we will have to access the queue directly
+        public void Enqueue(byte[] frame)
         {
             //Used by main thread to add new frames
             _frames.Add(frame);
