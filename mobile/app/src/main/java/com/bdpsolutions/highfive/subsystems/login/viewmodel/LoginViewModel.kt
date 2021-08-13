@@ -2,6 +2,7 @@ package com.bdpsolutions.highfive.subsystems.login.viewmodel
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,13 +14,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.bdpsolutions.highfive.subsystems.login.model.LoginRepository
 
 import com.bdpsolutions.highfive.R
+import com.bdpsolutions.highfive.constants.Settings
+import com.bdpsolutions.highfive.constants.Tests
+import com.bdpsolutions.highfive.subsystems.login.LoginActivity
 import com.bdpsolutions.highfive.subsystems.login.view.LoggedInUserView
 import com.bdpsolutions.highfive.utils.ContextHolder
 import com.bdpsolutions.highfive.utils.Result
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel private constructor(val loginRepository: LoginRepository) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
@@ -63,6 +67,12 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         loginRepository.login(mRegisterLoginResult!!)
     }
 
+    fun resumeSession() {
+        loginRepository.resumeSession {
+            _loginResult.value = LoginResult(success = LoggedInUserView(displayName = "Hello"))
+        }
+    }
+
     fun loginDataChanged(username: String, password: String) {
         if (!isUserNameValid(username)) {
             _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
@@ -85,5 +95,18 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
+    }
+
+    /**
+     * Companion object to create the actual class.
+     *
+     * This is to allow PowerMockito to mock this class when it is created by the
+     * ViewModelProviderFactory, by mocking this static method to return a mock
+     * class instead of the actual class.
+     */
+    companion object {
+        fun create(loginRepository: LoginRepository?) : LoginViewModel {
+            return LoginViewModel(loginRepository!!)
+        }
     }
 }

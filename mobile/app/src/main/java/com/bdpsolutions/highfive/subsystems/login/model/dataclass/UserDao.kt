@@ -1,6 +1,8 @@
 package com.bdpsolutions.highfive.subsystems.login.model.dataclass
 
 import androidx.room.*
+import com.bdpsolutions.highfive.BuildConfig
+import retrofit2.http.GET
 
 @Dao
 interface UserDao {

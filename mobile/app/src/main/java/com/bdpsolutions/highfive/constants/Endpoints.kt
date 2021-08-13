@@ -7,4 +7,8 @@ object Endpoints {
     object VIDEO {
         const val GET_ALL_VIDEOS = "/media/getAllVideos"
     }
+
+    object AUTH {
+        const val AUTH_TOKEN = "/oauth2/v2.0/token"
+    }
 }

@@ -7,7 +7,7 @@ import com.bdpsolutions.highfive.utils.Result
 /**
  * Database implementation for the VideoDataSource. Fetches data from a Room database instance.
  */
-class DatabaseVideoDataSource : VideoDataSource {
+class DatabaseVideoDataSource private constructor(): VideoDataSource {
     override fun getVideoPreviewData(callback: (Result<List<VideoPreview>>) -> Unit) {
         TODO(TodoStatements.NOT_YET_IMPLEMENTED)
     }
@@ -18,5 +18,11 @@ class DatabaseVideoDataSource : VideoDataSource {
 
     override fun deletePreviewData(id: String) {
         TODO(TodoStatements.NOT_YET_IMPLEMENTED)
+    }
+
+    companion object {
+        fun create(): DatabaseVideoDataSource {
+            return DatabaseVideoDataSource()
+        }
     }
 }

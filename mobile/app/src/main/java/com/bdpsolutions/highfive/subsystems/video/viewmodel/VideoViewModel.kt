@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.bdpsolutions.highfive.subsystems.video.model.VideoDataRepository
 import com.bdpsolutions.highfive.utils.Result
 
-class VideoViewModel(private val repo: VideoDataRepository) : ViewModel() {
+class VideoViewModel private constructor(private val repo: VideoDataRepository) : ViewModel() {
 
     private val _videoResult = MutableLiveData<VideoResult>()
     val videoResult: LiveData<VideoResult> = _videoResult
@@ -25,6 +25,12 @@ class VideoViewModel(private val repo: VideoDataRepository) : ViewModel() {
                     }
                 }
             }
+        }
+    }
+
+    companion object {
+        fun create(repo: VideoDataRepository): VideoViewModel {
+            return VideoViewModel(repo)
         }
     }
 }

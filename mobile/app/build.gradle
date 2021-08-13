@@ -48,7 +48,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
     buildFeatures {
         viewBinding true
@@ -136,6 +136,12 @@ dependencies {
     //Mockito
     testImplementation "org.mockito:mockito-core:$mockito_version"
     androidTestImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "org.mockito:mockito-inline:$mockito_version"
 
+    //PowerMock
+    testImplementation "org.powermock:powermock-api-mockito2:$powermock_version"
+    testImplementation "org.powermock:powermock-module-junit4-rule-agent:$powermock_version"
+    testImplementation "org.powermock:powermock-module-junit4-rule:$powermock_version"
+    testImplementation "org.powermock:powermock-module-junit4:$powermock_version"
 
 }
