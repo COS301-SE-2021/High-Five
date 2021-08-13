@@ -85,29 +85,29 @@ namespace src.AnalysisTools.ConcreteTools
             width = width + 32 - (width % 32);
             height = height + 32 - (height % 32);
 
-            var bImage = ResizeImage(image, width, height);
+            Bitmap bImage = ResizeImage(image, width, height);
 
 
             var processedFrame = new float[3][][];
-            var converter = new ImageToMatrix();
-
-            converter.Channel = 0;
-            converter.Convert(bImage, out processedFrame[2]);
-            converter.Channel = 1;
-            converter.Convert(bImage, out processedFrame[1]);
-            converter.Channel = 2;
-            converter.Convert(bImage, out processedFrame[0]);
 
             float[] colourMeans =
                 { Convert.ToSingle(102.9801), Convert.ToSingle(115.9465), Convert.ToSingle(122.7717) };
 
+            processedFrame[0] = new float[bImage.Height][];
+            processedFrame[1] = new float[bImage.Height][];
+            processedFrame[2] = new float[bImage.Height][];
+            
             for (var i = 0; i < processedFrame[0].Length; i++) //Might replace with parallel for loop
             {
+                processedFrame[0][i] = new float[bImage.Width];
+                processedFrame[1][i] = new float[bImage.Width];
+                processedFrame[2][i] = new float[bImage.Width];
+                
                 for (var j = 0; j < processedFrame[0][0].Length; j++)
                 {
-                    processedFrame[0][i][j] = processedFrame[0][i][j] * 255 - colourMeans[0];
-                    processedFrame[1][i][j] = processedFrame[1][i][j] * 255 - colourMeans[1];
-                    processedFrame[2][i][j] = processedFrame[2][i][j] * 255 - colourMeans[2];
+                    processedFrame[0][i][j] = bImage.GetPixel(j,i).B - colourMeans[0];
+                    processedFrame[1][i][j] = bImage.GetPixel(j,i).G - colourMeans[1];
+                    processedFrame[2][i][j] = bImage.GetPixel(j,i).R - colourMeans[2];
                 }
             }
 
