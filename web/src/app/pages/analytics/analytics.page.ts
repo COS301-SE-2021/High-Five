@@ -79,6 +79,16 @@ export class AnalyticsPage implements OnInit {
             name: data.data.pipeline.name,
             tools: data.data.pipeline.tools
           };
+          const isDuplicateName : boolean = this.pipelines.some(pipeline=>pipeline.name===data.data.pieline.name);
+          if (isDuplicateName) {
+            this.toastController.create({
+              message: 'Cannot create a pipeline with an already existing name',
+              duration: 1000,
+              translucent: true,
+              position: 'bottom'
+            }).then(m => m.present());
+            return;
+          }
           const createPipelineRequest: CreatePipelineRequest = {
             pipeline: newPipeline
           };
@@ -110,7 +120,7 @@ export class AnalyticsPage implements OnInit {
     this.pipelinesService.getPipelines().subscribe(response => {
       this.pipelines = response.pipelines;
       this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
-      localStorage.setItem('pipelines',JSON.stringify(this.availableTools));
+      localStorage.setItem('pipelines', JSON.stringify(this.availableTools));
       return true;
     });
     return false;
@@ -120,7 +130,7 @@ export class AnalyticsPage implements OnInit {
     this.pipelinesService.getAllTools().subscribe(response => {
       this.availableTools = response;
       this.pipelines.sort((a, b) => a.name.localeCompare(b.name));
-      localStorage.setItem('pipelines',JSON.stringify(this.pipelines));
+      localStorage.setItem('pipelines', JSON.stringify(this.pipelines));
       return true;
     });
     return false;
