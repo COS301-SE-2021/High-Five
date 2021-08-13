@@ -20,7 +20,7 @@ namespace src.Subsystems.Analysis
         {
             switch (toolName)
             {
-                case "AnimalCounting":
+                case "AnimalRecognition":
                     return _animalRecognition;
                 case "VehicleRecognition":
                     return _vehicleRecognition;

@@ -154,10 +154,11 @@ namespace src.Subsystems.Analysis
 
             var rawVideo = _mediaStorageService.GetVideo(videoId);
             var rawVideoByteArray = rawVideo.ToByteArray().Result;
+            
             //---------------------------------------------------------------------------------------
             //-----------------------------TODO: PERFORM ANALYSIS HERE-------------------------------
             //---------------------------------------------------------------------------------------
-            
+
             throw new System.NotImplementedException();
         }
         
