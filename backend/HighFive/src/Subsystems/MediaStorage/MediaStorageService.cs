@@ -95,7 +95,7 @@ namespace src.Subsystems.MediaStorage
             //upload to Azure Blob Storage
             await videoBlob.UploadFile(video);
         }
-
+ 
         public List<VideoMetaData> GetAllVideos()
         {
             /*
@@ -181,7 +181,7 @@ namespace src.Subsystems.MediaStorage
             var extension = "." + splitName[1];
             if(!(extension.Equals(".jpg") || extension.Equals(".jpeg") || extension.Equals(".png")))
             {
-                throw new InvalidDataException("Invalid extension provided."); 
+                throw new InvalidDataException("Invalid extension provided.");
             }
             var imageBlob = _storageManager.CreateNewFile(generatedName + ".img", ImageContainerName).Result;
             var salt = "";
@@ -238,18 +238,18 @@ namespace src.Subsystems.MediaStorage
              *      Parameters:
              * -> request: the request object for this service contract.
              */
-            
+
             var imageFile = _storageManager.GetFile(request.Id + ".img",ImageContainerName).Result;
             if (imageFile == null)
             {
                 return false;
             }
-            
+
             await imageFile.Delete();
             return true;
         }
-        
-        public void SetBaseContainer(string id)
+
+        public void SetBaseContainer(string containerName)
         {
             /*
              *      Description:
@@ -259,13 +259,98 @@ namespace src.Subsystems.MediaStorage
              * id - hence pointing towards the user's own container within the storage.
              *
              *      Parameters:
-             * -> id: the user's id that will be used as the container name.
+             * -> containerName: the user's id that will be used as the container name.
              */
             if (!_storageManager.IsContainerSet())
             {
-                _storageManager.SetBaseContainer(id);
+                _storageManager.SetBaseContainer(containerName);
             }
         }
-        
+
+        public IBlobFile GetImage(string imageId)
+        {
+            /*
+             *      Description:
+             * This function will retrieve a single, raw image from the blob storage belonging to imageId and
+             * return a BlobFile or null if it does not exist.
+             * This function is for internal use only and should not be called by any controllers.
+             *
+             *      Parameters:
+             * -> imageId: the id of the image to be retrieved.
+             */
+
+            return _storageManager.GetFile(imageId + ".img", ImageContainerName).Result;
+        }
+
+        public IBlobFile GetVideo(string videoId)
+        {
+            /*
+             *      Description:
+             * This function will retrieve a single, raw video from the blob storage belonging to videoId and
+             * return a BlobFile or null if it does not exist.
+             * This function is for internal use only and should not be called by any controllers.
+             *
+             *      Parameters:
+             * -> videoId: the id of the video to be retrieved.
+             */
+            
+            return _storageManager.GetFile(videoId + ".mp4", VideoContainerName).Result;
+        }
+
+        public GetAnalyzedImagesResponse GetAnalyzedImages()
+        {
+            /*
+             *      Description:
+             * This function will return all images that a user has analyzed and that has been stored in the
+             * cloud.
+             */
+
+            var allFiles = _storageManager.GetAllFilesInContainer("analyzed/" + ImageContainerName).Result;
+            if (allFiles == null)
+            {
+                return new GetAnalyzedImagesResponse{Images = new List<AnalyzedImageMetaData>()};
+            }
+            var resultList = new List<AnalyzedImageMetaData>();
+            foreach(var listBlobItem in allFiles)
+            {
+                var currentImage = new AnalyzedImageMetaData {Id = listBlobItem.Name.Replace(".img", "")};
+                if (listBlobItem.Properties is {LastModified: { }})
+                    currentImage.DateAnalyzed = listBlobItem.Properties.LastModified.Value.DateTime;
+                currentImage.ImageId = listBlobItem.GetMetaData("mediaId");
+                currentImage.PipelineId = listBlobItem.GetMetaData("pipelineId");
+                currentImage.Url = listBlobItem.GetUrl();
+                resultList.Add(currentImage);
+            }
+
+            return new GetAnalyzedImagesResponse {Images = resultList};
+        }
+
+        public GetAnalyzedVideosResponse GetAnalyzedVideos()
+        {
+            /*
+             *      Description:
+             * This function will return all videos that a user has analyzed and that has been stored in the
+             * cloud.
+             */
+
+            var allFiles = _storageManager.GetAllFilesInContainer("analyzed/" + ImageContainerName).Result;
+            if (allFiles == null)
+            {
+                return new GetAnalyzedVideosResponse{Videos = new List<AnalyzedVideoMetaData>()};
+            }
+            var resultList = new List<AnalyzedVideoMetaData>();
+            foreach(var listBlobItem in allFiles)
+            {
+                var currentImage = new AnalyzedVideoMetaData {Id = listBlobItem.Name.Replace(".mp4", "")};
+                if (listBlobItem.Properties is {LastModified: { }})
+                    currentImage.DateAnalyzed = listBlobItem.Properties.LastModified.Value.DateTime;
+                currentImage.VideoId = listBlobItem.GetMetaData("mediaId");
+                currentImage.PipelineId = listBlobItem.GetMetaData("pipelineId");
+                currentImage.Url = listBlobItem.GetUrl();
+                resultList.Add(currentImage);
+            }
+
+            return new GetAnalyzedVideosResponse {Videos = resultList};
+        }
     }
 }

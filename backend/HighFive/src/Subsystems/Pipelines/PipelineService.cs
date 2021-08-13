@@ -222,7 +222,7 @@ namespace src.Subsystems.Pipelines
             await blobFile.UploadText(jsonData);
         }
 
-        public void SetBaseContainer(string id)
+        public void SetBaseContainer(string containerName)
         {
             /*
              *      Description:
@@ -232,11 +232,12 @@ namespace src.Subsystems.Pipelines
              * id - hence pointing towards the user's own container within the storage.
              *
              *      Parameters:
-             * -> id: the user's id that will be used as the container name.
+             * -> containerName: the user's id that will be used as the container name.
              */
+            
             if (!_storageManager.IsContainerSet())
             {
-                _storageManager.SetBaseContainer(id);
+                _storageManager.SetBaseContainer(containerName);
             }
         }
 
