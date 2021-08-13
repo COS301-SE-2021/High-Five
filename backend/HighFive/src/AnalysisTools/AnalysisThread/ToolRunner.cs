@@ -71,6 +71,7 @@ namespace src.AnalysisTools.AnalysisThread
             //initialise drawing tools
             var penWidth = Convert.ToInt32(Math.Max(oldHeight, oldWidth) * (1.0 / 445));
             var fontSize = Convert.ToSingle(Math.Max(oldHeight, oldWidth) * (1.0 / 89));
+            var boxHeadingHeight = Convert.ToSingle(Math.Max(oldHeight, oldWidth) * (15.0 / 89));
             var pen = new Pen(Color.Red,penWidth);
             var brush = Brushes.Red;
             var font = new Font(FontFamily.GenericSansSerif,fontSize);
@@ -87,7 +88,7 @@ namespace src.AnalysisTools.AnalysisThread
                         Convert.ToInt32(output.Boxes[i * 4 + 3]));
                     g.DrawRectangle(pen, box);
                     g.DrawString(output.Classes[i], font, brush, Convert.ToSingle(output.Boxes[i * 4]),
-                        Convert.ToSingle(output.Boxes[i * 4 + 1]) - 75);
+                        Convert.ToSingle(output.Boxes[i * 4 + 1]) - boxHeadingHeight);
                 }
 
                 font = new Font(FontFamily.GenericSansSerif, fontSize * 2);
