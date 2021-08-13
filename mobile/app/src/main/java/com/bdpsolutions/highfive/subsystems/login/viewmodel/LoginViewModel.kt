@@ -36,6 +36,7 @@ class LoginViewModel private constructor(val loginRepository: LoginRepository) :
             if (result.resultCode == Activity.RESULT_OK) {
                 // There are no request codes
                 val data: Intent? = result.data
+                Log.d("Intent URI", data?.dataString!!)
                 val resp = AuthorizationResponse.fromIntent(data!!)
                 val ex = AuthorizationException.fromIntent(data)
 

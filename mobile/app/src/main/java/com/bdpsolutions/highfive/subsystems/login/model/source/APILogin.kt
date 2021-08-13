@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import com.bdpsolutions.highfive.constants.TodoStatements
 import com.bdpsolutions.highfive.utils.factories.authConverterFactory
 import net.openid.appauth.*
 import net.openid.appauth.connectivity.DefaultConnectionBuilder
@@ -46,7 +47,7 @@ class APILogin private constructor(): LoginDataSource {
     }
 
     override fun logout() {
-        // TODO: revoke authentication
+        TODO(TodoStatements.NOT_YET_IMPLEMENTED)
     }
 
     /**
