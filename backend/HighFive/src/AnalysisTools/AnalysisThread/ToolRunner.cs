@@ -3,6 +3,7 @@ using System.Threading;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using Org.OpenAPITools.Models;
@@ -15,14 +16,15 @@ namespace src.AnalysisTools.AnalysisThread
         private BlockingCollection<byte[]> _frames = new();
         private readonly AnalysisModels _tools;
         private Pipeline _pipeline;
-        private object _outputQueue;//Type may change
+        private BlockingCollection<byte[]> _outputQueue;//Type may change
+        private readonly ImageFormat _frameFormat = ImageFormat.Jpeg;//May change
  
-        public ToolRunner(AnalysisModels tools, Pipeline analysisPipeline, BlockingCollection<byte[]> outputQueue, Pipeline pipeline)
+        public ToolRunner(AnalysisModels tools, BlockingCollection<byte[]> outputQueue, Pipeline pipeline)
         {
             _outputQueue = outputQueue;
             _pipeline = pipeline;
             _tools = tools;
-            var thread = new Thread(new ThreadStart(OnStart));
+            var thread = new Thread(OnStart);
             thread.IsBackground = true;
             thread.Start();
         }
@@ -43,8 +45,15 @@ namespace src.AnalysisTools.AnalysisThread
                 
                 //Draw Boxes
                 var image = DrawBoxes(frame, outputs);
-
+                byte[] outputFrame;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    image.Save(ms, _frameFormat);
+                    outputFrame =  ms.ToArray();
+                }
+                
                 //Add to output queue
+                _outputQueue.Add(outputFrame);
                 //OutputQueue.Enqueue(analysedFrame);
             }
         }

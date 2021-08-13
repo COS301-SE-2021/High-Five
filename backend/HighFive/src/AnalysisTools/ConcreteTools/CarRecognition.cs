@@ -23,7 +23,6 @@ namespace src.AnalysisTools.ConcreteTools
         private const double MinScore=0.70;
         private const long MinClass = 2;
         private const long MaxClass = 9;
-        private readonly ImageFormat _frameFormat = ImageFormat.Jpeg;
         public const string ToolPurpose = "Vehicle";
         
         private readonly string[] _classes ={
