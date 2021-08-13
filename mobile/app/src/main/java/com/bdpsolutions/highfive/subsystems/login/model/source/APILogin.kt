@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import com.bdpsolutions.highfive.constants.TodoStatements
+import com.bdpsolutions.highfive.utils.AzureConfiguration
 import com.bdpsolutions.highfive.utils.factories.authConverterFactory
 import net.openid.appauth.*
 import net.openid.appauth.connectivity.DefaultConnectionBuilder
@@ -19,26 +20,24 @@ class APILogin private constructor(): LoginDataSource {
 
     override fun login(resultLauncher: ActivityResultLauncher<Intent>) {
 
-        val bundle: Bundle = ContextHolder.appContext!!.packageManager
-            .getApplicationInfo(
-                ContextHolder.appContext!!.packageName,
-                PackageManager.GET_META_DATA
-            ).metaData
+        val adConfig = AzureConfiguration.getInstance()
 
         // Perform authentication
         AuthorizationServiceConfiguration.fetchFromUrl(
-            Uri.parse(authConverterFactory<String>("discovery_uri", bundle)),
+            Uri.parse(adConfig.discoveryUri),
             { config: AuthorizationServiceConfiguration?, ex: AuthorizationException? ->
                 val authRequestBuilder = AuthorizationRequest.Builder(
                     config!!,
-                    authConverterFactory<String>("client_id", bundle)!!,
+                    adConfig.clientId,
                     ResponseTypeValues.CODE,
-                    Uri.parse(authConverterFactory<String>("redirect_uri", bundle))
+                    Uri.parse(adConfig.redirectUri)
                 )
-                    .setScope(authConverterFactory<String>("authorization_scope", bundle))
+                    .setScope(adConfig.scope)
                     .setPrompt(Settings.PROMPT)
                 val authService = AuthorizationService(ContextHolder.appContext!!)
-                val authIntent = authService.getAuthorizationRequestIntent(authRequestBuilder.build())
+                val authRequest = authRequestBuilder.build()
+                adConfig.codeVerifier = authRequest.codeVerifier!!
+                val authIntent = authService.getAuthorizationRequestIntent(authRequest)
                 resultLauncher.launch(authIntent)
 
             },

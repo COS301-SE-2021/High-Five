@@ -45,7 +45,7 @@ class LoginRepository private constructor(private val apiLogin: LoginDataSource)
             callback()
             return
         }
-        TODO(TodoStatements.CHECK_DB_FOR_TOKEN)
+        //TODO(TodoStatements.CHECK_DB_FOR_TOKEN)
     }
 
     /**

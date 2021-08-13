@@ -14,14 +14,27 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.bdpsolutions.highfive.subsystems.login.model.LoginRepository
 
 import com.bdpsolutions.highfive.R
+import com.bdpsolutions.highfive.constants.Endpoints
 import com.bdpsolutions.highfive.constants.Settings
 import com.bdpsolutions.highfive.constants.Tests
 import com.bdpsolutions.highfive.subsystems.login.LoginActivity
+import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessToken
+import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AuthEndpoint
 import com.bdpsolutions.highfive.subsystems.login.view.LoggedInUserView
+import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
+import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreviewDao
+import com.bdpsolutions.highfive.utils.AzureConfiguration
 import com.bdpsolutions.highfive.utils.ContextHolder
 import com.bdpsolutions.highfive.utils.Result
+import com.bdpsolutions.highfive.utils.RetrofitDeserializers
+import com.google.gson.GsonBuilder
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginViewModel private constructor(val loginRepository: LoginRepository) : ViewModel() {
 
@@ -46,15 +59,61 @@ class LoginViewModel private constructor(val loginRepository: LoginRepository) :
                 run handleResult@ {
                     resp?.let {
                         Log.d("TOKEN", "User successfully logged in: ${it.authorizationCode}")
-                        //TODO: Get the user's first name and set the display name to that.
-                        _loginResult.value = LoginResult(success = LoggedInUserView(displayName = "Hello"))
+                        // create a deserializer to create the VideoPreview objects
+                        val gson = GsonBuilder()
+                            .registerTypeHierarchyAdapter(
+                                VideoPreview::class.java,
+                                RetrofitDeserializers.AccessTokenDeserializer
+                            ).create()
+
+                        // create Retrofit object and fetch data
+                        val retrofit = Retrofit.Builder()
+                            .baseUrl(Endpoints.AUTH.BASE_URL)
+                            .addConverterFactory(GsonConverterFactory.create(gson))
+                            .build()
+
+                        val tokenSource = retrofit.create(AuthEndpoint::class.java)
+                        val config = AzureConfiguration.getInstance()
+                        val call = tokenSource.getAccessToken(
+                            client_id = config.clientId,
+                            scope = config.scope,
+                            redirect_uri = config.redirectUri,
+                            code = it.authorizationCode!!,
+                            grant_type = "authorization_code",
+                            code_verifier = config.codeVerifier
+                        )
+
+                        // Enqueue callback object that will call the callback function passed to this function
+                        call.enqueue(object : Callback<AccessToken> {
+
+                            override fun onResponse(
+                                call: Call<AccessToken>,
+                                response: Response<AccessToken>
+                            ) {
+
+                                if (response.isSuccessful) {
+                                    val accessToken = response.body()!!
+                                    Log.d("Access token", "Access token: ${accessToken.idToken}")
+                                    //TODO: Get the user's first name and set the display name to that.
+                                    _loginResult.value = LoginResult(
+                                        success = LoggedInUserView(displayName = "hello")
+                                    )
+                                } else {
+                                    Log.e("Error", response.message())
+                                }
+                            }
+
+                            override fun onFailure(call: Call<AccessToken>, t: Throwable) {
+                                Log.e("TOKEN", "Failed to log in: ${t.message}")
+                                _loginResult.value = LoginResult(error = R.string.login_failed)
+                            }
+                        })
                         return@handleResult
                     }
 
                     ex?.let {
                         Log.e("TOKEN", "Failed to log in: ${it.message}")
                         _loginResult.value = LoginResult(error = R.string.login_failed)
-                        return@handleResult
                     }
                 }
             }
