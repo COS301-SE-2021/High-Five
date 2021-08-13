@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System.Collections.Concurrent;
+using System.IO;
+using System.Threading;
 using Org.OpenAPITools.Models;
+using src.AnalysisTools.AnalysisThread;
 using src.Storage;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
@@ -110,11 +113,23 @@ namespace src.Subsystems.Analysis
             
             var rawImage = _mediaStorageService.GetImage(imageId);
             var rawImageByteArray = rawImage.ToByteArray().Result;
-            //---------------------------------------------------------------------------------------
-            //-----------------------------TODO: PERFORM ANALYSIS HERE-------------------------------
+            
+            
+            //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
+            var outputQueue = new BlockingCollection<byte[]>();
+            var analysisThread = new ToolRunner(_analysisModels, outputQueue, analysisPipeline);
+            analysisThread.Enqueue(rawImageByteArray);
+            analysisThread.Enqueue(new byte[]{0});//ByteArray of length 1 indicates end of input
+
+            var analyzedImageData= System.Array.Empty<byte>();
+            foreach (var frame in outputQueue.GetConsumingEnumerable(CancellationToken.None))
+            {
+                analyzedImageData = frame;//Get Frame from outputqueue
+            }
             //---------------------------------------------------------------------------------------
             
-            var analyzedImageData = new byte[5];//replace this with actual returned byte array once analysis is implemented
+            
+            // var analyzedImageData = new byte[5];//replace this with actual returned byte array once analysis is implemented
             
             var tempDirectory = Directory.GetCurrentDirectory() + "\\analyzed" + rawImage.GetMetaData("originalName");
             File.WriteAllBytes(tempDirectory, analyzedImageData);

@@ -14,12 +14,12 @@ namespace src.AnalysisTools.AnalysisThread
     public class ToolRunner
     {
         private BlockingCollection<byte[]> _frames = new();
-        private readonly AnalysisModels _tools;
+        private readonly IAnalysisModels _tools;
         private Pipeline _pipeline;
         private BlockingCollection<byte[]> _outputQueue;//Type may change
         private readonly ImageFormat _frameFormat = ImageFormat.Jpeg;//May change
  
-        public ToolRunner(AnalysisModels tools, BlockingCollection<byte[]> outputQueue, Pipeline pipeline)
+        public ToolRunner(IAnalysisModels tools, BlockingCollection<byte[]> outputQueue, Pipeline pipeline)
         {
             _outputQueue = outputQueue;
             _pipeline = pipeline;
@@ -40,6 +40,9 @@ namespace src.AnalysisTools.AnalysisThread
             //Loop keeps checking queue for new frames to analyse
             foreach (var frame in _frames.GetConsumingEnumerable(CancellationToken.None))
             {
+                //ByteArray of length 1 indicates end of input
+                if (frame.Length == 1) break;
+                
                 //Analyse images
                 var outputs = _pipeline.Tools.Select(tool => _tools.GetTool(tool).AnalyseFrame(frame)).ToList();
                 
@@ -54,11 +57,10 @@ namespace src.AnalysisTools.AnalysisThread
                 
                 //Add to output queue
                 _outputQueue.Add(outputFrame);
-                //OutputQueue.Enqueue(analysedFrame);
             }
         }
 
-        private static Image DrawBoxes(byte[] frame,List<AnalysisOutput> outputs)
+        private static Image DrawBoxes(byte[] frame, IReadOnlyList<AnalysisOutput> outputs)
         {
             Image outputFrame;
             using var ms = new MemoryStream(frame);
