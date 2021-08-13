@@ -113,7 +113,7 @@ namespace src.Storage
             foreach (var listBlobItem in allFiles)
             {
                 var blob = (CloudBlockBlob) listBlobItem;
-                if (blob.Name.Contains(container))
+                if (blob.Name.Contains(container) && !blob.Name.Replace(container + "/", string.Empty).Contains("/"))
                 {
                     blobFileList.Add(new BlobFile(blob));
                 }

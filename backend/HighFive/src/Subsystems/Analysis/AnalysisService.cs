@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using Org.OpenAPITools.Models;
 using src.AnalysisTools.AnalysisThread;
 using src.Storage;

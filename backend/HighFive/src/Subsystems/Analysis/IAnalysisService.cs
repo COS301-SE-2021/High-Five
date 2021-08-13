@@ -1,4 +1,5 @@
-﻿using Org.OpenAPITools.Models;
+﻿using System.Threading.Tasks;
+using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.Analysis
 {

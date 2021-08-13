@@ -105,8 +105,14 @@ namespace src.Storage
              *      Parameters:
              * -> path: the full path pointing to where the file is stored.
              */
+            var fs = File.OpenRead(path);
+            var file = new FormFile(fs, 0, fs.Length, null, Path.GetFileName(fs.Name))
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "image/" + Path.GetFileName(fs.Name).Split(".")[Path.GetFileName(fs.Name).Split(".").Length-1]
+            };
 
-            await _file.UploadFromFileAsync(path);
+            await UploadFile(file);
         }
 
         public async Task UploadText(string text)
