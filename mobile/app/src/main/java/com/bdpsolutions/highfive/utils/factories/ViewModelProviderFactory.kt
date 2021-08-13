@@ -22,7 +22,7 @@ class ViewModelProviderFactory @Inject constructor(): ViewModelProvider.Factory 
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             return LoginViewModel.create(
                 loginRepository = LoginRepository.create(
-                    loginSource = APILogin.create()
+                    apiLogin = APILogin.create()
                 )
             ) as T
         }

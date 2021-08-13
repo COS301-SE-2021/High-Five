@@ -2,6 +2,7 @@ package com.bdpsolutions.highfive.subsystems.login.viewmodel
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,6 +14,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.bdpsolutions.highfive.subsystems.login.model.LoginRepository
 
 import com.bdpsolutions.highfive.R
+import com.bdpsolutions.highfive.constants.Settings
+import com.bdpsolutions.highfive.constants.Tests
+import com.bdpsolutions.highfive.subsystems.login.LoginActivity
 import com.bdpsolutions.highfive.subsystems.login.view.LoggedInUserView
 import com.bdpsolutions.highfive.utils.ContextHolder
 import com.bdpsolutions.highfive.utils.Result
@@ -36,7 +40,6 @@ class LoginViewModel private constructor(val loginRepository: LoginRepository) :
             if (result.resultCode == Activity.RESULT_OK) {
                 // There are no request codes
                 val data: Intent? = result.data
-                Log.d("Intent URI", data?.dataString!!)
                 val resp = AuthorizationResponse.fromIntent(data!!)
                 val ex = AuthorizationException.fromIntent(data)
 
@@ -62,6 +65,12 @@ class LoginViewModel private constructor(val loginRepository: LoginRepository) :
     fun login() {
         // can be launched in a separate asynchronous job
         loginRepository.login(mRegisterLoginResult!!)
+    }
+
+    fun resumeSession() {
+        loginRepository.resumeSession {
+            _loginResult.value = LoginResult(success = LoggedInUserView(displayName = "Hello"))
+        }
     }
 
     fun loginDataChanged(username: String, password: String) {

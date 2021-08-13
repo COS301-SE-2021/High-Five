@@ -16,4 +16,8 @@ object Tests {
         const val INVALID_KEY = "invalid"
         val INVALID_VAL = null
     }
+
+    object STUB_VALUES {
+        const val URI = "com.bdpsolutions.highfive://oauth2redirect/?state=test&code=test"
+    }
 }
