@@ -54,11 +54,11 @@ namespace src.AnalysisTools.ConcreteTools
         {
             return null;
         }
-        
+
         private float[][][] PreprocessFrame(Image image)
         {
-            
-            
+
+
             var oldWidth = image.Width;
             var oldHeight = image.Height;
             var ratio = 800.0 / Math.Min(oldWidth, oldHeight);
@@ -66,23 +66,24 @@ namespace src.AnalysisTools.ConcreteTools
             var height = Convert.ToInt32(ratio * oldHeight);
             width = width + 32 - (width % 32);
             height = height + 32 - (height % 32);
-            
+
             var bImage = ResizeImage(image, width, height);
-            
-            
-            var processedFrame=new float[3][][];
+
+
+            var processedFrame = new float[3][][];
             var converter = new ImageToMatrix();
-            
+
             converter.Channel = 0;
-            converter.Convert(bImage,out processedFrame[2]);
+            converter.Convert(bImage, out processedFrame[2]);
             converter.Channel = 1;
-            converter.Convert(bImage,out processedFrame[1]);
+            converter.Convert(bImage, out processedFrame[1]);
             converter.Channel = 2;
-            converter.Convert(bImage,out processedFrame[0]);
-            
-            float[] colourMeans ={ Convert.ToSingle(102.9801), Convert.ToSingle(115.9465), Convert.ToSingle(122.7717) };
-            
-            for (var i = 0; i < processedFrame[0].Length; i++)//Might replace with parallel for loop
+            converter.Convert(bImage, out processedFrame[0]);
+
+            float[] colourMeans =
+                { Convert.ToSingle(102.9801), Convert.ToSingle(115.9465), Convert.ToSingle(122.7717) };
+
+            for (var i = 0; i < processedFrame[0].Length; i++) //Might replace with parallel for loop
             {
                 for (var j = 0; j < processedFrame[0][0].Length; j++)
                 {
@@ -91,10 +92,56 @@ namespace src.AnalysisTools.ConcreteTools
                     processedFrame[2][i][j] = processedFrame[2][i][j] * 255 - colourMeans[2];
                 }
             }
+
             return processedFrame;
         }
         
-        
+        private byte[] PostProcessFrame(Image image, IReadOnlyList<float> boxes, IReadOnlyList<long> labels, IReadOnlyList<float> scores)
+        {
+            //get scale
+            var oldWidth = image.Width;
+            var oldHeight = image.Height;
+            var ratio = 800.0 / Math.Min(oldWidth, oldHeight);
+            var penWidth = Convert.ToInt32(Math.Max(oldHeight, oldWidth) * (1.0 / 445));
+            var fontSize = Convert.ToSingle(Math.Max(oldHeight, oldWidth) * (1.0 / 89));
+            //initialise drawing tools
+            var finalImage = image;
+            var pen = new Pen(Color.Red,penWidth);
+            var brush = Brushes.Red;
+            var font = new Font(FontFamily.GenericSansSerif,fontSize);
+            //draw relevant boxes and text
+            int count = 0;
+            for (int i = 0; i < labels.Count; i++)
+            {
+                if (labels[i] >= MinClass && labels[i] <= MaxClass && scores[i] > MinScore)
+                {
+                    count++;
+                    using (Graphics g = Graphics.FromImage(image))
+                    {
+                        var box = new Rectangle(Convert.ToInt32(boxes[i * 4] / ratio),
+                            Convert.ToInt32(boxes[i * 4 + 1] / ratio),
+                            Convert.ToInt32(boxes[i * 4 + 2] / ratio - boxes[i * 4] / ratio),
+                            Convert.ToInt32(boxes[i * 4 + 3] / ratio - boxes[i * 4 + 1] / ratio));
+                        g.DrawRectangle(pen, box);
+                        g.DrawString(_classes[labels[i]], font, brush, Convert.ToSingle(boxes[i * 4] / ratio),
+                            Convert.ToSingle(boxes[i * 4 + 1] / ratio) - 75);
+                    }
+                }
+            }
+
+            font = new Font(FontFamily.GenericSansSerif, fontSize * 2);
+            Graphics.FromImage(image).DrawString(ToolPurpose+" Count: "+count, font, brush, 10, 10);
+
+            byte[] finalFrame;
+                
+            using (MemoryStream ms = new MemoryStream())
+            {
+                finalImage.Save(ms, _frameFormat);
+                finalFrame =  ms.ToArray();
+            }
+            return finalFrame;
+        }
+
         private static Bitmap ResizeImage(Image image, int width, int height)
         {
             var destRect = new Rectangle(0, 0, width, height);
