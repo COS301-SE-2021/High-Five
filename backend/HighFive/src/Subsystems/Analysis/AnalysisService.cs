@@ -125,6 +125,7 @@ namespace src.Subsystems.Analysis
             foreach (var frame in outputQueue.GetConsumingEnumerable(CancellationToken.None))
             {
                 analyzedImageData = frame;//Get Frame from outputqueue
+                break;
             }
             //---------------------------------------------------------------------------------------
             
