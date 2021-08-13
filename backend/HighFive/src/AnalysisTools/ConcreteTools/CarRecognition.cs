@@ -10,6 +10,7 @@ using Accord.Imaging.Converters;
 using Accord.Math;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
+using src.AnalysisTools.AnalysisThread;
 using Image = System.Drawing.Image;
 
 namespace src.AnalysisTools.ConcreteTools
@@ -42,7 +43,7 @@ namespace src.AnalysisTools.ConcreteTools
             _model = new InferenceSession(ModelPath);
             _modelInputLayerName = _model.InputMetadata.Keys.Single();
         }
-        public byte[] AnalyseFrame(byte[] frame)
+        public AnalysisOutput AnalyseFrame(byte[] frame)
         {
             //Convert from input type frame to 3D array
             Image originalImage;
@@ -70,8 +71,7 @@ namespace src.AnalysisTools.ConcreteTools
             var scores=((DenseTensor<float>) result.ElementAtOrDefault(2).Value).ToArray();
             
             
-            var output = PostProcessFrame(originalImage, boxes, labels, scores);
-            return output;
+            return PostProcessFrame(originalImage, boxes, labels, scores);
         }
 
         private static float[][][] PreprocessFrame(Image image)
@@ -115,50 +115,30 @@ namespace src.AnalysisTools.ConcreteTools
             return processedFrame;
         }
         
-        private byte[] PostProcessFrame(Image image, IReadOnlyList<float> boxes, IReadOnlyList<long> labels, IReadOnlyList<float> scores)
+        private AnalysisOutput PostProcessFrame(Image image, IReadOnlyList<float> boxes, IReadOnlyList<long> labels, IReadOnlyList<float> scores)
         {
             //get scale
             var oldWidth = image.Width;
             var oldHeight = image.Height;
-            var ratio = 800.0 / Math.Min(oldWidth, oldHeight);
-            var penWidth = Convert.ToInt32(Math.Max(oldHeight, oldWidth) * (1.0 / 445));
-            var fontSize = Convert.ToSingle(Math.Max(oldHeight, oldWidth) * (1.0 / 89));
-            //initialise drawing tools
-            var finalImage = image;
-            var pen = new Pen(Color.Red,penWidth);
-            var brush = Brushes.Red;
-            var font = new Font(FontFamily.GenericSansSerif,fontSize);
-            //draw relevant boxes and text
-            int count = 0;
+            var ratio = Convert.ToSingle(800.0 / Math.Min(oldWidth, oldHeight));
+            
+            var output = new AnalysisOutput();
+            output.Boxes = new List<float>();
+            output.Classes = new List<string>();
             for (int i = 0; i < labels.Count; i++)
             {
                 if (labels[i] >= MinClass && labels[i] <= MaxClass && scores[i] > MinScore)
                 {
-                    count++;
-                    using (Graphics g = Graphics.FromImage(image))
-                    {
-                        var box = new Rectangle(Convert.ToInt32(boxes[i * 4] / ratio),
-                            Convert.ToInt32(boxes[i * 4 + 1] / ratio),
-                            Convert.ToInt32(boxes[i * 4 + 2] / ratio - boxes[i * 4] / ratio),
-                            Convert.ToInt32(boxes[i * 4 + 3] / ratio - boxes[i * 4 + 1] / ratio));
-                        g.DrawRectangle(pen, box);
-                        g.DrawString(_classes[labels[i]], font, brush, Convert.ToSingle(boxes[i * 4] / ratio),
-                            Convert.ToSingle(boxes[i * 4 + 1] / ratio) - 75);
-                    }
+                    output.Boxes.Add(boxes[i*4] / ratio);
+                    output.Boxes.Add(boxes[i*4+1] / ratio);
+                    output.Boxes.Add(boxes[i*4+2] / ratio);
+                    output.Boxes.Add(boxes[i*4+3] / ratio);
+                    
+                    output.Classes.Add(_classes[labels[i]]);
                 }
             }
 
-            font = new Font(FontFamily.GenericSansSerif, fontSize * 2);
-            Graphics.FromImage(image).DrawString(ToolPurpose+" Count: "+count, font, brush, 10, 10);
-
-            byte[] finalFrame;
-                
-            using (MemoryStream ms = new MemoryStream())
-            {
-                finalImage.Save(ms, _frameFormat);
-                finalFrame =  ms.ToArray();
-            }
-            return finalFrame;
+            return output;
         }
 
         private static Bitmap ResizeImage(Image image, int width, int height)

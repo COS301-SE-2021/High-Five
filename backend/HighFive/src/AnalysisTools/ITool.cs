@@ -1,8 +1,10 @@
+using src.AnalysisTools.AnalysisThread;
+
 namespace src.AnalysisTools
 {
     public interface ITool
     {
-        public byte[] AnalyseFrame(byte[] frame);
+        public AnalysisOutput AnalyseFrame(byte[] frame);
     }
     
     
