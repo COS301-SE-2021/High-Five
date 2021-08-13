@@ -34,12 +34,11 @@ export class ImageCardComponent implements OnInit {
   }
 
   public analyseImage(pipelines : string[]) {
-    // Nothing added here
-    console.log(pipelines);
+    // Send requests to analyse image with passed in pipeline here.
   }
 
   public viewAnalysedImage() {
-    return; // Todo : show a modal containing the analysed image
+    return; // Todo : show a new tab containing the analysed image
   }
 
   public async showAnalyseImagePopover(ev : any){
