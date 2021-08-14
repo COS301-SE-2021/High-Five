@@ -21,14 +21,10 @@
         <swiper #swiper2 [config]="swiperConfig2" class="swiper2">
           <ng-template swiperSlide>
             <ion-card>
-              <ion-card-title class="architectureConsiderationsTitle">
-                Key design considerations
-              </ion-card-title>
               <ion-card-content>
-                <ion-text>
-                    The following cards represent the key design considerations taken into account whilst designing the
-                    architecture of High-Five, as well as how we solved the issues that arose whilst addressing them.
-                </ion-text>
+                <ion-card-title style="font-size: 30px">
+                  Key design considerations
+                </ion-card-title>
               </ion-card-content>
             </ion-card>
           </ng-template>
@@ -38,61 +34,34 @@
                 Latency Between the drone and backend
               </ion-card-title>
               <ion-card-content>
-                <ion-text>
 
-                </ion-text>
               </ion-card-content>
             </ion-card>
           </ng-template>
           <ng-template swiperSlide>
             <ion-card>
               <ion-card-title class="architectureConsiderationsTitle">
-                  Streaming the live video to multiple clients
+                Streaming the live video to multiple clients
               </ion-card-title>
               <ion-card-content>
-                <ion-text>
-
-                </ion-text>
+                <ng-lottie [options]="lottieMulticastConfig"></ng-lottie>
               </ion-card-content>
             </ion-card>
           </ng-template>
           <ng-template swiperSlide>
             <ion-card>
               <ion-card-title class="architectureConsiderationsTitle">
-                  Flying the drones using our own application
+                Flying the drones using our own application
               </ion-card-title>
               <ion-card-content>
-                <ion-text>
-
-                </ion-text>
-              </ion-card-content>
-            </ion-card>
-          </ng-template>
-          <ng-template swiperSlide>
-            <ion-card>
-              <ion-card-title>
-
-              </ion-card-title>
-              <ion-card-content>
-                <ion-text>
-
-                </ion-text>
-              </ion-card-content>
-            </ion-card>
-          </ng-template>
-          <ng-template swiperSlide>
-            <ion-card>
-              <ion-card-title class="architectureConsiderationsTitle">
-
-              </ion-card-title>
-              <ion-card-content>
-                <ion-text>
-
-                </ion-text>
+                <ng-lottie [options]="lottieMobileAppConfig"></ng-lottie>
               </ion-card-content>
             </ion-card>
           </ng-template>
         </swiper>
+        <ion-card>
+
+        </ion-card>
       </ion-content>
     </ion-col>
     <ion-col>

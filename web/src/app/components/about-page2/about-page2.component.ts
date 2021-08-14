@@ -3,6 +3,7 @@ import {AnimationOptions} from "ngx-lottie";
 import {SwiperComponent} from "swiper/angular";
 import {SwiperOptions} from "swiper";
 import SwiperCore, {Pagination, Mousewheel, Navigation, Autoplay } from 'swiper/core';
+import {ModalController} from "@ionic/angular";
 
 SwiperCore.use([Pagination, Mousewheel, Navigation, Autoplay]);
 @Component({
@@ -15,6 +16,15 @@ export class AboutPage2Component implements OnInit, AfterContentChecked {
   lottieConfig: AnimationOptions ={
     path:'/assets/lottie-animations/lf30_editor_5gpajdty.json'
   }
+
+  lottieMulticastConfig: AnimationOptions= {
+    path:'/assets/lottie-animations/multicast.json',
+  }
+
+  lottieMobileAppConfig: AnimationOptions= {
+    path:'/assets/lottie-animations/72680-mobile-app.json',
+  }
+
   @ViewChild('swiper2') swiper2: SwiperComponent;
   swiperConfig2: SwiperOptions= {
     slidesPerView: 3,
@@ -30,7 +40,7 @@ export class AboutPage2Component implements OnInit, AfterContentChecked {
     }
   }
 
-  constructor() { }
+  constructor(private modalController : ModalController) { }
 
   ngOnInit() {}
 
@@ -38,6 +48,10 @@ export class AboutPage2Component implements OnInit, AfterContentChecked {
     if(this.swiper2){
       this.swiper2.updateSwiper({});
     }
+  }
+
+  async displayModal(){
+    // Display modal containing info here
   }
 
 }
