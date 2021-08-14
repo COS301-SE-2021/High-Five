@@ -19,4 +19,14 @@
     <dji.ux.workflow.CompassCalibratingWorkFlow
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    <!-- Widgets in top status bar -->
+    <LinearLayout
+        android:id="@+id/signal"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:background="@color/dark_gray"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
 </RelativeLayout>
