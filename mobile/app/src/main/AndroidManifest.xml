@@ -33,6 +33,7 @@
         android:roundIcon="@mipmap/logo1_2round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HighFive" >
+
         <!-- DJI SDK -->
         <uses-library android:name="com.android.future.usb.accessory" />
         <meta-data
@@ -51,6 +52,7 @@
         <service android:name="dji.sdk.sdkmanager.DJIGlobalService" >
         </service>
         <!-- DJI SDK -->
+
         <activity
             android:name="net.openid.appauth.RedirectUriReceiverActivity">
             <intent-filter>
@@ -62,10 +64,12 @@
                     android:path="/oauth2redirect"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".subsystems.login.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.HighFive.NoActionBar"/>
+
         <activity
             android:name="com.bdpsolutions.highfive.subsystems.splash.view.SplashActivity"
             android:exported="true"
@@ -76,6 +80,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.bdpsolutions.highfive.subsystems.main.MainActivity"
             android:exported="true"
@@ -85,6 +90,17 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.bdpsolutions.highfive.subsystems.drone.DroneActivity"
+            android:label="@string/title_activity_drone"
+            android:theme="@style/Theme.HighFive.NoActionBar"
+            android:exported="true"
+            >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
