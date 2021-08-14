@@ -39,6 +39,10 @@
             android:layout_width="38dp"
             android:layout_height="22dp"/>
 
+        <dji.ux.widget.VideoSignalWidget
+            android:layout_width="38dp"
+            android:layout_height="22dp"/>
+
         <dji.ux.widget.BatteryWidget
             android:layout_width="96dp"
             android:layout_height="22dp"
