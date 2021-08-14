@@ -2,6 +2,12 @@ package com.bdpsolutions.highfive.subsystems.login.model.dataclass
 
 import androidx.room.*
 
+/**
+ * DAO interface used by Room to run queries on the Room database
+ *
+ * @author Kyle Barry (u19232510@tuks.co.za)
+ * @see AuthToken
+ */
 @Dao
 interface AuthTokenDao {
     @Query("SELECT * FROM authtoken LIMIT 1")

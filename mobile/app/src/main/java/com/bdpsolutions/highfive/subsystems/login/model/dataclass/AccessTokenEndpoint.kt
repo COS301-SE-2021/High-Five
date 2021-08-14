@@ -4,6 +4,11 @@ import com.bdpsolutions.highfive.constants.Endpoints
 import retrofit2.Call
 import retrofit2.http.*
 
+/**
+ * Retrofit interface to fetch an access token from Azure.
+ *
+ * @author Kyle Barry (u19232510@tuks.co.za)
+ */
 interface AccessTokenEndpoint {
 
     @FormUrlEncoded
