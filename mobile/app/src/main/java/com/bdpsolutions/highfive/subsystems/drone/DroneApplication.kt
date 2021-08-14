@@ -103,7 +103,20 @@ class DroneApplication: Application() {
                 }
                 Log.e("TAG", error.toString())
             }
+            override fun onProductDisconnect() {
+                Log.d("TAG", "onProductDisconnect")
+                notifyStatusChange()
+            }
 
+            override fun onProductConnect(baseProduct: BaseProduct?) {
+                Log.d("TAG", String.format("onProductConnect newProduct:%s", baseProduct))
+                notifyStatusChange()
+            }
+
+            override fun onProductChanged(baseProduct: BaseProduct?) {
+                Log.d("TAG", String.format("onProductChanged newProduct:%s", baseProduct))
+                notifyStatusChange()
+            }
 
         }
     }
