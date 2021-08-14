@@ -83,4 +83,11 @@
         android:layout_height="213dp"
         tools:ignore="RtlHardcoded"/>
 
+    <!-- Pre-flight checklist panel -->
+    <dji.ux.panel.PreFlightCheckListPanel
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/signal"
+        custom:excludeItem="ESCStatus"
+        android:visibility="gone"/>
 </RelativeLayout>
