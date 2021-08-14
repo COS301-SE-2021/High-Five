@@ -1,7 +1,7 @@
 <ion-content>
   <swiper #swiper [config]="swiperConfig" (slideChange)="swiperSlideChanged($event)">
-    <ng-template swiperSlide><ng-lottie [options]="lottieConfig"></ng-lottie></ng-template>
-    <ng-template swiperSlide>Slide 2</ng-template>
+    <ng-template swiperSlide><app-about-page1></app-about-page1></ng-template>
+    <ng-template swiperSlide><app-about-page2></app-about-page2></ng-template>
     <ng-template swiperSlide>Slide 3</ng-template>
     <ng-template swiperSlide>Slide 4</ng-template>
     <ng-template swiperSlide>Slide 5</ng-template>
