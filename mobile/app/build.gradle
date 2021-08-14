@@ -88,6 +88,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit_version"
     implementation "commons-io:commons-io:$commons_io_version"
     implementation "net.openid:appauth:$appauth_version"
+    implementation "commons-codec:commons-codec:$codec_version"
 
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 

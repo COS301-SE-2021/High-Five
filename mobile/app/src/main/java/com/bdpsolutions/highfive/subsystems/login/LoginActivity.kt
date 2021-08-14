@@ -7,11 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.Window
-import android.widget.EditText
 import android.widget.Toast
 
 import com.bdpsolutions.highfive.subsystems.login.view.LoggedInUserView
@@ -22,11 +19,6 @@ import com.bdpsolutions.highfive.subsystems.main.MainActivity
 import com.bdpsolutions.highfive.utils.ContextHolder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import net.openid.appauth.AuthorizationException
-
-import net.openid.appauth.AuthorizationResponse
-
-
 
 
 @AndroidEntryPoint
@@ -84,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
         // TODO : initiate successful logged in experience
         Toast.makeText(
             applicationContext,
-            "$welcome $displayName",
+            "$welcome $displayName!",
             Toast.LENGTH_LONG
         ).show()
     }
