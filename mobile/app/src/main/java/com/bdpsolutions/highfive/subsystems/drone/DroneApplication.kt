@@ -1,4 +1,7 @@
 package com.bdpsolutions.highfive.subsystems.drone
 
-class DroneApplication {
+import android.app.Application
+
+class DroneApplication: Application() {
+
 }
