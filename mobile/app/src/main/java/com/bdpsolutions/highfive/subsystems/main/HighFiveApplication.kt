@@ -14,7 +14,7 @@ class HighFiveApplication : Application(){
         Helper.install(this@HighFiveApplication)
         if (droneApplication == null) {
             droneApplication = DroneApplication()
-            droneApplication.setContext(this)
+            droneApplication!!.setContext(this)
         }
     }
 
