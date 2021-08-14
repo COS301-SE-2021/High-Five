@@ -3,15 +3,12 @@ package com.bdpsolutions.highfive.helpers
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bdpsolutions.highfive.subsystems.login.model.LoginRepository
-import com.bdpsolutions.highfive.subsystems.login.model.dataclass.User
 import com.bdpsolutions.highfive.subsystems.login.model.source.APILogin
 import com.bdpsolutions.highfive.subsystems.video.model.VideoDataRepository
 import com.bdpsolutions.highfive.subsystems.video.model.source.APIVideoDataSource
-import com.bdpsolutions.highfive.utils.Result
 import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
 import com.bdpsolutions.highfive.subsystems.video.viewmodel.VideoViewModel
 import org.mockito.Mockito.*
-import org.mockito.Mockito.`when`
 
 class ViewModelMockRepositoryFactory : ViewModelProvider.Factory {
 
