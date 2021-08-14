@@ -37,16 +37,6 @@ class LoginRepository private constructor(private val apiLogin: LoginDataSource)
         apiLogin.login(resultLauncher)
     }
 
-    fun resumeSession(callback: () -> Unit) {
-
-        //login regardless of whether an auth token is set or not.
-        if (Settings.DEVELOPMENT && BuildConfig.DEBUG) {
-            callback()
-            return
-        }
-        //TODO(TodoStatements.CHECK_DB_FOR_TOKEN)
-    }
-
     /**
      * Companion object to create the actual class.
      *

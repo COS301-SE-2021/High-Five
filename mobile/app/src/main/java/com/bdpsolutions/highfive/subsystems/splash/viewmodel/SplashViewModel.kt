@@ -3,6 +3,8 @@ package com.bdpsolutions.highfive.subsystems.splash.viewmodel
 import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.ViewModel
+import com.bdpsolutions.highfive.BuildConfig
+import com.bdpsolutions.highfive.constants.Settings
 import com.bdpsolutions.highfive.subsystems.main.MainActivity
 import com.bdpsolutions.highfive.subsystems.login.LoginActivity
 import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
@@ -36,7 +38,7 @@ class SplashViewModel : ViewModel() {
 
             // check if the user has saved details. If there are no details, redirect to login
             val user = DatabaseHandler.getDatabase(context).userDao().getUser()
-            val intent = if (user == null) {
+            val intent = if (user == null && !(Settings.DEVELOPMENT && BuildConfig.DEBUG)) {
                 Intent(context, LoginActivity::class.java)
             } else {
                 Intent(context, MainActivity::class.java)

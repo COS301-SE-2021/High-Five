@@ -45,8 +45,6 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel.registerLoginResult(this)
 
-        loginViewModel.resumeSession()
-
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 

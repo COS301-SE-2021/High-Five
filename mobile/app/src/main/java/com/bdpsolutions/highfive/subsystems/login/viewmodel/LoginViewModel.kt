@@ -16,11 +16,10 @@ import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.constants.Endpoints
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenResponse
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenEndpoint
+import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AuthToken
 import com.bdpsolutions.highfive.subsystems.login.view.LoggedInUserView
 import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
-import com.bdpsolutions.highfive.utils.AzureConfiguration
-import com.bdpsolutions.highfive.utils.JWTDecoder
-import com.bdpsolutions.highfive.utils.RetrofitDeserializers
+import com.bdpsolutions.highfive.utils.*
 import com.google.gson.GsonBuilder
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
@@ -88,6 +87,21 @@ class LoginViewModel private constructor(val loginRepository: LoginRepository) :
                                 if (response.isSuccessful) {
                                     val accessToken = response.body()!!
 
+                                    ConcurrencyExecutor.execute {
+
+                                        val db = DatabaseHandler.getDatabase(null)
+
+                                        db.userDao().addUser(
+                                            AuthToken(
+                                                uid = 1,
+                                                authToken = accessToken.idToken,
+                                                refreshToken = accessToken.refreshToken,
+                                                authExpires = accessToken.tokenExpires,
+                                                refreshExpires = accessToken.refreshExpires
+                                            )
+                                        )
+                                    }
+
                                     _loginResult.value = LoginResult(
                                         success = LoggedInUserView(
                                             displayName = JWTDecoder.getFirstName(
@@ -121,12 +135,6 @@ class LoginViewModel private constructor(val loginRepository: LoginRepository) :
     fun login() {
         // can be launched in a separate asynchronous job
         loginRepository.login(mRegisterLoginResult!!)
-    }
-
-    fun resumeSession() {
-        loginRepository.resumeSession {
-            _loginResult.value = LoginResult(success = LoggedInUserView(displayName = "Hello"))
-        }
     }
 
     fun loginDataChanged(username: String, password: String) {
