@@ -7,5 +7,16 @@
     android:background="@color/background_blue"
     android:orientation="horizontal"
     tools:context=".subsystems.drone.DroneActivity">
+    <!-- Widget to see first person view (FPV) -->
+    <dji.ux.widget.FPVWidget
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
+    <dji.ux.widget.FPVOverlayWidget
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <dji.ux.workflow.CompassCalibratingWorkFlow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>
