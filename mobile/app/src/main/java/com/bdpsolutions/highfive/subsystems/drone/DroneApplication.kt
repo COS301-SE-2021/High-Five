@@ -117,7 +117,26 @@ class DroneApplication: Application() {
                 Log.d("TAG", String.format("onProductChanged newProduct:%s", baseProduct))
                 notifyStatusChange()
             }
+            override fun onComponentChange(
+                componentKey: ComponentKey?, oldComponent: BaseComponent?,
+                newComponent: BaseComponent?
+            ) {
+                newComponent?.setComponentListener { isConnected ->
+                    Log.d("TAG", "onComponentConnectivityChanged: $isConnected")
+                    notifyStatusChange()
+                }
+                Log.d(
+                    "TAG", String.format(
+                        "onComponentChange key:%s, oldComponent:%s, newComponent:%s",
+                        componentKey,
+                        oldComponent,
+                        newComponent
+                    )
+                )
+            }
+            override fun onInitProcess(djisdkInitEvent: DJISDKInitEvent?, i: Int) {}
 
+            override fun onDatabaseDownloadProgress(l: Long, l1: Long) {}
         }
     }
     var updateRunnable = Runnable {
