@@ -8,30 +8,17 @@ import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AuthToken
 import com.bdpsolutions.highfive.subsystems.login.model.source.LoginDataSource
 
 /**
- * Class that requests authentication and user information from the remote data source and
- * maintains an in-memory cache of login status and user credentials information.
+ * Class that requests authentication and user information from a data source.
+ *
+ * @author Kyle Barry (u19232510@tuks.co.za)
  */
-
 class LoginRepository private constructor(private val apiLogin: LoginDataSource) {
 
-    // in-memory cache of the loggedInUser object
-    var authToken: AuthToken? = null
-        private set
-
-    val isLoggedIn: Boolean
-        get() = authToken != null
-
-    init {
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
-        authToken = null
-    }
-
-    fun logout() {
-        authToken = null
-        apiLogin.logout()
-    }
-
+    /**
+     * Invokes the login data source to log the user in.
+     *
+     * @param resultLauncher object that captures the result of the authentication.
+     */
     fun login(resultLauncher: ActivityResultLauncher<Intent>) {
         // handle login
         apiLogin.login(resultLauncher)
