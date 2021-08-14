@@ -3,6 +3,7 @@ package com.bdpsolutions.highfive.subsystems.drone
 import android.Manifest
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -104,7 +105,16 @@ class DroneApplication: Application() {
             }
 
 
+        }
+    }
+    var updateRunnable = Runnable {
+        val intent = Intent(FLAG_CONNECTION_CHANGE)
+        applicationContext!!.sendBroadcast(intent)
     }
 
+    fun notifyStatusChange() {
+        mHandler!!.removeCallbacks(updateRunnable)
+        mHandler!!.postDelayed(updateRunnable, 500)
+    }
 
 }
