@@ -3,8 +3,10 @@ package com.bdpsolutions.highfive.subsystems.drone
 import android.Manifest
 import android.app.Application
 import android.content.Context
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import dji.sdk.base.BaseProduct
 import dji.sdk.sdkmanager.DJISDKManager
@@ -56,5 +58,16 @@ class DroneApplication: Application() {
             Manifest.permission.READ_PHONE_STATE
         )
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || permissionCheck == 0 && permissionCheck2 == 0) {
+
+            //This is used to start SDK services and initiate SDK.
+            DJISDKManager.getInstance().registerApp(applicationContext, mDJISDKManagerCallback)
+        } else {
+            Toast.makeText(
+                applicationContext,
+                "Please check if the permission is granted.",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 }
