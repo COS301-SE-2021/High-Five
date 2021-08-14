@@ -4,6 +4,7 @@ import {SwiperComponent} from "swiper/angular";
 import {SwiperOptions} from "swiper";
 import SwiperCore, {Pagination, Mousewheel, Navigation, Autoplay } from 'swiper/core';
 import {ModalController} from "@ionic/angular";
+import {MoreInfoComponent} from "../more-info/more-info.component";
 
 SwiperCore.use([Pagination, Mousewheel, Navigation, Autoplay]);
 @Component({
@@ -51,7 +52,17 @@ export class AboutPage2Component implements OnInit, AfterContentChecked {
   }
 
   async displayModal(){
-    // Display modal containing info here
+    const modal = await this.modalController.create({
+      component: MoreInfoComponent,
+      showBackdrop: true,
+      animated: true,
+      backdropDismiss: true,
+      componentProps: {
+        title: 'Some Title',
+        description : 'Some Description'
+      }
+    });
+    await modal.present();
   }
 
 }
