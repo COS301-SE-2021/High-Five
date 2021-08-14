@@ -95,6 +95,7 @@
 
         <activity
             android:name="com.bdpsolutions.highfive.subsystems.drone.DroneActivity"
+            android:screenOrientation="reverseLandscape"
             android:label="@string/title_activity_drone"
             android:theme="@style/Theme.HighFive.NoActionBar"
             android:exported="true"
