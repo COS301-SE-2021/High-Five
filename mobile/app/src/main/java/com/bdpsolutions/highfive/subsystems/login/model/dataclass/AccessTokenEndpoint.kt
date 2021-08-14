@@ -4,7 +4,7 @@ import com.bdpsolutions.highfive.constants.Endpoints
 import retrofit2.Call
 import retrofit2.http.*
 
-interface AuthEndpoint {
+interface AccessTokenEndpoint {
 
     @FormUrlEncoded
     @POST(Endpoints.AUTH.AUTH_TOKEN)
@@ -15,5 +15,5 @@ interface AuthEndpoint {
         @Field("redirect_uri") redirect_uri: String,
         @Field("grant_type") grant_type: String,
         @Field("code_verifier") code_verifier: String
-    ): Call<AccessToken>
+    ): Call<AccessTokenResponse>
 }

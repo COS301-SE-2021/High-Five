@@ -4,8 +4,7 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.bdpsolutions.highfive.BuildConfig
 import com.bdpsolutions.highfive.constants.Settings
-import com.bdpsolutions.highfive.constants.TodoStatements
-import com.bdpsolutions.highfive.subsystems.login.model.dataclass.User
+import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AuthToken
 import com.bdpsolutions.highfive.subsystems.login.model.source.LoginDataSource
 
 /**
@@ -16,20 +15,20 @@ import com.bdpsolutions.highfive.subsystems.login.model.source.LoginDataSource
 class LoginRepository private constructor(private val apiLogin: LoginDataSource) {
 
     // in-memory cache of the loggedInUser object
-    var user: User? = null
+    var authToken: AuthToken? = null
         private set
 
     val isLoggedIn: Boolean
-        get() = user != null
+        get() = authToken != null
 
     init {
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
-        user = null
+        authToken = null
     }
 
     fun logout() {
-        user = null
+        authToken = null
         apiLogin.logout()
     }
 

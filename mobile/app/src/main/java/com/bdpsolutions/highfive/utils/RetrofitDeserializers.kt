@@ -1,6 +1,6 @@
 package com.bdpsolutions.highfive.utils
 
-import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessToken
+import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenResponse
 import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
 import com.bdpsolutions.highfive.utils.factories.jsonElementConverterFactory
 import com.google.gson.*;
@@ -41,14 +41,14 @@ object RetrofitDeserializers {
         }
     }
 
-    object AccessTokenDeserializer : JsonDeserializer<AccessToken> {
+    object AccessTokenDeserializer : JsonDeserializer<AccessTokenResponse> {
         override fun deserialize(
             json: JsonElement,
             typeOfT: Type?,
             context: JsonDeserializationContext?
-        ): AccessToken {
+        ): AccessTokenResponse {
 
-            return AccessToken(
+            return AccessTokenResponse(
                 scope = json.getOrNull<String>("scope"),
                 tokenExpires = json.getOrNull<Int>("id_token_expires_in"),
                 refreshExpires = json.getOrNull<Int>("refresh_token_expires_in"),

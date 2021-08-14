@@ -2,7 +2,6 @@ package com.bdpsolutions.highfive.subsystems.login.viewmodel
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,8 +14,8 @@ import com.bdpsolutions.highfive.subsystems.login.model.LoginRepository
 
 import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.constants.Endpoints
-import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessToken
-import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AuthEndpoint
+import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenResponse
+import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenEndpoint
 import com.bdpsolutions.highfive.subsystems.login.view.LoggedInUserView
 import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
 import com.bdpsolutions.highfive.utils.AzureConfiguration
@@ -67,7 +66,7 @@ class LoginViewModel private constructor(val loginRepository: LoginRepository) :
                             .addConverterFactory(GsonConverterFactory.create(gson))
                             .build()
 
-                        val tokenSource = retrofit.create(AuthEndpoint::class.java)
+                        val tokenSource = retrofit.create(AccessTokenEndpoint::class.java)
                         val config = AzureConfiguration.getInstance()
                         val call = tokenSource.getAccessToken(
                             client_id = config.clientId,
@@ -79,11 +78,11 @@ class LoginViewModel private constructor(val loginRepository: LoginRepository) :
                         )
 
                         // Enqueue callback object that will call the callback function passed to this function
-                        call.enqueue(object : Callback<AccessToken> {
+                        call.enqueue(object : Callback<AccessTokenResponse> {
 
                             override fun onResponse(
-                                call: Call<AccessToken>,
-                                response: Response<AccessToken>
+                                call: Call<AccessTokenResponse>,
+                                response: Response<AccessTokenResponse>
                             ) {
 
                                 if (response.isSuccessful) {
@@ -101,7 +100,7 @@ class LoginViewModel private constructor(val loginRepository: LoginRepository) :
                                 }
                             }
 
-                            override fun onFailure(call: Call<AccessToken>, t: Throwable) {
+                            override fun onFailure(call: Call<AccessTokenResponse>, t: Throwable) {
                                 Log.e("TOKEN", "Failed to log in: ${t.message}")
                                 _loginResult.value = LoginResult(error = R.string.login_failed)
                             }
