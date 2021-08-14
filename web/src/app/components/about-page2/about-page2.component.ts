@@ -18,17 +18,16 @@ export class AboutPage2Component implements OnInit, AfterContentChecked {
   @ViewChild('swiper2') swiper2: SwiperComponent;
   swiperConfig2: SwiperOptions= {
     slidesPerView: 3,
-    spaceBetween: 50,
+    spaceBetween: 10,
     pagination: true,
-    // mousewheel: true,
-    navigation: true,
+    mousewheel: true,
     speed: 800,
-    loop: true,
     allowTouchMove: true,
-    // autoplay: {
-    //   delay: 12000,
-    //   disableOnInteraction: true,
-    // }
+    slideToClickedSlide: true,
+    autoplay: {
+      delay: 12000,
+      disableOnInteraction: true,
+    }
   }
 
   constructor() { }
