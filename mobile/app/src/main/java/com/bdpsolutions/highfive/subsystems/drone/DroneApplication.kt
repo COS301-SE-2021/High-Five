@@ -6,9 +6,15 @@ import android.content.Context
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import dji.common.error.DJIError
+import dji.common.error.DJISDKError
+import dji.sdk.base.BaseComponent
 import dji.sdk.base.BaseProduct
+import dji.sdk.base.BaseProduct.ComponentKey
+import dji.sdk.sdkmanager.DJISDKInitEvent
 import dji.sdk.sdkmanager.DJISDKManager
 import dji.sdk.sdkmanager.DJISDKManager.SDKManagerCallback
 
@@ -69,5 +75,36 @@ class DroneApplication: Application() {
                 Toast.LENGTH_LONG
             ).show()
         }
+
+        /**
+         * When starting SDK services, an instance of interface DJISDKManager.DJISDKManagerCallback will be used to listen to
+         * the SDK Registration result and the product changing.
+         */
+        mDJISDKManagerCallback = object : SDKManagerCallback {
+            //Listens to the SDK registration result
+            override fun onRegister(error: DJIError) {
+                if (error === DJISDKError.REGISTRATION_SUCCESS) {
+                    DJISDKManager.getInstance().startConnectionToProduct()
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.post {
+                        Toast.makeText(applicationContext, "Register Success", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                } else {
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.post {
+                        Toast.makeText(
+                            applicationContext,
+                            "Register Failed, check network is available",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+                Log.e("TAG", error.toString())
+            }
+
+
     }
+
+
 }
