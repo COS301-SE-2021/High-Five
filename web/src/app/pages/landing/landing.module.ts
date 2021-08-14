@@ -11,6 +11,7 @@ import {LottieModule} from "ngx-lottie";
 import player from 'lottie-web';
 import {AboutPage1Component} from "../../components/about-page1/about-page1.component";
 import {AboutPage2Component} from "../../components/about-page2/about-page2.component";
+import {AboutPage3Component} from "../../components/about-page3/about-page3.component";
 export function playerFactory() {
   return player;
 }
@@ -24,7 +25,7 @@ export function playerFactory() {
     SwiperModule,
     LottieModule.forRoot({player: playerFactory})
   ],
-  declarations: [LandingPage, AboutPage1Component, AboutPage2Component]
+  declarations: [LandingPage, AboutPage1Component, AboutPage2Component, AboutPage3Component]
 })
 export class LandingPageModule {
 }

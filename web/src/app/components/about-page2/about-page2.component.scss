@@ -1,6 +1,27 @@
 ion-card{
   text-align: center;
+  height: 100%;
 }
 ion-row{
   vertical-align: middle;
+}
+
+ion-title{
+  justify-content: center;
+  text-align: center;
+  font-size: 40pt;
+}
+.swiper-container{
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+ion-text{
+  font-size: 18pt;
 }

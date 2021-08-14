@@ -11,6 +11,20 @@ export class AboutPage1Component implements OnInit {
   lottieConfig: AnimationOptions ={
     path:'/assets/lottie-animations/67783-drones-isometric-lottie-animation.json'
   }
+  lottieConfig2: AnimationOptions = {
+    path:'/assets/lottie-animations/72680-mobile-app.json',
+    loop: false
+
+  }
+  lottieConfigArrowRight : AnimationOptions = {
+    path:'/assets/lottie-animations/71249-arrow-pointing-to-right.json',
+    loop: false
+
+  }
+  lottieConfig3: AnimationOptions = {
+    path:'/assets/lottie-animations/41703-cloud-server.json',
+
+  }
   constructor() { }
 
   ngOnInit() {}

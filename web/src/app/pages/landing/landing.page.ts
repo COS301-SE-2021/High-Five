@@ -17,15 +17,15 @@ export class LandingPage implements OnInit, AfterContentChecked {
     slidesPerView: "auto",
     spaceBetween: 50,
     pagination: true,
-    mousewheel: true,
+    // mousewheel: true,
     navigation: true,
     speed: 800,
     loop: true,
     allowTouchMove: false,
-    autoplay: {
-      delay: 12000,
-      disableOnInteraction: true,
-    }
+    // autoplay: {
+    //   delay: 12000,
+    //   disableOnInteraction: true,
+    // }
   }
 
   constructor() {
