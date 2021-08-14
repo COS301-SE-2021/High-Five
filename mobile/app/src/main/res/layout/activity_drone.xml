@@ -53,17 +53,8 @@
             android:layout_width="18dp"
             android:layout_height="18dp"/>
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/signal"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:background="@color/dark_gray"
-        android:orientation="horizontal">
 
-    </LinearLayout>
+
 
     <!--Take off and return home buttons on left -->
     <LinearLayout
@@ -83,4 +74,13 @@
             android:layout_height="40dp"
             android:layout_marginTop="12dp"/>
     </LinearLayout>
+
+    <dji.ux.widget.controls.CameraControlsWidget
+        android:id="@+id/CameraCapturePanel"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/signal"
+        android:layout_width="50dp"
+        android:layout_height="213dp"
+        tools:ignore="RtlHardcoded"/>
+
 </RelativeLayout>
