@@ -41,8 +41,4 @@ export class LandingPage implements OnInit, AfterContentChecked {
       this.swiper.updateSwiper({});
     }
   }
-
-  swiperSlideChanged(event: SwiperEvents["slideChange"]) {
-    console.log(event);
-  }
 }
