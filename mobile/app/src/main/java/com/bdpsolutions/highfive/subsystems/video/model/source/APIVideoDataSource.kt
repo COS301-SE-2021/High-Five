@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 /**
  * API implementation for the VideoDataSource. This class fetches data from the backend service.
  */
-class APIVideoDataSource : VideoDataSource {
+class APIVideoDataSource private constructor(): VideoDataSource {
 
     /**
      * Fetches video preview data from the backend service. This data is passed to a callback
@@ -57,5 +57,11 @@ class APIVideoDataSource : VideoDataSource {
                 throw t
             }
         })
+    }
+
+    companion object {
+        fun create(): APIVideoDataSource {
+            return APIVideoDataSource()
+        }
     }
 }

@@ -20,6 +20,7 @@ inline fun <reified T> jsonElementConverterFactory (element: JsonElement?) :T? {
                 val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
                 format.parse(element.asString) as T
             }
+            Int::class -> element.asInt as T
             else -> null
         }
     }
