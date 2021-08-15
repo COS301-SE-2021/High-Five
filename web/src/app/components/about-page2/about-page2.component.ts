@@ -26,6 +26,10 @@ export class AboutPage2Component implements OnInit, AfterContentChecked {
     path:'/assets/lottie-animations/72680-mobile-app.json',
   }
 
+  lottieLatencyConfig: AnimationOptions={
+    path:'/assets/lottie-animations/speed.json',
+  }
+
   @ViewChild('swiper2') swiper2: SwiperComponent;
   swiperConfig2: SwiperOptions= {
     slidesPerView: 3,
