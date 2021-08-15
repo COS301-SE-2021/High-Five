@@ -6,15 +6,11 @@ ion-card{
 }
 ion-row{
   vertical-align: middle;
-}
-
-#\#imgContainer{
-  max-height: 30%;
-  max-width: 30%;
-  justify-items: center;
-  justify-content: center;
-  align-items: center;
-  padding: 5%;
+  text-align: center;
+  display: flex !important;
+  align-content: center!important;
+  align-items: center!important;
+  padding-right: 5%;
 }
 
 ion-card-title{
