@@ -11,6 +11,7 @@ ion-title{
   font-size: 18px;
 }
 
-ion-card.considerations{
-  max-height: 20%;
+ion-card.considerations ion-card-content{
+  max-height: 24vh;
 }
+
