@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Threading.Tasks;
 using Accord.Imaging.Converters;
 using Accord.Math;
 using Microsoft.ML.OnnxRuntime;
@@ -17,25 +18,26 @@ namespace src.AnalysisTools.ConcreteTools
 {
     public class CarRecognition: ITool
     {
-        private const string ModelName = "FasterRCNN-10.onnx";
+        private const string ModelName = "ssd_mobilenet_v1_10.onnx";
         private static readonly string ModelPath = Directory.GetCurrentDirectory() + "\\Models\\" + ModelName;
         private readonly InferenceSession _model;
         private readonly string _modelInputLayerName;
-        private const double MinScore=0.70;
+        private const double MinScore=0.50;
         private const long MinClass = 2;
         private const long MaxClass = 9;
         public const string ToolPurpose = "Vehicle";
 
         private readonly string[] _classes ={
-            "__background", "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat",
-            "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse",
-            "sheep", "cow", "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella", "handbag", "tie",
-            "suitcase", "frisbee", "skis", "snowboard", "sports ball", "kite", "baseball bat", "baseball glove",
-            "skateboard", "surfboard", "tennis racket", "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl",
-            "banana", "apple", "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", "chair",
-            "couch", "potted plant", "bed", "dining table", "toilet", "tv", "laptop", "mouse", "remote", "keyboard",
-            "cell phone", "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors",
-            "teddy bear", "hair drier", "toothbrush",
+            "person",
+            "bicycle",
+            "car",
+            "motorcycle",
+            "airplane",
+            "bus",
+            "train",
+            "truck",
+            "boat",
+            "traffic light",
         };
         public CarRecognition()
         {
@@ -46,121 +48,130 @@ namespace src.AnalysisTools.ConcreteTools
         public AnalysisOutput AnalyseFrame(byte[] frame)
         {
             //Convert from input type frame to 3D array
-            Image originalImage;
+            Bitmap originalImage;
             using (var ms = new MemoryStream(frame))
             {
-                originalImage = Image.FromStream(ms);
+                originalImage = new Bitmap(Image.FromStream(ms));
             }
-
             var image = PreprocessFrame(originalImage);
-
-            int[] dimensions = {3, image[0].Length, image[0][0].Length};
-            var inputTensor = new DenseTensor<float>(image.Flatten().Flatten(),dimensions); //image.ToTensor();
-
+            
+            int[] dimensions = { 1, originalImage.Height, originalImage.Width, 3 };
+            var inputTensor = new DenseTensor<byte>(image, dimensions);
+            
             var modelInput = new List<NamedOnnxValue>
             {
                 NamedOnnxValue.CreateFromTensor(_modelInputLayerName, inputTensor)
             };
+            
             using var session = _model;
-
+            
+            
             var result = session.Run(modelInput);
-
-
+            
+            
             var boxes=((DenseTensor<float>) result.ElementAtOrDefault(0).Value).ToArray();//Convert to output type
-            var labels=((DenseTensor<long>) result.ElementAtOrDefault(1).Value).ToArray();
+            var labels=((DenseTensor<float>) result.ElementAtOrDefault(1).Value).ToArray();
             var scores=((DenseTensor<float>) result.ElementAtOrDefault(2).Value).ToArray();
-
-
-            return PostProcessFrame(originalImage, boxes, labels, scores);
+            var numDetections=((DenseTensor<float>) result.ElementAtOrDefault(3).Value).ToArray();
+            
+            
+            var output = PostProcessFrame(originalImage, boxes, labels, scores, numDetections);
+            
+            return output;
         }
 
-        private static float[][][] PreprocessFrame(Image image)
+        private byte[] PreprocessFrame(Image image)
         {
 
 
-            var oldWidth = image.Width;
-            var oldHeight = image.Height;
-            var ratio = 800.0 / Math.Min(oldWidth, oldHeight);
-            var width = Convert.ToInt32(ratio * oldWidth);
-            var height = Convert.ToInt32(ratio * oldHeight);
-            width = width + 32 - (width % 32);
-            height = height + 32 - (height % 32);
-
-            Bitmap bImage = ResizeImage(image, width, height);
+            var bImage = new Bitmap(image);
 
 
-            var processedFrame = new float[3][][];
+            var bytes = ProcessUsingLockbitsAndUnsafeAndParallel(bImage);
+            
 
-            float[] colourMeans =
-                { Convert.ToSingle(102.9801), Convert.ToSingle(115.9465), Convert.ToSingle(122.7717) };
-
-            processedFrame[0] = new float[bImage.Height][];
-            processedFrame[1] = new float[bImage.Height][];
-            processedFrame[2] = new float[bImage.Height][];
-
-            for (var i = 0; i < processedFrame[0].Length; i++) //Might replace with parallel for loop
-            {
-                processedFrame[0][i] = new float[bImage.Width];
-                processedFrame[1][i] = new float[bImage.Width];
-                processedFrame[2][i] = new float[bImage.Width];
-
-                for (var j = 0; j < processedFrame[0][0].Length; j++)
-                {
-                    processedFrame[0][i][j] = bImage.GetPixel(j,i).B - colourMeans[0];
-                    processedFrame[1][i][j] = bImage.GetPixel(j,i).G - colourMeans[1];
-                    processedFrame[2][i][j] = bImage.GetPixel(j,i).R - colourMeans[2];
-                }
-            }
-
-            return processedFrame;
+            return bytes;
         }
 
-        private AnalysisOutput PostProcessFrame(Image image, IReadOnlyList<float> boxes, IReadOnlyList<long> labels, IReadOnlyList<float> scores)
+        private AnalysisOutput PostProcessFrame(Image image, IReadOnlyList<float> boxes, IReadOnlyList<float> labels, IReadOnlyList<float> scores, IReadOnlyList<float> numDetections)
         {
-            //get scale
-            var oldWidth = image.Width;
-            var oldHeight = image.Height;
-            var ratio = Convert.ToSingle(800.0 / Math.Min(oldWidth, oldHeight));
-
             var output = new AnalysisOutput();
+            
             output.Purpose = ToolPurpose;
             output.Boxes = new List<float>();
             output.Classes = new List<string>();
-            for (int i = 0; i < labels.Count; i++)
+            
+            for (var i = 0; i < numDetections[0]; i++)
             {
                 if (labels[i] >= MinClass && labels[i] <= MaxClass && scores[i] > MinScore)
                 {
-                    output.Boxes.Add(boxes[i*4] / ratio);
-                    output.Boxes.Add(boxes[i*4+1] / ratio);
-                    output.Boxes.Add((boxes[i*4+2]-boxes[i*4]) / ratio);
-                    output.Boxes.Add((boxes[i*4+3]-boxes[i*4+1]) / ratio);
+                    output.Boxes.Add(boxes[i*4+1]);
+                    output.Boxes.Add(boxes[i*4]);
+                    output.Boxes.Add((boxes[i * 4 + 3] - boxes[i * 4 + 1]));
+                    output.Boxes.Add((boxes[i * 4 + 2] - boxes[i * 4]));
 
-                    output.Classes.Add(_classes[labels[i]]);
+                    output.Classes.Add(_classes[Convert.ToInt32(labels[i]-1)]);
                 }
             }
 
             return output;
         }
 
-        private static Bitmap ResizeImage(Image image, int width, int height)
+        private byte[] ProcessUsingLockbitsAndUnsafeAndParallel(Bitmap img)
         {
-            var destRect = new Rectangle(0, 0, width, height);
-            var destImage = new Bitmap(width, height);
+            unsafe
+            {
+                var processedBitmap = new Bitmap(img.Width, img.Height, PixelFormat.Format24bppRgb);
+                using (var gr = Graphics.FromImage(processedBitmap))
+                    gr.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height));
+                BitmapData bitmapData = processedBitmap.LockBits(new Rectangle(0, 0, processedBitmap.Width, processedBitmap.Height), ImageLockMode.ReadWrite, processedBitmap.PixelFormat);
+ 
+                var bytesPerPixel = Bitmap.GetPixelFormatSize(processedBitmap.PixelFormat) / 8;
+                var heightInPixels = bitmapData.Height;
+                var widthInBytes = bitmapData.Width * bytesPerPixel;
+                var PtrFirstPixel = (byte*)bitmapData.Scan0;
+                byte[] output = new byte[processedBitmap.Height*processedBitmap.Width*3];
+                fixed (byte* p = &output[0])
+                {
+                    // var PtrOut = (byte*)new byte[heightInPixels * widthInBytes];
 
-            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+                    // var output = new byte[processedBitmap.Height][][];
+                    byte* ptr = p;
 
-            using var graphics = Graphics.FromImage(destImage);
-            graphics.CompositingMode = CompositingMode.SourceCopy;
-            graphics.CompositingQuality = CompositingQuality.HighQuality;
-            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            graphics.SmoothingMode = SmoothingMode.HighQuality;
-            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    Parallel.For(0, heightInPixels, y =>
+                    {
 
-            using var wrapMode = new ImageAttributes();
-            wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-            graphics.DrawImage(image, destRect, 0, 0, image.Width,image.Height, GraphicsUnit.Pixel, wrapMode);
+                        var currentLine = PtrFirstPixel + (y * bitmapData.Stride);
+                        // output[y] = new byte[processedBitmap.Width][];
 
-            return destImage;
+                        for (var x = 0; x < widthInBytes; x += bytesPerPixel)
+                        {
+                            // output[y][x] = new byte[3];
+
+                            int oldBlue = currentLine[x];
+                            int oldGreen = currentLine[x + 1];
+                            int oldRed = currentLine[x + 2];
+
+                            currentLine[x] = (byte)oldRed;
+                            currentLine[x + 1] = (byte)oldGreen;
+                            currentLine[x + 2] = (byte)oldBlue;
+
+                            ptr[y * widthInBytes + x] = (byte)oldRed;
+                            ptr[y * widthInBytes + x + 1] = (byte)oldGreen;
+                            ptr[y * widthInBytes + x + 2] = (byte)oldBlue;
+
+                            // output[y][x / bytesPerPixel][0] = (byte)oldRed;
+                            // output[y][x / bytesPerPixel][1] = (byte)oldGreen;
+                            // output[y][x / bytesPerPixel][2] = (byte)oldBlue;
+                        }
+                    });
+                }
+
+                processedBitmap.UnlockBits(bitmapData);
+                
+                // Marshal.Copy((IntPtr)PtrFirstPixel, output, 0, processedBitmap.Height*processedBitmap.Width*3);
+                return output;
+            }
         }
     }
 }
