@@ -1,10 +1,8 @@
 import { Component, OnInit} from '@angular/core';
 import {AnimationOptions} from "ngx-lottie";
-import SwiperCore, {Pagination, Mousewheel, Navigation, Autoplay } from 'swiper/core';
 import {ModalController} from "@ionic/angular";
 import {MoreInfoComponent} from "../more-info/more-info.component";
 
-SwiperCore.use([Pagination, Mousewheel, Navigation, Autoplay]);
 @Component({
   selector: 'app-about-page2',
   templateUrl: './about-page2.component.html',
