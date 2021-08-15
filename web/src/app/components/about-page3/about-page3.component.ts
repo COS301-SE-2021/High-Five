@@ -23,6 +23,10 @@ export class AboutPage3Component implements OnInit, AfterContentChecked {
   lottieScrollDownConfig : AnimationOptions = {
     path:'/assets/lottie-animations/scroll-down-animation.json'
   }
+  lottieServerConfig : AnimationOptions= {
+    path:'/assets/lottie-animations/41703-cloud-server.json'
+
+  }
   constructor() { }
 
   ngOnInit() {}
