@@ -20,7 +20,7 @@
         </ion-card>
         <swiper #swiper2 [config]="swiperConfig2" class="swiper2">
           <ng-template swiperSlide>
-            <ion-card>
+            <ion-card  (click)="displayModal()">
               <ion-card-content>
                 <ion-card-title style="font-size: 30px">
                   Key design considerations
@@ -32,11 +32,11 @@
             <ion-card>
               <ion-card-header>
                 <ion-card-title class="architectureConsiderationsTitle">
-                  Latency Between the drone and backend
+                  Latency between the drone and backend
                 </ion-card-title>
               </ion-card-header>
               <ion-card-content>
-
+                <ng-lottie [options]="lottieLatencyConfig"></ng-lottie>
               </ion-card-content>
             </ion-card>
           </ng-template>
@@ -53,7 +53,7 @@
             </ion-card>
           </ng-template>
           <ng-template swiperSlide>
-            <ion-card>
+            <ion-card (click)="displayModal()">
               <ion-card-header>
                 <ion-card-title class="architectureConsiderationsTitle">
                   Flying the drones using our own application
@@ -66,6 +66,16 @@
           </ng-template>
         </swiper>
         <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              The Big Picture
+            </ion-card-title>
+            <ion-card-content>
+              <ion-text>
+
+              </ion-text>
+            </ion-card-content>
+          </ion-card-header>
         </ion-card>
       </ion-content>
     </ion-col>
