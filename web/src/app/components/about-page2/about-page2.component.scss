@@ -1,41 +1,19 @@
-ion-card{
-  text-align: center;
-  height: 100%;
-}
 ion-row{
-  vertical-align: middle;
+  height: 100%;
+  width: 100%;
+}
+
+ion-col{
+  height: 100%;
+  width: 100%;
+}
+
+ion-grid{
+  height: 100%;
+  width: 100%;
 }
 
 ion-title{
-  justify-content: center;
-  text-align: center;
   font-size: 40pt;
-}
-.swiper-container{
-  width: 100%;
-  height: 100%;
-  border-radius: 0.4%;
-}
-
-.swiper-slide{
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-#architectureDescription{
-  font-size: 18pt;
-}
-
-.architectureConsiderationsTitle{
   color: var(--ion-color-primary);
 }
-ion-card-content{
-  text-align: center;
-  display: flex !important;
-  align-content: center!important;
-  align-items: center!important;
-  height: 100%;
-}
-
