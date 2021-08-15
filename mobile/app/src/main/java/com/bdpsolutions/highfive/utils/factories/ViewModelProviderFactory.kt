@@ -8,6 +8,7 @@ import com.bdpsolutions.highfive.subsystems.login.model.source.APIRefreshToken
 import com.bdpsolutions.highfive.subsystems.video.model.VideoDataRepository
 import com.bdpsolutions.highfive.subsystems.video.model.source.APIVideoDataSource
 import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
+import com.bdpsolutions.highfive.subsystems.media.viewmodel.MediaViewModel
 import com.bdpsolutions.highfive.subsystems.splash.viewmodel.SplashViewModel
 import com.bdpsolutions.highfive.subsystems.video.viewmodel.VideoViewModel
 import com.bdpsolutions.highfive.constants.Exceptions.VIEWMODEL_PROVIDER_FACTORY as vmf
@@ -40,6 +41,9 @@ class ViewModelProviderFactory @Inject constructor(): ViewModelProvider.Factory 
                         APIRefreshToken.create()
                     )
                 ) as T
+            }
+            modelClass.isAssignableFrom(MediaViewModel::class.java) -> {
+                return MediaViewModel.create() as T
             }
             else -> throw IllegalArgumentException(vmf.UNKNOWN_VIEWMODEL)
         }
