@@ -35,7 +35,7 @@ class ViewModelProviderFactory @Inject constructor(): ViewModelProvider.Factory 
                 ) as T
             }
             modelClass.isAssignableFrom(SplashViewModel::class.java) -> {
-                return SplashViewModel(
+                return SplashViewModel.create(
                     authenticationRepository = AuthenticationRepositoryImpl.create(
                         APIRefreshToken.create()
                     )

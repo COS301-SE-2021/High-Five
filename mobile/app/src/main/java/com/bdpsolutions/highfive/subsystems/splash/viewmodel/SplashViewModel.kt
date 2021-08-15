@@ -9,6 +9,7 @@ import com.bdpsolutions.highfive.constants.Settings
 import com.bdpsolutions.highfive.subsystems.main.MainActivity
 import com.bdpsolutions.highfive.subsystems.login.LoginActivity
 import com.bdpsolutions.highfive.subsystems.login.model.AuthenticationRepository
+import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
 import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
 import com.bdpsolutions.highfive.utils.ContextHolder
 import com.bdpsolutions.highfive.utils.DatabaseHandler
@@ -21,7 +22,7 @@ import kotlinx.coroutines.runBlocking
  * This class runs logic for the SplashActivity to start the main or login activity based
  * on whether the user is logged in or not.
  */
-class SplashViewModel (private val authenticationRepository: AuthenticationRepository): ViewModel() {
+class SplashViewModel private constructor(private val authenticationRepository: AuthenticationRepository): ViewModel() {
 
     /**
      * Checks if the user has stored credentials. If they do, they get redirected to the main
@@ -87,5 +88,18 @@ class SplashViewModel (private val authenticationRepository: AuthenticationRepos
 
     private fun checkTokenExpired(tokenTime: Long) : Boolean {
         return (System.currentTimeMillis() / 1000L) > tokenTime
+    }
+
+    /**
+     * Companion object to create the actual class.
+     *
+     * This is to allow PowerMockito to mock this class when it is created by the
+     * ViewModelProviderFactory, by mocking this static method to return a mock
+     * class instead of the actual class.
+     */
+    companion object {
+        fun create(authenticationRepository: AuthenticationRepository?) : SplashViewModel {
+            return SplashViewModel(authenticationRepository!!)
+        }
     }
 }
