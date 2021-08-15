@@ -1,13 +1,9 @@
 package com.bdpsolutions.highfive.subsystems.login.model.source
 
 import android.util.Log
-import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.constants.Endpoints
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenEndpoint
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenResponse
-import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AuthToken
-import com.bdpsolutions.highfive.subsystems.login.view.LoggedInUserView
-import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginResult
 import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
 import com.bdpsolutions.highfive.utils.*
 import com.google.gson.GsonBuilder
@@ -38,10 +34,10 @@ class APIRefreshToken : LoginDataSource {
         val tokenSource = retrofit.create(AccessTokenEndpoint::class.java)
         val config = AzureConfiguration.getInstance()
         val call = tokenSource.getNewAccessToken(
-            client_id = config.clientId,
-            redirect_uri = config.redirectUri,
-            refresh_token = refreshToken,
-            grant_type = "refresh_token",
+            clientId = config.clientId,
+            redirectUri = config.redirectUri,
+            refreshToken = refreshToken,
+            grantType = "refresh_token",
         )
 
         call.enqueue(object : Callback<AccessTokenResponse> {

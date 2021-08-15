@@ -68,12 +68,12 @@ class LoginViewModel private constructor(val authenticationRepository: Authentic
                         val tokenSource = retrofit.create(AccessTokenEndpoint::class.java)
                         val config = AzureConfiguration.getInstance()
                         val call = tokenSource.getAccessToken(
-                            client_id = config.clientId,
+                            clientId = config.clientId,
                             scope = config.scope,
-                            redirect_uri = config.redirectUri,
+                            redirectUri = config.redirectUri,
                             code = it.authorizationCode!!,
-                            grant_type = "authorization_code",
-                            code_verifier = config.codeVerifier
+                            grantType = "authorization_code",
+                            codeVerifier = config.codeVerifier
                         )
 
                         // Enqueue callback object that will call the callback function passed to this function

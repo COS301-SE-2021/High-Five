@@ -14,20 +14,20 @@ interface AccessTokenEndpoint {
     @FormUrlEncoded
     @POST(Endpoints.AUTH.AUTH_TOKEN)
     fun getAccessToken(
-        @Field("client_id") client_id: String,
+        @Field("client_id") clientId: String,
         @Field("scope") scope: String,
         @Field("code") code: String,
-        @Field("redirect_uri") redirect_uri: String,
-        @Field("grant_type") grant_type: String,
-        @Field("code_verifier") code_verifier: String
+        @Field("redirect_uri") redirectUri: String,
+        @Field("grant_type") grantType: String,
+        @Field("code_verifier") codeVerifier: String
     ): Call<AccessTokenResponse>
 
     @FormUrlEncoded
     @POST(Endpoints.AUTH.AUTH_TOKEN)
     fun getNewAccessToken(
-        @Field("client_id") client_id: String,
-        @Field("grant_type") grant_type: String,
-        @Field("refresh_token") refresh_token: String,
-        @Field("redirect_uri") redirect_uri: String
+        @Field("client_id") clientId: String,
+        @Field("grant_type") grantType: String,
+        @Field("refresh_token") refreshToken: String,
+        @Field("redirect_uri") redirectUri: String
     ): Call<AccessTokenResponse>
 }
