@@ -65,7 +65,7 @@ namespace src.Subsystems.MediaStorage
 
             //create local temp copy of video file and thumbnail
             //var baseDirectory = "d:\\local\\";
-            var baseDirectory = Directory.GetCurrentDirectory() + "\\";
+            var baseDirectory = Path.GetTempPath() + "\\";
             var thumbnailPath = baseDirectory + "thumbnail.jpg";
             var videoPath = baseDirectory + video.Name;
             await using var stream = new FileStream(videoPath, FileMode.Create);
