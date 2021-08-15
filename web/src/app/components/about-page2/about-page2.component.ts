@@ -1,6 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import {AnimationOptions} from "ngx-lottie";
-import {ModalController} from "@ionic/angular";
+import { ModalController} from "@ionic/angular";
 import {MoreInfoComponent} from "../more-info/more-info.component";
 
 @Component({
