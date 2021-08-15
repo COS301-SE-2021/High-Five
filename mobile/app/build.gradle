@@ -89,6 +89,7 @@ dependencies {
     implementation "commons-io:commons-io:$commons_io_version"
     implementation "net.openid:appauth:$appauth_version"
     implementation "commons-codec:commons-codec:$codec_version"
+    implementation "androidx.viewpager2:viewpager2:$viewpager_version"
 
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 

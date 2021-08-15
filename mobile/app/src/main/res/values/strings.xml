@@ -30,4 +30,6 @@
     <string name="title_activity_hoohah">Hoohah</string>
     <string name="open">0</string>
     <string name="close">1</string>
+    <string name="images">Images</string>
+    <string name="video">Video</string>
 </resources>

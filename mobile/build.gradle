@@ -29,6 +29,7 @@ buildscript {
     ext.appauth_version = "0.9.1"
     ext.powermock_version = "2.0.4"
     ext.codec_version = "1.15"
+    ext.viewpager_version = "1.0.0"
 
 
     repositories {
