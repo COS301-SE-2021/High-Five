@@ -3,12 +3,9 @@ using System.IO;
 
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading.Tasks;
-using Accord.Imaging.Converters;
-using Accord.Math;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using src.AnalysisTools.AnalysisThread;

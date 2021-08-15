@@ -84,14 +84,14 @@ namespace src.AnalysisTools.AnalysisThread
                 for (var i = 0; i < output.Classes.Count; i++)
                 {
                     using var g = Graphics.FromImage(outputFrame);
-                    var box = new Rectangle(Convert.ToInt32(output.Boxes[i * 4]),
-                        Convert.ToInt32(output.Boxes[i * 4 + 1]),
-                        Convert.ToInt32(output.Boxes[i * 4 + 2]),
-                        Convert.ToInt32(output.Boxes[i * 4 + 3]));
+                    var box = new Rectangle(Convert.ToInt32(output.Boxes[i * 4] * oldWidth),
+                        Convert.ToInt32(output.Boxes[i * 4 + 1] * oldHeight),
+                        Convert.ToInt32(output.Boxes[i * 4 + 2] * oldWidth),
+                        Convert.ToInt32(output.Boxes[i * 4 + 3] * oldHeight));
                     g.DrawRectangle(pen, box);
                     g.DrawString(char.ToUpper(output.Classes[i][0]) + output.Classes[i].Substring(1), font, brush,
-                        Convert.ToSingle(output.Boxes[i * 4]),
-                        Convert.ToSingle(output.Boxes[i * 4 + 1]) - boxHeadingHeight);
+                        Convert.ToSingle(output.Boxes[i * 4] * oldWidth),
+                        Convert.ToSingle(output.Boxes[i * 4 + 1] * oldHeight) - boxHeadingHeight);
                 }
                 
                 Graphics.FromImage(outputFrame).DrawString(output.Purpose + " Count: " + output.Classes.Count, countFont,
