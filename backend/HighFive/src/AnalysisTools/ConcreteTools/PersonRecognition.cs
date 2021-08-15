@@ -16,8 +16,9 @@ using Image = System.Drawing.Image;
 namespace src.AnalysisTools.ConcreteTools
 {
     public class PersonRecognition : ITool
-    {
-        private const string ModelPath = @"D:\Tuks\2021\COS301\CapstoneProject\Code\Backend-develop\analysis-pipepline\High-Five\backend\HighFive\src\AnalysisTools\ConcreteTools\FasterRCNN-10.onnx";//TODO add path to model
+    {        
+        private const string ModelName = "FasterRCNN-10.onnx";
+        private static readonly string ModelPath = Directory.GetCurrentDirectory() + "\\AnalysisTools\\" + ModelName;
         private readonly InferenceSession _model;
         private readonly string _modelInputLayerName;
         private const double MinScore=0.70;
