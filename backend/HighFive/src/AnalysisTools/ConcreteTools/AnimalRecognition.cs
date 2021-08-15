@@ -18,7 +18,7 @@ namespace src.AnalysisTools.ConcreteTools
     public class AnimalRecognition : ITool
     {
         private const string ModelName = "FasterRCNN-10.onnx";
-        private static readonly string ModelPath = Directory.GetCurrentDirectory() + "\\AnalysisTools\\" + ModelName;
+        private static readonly string ModelPath = Directory.GetCurrentDirectory() + "\\Models\\" + ModelName;
         private readonly InferenceSession _model;
         private readonly string _modelInputLayerName;
         private const double MinScore=0.70;
