@@ -46,7 +46,7 @@ export class PipelineService {
 
   async removePipeline(pipelineId: string, serverRemove: boolean = true) {
     const pipeline = this.pipelines.find(p => p.id === pipelineId);
-    this.pipelines = this.pipelines.filter(video => video.id !== pipelineId);
+    this.pipelines = this.pipelines.filter(pipeline => pipeline.id !== pipelineId);
     if (serverRemove) {
       try {
         await this.pipelinesService.deletePipeline({pipelineId: pipelineId}).toPromise();

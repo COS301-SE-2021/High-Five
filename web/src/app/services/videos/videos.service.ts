@@ -38,7 +38,7 @@ export class VideosService {
 
     if (serverRemove) {
       try {
-        await this.mediaStorageService.deleteImage({id: videoId}).toPromise();
+        await this.mediaStorageService.deleteVideo({id: videoId}).toPromise();
       } catch (e) {
         console.error(e);
         this.videos = [...this.videos, video];
