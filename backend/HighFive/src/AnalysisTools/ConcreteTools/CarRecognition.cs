@@ -60,7 +60,7 @@ namespace src.AnalysisTools.ConcreteTools
                 NamedOnnxValue.CreateFromTensor(_modelInputLayerName, inputTensor)
             };
             
-            using var session = _model;
+            var session = _model;
             
             
             var result = session.Run(modelInput);
