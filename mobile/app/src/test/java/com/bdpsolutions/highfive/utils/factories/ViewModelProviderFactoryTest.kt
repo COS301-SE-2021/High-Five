@@ -1,7 +1,7 @@
 package com.bdpsolutions.highfive.utils.factories
 
 import com.bdpsolutions.highfive.helpers.TestViewModel
-import com.bdpsolutions.highfive.subsystems.login.model.LoginRepository
+import com.bdpsolutions.highfive.subsystems.login.model.AuthenticationRepositoryImpl
 import com.bdpsolutions.highfive.subsystems.login.model.source.APILogin
 import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
 import com.bdpsolutions.highfive.subsystems.video.model.VideoDataRepository
@@ -23,7 +23,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(
     APILogin.Companion::class,
     LoginViewModel.Companion::class,
-    LoginRepository.Companion::class,
+    AuthenticationRepositoryImpl.Companion::class,
     APIVideoDataSource.Companion::class,
     DatabaseVideoDataSource.Companion::class,
     VideoDataRepository.Companion::class,
@@ -43,8 +43,8 @@ class ViewModelProviderFactoryTest {
             `when`(apiCompanionMock.create()).thenReturn(apiMock)
 
             //create mock LoginRepository
-            val repoMock = mock(LoginRepository::class.java)
-            val repoCompanionMock = mock(LoginRepository.Companion::class.java)
+            val repoMock = mock(AuthenticationRepositoryImpl::class.java)
+            val repoCompanionMock = mock(AuthenticationRepositoryImpl.Companion::class.java)
             `when`(repoCompanionMock.create(apiCompanionMock.create())).thenReturn(repoMock)
 
             //create mock LoginViewModel
@@ -61,8 +61,8 @@ class ViewModelProviderFactoryTest {
 
 
             //Mock repository
-            PowerMockito.mockStatic(LoginRepository.Companion::class.java)
-            PowerMockito.whenNew(LoginRepository.Companion::class.java)
+            PowerMockito.mockStatic(AuthenticationRepositoryImpl.Companion::class.java)
+            PowerMockito.whenNew(AuthenticationRepositoryImpl.Companion::class.java)
                 .withNoArguments()
                 .thenReturn(repoCompanionMock)
 

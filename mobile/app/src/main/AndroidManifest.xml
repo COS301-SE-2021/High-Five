@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HighFive" >
         <activity
-            android:name="net.openid.appauth.RedirectUriReceiverActivity">
+            android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -29,7 +30,7 @@
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.HighFive.NoActionBar"/>
         <activity
-            android:name="com.bdpsolutions.highfive.subsystems.splash.view.SplashActivity"
+            android:name="com.bdpsolutions.highfive.subsystems.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.HighFive.Splash" >
             <intent-filter>

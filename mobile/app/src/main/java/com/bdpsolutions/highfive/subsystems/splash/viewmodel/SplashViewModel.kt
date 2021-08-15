@@ -7,6 +7,7 @@ import com.bdpsolutions.highfive.BuildConfig
 import com.bdpsolutions.highfive.constants.Settings
 import com.bdpsolutions.highfive.subsystems.main.MainActivity
 import com.bdpsolutions.highfive.subsystems.login.LoginActivity
+import com.bdpsolutions.highfive.subsystems.login.model.AuthenticationRepository
 import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
 import com.bdpsolutions.highfive.utils.ContextHolder
 import com.bdpsolutions.highfive.utils.DatabaseHandler
@@ -19,7 +20,7 @@ import kotlinx.coroutines.runBlocking
  * This class runs logic for the SplashActivity to start the main or login activity based
  * on whether the user is logged in or not.
  */
-class SplashViewModel : ViewModel() {
+class SplashViewModel (private val authenticationRepository: AuthenticationRepository): ViewModel() {
 
     /**
      * Checks if the user has stored credentials. If they do, they get redirected to the main
@@ -38,10 +39,24 @@ class SplashViewModel : ViewModel() {
 
             // check if the user has saved details. If there are no details, redirect to login
             val user = DatabaseHandler.getDatabase(context).userDao().getUser()
+
             val intent = if (user == null && !(Settings.DEVELOPMENT && BuildConfig.DEBUG)) {
                 Intent(context, LoginActivity::class.java)
             } else {
-                Intent(context, MainActivity::class.java)
+
+                val intent: Intent?
+
+                run checkExpired@ {
+                    //check if refresh token expired and redirect to login if it has
+                    if (checkTokenExpired(user?.refreshExpires!!)) {
+                        intent = Intent(context, LoginActivity::class.java)
+                        return@checkExpired
+                    }
+                    intent = Intent(context, MainActivity::class.java)
+                    //check if access token is expired and request a new one if it has
+                }
+
+                intent!!
             }
 
             // Allows running of a coroutine in the current thread.
@@ -58,5 +73,9 @@ class SplashViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    private fun checkTokenExpired(tokenTime: Long) : Boolean {
+        return (System.currentTimeMillis() / 1000L) > tokenTime
     }
 }

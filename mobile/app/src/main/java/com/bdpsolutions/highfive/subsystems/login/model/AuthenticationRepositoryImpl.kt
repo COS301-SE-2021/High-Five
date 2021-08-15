@@ -2,9 +2,6 @@ package com.bdpsolutions.highfive.subsystems.login.model
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
-import com.bdpsolutions.highfive.BuildConfig
-import com.bdpsolutions.highfive.constants.Settings
-import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AuthToken
 import com.bdpsolutions.highfive.subsystems.login.model.source.LoginDataSource
 
 /**
@@ -12,16 +9,16 @@ import com.bdpsolutions.highfive.subsystems.login.model.source.LoginDataSource
  *
  * @author Kyle Barry (u19232510@tuks.co.za)
  */
-class LoginRepository private constructor(private val apiLogin: LoginDataSource) {
+class AuthenticationRepositoryImpl private constructor(private val loginSource: LoginDataSource) : AuthenticationRepository {
 
     /**
      * Invokes the login data source to log the user in.
      *
      * @param resultLauncher object that captures the result of the authentication.
      */
-    fun login(resultLauncher: ActivityResultLauncher<Intent>) {
+    override fun login(resultLauncher: ActivityResultLauncher<Intent>) {
         // handle login
-        apiLogin.login(resultLauncher)
+        loginSource.login(resultLauncher)
     }
 
     /**
@@ -32,8 +29,8 @@ class LoginRepository private constructor(private val apiLogin: LoginDataSource)
      * class instead of the actual class.
      */
     companion object {
-        fun create(apiLogin: LoginDataSource?): LoginRepository {
-            return LoginRepository(apiLogin!!)
+        fun create(apiLogin: LoginDataSource?): AuthenticationRepositoryImpl {
+            return AuthenticationRepositoryImpl(apiLogin!!)
         }
     }
 }
