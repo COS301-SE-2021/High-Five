@@ -10,7 +10,7 @@ import android.util.Patterns
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import com.bdpsolutions.highfive.subsystems.login.model.LoginRepository
+import com.bdpsolutions.highfive.subsystems.login.model.AuthenticationRepository
 
 import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.constants.Endpoints
@@ -30,7 +30,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-class LoginViewModel private constructor(val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel private constructor(val authenticationRepository: AuthenticationRepository) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
@@ -68,12 +68,12 @@ class LoginViewModel private constructor(val loginRepository: LoginRepository) :
                         val tokenSource = retrofit.create(AccessTokenEndpoint::class.java)
                         val config = AzureConfiguration.getInstance()
                         val call = tokenSource.getAccessToken(
-                            client_id = config.clientId,
+                            clientId = config.clientId,
                             scope = config.scope,
-                            redirect_uri = config.redirectUri,
+                            redirectUri = config.redirectUri,
                             code = it.authorizationCode!!,
-                            grant_type = "authorization_code",
-                            code_verifier = config.codeVerifier
+                            grantType = "authorization_code",
+                            codeVerifier = config.codeVerifier
                         )
 
                         // Enqueue callback object that will call the callback function passed to this function
@@ -96,8 +96,8 @@ class LoginViewModel private constructor(val loginRepository: LoginRepository) :
                                                 uid = 1,
                                                 authToken = accessToken.idToken,
                                                 refreshToken = accessToken.refreshToken,
-                                                authExpires = accessToken.tokenExpires,
-                                                refreshExpires = accessToken.refreshExpires
+                                                authExpires = GetTimestamp(accessToken.tokenExpires),
+                                                refreshExpires = GetTimestamp(accessToken.refreshExpires)
                                             )
                                         )
                                     }
@@ -134,7 +134,7 @@ class LoginViewModel private constructor(val loginRepository: LoginRepository) :
 
     fun login() {
         // can be launched in a separate asynchronous job
-        loginRepository.login(mRegisterLoginResult!!)
+        authenticationRepository.login(mRegisterLoginResult!!)
     }
 
     fun loginDataChanged(username: String, password: String) {
@@ -169,8 +169,8 @@ class LoginViewModel private constructor(val loginRepository: LoginRepository) :
      * class instead of the actual class.
      */
     companion object {
-        fun create(loginRepository: LoginRepository?) : LoginViewModel {
-            return LoginViewModel(loginRepository!!)
+        fun create(authenticationRepository: AuthenticationRepository?) : LoginViewModel {
+            return LoginViewModel(authenticationRepository!!)
         }
     }
 }

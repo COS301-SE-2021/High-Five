@@ -14,7 +14,10 @@ import net.openid.appauth.*
 import net.openid.appauth.connectivity.DefaultConnectionBuilder
 
 /**
- * Class that logs in a user using Azure AD.
+ * Class that logs in a user using Azure AD. AppAuth is used to make a request to Azure AD,
+ * and handles redirecting the response to the given resultLauncher.
+ *
+ * @author Kyle Barry (u19232510@tuks.co.za)
  */
 class APILogin private constructor(): LoginDataSource {
 
@@ -55,6 +58,9 @@ class APILogin private constructor(): LoginDataSource {
      * This is to allow PowerMockito to mock this class when it is created by the
      * ViewModelProviderFactory, by mocking this static method to return a mock
      * class instead of the actual class.
+     *
+     * The constructor of the parent class is made private to ensure that only this helper
+     * object may instantiate the parent class.
      */
     companion object {
         fun create(): APILogin {
