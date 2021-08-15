@@ -10,7 +10,6 @@ using Accord.Imaging.Converters;
 using Accord.Math;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
-using Microsoft.VisualBasic.FileIO;
 using src.AnalysisTools.AnalysisThread;
 using Image = System.Drawing.Image;
 
