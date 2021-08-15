@@ -10,10 +10,16 @@ plugins {
 
 }
 apply plugin: 'dagger.hilt.android.plugin'
+repositories {
+    google()
+    jcenter()
+    mavenCentral()
+}
 android {
     packagingOptions{
         pickFirst "androidsupportmultidexversion.txt"
     }
+    useLibrary 'org.apache.http.legacy'
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
@@ -26,7 +32,12 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-
+        vectorDrawables.useSupportLibrary = true
+//        ndk {
+//            // On x86 devices that run Android API 23 or above, if the application is targeted with API 23 or
+//            // above, FFmpeg lib might lead to runtime crashes or warnings.
+//            abiFilters 'armeabi-v7a', 'arm64-v8a'
+//        }
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["androidManifestFile": "$projectDir/src/main/AndroidManifest.xml".toString()]
@@ -42,6 +53,17 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+    lintOptions {
+        abortOnError false
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -173,8 +195,7 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "org.mockito:mockito-inline:$mockito_version"
 
-
-    //dji-sdk
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation('com.dji:dji-sdk:4.15', {
         /**
          * Uncomment the "library-anti-distortion" if your app does not need Anti Distortion for Mavic 2 Pro and Mavic 2 Zoom.
@@ -183,8 +204,14 @@ dependencies {
          * Both will greatly reduce the size of the APK.
          */
         exclude module: 'library-anti-distortion'
-        //exclude module: 'fly-safe-database'
+        exclude module: 'fly-safe-database'
     })
+    compileOnly ('com.dji:dji-sdk-provided:4.15')
+
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
+
     implementation ('com.dji:dji-uxsdk:4.14', {
         /**
          * Uncomment the "library-anti-distortion" if your app does not need Anti Distortion for Mavic 2 Pro and Mavic 2 Zoom.
@@ -194,9 +221,10 @@ dependencies {
          */
         exclude module: 'library-anti-distortion'
         exclude module: 'dji-sdk'
-        //exclude module: 'fly-safe-database'
+        exclude module: 'fly-safe-database'
     })
-    compileOnly ('com.dji:dji-sdk-provided:4.15')
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     //PowerMock
     testImplementation "org.powermock:powermock-api-mockito2:$powermock_version"
     testImplementation "org.powermock:powermock-module-junit4-rule-agent:$powermock_version"
