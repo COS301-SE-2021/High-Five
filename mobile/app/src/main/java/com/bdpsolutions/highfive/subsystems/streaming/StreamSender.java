@@ -7,7 +7,7 @@ public abstract class StreamSender implements Runnable{
     protected static boolean running,streaming;
     protected static ConcurrentLinkedQueue<byte[]> inputBuffer = new ConcurrentLinkedQueue<>();
 
-    StreamSender(){
+    public StreamSender(){
         runner = new Thread(this);
         running = true;
         runner.start();
