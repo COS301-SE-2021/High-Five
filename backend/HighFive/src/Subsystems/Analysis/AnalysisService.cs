@@ -129,11 +129,9 @@ namespace src.Subsystems.Analysis
                 break;
             }
             //---------------------------------------------------------------------------------------
-            
-            
-            // var analyzedImageData = new byte[5];//replace this with actual returned byte array once analysis is implemented
-            
-            var tempDirectory = Directory.GetCurrentDirectory() + "\\analyzed" + rawImage.GetMetaData("originalName");
+
+            var oldName = rawImage.GetMetaData("originalName");
+            var tempDirectory = Path.GetTempPath() + "\\analyzed" + oldName;
             File.WriteAllBytes(tempDirectory, analyzedImageData);
             return tempDirectory;
         }
