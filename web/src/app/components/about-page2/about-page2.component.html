@@ -1,6 +1,6 @@
-<ion-grid>
-  <ion-row>
-    <ion-col class="ion-justify-content-center ion-align-items-center ion-text-center">
+<ion-grid class="initial">
+  <ion-row class="initial">
+    <ion-col  class="ion-justify-content-center ion-align-items-center ion-text-center initial">
       <ion-title>The Architecture</ion-title>
       <ion-grid>
         <ion-row>
@@ -19,7 +19,61 @@
           </ion-col>
         </ion-row>
         <ion-row>
+          <ion-col>
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <ion-card class="considerations">
+                    <ion-card-header>
+                      <ion-card-title>
+                        Streaming the live video to multiple clients
+                      </ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                      <ng-lottie [options]="lottieMulticastConfig" ></ng-lottie>
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+                <ion-col>
+                  <ion-card class="considerations">
+                    <ion-card-header>
+                      <ion-card-title>
+                        Flying the drones using our own application
+                      </ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                      <ng-lottie [options]="lottieMobileAppConfig"></ng-lottie>
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-card class="considerations">
+                    <ion-card-header>
+                      <ion-card-title>
+                        Latency Between the drone and backend
+                      </ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                      <ng-lottie [options]="lottieLatencyConfig"></ng-lottie>
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+                <ion-col>
+                  <ion-card class="considerations">
+                    <ion-card-header>
+                      <ion-card-title>
+                      </ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
 
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-col>
         </ion-row>
       </ion-grid>
     </ion-col>

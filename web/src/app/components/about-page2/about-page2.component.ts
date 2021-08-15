@@ -1,7 +1,5 @@
-import {AfterContentChecked, Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import {AnimationOptions} from "ngx-lottie";
-import {SwiperComponent} from "swiper/angular";
-import {SwiperOptions} from "swiper";
 import SwiperCore, {Pagination, Mousewheel, Navigation, Autoplay } from 'swiper/core';
 import {ModalController} from "@ionic/angular";
 import {MoreInfoComponent} from "../more-info/more-info.component";
@@ -12,7 +10,7 @@ SwiperCore.use([Pagination, Mousewheel, Navigation, Autoplay]);
   templateUrl: './about-page2.component.html',
   styleUrls: ['./about-page2.component.scss'],
 })
-export class AboutPage2Component implements OnInit, AfterContentChecked {
+export class AboutPage2Component implements OnInit{
 
   lottieConfig: AnimationOptions ={
     path:'/assets/lottie-animations/lf30_editor_5gpajdty.json'
@@ -30,30 +28,10 @@ export class AboutPage2Component implements OnInit, AfterContentChecked {
     path:'/assets/lottie-animations/speed.json',
   }
 
-  @ViewChild('swiper2') swiper2: SwiperComponent;
-  swiperConfig2: SwiperOptions= {
-    slidesPerView: 3,
-    spaceBetween: 10,
-    pagination: true,
-    mousewheel: true,
-    speed: 800,
-    allowTouchMove: true,
-    slideToClickedSlide: true,
-    autoplay: {
-      delay: 12000,
-      disableOnInteraction: true,
-    }
-  }
-
   constructor(private modalController : ModalController) { }
 
   ngOnInit() {}
 
-  ngAfterContentChecked(): void {
-    if(this.swiper2){
-      this.swiper2.updateSwiper({});
-    }
-  }
 
   async displayModal(){
     const modal = await this.modalController.create({

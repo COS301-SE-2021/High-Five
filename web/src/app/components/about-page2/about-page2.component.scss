@@ -1,14 +1,4 @@
-ion-row{
-  height: 100%;
-  width: 100%;
-}
-
-ion-col{
-  height: 100%;
-  width: 100%;
-}
-
-ion-grid{
+.initial{
   height: 100%;
   width: 100%;
 }
@@ -16,4 +6,11 @@ ion-grid{
 ion-title{
   font-size: 40pt;
   color: var(--ion-color-primary);
+}
+#architectureDescription{
+  font-size: 18px;
+}
+
+ion-card.considerations{
+  max-height: 20%;
 }
