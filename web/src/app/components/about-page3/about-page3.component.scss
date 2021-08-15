@@ -1,6 +1,6 @@
 .initial{
   width: 100%;
-  height: 80%;
+  height: 90%;
 }
 .swiper-container{
   width: 100%;
@@ -12,5 +12,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
 
+ion-grid.initial {
+  padding-top: 5%;
+}
+
+ion-title{
+  font-size: 70pt;
 }

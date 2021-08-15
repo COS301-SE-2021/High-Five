@@ -2,6 +2,7 @@ import {AfterContentChecked, Component, OnInit, ViewChild} from '@angular/core';
 import {SwiperComponent} from "swiper/angular";
 import {SwiperOptions} from "swiper";
 import SwiperCore, {Autoplay, Mousewheel} from 'swiper/core';
+import {AnimationOptions} from "ngx-lottie";
 
 SwiperCore.use([Mousewheel, Autoplay]);
 @Component({
@@ -17,10 +18,10 @@ export class AboutPage3Component implements OnInit, AfterContentChecked {
     mousewheel: true,
     speed: 800,
     allowTouchMove: true,
-    // autoplay: {
-    //   delay: 12000,
-    //   disableOnInteraction: true,
-    // }
+  }
+
+  lottieScrollDownConfig : AnimationOptions = {
+    path:'/assets/lottie-animations/scroll-down-animation.json'
   }
   constructor() { }
 
