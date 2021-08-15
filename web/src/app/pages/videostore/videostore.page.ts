@@ -4,6 +4,8 @@ import {VideoMetaData} from '../../models/videoMetaData';
 import {VideoStoreConstants} from '../../../constants/pages/videostore-constants';
 import {ImageMetaData} from '../../models/imageMetaData';
 import {MediaStorageService} from '../../apis/mediaStorage.service';
+import {ImagesService} from "../../services/images/images.service";
+import {VideosService} from "../../services/videos/videos.service";
 
 @Component({
   selector: 'app-videostore',
@@ -13,6 +15,8 @@ import {MediaStorageService} from '../../apis/mediaStorage.service';
 export class VideostorePage implements OnInit {
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+  imagesTrackFn = (i, image) => image.id;
+  videoTrackFn = (v, video) => video.id;
 
   public videos: VideoMetaData[] = [];
   public videosFetched = false;
@@ -22,27 +26,24 @@ export class VideostorePage implements OnInit {
   constructor(private modal: ModalController,
               public toastController: ToastController,
               private loadingController: LoadingController,
-              private constants: VideoStoreConstants, private mediaStorageService: MediaStorageService) {
+              private constants: VideoStoreConstants, private mediaStorageService: MediaStorageService,
+              public imagesService : ImagesService, public videosService : VideosService) {
     this.segment = 'images';
   }
 
-  ngOnInit() {
-    this.updateImages().then(() => {
-    });
-    this.updateVideos().then(() => {
-    });
-  }
+  ngOnInit() {  }
 
 
   deleteVideo(videoId: string) {
-    this.videos = this.videos.filter(video => video.id !== videoId);
-    this.mediaStorageService.deleteVideo({id: videoId}).subscribe(() => {
-      this.toastController.create({
-        message: 'Successfully deleted video',
-        duration: 2000,
-        translucent: true
-      }).then(m => m.present());
-    });
+    // this.videos = this.videos.filter(video => video.id !== videoId);
+    // this.mediaStorageService.deleteVideo({id: videoId}).subscribe(() => {
+    //   this.toastController.create({
+    //     message: 'Successfully deleted video',
+    //     duration: 2000,
+    //     translucent: true
+    //   }).then(m => m.present());
+    // });
+    this.videosService.removeVideo(videoId);
 
   }
 
@@ -53,29 +54,30 @@ export class VideostorePage implements OnInit {
    */
   async uploadVideo(video: any) {
 
-    const loading = await this.loadingController.create({
-      spinner: 'circles',
-      animated: true,
-    });
-    await loading.present();
-    this.mediaStorageService.storeVideoForm(video.target.files[0]).subscribe(() => {
-      this.updateVideos();
-      loading.dismiss();
-    });
+    // const loading = await this.loadingController.create({
+    //   spinner: 'circles',
+    //   animated: true,
+    // });
+    // await loading.present();
+    // this.mediaStorageService.storeVideoForm(video.target.files[0]).subscribe(() => {
+    //   this.updateVideos();
+    //   loading.dismiss();
+    // });
+    await this.videosService.addVideo(video.target.files[0]);
   }
 
   /**
    * Shows a toast once a video is successfully uploaded.
    */
-  async presentAlert() {
-    const alert = await this.toastController.create({
-      cssClass: 'alert-style',
-      header: this.constants.toastLabels.header,
-      message: this.constants.toastLabels.message,
-      buttons: this.constants.toastLabels.buttons
-    });
-    await alert.present();
-  }
+  // async presentAlert() {
+  //   const alert = await this.toastController.create({
+  //     cssClass: 'alert-style',
+  //     header: this.constants.toastLabels.header,
+  //     message: this.constants.toastLabels.message,
+  //     buttons: this.constants.toastLabels.buttons
+  //   });
+  //   await alert.present();
+  // }
 
   /**
    * This function will delete an image from the user's account, optimistic loading updates are used and in the event
@@ -84,66 +86,68 @@ export class VideostorePage implements OnInit {
    * @param imageId the ID of the image we wish to delete
    */
   deleteImage(imageId: string) {
-    if(this.images.length==0){
-      return;
-    }
-    this.images = this.images.filter(img => img.id !== imageId);
-    const image: ImageMetaData = this.images.filter(img => img.id === imageId)[0];
-    try {
-      this.mediaStorageService.deleteImage({id: imageId}).subscribe(() => {
-        this.toastController.create({
-          message: 'Successfully deleted image',
-          duration: 2000,
-          translucent: true
-        }).then(m => m.present());
-      });
-    } catch (e) {
-      this.toastController.create({
-        message: 'Error occurred while deleting image',
-        duration: 2000,
-        translucent: true
-      }).then(m => m.present());
-      this.images = this.images.concat([image]);
-      if(this.images != undefined && this.images.length>1){
-        this.images.sort((a, b) => a.name.localeCompare(b.name));
-      }
-    }
+    // if(this.images.length==0){
+    //   return;
+    // }
+    // this.images = this.images.filter(img => img.id !== imageId);
+    // const image: ImageMetaData = this.images.filter(img => img.id === imageId)[0];
+    // try {
+    //   this.mediaStorageService.deleteImage({id: imageId}).subscribe(() => {
+    //     this.toastController.create({
+    //       message: 'Successfully deleted image',
+    //       duration: 2000,
+    //       translucent: true
+    //     }).then(m => m.present());
+    //   });
+    // } catch (e) {
+    //   this.toastController.create({
+    //     message: 'Error occurred while deleting image',
+    //     duration: 2000,
+    //     translucent: true
+    //   }).then(m => m.present());
+    //   this.images = this.images.concat([image]);
+    //   if(this.images != undefined && this.images.length>1){
+    //     this.images.sort((a, b) => a.name.localeCompare(b.name));
+    //   }
+    // }
+    this.imagesService.removeImage(imageId);
 
   }
 
   async uploadImage(image: any) {
-    const loading = await this.loadingController.create({
-      spinner: 'circles',
-      animated: true,
-    });
-    await loading.present();
-    this.mediaStorageService.storeImageForm(image.target.files[0]).subscribe(() => {
-      this.updateImages();
-      loading.dismiss();
-    });
+    // const loading = await this.loadingController.create({
+    //   spinner: 'circles',
+    //   animated: true,
+    // });
+    // await loading.present();
+    // this.mediaStorageService.storeImageForm(image.target.files[0]).subscribe(() => {
+    //   this.updateImages();
+    //   loading.dismiss();
+    // });
+    await this.imagesService.addImage(image.target.files[0]);
     //Nothing added here yet
   }
 
-  private async updateImages(): Promise<boolean> {
-    this.mediaStorageService.getAllImages().subscribe(response => {
-      this.images = response.images;
-      if(this.images != undefined  && this.images.length>1){
-        this.images.sort((a, b) => a.name.localeCompare(b.name));
-      }
-      return true;
-    });
-    return false;
-  }
+  // private async updateImages(): Promise<boolean> {
+  //   this.mediaStorageService.getAllImages().subscribe(response => {
+  //     this.images = response.images;
+  //     if(this.images != undefined  && this.images.length>1){
+  //       this.images.sort((a, b) => a.name.localeCompare(b.name));
+  //     }
+  //     return true;
+  //   });
+  //   return false;
+  // }
 
-  private async updateVideos(): Promise<boolean> {
-    this.mediaStorageService.getAllVideos().subscribe(response => {
-      this.videos = response.videos;
-      if(this.videos != undefined  && this.videos.length>1){
-        this.videos.sort((a, b) => a.name.localeCompare(b.name));
-      }
-      return true;
-    });
-    return false;
-  }
+  // private async updateVideos(): Promise<boolean> {
+  //   this.mediaStorageService.getAllVideos().subscribe(response => {
+  //     this.videos = response.videos;
+  //     if(this.videos != undefined  && this.videos.length>1){
+  //       this.videos.sort((a, b) => a.name.localeCompare(b.name));
+  //     }
+  //     return true;
+  //   });
+  //   return false;
+  // }
 
 }
