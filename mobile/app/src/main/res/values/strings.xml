@@ -14,7 +14,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="analysis_fragment">Analysis</string>
-    <string name="video_fragment">Video</string>
+    <string name="media_fragment">Images/Video</string>
     <string name="title_activity_asdf">Asdf</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

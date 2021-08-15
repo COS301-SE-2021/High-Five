@@ -11,7 +11,9 @@ import com.bdpsolutions.highfive.databinding.MediaFragmentBinding
 import com.bdpsolutions.highfive.subsystems.media.adapter.MediaAdapter
 import com.bdpsolutions.highfive.subsystems.media.adapter.provider.MediaAdapterFactory
 import com.bdpsolutions.highfive.subsystems.media.viewmodel.MediaViewModel
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.FieldPosition
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -41,8 +43,22 @@ class MediaFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val tabLayout = binding?.mediaFormats
+
         mediaAdapter = adapterFactory.create(this)
         viewPager = binding?.mediaPager!!
         viewPager.adapter = mediaAdapter
+
+        TabLayoutMediator(tabLayout!!, viewPager) { tab, position ->
+            tab.text = fetchTabString(position)
+        }.attach()
+    }
+
+    private fun fetchTabString(position: Int) : String {
+        return when (position) {
+            0 -> "Images"
+            1 -> "Videos"
+            else -> ""
+        }
     }
 }

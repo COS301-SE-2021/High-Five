@@ -70,7 +70,7 @@ class VideoFragment: Fragment() {
             }
         })
 
-        videoViewModel.fetchVideoData()
+        //videoViewModel.fetchVideoData()
 
         return binding?.root
         //return inflater.inflate(R.layout.fragment_video, container, false)

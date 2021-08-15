@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class MediaAdapterImpl(fragment: Fragment): MediaAdapter(fragment) {
 
-    override fun getItemCount(): Int = 100
+    override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {
         // Return a NEW fragment instance in createFragment(int)

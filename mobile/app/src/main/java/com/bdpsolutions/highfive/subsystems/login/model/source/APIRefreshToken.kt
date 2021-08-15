@@ -49,12 +49,14 @@ class APIRefreshToken : LoginDataSource {
 
                 if (response.isSuccessful) {
                     val accessToken = response.body()!!
-                    db.updateToken(
-                        auth_token = accessToken.idToken!!,
-                        refresh_token = accessToken.refreshToken!!,
-                        auth_expires = GetTimestamp(accessToken.tokenExpires),
-                        refresh_expires = GetTimestamp(accessToken.refreshExpires),
-                    )
+                    ConcurrencyExecutor.execute {
+                        db.updateToken(
+                            auth_token = accessToken.idToken!!,
+                            refresh_token = accessToken.refreshToken!!,
+                            auth_expires = GetTimestamp(accessToken.tokenExpires),
+                            refresh_expires = GetTimestamp(accessToken.refreshExpires),
+                        )
+                    }
 
                 } else {
                     Log.e("Error", response.message())
