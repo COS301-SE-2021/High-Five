@@ -1,4 +1,17 @@
 package com.bdpsolutions.highfive.subsystems.streaming;
 
-public class UdpSender {
+import java.net.DatagramSocket;
+
+public class UdpSender implements StreamSender{
+    private Thread runner;
+    private boolean running;
+    private DatagramSocket server;
+    public UdpSender(){
+
+    }
+
+    @Override
+    public void run() {
+
+    }
 }
