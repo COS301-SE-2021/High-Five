@@ -21,6 +21,10 @@ class AuthenticationRepositoryImpl private constructor(private val loginSource: 
         loginSource.login(resultLauncher)
     }
 
+    override fun refreshToken() {
+        loginSource.refreshToken()
+    }
+
     /**
      * Companion object to create the actual class.
      *

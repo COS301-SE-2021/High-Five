@@ -21,4 +21,13 @@ interface AccessTokenEndpoint {
         @Field("grant_type") grant_type: String,
         @Field("code_verifier") code_verifier: String
     ): Call<AccessTokenResponse>
+
+    @FormUrlEncoded
+    @POST(Endpoints.AUTH.AUTH_TOKEN)
+    fun getNewAccessToken(
+        @Field("client_id") client_id: String,
+        @Field("grant_type") grant_type: String,
+        @Field("refresh_token") refresh_token: String,
+        @Field("redirect_uri") redirect_uri: String
+    ): Call<AccessTokenResponse>
 }

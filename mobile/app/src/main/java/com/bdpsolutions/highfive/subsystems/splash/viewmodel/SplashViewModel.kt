@@ -2,6 +2,7 @@ package com.bdpsolutions.highfive.subsystems.splash.viewmodel
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.bdpsolutions.highfive.BuildConfig
 import com.bdpsolutions.highfive.constants.Settings
@@ -47,6 +48,7 @@ class SplashViewModel (private val authenticationRepository: AuthenticationRepos
                 val intent: Intent?
 
                 run checkExpired@ {
+                    Log.d("Check Expires", "Checking if tokens are expired...")
                     //check if refresh token expired and redirect to login if it has
                     if (checkTokenExpired(user?.refreshExpires!!)) {
                         intent = Intent(context, LoginActivity::class.java)
@@ -54,6 +56,14 @@ class SplashViewModel (private val authenticationRepository: AuthenticationRepos
                     }
                     intent = Intent(context, MainActivity::class.java)
                     //check if access token is expired and request a new one if it has
+
+                    if (checkTokenExpired(user.authExpires!!)) {
+                        runBlocking {
+                            launch {
+                                authenticationRepository.refreshToken()
+                            }
+                        }
+                    }
                 }
 
                 intent!!

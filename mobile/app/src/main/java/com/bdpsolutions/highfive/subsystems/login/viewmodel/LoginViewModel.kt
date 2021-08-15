@@ -96,8 +96,8 @@ class LoginViewModel private constructor(val authenticationRepository: Authentic
                                                 uid = 1,
                                                 authToken = accessToken.idToken,
                                                 refreshToken = accessToken.refreshToken,
-                                                authExpires = getTimestamp(accessToken.tokenExpires),
-                                                refreshExpires = getTimestamp(accessToken.refreshExpires)
+                                                authExpires = GetTimestamp(accessToken.tokenExpires),
+                                                refreshExpires = GetTimestamp(accessToken.refreshExpires)
                                             )
                                         )
                                     }
@@ -159,10 +159,6 @@ class LoginViewModel private constructor(val authenticationRepository: Authentic
     // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
-    }
-
-    private fun getTimestamp(offset: Int?): Long {
-        return (System.currentTimeMillis() / 1000L) + (offset ?: 0)
     }
 
     /**
