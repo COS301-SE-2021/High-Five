@@ -10,8 +10,8 @@ class ImageRepository private constructor(private val source : ImageDataSource){
         source.fetchAllImages(imageObservable)
     }
 
-    fun storeImage(image: File) {
-        source.loadImage(image)
+    fun storeImage(image: File, callback: (() -> Unit)? = null) {
+        source.loadImage(image, callback)
     }
 
     companion object {

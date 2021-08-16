@@ -63,7 +63,7 @@ class APIImageDataSource private constructor(): ImageDataSource {
         }
     }
 
-    override fun loadImage(image: File) {
+    override fun loadImage(image: File, callback: (() -> Unit)?) {
         val requestFile: RequestBody =
             RequestBody.create(MediaType.parse("multipart/form-data"), image)
 
@@ -108,6 +108,8 @@ class APIImageDataSource private constructor(): ImageDataSource {
                     Log.e("Image upload", "Failed to fetch image data: ${t.message}")
                 }
             })
+
+            callback?.let { it() }
         }
     }
 

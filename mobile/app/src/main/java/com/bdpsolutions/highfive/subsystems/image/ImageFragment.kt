@@ -146,8 +146,10 @@ class ImageFragment : Fragment() {
     }
 
     fun refresh() {
-        binding?.progressBar2?.visibility = View.VISIBLE
-        adapter.clearData()
-        viewModel.fetchImageData()
+        this.requireActivity().runOnUiThread {
+            binding?.progressBar2?.visibility = View.VISIBLE
+            adapter.clearData()
+            viewModel.fetchImageData()
+        }
     }
 }

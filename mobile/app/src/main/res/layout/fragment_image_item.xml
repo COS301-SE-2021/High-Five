@@ -19,6 +19,8 @@
             android:id="@+id/image_thumbnail"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
             android:src="@mipmap/logo1_2round" />
 
         <TextView

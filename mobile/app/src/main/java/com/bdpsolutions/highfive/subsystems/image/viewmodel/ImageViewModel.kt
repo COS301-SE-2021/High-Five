@@ -22,10 +22,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.graphics.Bitmap.CompressFormat
 import android.graphics.ImageFormat
+import android.os.Build
 import com.bdpsolutions.highfive.subsystems.image.ImageFragment
 
 import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.*
+import java.time.Instant
 
 
 class ImageViewModel private constructor(private val repo: ImageRepository): ViewModel() {
@@ -54,9 +59,10 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
                         cursor.moveToFirst()
                         val idx: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
                         val path = cursor.getString(idx)
-                        repo.storeImage(File(path))
                         cursor.close()
-                        activity.refresh()
+                        repo.storeImage(File(path)) {
+                            activity.refresh()
+                        }
                     }
                 }
             }
@@ -71,23 +77,25 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
                 ConcurrencyExecutor.execute {
                     val selectedImage: Bitmap = result.data?.extras?.get("data") as Bitmap
                     val outputDir: File = activity.requireContext().cacheDir
-                    val formatter = SimpleDateFormat("yyyy_MM_dd-HH:mm", Locale.getDefault())
-                    val date = Date()
+                    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+                    val date = Calendar.getInstance().time
+
 
                     val bos = ByteArrayOutputStream()
                     selectedImage.compress(CompressFormat.JPEG, 80 /*ignored for PNG*/, bos)
                     val bitmapdata: ByteArray = bos.toByteArray()
 
-                    val outputFile =
-                        File.createTempFile("IMG_${formatter.format(date)}", ".jpg", outputDir)
+                    val formatDate = formatter.format(date)
+
+                    val outputFile = File(outputDir, "IMG_$formatDate.jpg")
                     val fos = FileOutputStream(outputFile)
                     fos.write(bitmapdata)
                     fos.flush()
                     fos.close()
 
-                    repo.storeImage(outputFile)
-
-                    activity.refresh()
+                    repo.storeImage(outputFile) {
+                        activity.refresh()
+                    }
                 }
             }
         }

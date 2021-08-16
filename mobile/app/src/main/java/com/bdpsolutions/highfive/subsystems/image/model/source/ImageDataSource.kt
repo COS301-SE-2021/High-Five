@@ -6,5 +6,5 @@ import java.io.File
 
 interface ImageDataSource {
     fun fetchAllImages(imageObservable: MutableLiveData<ImageResult>)
-    fun loadImage(image: File)
+    fun loadImage(image: File, callback: (() -> Unit)? = null)
 }
