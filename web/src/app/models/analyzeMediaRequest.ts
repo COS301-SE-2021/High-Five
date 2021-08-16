@@ -9,8 +9,12 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { NewPipeline } from './newPipeline';
 
-export interface CreatePipelineRequest { 
-    pipeline?: NewPipeline;
+export interface AnalyzeMediaRequest { 
+    mediaId?: string;
+    pipelineId?: string;
+    /**
+     * This string can only be \"image\" or \"video\"
+     */
+    mediaType?: string;
 }
