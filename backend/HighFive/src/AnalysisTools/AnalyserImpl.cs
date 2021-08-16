@@ -38,9 +38,9 @@ namespace src.AnalysisTools
 
         public void FeedFrame(byte[] frame)
         {
-            foreach (var queue in _outputQueues)
+            foreach (var toolRunner in _toolRunners)
             {
-                queue.Add(frame);
+                toolRunner.Enqueue(frame);
             }
         }
 
