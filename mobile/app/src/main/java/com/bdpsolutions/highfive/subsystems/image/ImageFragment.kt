@@ -69,6 +69,10 @@ class ImageFragment : Fragment() {
             }
         })
 
+        binding?.uploadImageBtn?.setOnClickListener {
+
+        }
+
         viewModel.fetchVideoData()
 
         return binding?.root
