@@ -3,6 +3,7 @@ import {LoadingController, Platform} from '@ionic/angular';
 import {ScreenSizeServiceService} from './services/screen-size-service.service';
 import {MsalService} from '@azure/msal-angular';
 import {NavigationEnd, NavigationStart, Router, RouterEvent} from '@angular/router';
+import {environment} from "../environments/environment";
 
 @Component({
   selector: 'app-root',
@@ -31,7 +32,7 @@ export class AppComponent implements OnInit {
           this.loading.dismiss();
         }
       });
-      if(msalService.instance.getAllAccounts().length>0){
+      if (msalService.instance.getAllAccounts().length > 0) {
         router.navigate(['/navbar/landing'])
       }
     });
@@ -60,6 +61,9 @@ export class AppComponent implements OnInit {
           this.loading.present();
           this.msalService.instance.setActiveAccount(res.account);
           localStorage.setItem('jwt', res.idToken);
+          if (!environment.production) {
+            console.log("JWT Token for login : " + res.idToken);
+          }
           this.router.navigate(['/navbar/landing']).then(() => {
             this.loading.dismiss();
           });
