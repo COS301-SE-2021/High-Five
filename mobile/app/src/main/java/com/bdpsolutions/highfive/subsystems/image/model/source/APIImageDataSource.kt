@@ -11,7 +11,7 @@ import com.google.gson.GsonBuilder
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 
-class APIImageDataSource : ImageDataSource {
+class APIImageDataSource private constructor(): ImageDataSource {
 
     override fun fetchAllImages(imageObservable: MutableLiveData<ImageResult>) {
         val gson = GsonBuilder()
@@ -34,11 +34,11 @@ class APIImageDataSource : ImageDataSource {
 
             val call = imageSource.getAllImages("Bearer $bearer")
 
-            call.enqueue(object : Callback<List<ImageInfo>> {
+            call.enqueue(object : Callback<ImageList> {
 
                 override fun onResponse(
-                    call: Call<List<ImageInfo>>,
-                    response: Response<List<ImageInfo>>
+                    call: Call<ImageList>,
+                    response: Response<ImageList>
                 ) {
 
                     if (response.isSuccessful) {
@@ -49,10 +49,16 @@ class APIImageDataSource : ImageDataSource {
                     }
                 }
 
-                override fun onFailure(call: Call<List<ImageInfo>>, t: Throwable) {
+                override fun onFailure(call: Call<ImageList>, t: Throwable) {
                     Log.e("TOKEN", "Failed to fetch image data: ${t.message}")
                 }
             })
+        }
+    }
+
+    companion object {
+        fun create(): APIImageDataSource {
+            return APIImageDataSource()
         }
     }
 }

@@ -1,9 +1,13 @@
 package com.bdpsolutions.highfive.subsystems.image.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bdpsolutions.highfive.databinding.FragmentImageItemBinding
+import com.squareup.picasso.Picasso
 import javax.inject.Inject
+import com.squareup.picasso.Callback
+import java.lang.Exception
 
 class ImageRecyclerViewAdapterImpl @Inject constructor() : ImageRecyclerViewAdapter() {
     // Create new views (invoked by the layout manager)
@@ -20,9 +24,20 @@ class ImageRecyclerViewAdapterImpl @Inject constructor() : ImageRecyclerViewAdap
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
 
-        viewHolder.imageItem.imageName.text = dataSet!![position].imageName
-        viewHolder.imageItem.imageDate.text = dataSet!![position].imageDate
-        viewHolder.imageItem.imageId.text = dataSet!![position].imageId
+        Picasso.get()
+            .load(dataSet!![position].imageUrl)
+            .into(viewHolder.imageItem.imageThumbnail, object : Callback {
+                override fun onSuccess() {
+                    viewHolder.imageItem.imageName.text = dataSet!![viewHolder.adapterPosition].imageName
+                    viewHolder.imageItem.imageDate.text = dataSet!![viewHolder.adapterPosition].imageDate
+                    viewHolder.imageItem.imageId.text = dataSet!![viewHolder.adapterPosition].imageId
+
+                }
+
+                override fun onError(e: Exception?) {
+                    Log.e("Picasso", e?.message!!)
+                }
+            })
     }
 
     // Return the size of your dataset (invoked by the layout manager)

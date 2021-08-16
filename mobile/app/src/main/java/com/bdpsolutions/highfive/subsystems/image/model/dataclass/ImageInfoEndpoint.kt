@@ -10,5 +10,5 @@ interface ImageInfoEndpoint {
     @POST(Endpoints.IMAGE.GET_ALL_IMAGES)
     fun getAllImages(
         @Header("Authorization") authHeader: String
-    ): Call<List<ImageInfo>>
+    ): Call<ImageList>
 }

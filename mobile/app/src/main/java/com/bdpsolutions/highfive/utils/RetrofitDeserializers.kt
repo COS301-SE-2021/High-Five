@@ -2,6 +2,7 @@ package com.bdpsolutions.highfive.utils
 
 import android.net.Uri
 import com.bdpsolutions.highfive.subsystems.image.model.dataclass.ImageInfo
+import com.bdpsolutions.highfive.subsystems.image.model.dataclass.ImageList
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenResponse
 import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
 import com.bdpsolutions.highfive.utils.factories.jsonElementConverterFactory

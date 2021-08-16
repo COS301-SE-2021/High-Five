@@ -2,6 +2,9 @@ package com.bdpsolutions.highfive.utils.factories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.bdpsolutions.highfive.subsystems.image.model.ImageRepository
+import com.bdpsolutions.highfive.subsystems.image.model.source.APIImageDataSource
+import com.bdpsolutions.highfive.subsystems.image.viewmodel.ImageViewModel
 import com.bdpsolutions.highfive.subsystems.login.model.AuthenticationRepositoryImpl
 import com.bdpsolutions.highfive.subsystems.login.model.source.APILogin
 import com.bdpsolutions.highfive.subsystems.login.model.source.APIRefreshToken
@@ -45,6 +48,12 @@ class ViewModelProviderFactory @Inject constructor(): ViewModelProvider.Factory 
             modelClass.isAssignableFrom(MediaViewModel::class.java) -> {
                 return MediaViewModel.create() as T
             }
+            modelClass.isAssignableFrom(ImageViewModel::class.java) ->
+                return ImageViewModel.create(
+                    repo = ImageRepository.create(
+                        source = APIImageDataSource.create()
+                    )
+                ) as T
             else -> throw IllegalArgumentException(vmf.UNKNOWN_VIEWMODEL)
         }
     }

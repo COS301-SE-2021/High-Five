@@ -30,6 +30,7 @@ buildscript {
     ext.powermock_version = "2.0.4"
     ext.codec_version = "1.15"
     ext.viewpager_version = "1.0.0"
+    ext.picasso_version = "2.8"
 
 
     repositories {
