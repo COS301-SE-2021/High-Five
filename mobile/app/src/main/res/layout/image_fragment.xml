@@ -35,11 +35,39 @@
             android:id="@+id/upload_image_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:foregroundGravity="right|bottom"
-            android:src="@android:drawable/ic_input_add"
-            app:layout_constraintRight_toRightOf="parent"
             android:layout_margin="6sp"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:clickable="true"
+            android:focusable="true"
+            android:foregroundGravity="right|bottom"
+            android:src="@drawable/ic_add"
+            app:tint="@color/white"
+            app:backgroundTint="@color/purple_500"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_from_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_camera"
+            app:tint="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/upload_image_btn"
+            app:layout_constraintEnd_toEndOf="@+id/upload_image_btn" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_from_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_image"
+            app:tint="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/add_from_camera"
+            app:layout_constraintEnd_toEndOf="@+id/add_from_camera" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
