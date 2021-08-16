@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Org.OpenAPITools.Models;
@@ -37,17 +38,23 @@ namespace src.AnalysisTools
 
         public void FeedFrame(byte[] frame)
         {
-            throw new System.NotImplementedException();
+            foreach (var queue in _outputQueues)
+            {
+                queue.Add(frame);
+            }
         }
 
-        public List<byte[]> GetFrames()
+        public List<List<byte[]>> GetFrames()
         {
             throw new System.NotImplementedException();
         }
 
         public void EndAnalysis()
         {
-            throw new System.NotImplementedException();
+            foreach (var queue in _outputQueues)
+            {
+                queue.Add(new byte[] { 0 });
+            }
         }
     }
 }

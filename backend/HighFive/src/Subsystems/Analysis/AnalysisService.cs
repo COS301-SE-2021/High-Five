@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Org.OpenAPITools.Models;
+using src.AnalysisTools;
 using src.AnalysisTools.AnalysisThread;
 using src.Storage;
 using src.Subsystems.MediaStorage;
@@ -117,17 +118,11 @@ namespace src.Subsystems.Analysis
             
             
             //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
-            var outputQueue = new BlockingCollection<byte[]>();
-            var analysisThread = new ToolRunner(_analysisModels, outputQueue, analysisPipeline);
-            analysisThread.Enqueue(rawImageByteArray);
-            analysisThread.Enqueue(new byte[]{0});//ByteArray of length 1 indicates end of input
-
-            var analyzedImageData= System.Array.Empty<byte>();
-            foreach (var frame in outputQueue.GetConsumingEnumerable(CancellationToken.None))
-            {
-                analyzedImageData = frame;//Get Frame from outputqueue
-                break;
-            }
+            var analyser = new AnalyserImpl();
+            analyser.StartAnalysis(analysisPipeline,_analysisModels);
+            analyser.FeedFrame(rawImageByteArray);
+            analyser.EndAnalysis();
+            var analyzedImageData = analyser.GetFrames()[0][0];//TODO add functionality to save multiple images:analyser.GetFrames()[i][0]
             //---------------------------------------------------------------------------------------
 
             var oldName = rawImage.GetMetaData("originalName");

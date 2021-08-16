@@ -10,7 +10,7 @@ namespace src.AnalysisTools
 
         void FeedFrame(byte[] frame);
 
-        List<byte[]> GetFrames();
+        List<List<byte[]>> GetFrames();
 
         void EndAnalysis();
 
