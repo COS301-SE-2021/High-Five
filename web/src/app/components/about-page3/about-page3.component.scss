@@ -1,3 +1,7 @@
+.initial{
+  width: 100%;
+  height: 90%;
+}
 .swiper-container{
   width: 100%;
   height: 100%;
@@ -9,16 +13,11 @@
   align-items: center;
   justify-content: center;
 }
-app-about-page2{
-  height: 100%;
-  width: 100%;
-}
-app-about-page3{
-  height: 100%;
-  width: 100%;
+
+ion-grid.initial {
+  padding-top: 5%;
 }
 
-app-about-page1{
-  width: 100%;
-  height: 100%;
+ion-title{
+  font-size: 70pt;
 }
