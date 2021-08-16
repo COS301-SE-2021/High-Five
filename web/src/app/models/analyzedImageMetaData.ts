@@ -9,8 +9,14 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { NewPipeline } from './newPipeline';
 
-export interface CreatePipelineRequest { 
-    pipeline?: NewPipeline;
+export interface AnalyzedImageMetaData { 
+    id?: string;
+    /**
+     * The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Zring
+     */
+    dateAnalyzed?: Date;
+    url?: string;
+    imageId?: string;
+    pipelineId?: string;
 }
