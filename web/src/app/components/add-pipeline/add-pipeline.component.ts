@@ -1,7 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ModalController, PopoverController} from '@ionic/angular';
-import {Pipeline} from '../../models/pipeline';
 import {AddItemComponent} from '../add-item/add-item.component';
+import {PipelineService} from "../../services/pipeline/pipeline.service";
 
 @Component({
   selector: 'app-add-pipeline',
@@ -13,25 +13,16 @@ import {AddItemComponent} from '../add-item/add-item.component';
  * This class serves as a way to add pipelines
  */
 export class AddPipelineComponent implements OnInit {
-  @Input() availableTools: string[];
-  pipeline: Pipeline = {};
+  pipelineName : string;
   tools: string[] = [];
 
-  constructor(private modalController: ModalController, private popoverController: PopoverController) {
-    this.pipeline= {};
+  constructor(private modalController: ModalController, private popoverController: PopoverController , public pipelineService: PipelineService) {
+    // Nothing added here
   }
 
   async dismiss() {
-    if (this.pipeline && this.tools.length > 0) {
-      this.pipeline.tools = this.tools;
-      this.pipeline.tools.sort((a, b) => a.localeCompare(b));
-    } else {
-      this.pipeline = {};
-    }
-    await this.modalController.dismiss({
-      dismissed: true,
-      pipeline: this.pipeline
-    });
+    await this.pipelineService.addPipeline(this.pipelineName,this.tools);
+    await this.modalController.dismiss();
   }
 
   async presentAddToolPopover(ev: any) {
@@ -40,12 +31,12 @@ export class AddPipelineComponent implements OnInit {
       event: ev,
       translucent: true,
       componentProps: {
-        availableItems: this.availableTools.filter(tool => !this.tools.includes(tool))
+        availableItems: this.pipelineService.tools.filter(tool => !this.tools.includes(tool))
       }
     });
     await addToolPopover.present();
     await addToolPopover.onDidDismiss().then(data =>{
-      this.tools = this.tools.concat(data.data.tools);
+      this.tools = this.tools.concat(data.data.items);
     });
   }
 

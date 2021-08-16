@@ -1,0 +1,88 @@
+<ion-content>
+  <ion-grid class="initial">
+    <ion-row class="initial">
+      <ion-col  class="ion-justify-content-center ion-align-items-center ion-text-center initial">
+        <ion-title>The Architecture</ion-title>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-card>
+                <ion-card-content>
+                  <ion-text id="architectureDescription">
+                    The High Five architecture was meticulously designed by our software engineers with a keen focus on
+                    addressing the system's core quality requirements.
+                    Following a thorough analysis of these requirements; a set of industry-standard architectural-styles
+                    and patterns were selected, evaluated and elegantly intertwined to produce the exemplary architecture
+                    that serves as the foundation of the system today.
+                  </ion-text>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <ion-card class="considerations" (click)="displayModal()">
+                      <ion-card-header>
+                        <ion-card-title>
+                          Streaming the live video to multiple clients
+                        </ion-card-title>
+                      </ion-card-header>
+                      <ion-card-content>
+                        <ng-lottie [options]="lottieMulticastConfig" ></ng-lottie>
+                      </ion-card-content>
+                    </ion-card>
+                  </ion-col>
+                  <ion-col>
+                    <ion-card class="considerations" (click)="displayModal()">
+                      <ion-card-header>
+                        <ion-card-title>
+                          Flying the drones using our own application
+                        </ion-card-title>
+                      </ion-card-header>
+                      <ion-card-content>
+                        <ng-lottie [options]="lottieMobileAppConfig"></ng-lottie>
+                      </ion-card-content>
+                    </ion-card>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-card class="considerations" (click)="displayModal()">
+                      <ion-card-header>
+                        <ion-card-title>
+                          Latency Between the drone and backend
+                        </ion-card-title>
+                      </ion-card-header>
+                      <ion-card-content>
+                        <ng-lottie [options]="lottieLatencyConfig"></ng-lottie>
+                      </ion-card-content>
+                    </ion-card>
+                  </ion-col>
+                  <ion-col>
+                    <ion-card class="considerations" (click)="displayModal()">
+                      <ion-card-header>
+                        <ion-card-title>
+                          Another Thing here
+                        </ion-card-title>
+                      </ion-card-header>
+                      <ion-card-content>
+                        <ng-lottie [options]="lottieLatencyConfig"></ng-lottie>
+                      </ion-card-content>
+                    </ion-card>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+      <ion-col>
+        <ng-lottie [options]="lottieConfig"></ng-lottie>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>
