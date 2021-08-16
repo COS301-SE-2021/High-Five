@@ -16,7 +16,7 @@
     <div *ngSwitchCase="'videos'">
       <ion-grid>
         <ion-row>
-          <ion-col *ngFor="let video of videos; index as i" size-xl="3">
+          <ion-col *ngFor="let video of videosService.videos$ | async; trackBy: videoTrackFn" size-xl="3">
             <app-videostore-card (deleteVideo)="deleteVideo($event)" [video]="video"></app-videostore-card>
           </ion-col>
         </ion-row>
@@ -25,7 +25,7 @@
     <div *ngSwitchCase="'images'">
       <ion-grid>
         <ion-row>
-          <ion-col *ngFor="let img of images; index as i" size-xl="3">
+          <ion-col *ngFor="let img of imagesService.images$ | async; trackBy: imagesTrackFn" size-xl="3">
             <app-image-card (deleteImage)="deleteImage($event)" [image]="img"></app-image-card>
           </ion-col>
         </ion-row>
