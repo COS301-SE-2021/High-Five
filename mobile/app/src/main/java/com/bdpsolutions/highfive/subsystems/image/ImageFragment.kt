@@ -1,7 +1,6 @@
 package com.bdpsolutions.highfive.subsystems.image
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -13,8 +12,6 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,8 +20,6 @@ import com.bdpsolutions.highfive.databinding.ImageFragmentBinding
 import com.bdpsolutions.highfive.subsystems.image.adapter.ImageRecyclerViewAdapter
 import com.bdpsolutions.highfive.subsystems.image.view.ImageItemView
 import com.bdpsolutions.highfive.subsystems.image.viewmodel.ImageViewModel
-import com.bdpsolutions.highfive.subsystems.video.view.VideoItemView
-import com.bdpsolutions.highfive.subsystems.video.viewmodel.VideoViewModel
 import com.bdpsolutions.highfive.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -40,6 +35,7 @@ class ImageFragment : Fragment() {
     private lateinit var viewModel: ImageViewModel
     private var binding: ImageFragmentBinding? = null
     private var clicked = false
+    private var permissionCallBack : ArrayList<() -> Unit> = arrayListOf({})
 
     @Inject
     lateinit var adapter: ImageRecyclerViewAdapter
@@ -58,14 +54,8 @@ class ImageFragment : Fragment() {
         binding?.recyclerView?.adapter = adapter
 
         viewModel.registerFetchFromGallery(this)
-        viewModel.registerAccessStoragePermission(this) {
-            viewModel.launchGalleryChooser(
-                Intent(
-                    Intent.ACTION_PICK,
-                    MediaStore.Images.Media.INTERNAL_CONTENT_URI
-                )
-            )
-        }
+        viewModel.registerFetchFromCamera(this)
+        viewModel.registerPermission(this, permissionCallBack)
 
         viewModel.imageResult.observe(viewLifecycleOwner, Observer {
             val imageResult = it ?: return@Observer
@@ -117,20 +107,41 @@ class ImageFragment : Fragment() {
             if(ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)
             {
+                permissionCallBack[0] = { galleryUploader() }
                 viewModel.askPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
             } else {
-                viewModel.launchGalleryChooser(
-                    Intent(
-                        Intent.ACTION_PICK,
-                        MediaStore.Images.Media.INTERNAL_CONTENT_URI
-                    )
-                )
+                galleryUploader()
+            }
+        }
+        binding?.addFromCamera?.setOnClickListener {
+            if(ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED)
+            {
+                permissionCallBack[0] = { cameraUploader() }
+                viewModel.askPermission(Manifest.permission.CAMERA)
+            } else {
+                cameraUploader()
             }
         }
 
         viewModel.fetchVideoData()
 
         return binding?.root
+    }
+
+    private fun galleryUploader(){
+        viewModel.launchGalleryChooser(
+            Intent(
+                Intent.ACTION_PICK,
+                MediaStore.Images.Media.INTERNAL_CONTENT_URI
+            )
+        )
+    }
+
+    private fun cameraUploader(){
+        viewModel.launchCamera(
+            Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        )
     }
 
 }

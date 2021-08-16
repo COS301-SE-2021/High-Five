@@ -1,5 +1,6 @@
 package com.bdpsolutions.highfive.subsystems.image.viewmodel
 
+import android.R.attr
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,11 +22,16 @@ import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.IOException
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
+import android.graphics.Bitmap.CompressFormat
+
+import android.R.attr.bitmap
+import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
+import java.io.*
 
 
 class ImageViewModel private constructor(private val repo: ImageRepository): ViewModel() {
@@ -62,12 +68,41 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
         }
     }
 
-    fun registerAccessStoragePermission(activity: Fragment, callback: () -> Unit) {
+    fun registerFetchFromCamera(activity: Fragment) {
+        cameraResultLauncher = activity.registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result:ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                ConcurrencyExecutor.execute {
+                    val selectedImage: Bitmap = result.data?.extras?.get("data") as Bitmap
+                    val outputDir: File = activity.requireContext().cacheDir
+                    val formatter = SimpleDateFormat("yyyy_MM_dd-HH:mm", Locale.getDefault())
+                    val date = Date()
+
+                    val bos = ByteArrayOutputStream()
+                    selectedImage.compress(CompressFormat.JPEG, 80 /*ignored for PNG*/, bos)
+                    val bitmapdata: ByteArray = bos.toByteArray()
+
+                    val outputFile =
+                        File.createTempFile("IMG_${formatter.format(date)}", ".jpg", outputDir)
+                    val fos = FileOutputStream(outputFile)
+                    fos.write(bitmapdata)
+                    fos.flush()
+                    fos.close()
+
+
+                    repo.storeImage(outputFile)
+                }
+            }
+        }
+    }
+
+    fun registerPermission(activity: Fragment, callback: ArrayList<() -> Unit>) {
         permissionResultLauncher = activity.registerForActivityResult(
             RequestPermission()
         ) { result ->
             if (result) {
-                callback()
+                callback[0]() //Dirty hack, but it allows us to dynamically set which function to use.
             } else {
                 Log.e("Permission", "onActivityResult: PERMISSION DENIED")
             }
@@ -76,6 +111,10 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
 
     fun launchGalleryChooser(intent: Intent) {
         galleryResultLauncher?.launch(intent)
+    }
+
+    fun launchCamera(intent: Intent) {
+        cameraResultLauncher?.launch(intent)
     }
 
     fun askPermission(permission: String) {
