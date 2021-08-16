@@ -2,8 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ImageMetaData} from '../../models/imageMetaData';
 import {PopoverController} from "@ionic/angular";
 import {AddItemComponent} from "../add-item/add-item.component";
-import {Pipeline} from "../../models/pipeline";
-import {PipelinesService} from "../../apis/pipelines.service";
+import {PipelineService} from "../../services/pipeline/pipeline.service";
 
 @Component({
   selector: 'app-image-card',
@@ -14,23 +13,15 @@ export class ImageCardComponent implements OnInit {
   @Input() image: ImageMetaData;
   @Output() deleteImage: EventEmitter<string> = new EventEmitter<string>();
   public alt = '../../../assists/images/defaultprofile.svg';
-  private pipelines : Pipeline[] = []
-  constructor(private popoverController : PopoverController, private pipelinesService : PipelinesService) {
+  constructor(private popoverController : PopoverController, private pipelineService : PipelineService) {
     // No constructor body needed as properties are retrieved from angular input
   }
 
   ngOnInit() {
-    this.loadPipelines();
   }
 
   public onDeleteImage() {
     this.deleteImage.emit(this.image.id);
-  }
-
-  private async loadPipelines(){
-    this.pipelinesService.getPipelines().subscribe((res)=>{
-      this.pipelines= res.pipelines;
-    });
   }
 
   public analyseImage(pipelines : string[]) {
@@ -50,7 +41,7 @@ export class ImageCardComponent implements OnInit {
       event: ev,
       translucent: true,
       componentProps: {
-        availableItems: this.pipelines.map(a => a.name),
+        availableItems: this.pipelineService.pipelines.map(a => a.name),
         title: "Choose pipeline"
       }
     });
