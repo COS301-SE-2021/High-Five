@@ -10,6 +10,7 @@ object Endpoints {
 
     object IMAGE {
         const val GET_ALL_IMAGES = "media/getAllImages"
+        const val STORE_IMAGE = "media/storeImage"
     }
 
     object AUTH {

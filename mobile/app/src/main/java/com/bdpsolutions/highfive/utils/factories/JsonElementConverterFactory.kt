@@ -25,6 +25,7 @@ inline fun <reified T> jsonElementConverterFactory (element: JsonElement?) :T? {
             Int::class -> element.asInt as T
             Uri::class -> Uri.parse(element.asString) as T
             JsonArray::class -> element.asJsonArray as T
+            Boolean::class -> element.asBoolean as T
             else -> null
         }
     }

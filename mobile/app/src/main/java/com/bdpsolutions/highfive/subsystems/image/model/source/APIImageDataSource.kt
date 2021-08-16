@@ -1,5 +1,6 @@
 package com.bdpsolutions.highfive.subsystems.image.model.source
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bdpsolutions.highfive.constants.Endpoints
@@ -8,8 +9,14 @@ import com.bdpsolutions.highfive.subsystems.image.model.dataclass.*
 import com.bdpsolutions.highfive.subsystems.image.viewmodel.ImageResult
 import com.bdpsolutions.highfive.utils.*
 import com.google.gson.GsonBuilder
+import okhttp3.MediaType
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import okhttp3.MultipartBody
+
+import okhttp3.RequestBody
+import java.io.File
+
 
 class APIImageDataSource private constructor(): ImageDataSource {
 
@@ -51,6 +58,54 @@ class APIImageDataSource private constructor(): ImageDataSource {
 
                 override fun onFailure(call: Call<ImageList>, t: Throwable) {
                     Log.e("TOKEN", "Failed to fetch image data: ${t.message}")
+                }
+            })
+        }
+    }
+
+    override fun loadImage(image: File) {
+        val requestFile: RequestBody =
+            RequestBody.create(MediaType.parse("multipart/form-data"), image)
+
+        val body = MultipartBody.Part.createFormData("file", image.name, requestFile)
+
+        val gson = GsonBuilder()
+            .registerTypeHierarchyAdapter(
+                ImageUploadResult::class.java,
+                RetrofitDeserializers.ImageUploadResultDeserializer
+            ).create()
+
+        // create Retrofit object and fetch data
+        val retrofit = Retrofit.Builder()
+            .baseUrl(Endpoints.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+
+        val imageSource = retrofit.create(ImageInfoEndpoint::class.java)
+
+        ConcurrencyExecutor.execute {
+            val db = DatabaseHandler.getDatabase(null).userDao()
+            val bearer = db.getUser()?.authToken
+            val call = imageSource.storeImage(
+                authHeader = "Bearer $bearer",
+                file = body
+            )
+
+            call.enqueue(object : Callback<ImageUploadResult> {
+                override fun onResponse(
+                    call: Call<ImageUploadResult>,
+                    response: Response<ImageUploadResult>
+                ) {
+
+                    if (response.isSuccessful) {
+                        Log.d("Image upload", "Success")
+                    } else {
+                        Log.e("Image upload", "Error: ${response.message()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<ImageUploadResult>, t: Throwable) {
+                    Log.e("Image upload", "Failed to fetch image data: ${t.message}")
                 }
             })
         }

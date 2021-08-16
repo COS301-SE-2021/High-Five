@@ -3,6 +3,7 @@ package com.bdpsolutions.highfive.utils
 import android.net.Uri
 import com.bdpsolutions.highfive.subsystems.image.model.dataclass.ImageInfo
 import com.bdpsolutions.highfive.subsystems.image.model.dataclass.ImageList
+import com.bdpsolutions.highfive.subsystems.image.model.dataclass.ImageUploadResult
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenResponse
 import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
 import com.bdpsolutions.highfive.utils.factories.jsonElementConverterFactory
@@ -75,5 +76,19 @@ object RetrofitDeserializers {
                 url = json.getOrNull<Uri>("url")
             )
         }
+    }
+
+    object ImageUploadResultDeserializer : JsonDeserializer<ImageUploadResult> {
+        override fun deserialize(
+            json: JsonElement,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): ImageUploadResult {
+            return ImageUploadResult(
+                success = json.getOrNull<Boolean>("success"),
+                imageId = json.getOrNull<String>("imageId")
+            )
+        }
+
     }
 }
