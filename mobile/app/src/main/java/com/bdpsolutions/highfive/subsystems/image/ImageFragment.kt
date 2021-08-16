@@ -78,6 +78,7 @@ class ImageFragment : Fragment() {
                         }
                         adapter.setData(itemViews.toTypedArray())
                         adapter.notifyDataSetChanged()
+                        binding?.progressBar2?.visibility = View.INVISIBLE
                     }
                     is Result.Error -> {
                         Toast.makeText(context, "Unable to fetch data", Toast.LENGTH_LONG).show()
@@ -124,7 +125,7 @@ class ImageFragment : Fragment() {
             }
         }
 
-        viewModel.fetchVideoData()
+        viewModel.fetchImageData()
 
         return binding?.root
     }
@@ -144,4 +145,9 @@ class ImageFragment : Fragment() {
         )
     }
 
+    fun refresh() {
+        binding?.progressBar2?.visibility = View.VISIBLE
+        adapter.clearData()
+        viewModel.fetchImageData()
+    }
 }

@@ -23,4 +23,8 @@ abstract class ImageRecyclerViewAdapter : RecyclerView.Adapter<ImageRecyclerView
     fun setData(value: Array<ImageItemView>) {
         dataSet = value
     }
+
+    fun clearData() {
+        dataSet = null
+    }
 }

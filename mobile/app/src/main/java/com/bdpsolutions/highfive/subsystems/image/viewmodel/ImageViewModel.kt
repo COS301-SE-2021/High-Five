@@ -1,6 +1,5 @@
 package com.bdpsolutions.highfive.subsystems.image.viewmodel
 
-import android.R.attr
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,26 +9,21 @@ import android.provider.MediaStore
 
 import android.graphics.Bitmap
 
-import android.R.attr.data
-
 import android.app.Activity
 import android.content.Intent
 import android.database.Cursor
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
 import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 import android.graphics.Bitmap.CompressFormat
+import android.graphics.ImageFormat
+import com.bdpsolutions.highfive.subsystems.image.ImageFragment
 
-import android.R.attr.bitmap
 import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
 import java.io.*
 
@@ -40,7 +34,7 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
 
     private var cacheValidUntil: Int = 0
 
-    fun fetchVideoData() {
+    fun fetchImageData() {
         repo.fetchImages(_imageResult)
     }
 
@@ -48,7 +42,7 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
     private var cameraResultLauncher: ActivityResultLauncher<Intent>? = null
     private var permissionResultLauncher: ActivityResultLauncher<String>? = null
 
-    fun registerFetchFromGallery(activity: Fragment) {
+    fun registerFetchFromGallery(activity: ImageFragment) {
         galleryResultLauncher = activity.registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result:ActivityResult ->
@@ -62,13 +56,14 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
                         val path = cursor.getString(idx)
                         repo.storeImage(File(path))
                         cursor.close()
+                        activity.refresh()
                     }
                 }
             }
         }
     }
 
-    fun registerFetchFromCamera(activity: Fragment) {
+    fun registerFetchFromCamera(activity: ImageFragment) {
         cameraResultLauncher = activity.registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result:ActivityResult ->
@@ -90,8 +85,9 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
                     fos.flush()
                     fos.close()
 
-
                     repo.storeImage(outputFile)
+
+                    activity.refresh()
                 }
             }
         }
