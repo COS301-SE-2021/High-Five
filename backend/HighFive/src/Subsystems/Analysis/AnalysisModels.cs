@@ -5,9 +5,9 @@ namespace src.Subsystems.Analysis
 {
     public class AnalysisModels: IAnalysisModels
     {
-        private readonly ITool _animalRecognition;
-        private readonly ITool _vehicleRecognition;
-        private readonly ITool _personRecognition;
+        private readonly Tool _animalRecognition;
+        private readonly Tool _vehicleRecognition;
+        private readonly Tool _personRecognition;
         
         public AnalysisModels()
         {
@@ -16,7 +16,7 @@ namespace src.Subsystems.Analysis
             _personRecognition = new PersonRecognition();
         }
 
-        public ITool GetTool(string toolName)
+        public Tool GetTool(string toolName)
         {
             switch (toolName)
             {

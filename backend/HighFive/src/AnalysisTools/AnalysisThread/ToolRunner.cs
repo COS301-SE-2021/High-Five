@@ -49,7 +49,7 @@ namespace src.AnalysisTools.AnalysisThread
                 //Draw Boxes
                 var image = DrawBoxes(frame, outputs);
                 byte[] outputFrame;
-                using (MemoryStream ms = new MemoryStream())
+                using (var ms = new MemoryStream())
                 {
                     image.Save(ms, _frameFormat);
                     outputFrame =  ms.ToArray();

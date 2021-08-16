@@ -15,7 +15,7 @@ using Image = System.Drawing.Image;
 
 namespace src.AnalysisTools.ConcreteTools
 {
-    public class AnimalRecognition : ITool
+    public class AnimalRecognition : Tool
     {
         private const string ModelName = "FasterRCNN-10.onnx";
         private static readonly string ModelPath = Directory.GetCurrentDirectory() + "\\Models\\" + ModelName;
@@ -42,8 +42,9 @@ namespace src.AnalysisTools.ConcreteTools
             //Load object recognition model and get ready for analysis
             _model = new InferenceSession(ModelPath);
             _modelInputLayerName = _model.InputMetadata.Keys.Single();
+            SeparateOutput = false;
         }
-        public AnalysisOutput AnalyseFrame(byte[] frame)
+        public override AnalysisOutput AnalyseFrame(byte[] frame)
         {
             //Convert from input type frame to 3D array
             Image originalImage;
