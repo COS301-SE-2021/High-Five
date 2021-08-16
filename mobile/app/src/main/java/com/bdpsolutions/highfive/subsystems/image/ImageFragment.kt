@@ -5,9 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.databinding.ImageFragmentBinding
 import com.bdpsolutions.highfive.subsystems.image.adapter.ImageRecyclerViewAdapter
 import com.bdpsolutions.highfive.subsystems.image.view.ImageItemView
@@ -21,8 +24,14 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ImageFragment : Fragment() {
 
+    private val rotateOpenAnim: Animation by lazy { AnimationUtils.loadAnimation(this.context, R.anim.rotate_open_anim) }
+    private val rotateCloseAnim: Animation by lazy { AnimationUtils.loadAnimation(this.context, R.anim.rotate_close_anim) }
+    private val fromBottomAnim: Animation by lazy { AnimationUtils.loadAnimation(this.context, R.anim.from_bottom_anim) }
+    private val fromTopAnim: Animation by lazy { AnimationUtils.loadAnimation(this.context, R.anim.from_top_anim) }
+
     private lateinit var viewModel: ImageViewModel
     private var binding: ImageFragmentBinding? = null
+    private var clicked = false
 
     @Inject
     lateinit var adapter: ImageRecyclerViewAdapter
@@ -70,7 +79,20 @@ class ImageFragment : Fragment() {
         })
 
         binding?.uploadImageBtn?.setOnClickListener {
-
+            if (!clicked) {
+                binding?.addFromCamera?.visibility = View.VISIBLE
+                binding?.addFromCamera?.startAnimation(fromBottomAnim)
+                binding?.addFromGallery?.visibility = View.VISIBLE
+                binding?.addFromGallery?.startAnimation(fromBottomAnim)
+                binding?.uploadImageBtn?.startAnimation(rotateOpenAnim)
+            } else {
+                binding?.addFromCamera?.visibility = View.INVISIBLE
+                binding?.addFromCamera?.startAnimation(fromTopAnim)
+                binding?.addFromGallery?.visibility = View.INVISIBLE
+                binding?.addFromGallery?.startAnimation(fromTopAnim)
+                binding?.uploadImageBtn?.startAnimation(rotateCloseAnim)
+            }
+            clicked = !clicked
         }
 
         viewModel.fetchVideoData()

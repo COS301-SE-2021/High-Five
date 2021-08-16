@@ -53,10 +53,12 @@
             android:layout_marginBottom="16dp"
             android:clickable="true"
             android:focusable="true"
+            android:visibility="invisible"
             android:src="@drawable/ic_camera"
-            app:tint="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/upload_image_btn"
-            app:layout_constraintEnd_toEndOf="@+id/upload_image_btn" />
+            app:layout_constraintEnd_toEndOf="@+id/upload_image_btn"
+            app:tint="@color/white"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_from_gallery"
@@ -65,9 +67,11 @@
             android:layout_marginBottom="16dp"
             android:clickable="true"
             android:focusable="true"
+            android:visibility="invisible"
             android:src="@drawable/ic_image"
-            app:tint="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/add_from_camera"
-            app:layout_constraintEnd_toEndOf="@+id/add_from_camera" />
+            app:layout_constraintEnd_toEndOf="@+id/add_from_camera"
+            app:tint="@color/white"
+            tools:ignore="SpeakableTextPresentCheck" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
