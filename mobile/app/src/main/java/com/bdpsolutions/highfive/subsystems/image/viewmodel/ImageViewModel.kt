@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import android.graphics.Bitmap
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
@@ -21,16 +22,14 @@ import androidx.activity.result.contract.ActivityResultContracts.RequestPermissi
 import java.text.SimpleDateFormat
 import java.util.*
 import android.graphics.Bitmap.CompressFormat
-import android.graphics.ImageFormat
+import android.graphics.ImageDecoder
 import android.os.Build
 import com.bdpsolutions.highfive.subsystems.image.ImageFragment
 
 import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import com.bdpsolutions.highfive.utils.ContextHolder
+import com.bdpsolutions.highfive.utils.ImageURL
 import java.io.*
-import java.time.Instant
 
 
 class ImageViewModel private constructor(private val repo: ImageRepository): ViewModel() {
@@ -75,14 +74,24 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
         ) { result:ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 ConcurrencyExecutor.execute {
-                    val selectedImage: Bitmap = result.data?.extras?.get("data") as Bitmap
+                    val selectedImage: Bitmap = if(Build.VERSION.SDK_INT < 28) {
+                        MediaStore.Images.Media.getBitmap(
+                            ContextHolder.appContext!!.contentResolver,
+                            ImageURL.url
+                        )
+                    } else {
+                        val source = ImageDecoder.createSource(ContextHolder.appContext!!.contentResolver, ImageURL.url!!)
+                        ImageDecoder.decodeBitmap(source)
+                    }
                     val outputDir: File = activity.requireContext().cacheDir
                     val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
                     val date = Calendar.getInstance().time
 
+                    Log.d("Img dims", "W:${selectedImage.width} H:${selectedImage.height}")
+
 
                     val bos = ByteArrayOutputStream()
-                    selectedImage.compress(CompressFormat.JPEG, 80 /*ignored for PNG*/, bos)
+                    selectedImage.compress(CompressFormat.JPEG, 100 /*ignored for PNG*/, bos)
                     val bitmapdata: ByteArray = bos.toByteArray()
 
                     val formatDate = formatter.format(date)

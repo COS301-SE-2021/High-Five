@@ -99,6 +99,7 @@ class APIImageDataSource private constructor(): ImageDataSource {
 
                     if (response.isSuccessful) {
                         Log.d("Image upload", "Success")
+                        callback?.let { it() }
                     } else {
                         Log.e("Image upload", "Error: ${response.message()}")
                     }
@@ -108,8 +109,6 @@ class APIImageDataSource private constructor(): ImageDataSource {
                     Log.e("Image upload", "Failed to fetch image data: ${t.message}")
                 }
             })
-
-            callback?.let { it() }
         }
     }
 

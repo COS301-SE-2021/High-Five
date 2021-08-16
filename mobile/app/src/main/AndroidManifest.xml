@@ -51,6 +51,17 @@
             android:theme="@style/Theme.HighFive.NoActionBar">
         </activity>
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
+
         <meta-data
             android:name="client_id"
             android:value="${CLIENT_ID}" />
@@ -70,5 +81,6 @@
             android:name="https_required"
             android:value="${HTTPS_REQUIRED}"/>
     </application>
+
 
 </manifest>
