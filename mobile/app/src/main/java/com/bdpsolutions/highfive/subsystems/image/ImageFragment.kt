@@ -1,6 +1,9 @@
 package com.bdpsolutions.highfive.subsystems.image
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +11,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bdpsolutions.highfive.R
@@ -48,6 +52,8 @@ class ImageFragment : Fragment() {
             .get(ImageViewModel::class.java)
 
         binding?.recyclerView?.adapter = adapter
+
+        viewModel.registerFetchFromGallery(this)
 
         viewModel.imageResult.observe(viewLifecycleOwner, Observer {
             val imageResult = it ?: return@Observer
@@ -95,8 +101,16 @@ class ImageFragment : Fragment() {
             clicked = !clicked
         }
 
+        binding?.addFromGallery?.setOnClickListener {
+            viewModel.launchGalleryChooser(Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI))
+        }
+
         viewModel.fetchVideoData()
 
         return binding?.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
     }
 }
