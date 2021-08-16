@@ -9,8 +9,8 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { NewPipeline } from './newPipeline';
+import { AnalyzedImageMetaData } from './analyzedImageMetaData';
 
-export interface CreatePipelineRequest { 
-    pipeline?: NewPipeline;
+export interface GetAnalyzedImagesResponse { 
+    images?: Array<AnalyzedImageMetaData>;
 }

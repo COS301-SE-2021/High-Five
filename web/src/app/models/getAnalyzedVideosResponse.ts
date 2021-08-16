@@ -9,8 +9,8 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { NewPipeline } from './newPipeline';
+import { AnalyzedVideoMetaData } from './analyzedVideoMetaData';
 
-export interface CreatePipelineRequest { 
-    pipeline?: NewPipeline;
+export interface GetAnalyzedVideosResponse { 
+    videos?: Array<AnalyzedVideoMetaData>;
 }

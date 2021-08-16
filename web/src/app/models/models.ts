@@ -1,4 +1,8 @@
 export * from './addToolsRequest';
+export * from './analyzeMediaRequest';
+export * from './analyzeMediaResponse';
+export * from './analyzedImageMetaData';
+export * from './analyzedVideoMetaData';
 export * from './createPipelineRequest';
 export * from './createPipelineResponse';
 export * from './deleteImageRequest';
@@ -8,6 +12,8 @@ export * from './echoRequest';
 export * from './emptyObject';
 export * from './getAllImagesResponse';
 export * from './getAllVideosResponse';
+export * from './getAnalyzedImagesResponse';
+export * from './getAnalyzedVideosResponse';
 export * from './getPipelineIdsResponse';
 export * from './getPipelineRequest';
 export * from './getPipelinesResponse';
