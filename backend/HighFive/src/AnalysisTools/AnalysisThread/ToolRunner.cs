@@ -11,7 +11,7 @@ using src.Subsystems.Analysis;
 
 namespace src.AnalysisTools.AnalysisThread
 {
-    public class ToolRunner
+    public class ToolRunner:IToolRunner
     {
         private BlockingCollection<byte[]> _frames = new();
         private readonly List<Tool> _tools;
