@@ -21,13 +21,19 @@
             android:layout_height="100dp"
             android:src="@mipmap/logo1_2round" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:id="@+id/image_id"/>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/image_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
@@ -36,7 +42,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/image_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""

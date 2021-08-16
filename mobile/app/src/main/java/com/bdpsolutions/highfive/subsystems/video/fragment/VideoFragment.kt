@@ -22,7 +22,7 @@ class VideoFragment: Fragment() {
     private lateinit var videoViewModel: VideoViewModel
 
     @Inject
-    lateinit var service: VideoFragmentRecyclerViewAdapter
+    lateinit var adapter: VideoFragmentRecyclerViewAdapter
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
@@ -38,7 +38,6 @@ class VideoFragment: Fragment() {
         videoViewModel = ViewModelProvider(this, factory)
             .get(VideoViewModel::class.java)
 
-        val adapter = service
         binding?.videoHolder?.adapter = adapter
 
         videoViewModel.videoResult.observe(viewLifecycleOwner, Observer {
