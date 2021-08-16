@@ -4,7 +4,6 @@ import android.util.Log
 import com.bdpsolutions.highfive.constants.Endpoints
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenEndpoint
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenResponse
-import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
 import com.bdpsolutions.highfive.utils.*
 import com.google.gson.GsonBuilder
 import retrofit2.Call
@@ -17,7 +16,7 @@ class APIRefreshToken : LoginDataSource {
     override fun refreshToken() {
         val gson = GsonBuilder()
             .registerTypeHierarchyAdapter(
-                VideoPreview::class.java,
+                AccessTokenResponse::class.java,
                 RetrofitDeserializers.AccessTokenDeserializer
             ).create()
 

@@ -1,5 +1,7 @@
 package com.bdpsolutions.highfive.utils
 
+import android.net.Uri
+import com.bdpsolutions.highfive.subsystems.image.model.dataclass.ImageInfo
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenResponse
 import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
 import com.bdpsolutions.highfive.utils.factories.jsonElementConverterFactory
@@ -54,6 +56,22 @@ object RetrofitDeserializers {
                 refreshExpires = json.getOrNull<Int>("refresh_token_expires_in"),
                 idToken = json.getOrNull<String>("id_token"),
                 refreshToken = json.getOrNull<String>("refresh_token")
+            )
+        }
+    }
+
+    object ImageInfoDeserializer : JsonDeserializer<ImageInfo> {
+        override fun deserialize(
+            json: JsonElement,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): ImageInfo {
+
+            return ImageInfo(
+                id = json.getOrNull<String>("id"),
+                name = json.getOrNull<String>("name"),
+                dateStored = json.getOrNull<Date>("dateStored"),
+                url = json.getOrNull<Uri>("url")
             )
         }
     }
