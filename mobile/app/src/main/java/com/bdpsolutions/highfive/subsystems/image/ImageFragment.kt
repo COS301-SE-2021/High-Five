@@ -168,9 +168,14 @@ class ImageFragment : Fragment() {
         viewModel.launchCamera(intent)
     }
 
-    fun refresh() {
+    fun showLoader() {
         this.requireActivity().runOnUiThread {
             binding?.progressBar2?.visibility = View.VISIBLE
+        }
+    }
+
+    fun refresh() {
+        this.requireActivity().runOnUiThread {
             adapter.clearData()
             viewModel.fetchImageData()
         }

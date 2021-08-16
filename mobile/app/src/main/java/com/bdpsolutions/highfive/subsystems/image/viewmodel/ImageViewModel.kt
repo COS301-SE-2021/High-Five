@@ -51,6 +51,7 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
             ActivityResultContracts.StartActivityForResult()
         ) { result:ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
+                activity.showLoader()
                 val selectedImage: Uri = result.data?.data!!
                 if (activity.requireActivity().contentResolver != null) {
                     val cursor: Cursor? = activity.requireActivity().contentResolver.query(selectedImage, null, null, null, null)
@@ -73,6 +74,7 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
             ActivityResultContracts.StartActivityForResult()
         ) { result:ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
+                activity.showLoader()
                 ConcurrencyExecutor.execute {
                     val selectedImage: Bitmap = if(Build.VERSION.SDK_INT < 28) {
                         MediaStore.Images.Media.getBitmap(
@@ -91,7 +93,7 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
 
 
                     val bos = ByteArrayOutputStream()
-                    selectedImage.compress(CompressFormat.JPEG, 100 /*ignored for PNG*/, bos)
+                    selectedImage.compress(CompressFormat.JPEG, 80 /*ignored for PNG*/, bos)
                     val bitmapdata: ByteArray = bos.toByteArray()
 
                     val formatDate = formatter.format(date)
