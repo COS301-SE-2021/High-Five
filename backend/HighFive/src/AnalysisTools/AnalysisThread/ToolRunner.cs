@@ -14,13 +14,15 @@ namespace src.AnalysisTools.AnalysisThread
     public class ToolRunner:IToolRunner
     {
         private BlockingCollection<byte[]> _frames = new();
-        private readonly List<Tool> _tools;
+        private readonly IAnalysisModels _tools;
+        private Pipeline _pipeline;
         private BlockingCollection<byte[]> _outputQueue;
         private readonly ImageFormat _frameFormat = ImageFormat.Jpeg;//Format of output is changed here
  
-        public ToolRunner(List<Tool> tools, BlockingCollection<byte[]> outputQueue)
+        public ToolRunner(IAnalysisModels tools, BlockingCollection<byte[]> outputQueue, Pipeline pipeline)
         {
             _outputQueue = outputQueue;
+            _pipeline = pipeline;
             _tools = tools;
             var thread = new Thread(OnStart);
             thread.IsBackground = true;
@@ -42,7 +44,7 @@ namespace src.AnalysisTools.AnalysisThread
                 if (frame.Length == 1) break;
                 
                 //Analyse images
-                var outputs = _tools.Select(tool => tool.AnalyseFrame(frame)).ToList();
+                var outputs = _pipeline.Tools.Select(tool => _tools.GetTool(tool).AnalyseFrame(frame)).ToList();
                 
                 //Draw Boxes
                 var image = DrawBoxes(frame, outputs);
