@@ -2,14 +2,15 @@
 </ion-header>
 
 <ion-content>
-
-
   <div [ngSwitch]="segment">
     <div *ngSwitchCase="'unanalyzed'">
       <ion-grid>
         <ion-row>
           <ion-col *ngFor="let image of imagesService.images$ | async; trackBy: imageTrackFn" size-xl="3">
             <app-image-card [image]="image"></app-image-card>
+          </ion-col>
+          <ion-col *ngFor="let video of videosService.videos$ | async; trackBy: videoTrackFn" size-xl="3">
+            <app-videostore-card [video]="video"></app-videostore-card>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -19,6 +20,9 @@
         <ion-row>
           <ion-col *ngFor="let analyzedImage of analyzedImagesService.analyzedImages$ | async; trackBy: analyzedImageTrackFn" size-xl="3">
             <app-analyzed-image-card [analyzedImage]="analyzedImage"></app-analyzed-image-card>
+          </ion-col>
+          <ion-col *ngFor="let analyzedVideo of analyzedVideosService.analyzedVideos$ | async; trackBy: analyzedVideoTrackFn" size-xl="3">
+           <app-analyzed-videostore-card [analyzedVideo]="analyzedVideo"></app-analyzed-videostore-card>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -31,6 +35,12 @@
           </ion-col>
           <ion-col *ngFor="let analyzedImage of analyzedImagesService.analyzedImages$ | async; trackBy: analyzedImageTrackFn" size-xl="3">
             <app-analyzed-image-card [analyzedImage]="analyzedImage"></app-analyzed-image-card>
+          </ion-col>
+          <ion-col *ngFor="let video of videosService.videos$ | async; trackBy: videoTrackFn" size-xl="3">
+            <app-videostore-card [video]="video"></app-videostore-card>
+          </ion-col>
+          <ion-col *ngFor="let analyzedVideo of analyzedVideosService.analyzedVideos$ | async; trackBy: analyzedVideoTrackFn" size-xl="3">
+            <app-analyzed-videostore-card [analyzedVideo]="analyzedVideo"></app-analyzed-videostore-card>
           </ion-col>
         </ion-row>
       </ion-grid>

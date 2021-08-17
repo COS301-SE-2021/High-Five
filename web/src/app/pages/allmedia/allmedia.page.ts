@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {VideosService} from "../../services/videos/videos.service";
 import {ImagesService} from "../../services/images/images.service";
 import {AnalyzedVideosService} from "../../services/analyzed-videos/analyzed-videos.service";
@@ -12,12 +12,15 @@ import {AnalyzedImagesService} from "../../services/analyzed-images/analyzed-ima
 export class AllmediaPage implements OnInit {
 
   analyzedImageTrackFn = (ai, analyzed_image) => analyzed_image.id;
-  imageTrackFn= (i, image) => image.id;
+  imageTrackFn = (i, image) => image.id;
   videoTrackFn = (v, video) => video.id;
   analyzedVideoTrackFn = (av, analyzed_video) => analyzed_video.id;
-  segment : string;
-  constructor(public videosService : VideosService, public imagesService: ImagesService,
-              public analyzedVideosService : AnalyzedVideosService, public analyzedImagesService : AnalyzedImagesService) { }
+  segment: string;
+
+  constructor(public videosService: VideosService, public imagesService: ImagesService,
+              public analyzedVideosService: AnalyzedVideosService, public analyzedImagesService: AnalyzedImagesService) {
+    this.segment = 'all'
+  }
 
   ngOnInit() {
   }
