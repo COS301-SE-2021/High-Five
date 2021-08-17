@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FFMediaToolkit.Decoding;
+using FFMediaToolkit.Graphics;
 using Xabe.FFmpeg;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace src.AnalysisTools.VideoDecoder
 {
@@ -21,14 +24,14 @@ namespace src.AnalysisTools.VideoDecoder
         }
         
         [SuppressMessage("ReSharper.DPA", "DPA0003: Excessive memory allocations in LOH", MessageId = "type: System.Byte[]")]
-        public List<byte[]> GetFramesFromVideo(Stream videoStream)
+        public List<Bitmap> GetFramesFromVideo(Stream videoStream)
         {
-            var frameList = new List<byte[]>();
+            var frameList = new List<Bitmap>();
             
             var file = MediaFile.Open(videoStream);
             while (file.Video.TryGetNextFrame( out var imageData))
             {
-                frameList.Add(imageData.Data.ToArray());
+                frameList.Add(ToBitmap(imageData));
             }
 
             return frameList;
@@ -43,6 +46,14 @@ namespace src.AnalysisTools.VideoDecoder
                 .AddStream(videoStream)
                 .ExtractNthFrame(1, s => thumbnailPath)
                 .Start();
+        }
+        
+        private static unsafe Bitmap ToBitmap(ImageData bitmap)
+        {
+            fixed(byte* p = bitmap.Data)
+            {
+                return new Bitmap(bitmap.ImageSize.Width, bitmap.ImageSize.Height, bitmap.Stride, PixelFormat.Format24bppRgb, new IntPtr(p));
+            }
         }
     }
 }
