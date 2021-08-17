@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Org.OpenAPITools.Models;
 using src.AnalysisTools.VideoDecoder;
@@ -68,19 +66,19 @@ namespace src.Subsystems.MediaStorage
 
             //create local temp copy of video file and thumbnail
             //var baseDirectory = "d:\\local\\";
-            var baseDirectory = Path.GetTempPath() + "\\";
-            var thumbnailPath = baseDirectory + "thumbnail.jpg";
+            var baseDirectory = Path.GetTempPath();
+            var thumbnailPath = baseDirectory + generatedName +"thumbnail.jpg";
             var videoPath = baseDirectory + video.Name;
             await using var stream = new FileStream(videoPath, FileMode.Create);
             await video.CopyToAsync(stream);
 
             //get video thumbnail and store as separate blob
-            _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);
-            
             if (!File.Exists(thumbnailPath))
             {
-                File.Create(thumbnailPath).Close();
+                File.Delete(thumbnailPath);
             }
+            _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);
+            
             var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", VideoContainerName).Result;
             await thumbnailBlob.UploadFile(thumbnailPath);
 
