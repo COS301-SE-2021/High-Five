@@ -1,5 +1,7 @@
 package com.bdpsolutions.highfive.utils.factories
 
+import android.net.Uri
+import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import java.text.SimpleDateFormat
 import java.util.*
@@ -21,6 +23,9 @@ inline fun <reified T> jsonElementConverterFactory (element: JsonElement?) :T? {
                 format.parse(element.asString) as T
             }
             Int::class -> element.asInt as T
+            Uri::class -> Uri.parse(element.asString) as T
+            JsonArray::class -> element.asJsonArray as T
+            Boolean::class -> element.asBoolean as T
             else -> null
         }
     }

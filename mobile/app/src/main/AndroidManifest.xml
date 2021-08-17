@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:name="com.bdpsolutions.highfive.subsystems.main.HighFiveApplication"
@@ -34,6 +36,7 @@
             android:name="com.bdpsolutions.highfive.subsystems.splash.SplashActivity"
             android:exported="true"
             android:permission=""
+            android:label="@string/app_name"
             android:theme="@style/Theme.HighFive.Splash" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,14 +48,19 @@
             android:name="com.bdpsolutions.highfive.subsystems.main.MainActivity"
             android:exported="true"
             android:permission=""
-            android:label="@string/app_name"
             android:theme="@style/Theme.HighFive.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
 
         <meta-data
             android:name="client_id"
@@ -73,5 +81,6 @@
             android:name="https_required"
             android:value="${HTTPS_REQUIRED}"/>
     </application>
+
 
 </manifest>

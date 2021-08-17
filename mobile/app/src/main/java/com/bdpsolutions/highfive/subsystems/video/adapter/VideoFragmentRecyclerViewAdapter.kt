@@ -1,6 +1,7 @@
 package com.bdpsolutions.highfive.subsystems.video.adapter
 
 import androidx.recyclerview.widget.RecyclerView
+import com.bdpsolutions.highfive.databinding.FragmentVideoItemBinding
 import com.bdpsolutions.highfive.subsystems.video.view.VideoItemView
 
 /**
@@ -9,8 +10,16 @@ import com.bdpsolutions.highfive.subsystems.video.view.VideoItemView
  * This provides flexibility to choose implementations using Dependency Injection.
  */
 abstract class VideoFragmentRecyclerViewAdapter:
-    RecyclerView.Adapter<VideoFragmentRecyclerViewAdapterImpl.ViewHolder>() {
-        protected var dataSet: Array<VideoItemView>? = null
+    RecyclerView.Adapter<VideoFragmentRecyclerViewAdapter.ViewHolder>() {
+    protected var dataSet: Array<VideoItemView>? = null
+
+    /**
+     * Provide a reference to the type of views that you are using
+     * (custom ViewHolder).
+     */
+    class ViewHolder(view: FragmentVideoItemBinding) : RecyclerView.ViewHolder(view.root) {
+        val videoItem: FragmentVideoItemBinding = view
+    }
 
     /**
      * Sets the data values for the adapter to put on the UI
@@ -18,6 +27,10 @@ abstract class VideoFragmentRecyclerViewAdapter:
      * @param value A list of video data
      */
     fun setData(value: Array<VideoItemView>) {
-            dataSet = value
-        }
+        dataSet = value
     }
+
+    fun clearData() {
+        dataSet = null
+    }
+}

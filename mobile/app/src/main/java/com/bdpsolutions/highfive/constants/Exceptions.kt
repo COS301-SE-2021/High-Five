@@ -9,4 +9,8 @@ object Exceptions {
     object VIEWMODEL_PROVIDER_FACTORY {
         const val UNKNOWN_VIEWMODEL = "Unknown ViewModel class"
     }
+
+    object MEDIA_ADAPTER_FACTORY {
+        const val UNKNOWN_ADAPTER = "Unknown MediaAdapter class!"
+    }
 }

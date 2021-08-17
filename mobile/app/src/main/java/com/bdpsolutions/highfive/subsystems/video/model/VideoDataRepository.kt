@@ -1,8 +1,9 @@
 package com.bdpsolutions.highfive.subsystems.video.model
 
-import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
+import androidx.lifecycle.MutableLiveData
 import com.bdpsolutions.highfive.subsystems.video.model.source.VideoDataSource
-import com.bdpsolutions.highfive.utils.Result
+import com.bdpsolutions.highfive.subsystems.video.viewmodel.VideoResult
+import java.io.File
 
 /**
  * @author Kyle Barry (u19232510@tuks.co.za)
@@ -19,26 +20,26 @@ import com.bdpsolutions.highfive.utils.Result
  *
  * To remain consistent, database access will use the same behaviour.
  *
- * @param apiVideoSource API endpoints to access data
- * @param dbVideoSource Database endpoints to access data
+ * @param source API endpoints to access data
  */
-class VideoDataRepository private constructor(private val apiVideoSource: VideoDataSource,
-                          private val dbVideoSource: VideoDataSource
-) {
+class VideoDataRepository private constructor(private val source: VideoDataSource) {
 
     /**
      * Fetches new video preview data from the backend service.
      *
      * @param callback A callback function that takes a list of video preview data as an argument.
      */
-    fun refreshData(callback: (Result<List<VideoPreview>>) -> Unit) {
-        apiVideoSource.getVideoPreviewData(callback)
+    fun fetchVideoData(videoObservable: MutableLiveData<VideoResult>) {
+        source.fetchAllVideos(videoObservable)
+    }
+
+    fun storeVideo(image: File, callback: (() -> Unit)? = null) {
+        source.loadVideo(image, callback)
     }
 
     companion object {
-        fun create(apiVideoSource: VideoDataSource,
-                   dbVideoSource: VideoDataSource): VideoDataRepository {
-            return VideoDataRepository(apiVideoSource, dbVideoSource)
+        fun create(apiVideoSource: VideoDataSource): VideoDataRepository {
+            return VideoDataRepository(apiVideoSource)
         }
     }
 }

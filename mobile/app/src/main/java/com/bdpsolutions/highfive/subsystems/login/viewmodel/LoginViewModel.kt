@@ -18,7 +18,6 @@ import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenRes
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenEndpoint
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AuthToken
 import com.bdpsolutions.highfive.subsystems.login.view.LoggedInUserView
-import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
 import com.bdpsolutions.highfive.utils.*
 import com.google.gson.GsonBuilder
 import net.openid.appauth.AuthorizationException
@@ -55,7 +54,7 @@ class LoginViewModel private constructor(val authenticationRepository: Authentic
                         // create a deserializer to create the VideoPreview objects
                         val gson = GsonBuilder()
                             .registerTypeHierarchyAdapter(
-                                VideoPreview::class.java,
+                                AccessTokenResponse::class.java,
                                 RetrofitDeserializers.AccessTokenDeserializer
                             ).create()
 

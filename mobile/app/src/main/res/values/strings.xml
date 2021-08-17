@@ -14,7 +14,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="analysis_fragment">Analysis</string>
-    <string name="video_fragment">Video</string>
+    <string name="media_fragment">Images/Video</string>
     <string name="title_activity_asdf">Asdf</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -30,4 +30,8 @@
     <string name="title_activity_hoohah">Hoohah</string>
     <string name="open">0</string>
     <string name="close">1</string>
+    <string name="images">Images</string>
+    <string name="video">Video</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
