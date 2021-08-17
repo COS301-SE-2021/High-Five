@@ -4,6 +4,8 @@ import {PopoverController} from "@ionic/angular";
 import {AddItemComponent} from "../add-item/add-item.component";
 import {PipelineService} from "../../services/pipeline/pipeline.service";
 import {ImagesService} from "../../services/images/images.service";
+import {Pipeline} from "../../models/pipeline";
+import {AnalyzedImagesService} from "../../services/analyzed-images/analyzed-images.service";
 
 @Component({
   selector: 'app-image-card',
@@ -13,8 +15,9 @@ import {ImagesService} from "../../services/images/images.service";
 export class ImageCardComponent implements OnInit {
   @Input() image: ImageMetaData;
   public alt = '../../../assists/images/defaultprofile.svg';
-  constructor(private popoverController : PopoverController, private pipelineService : PipelineService,
-              private imagesService : ImagesService) {
+
+  constructor(private popoverController: PopoverController, private pipelineService: PipelineService,
+              private imagesService: ImagesService, private analyzedImagesService : AnalyzedImagesService) {
     // No constructor body needed as properties are retrieved from angular input
   }
 
@@ -25,15 +28,23 @@ export class ImageCardComponent implements OnInit {
     this.imagesService.removeImage(this.image.id);
   }
 
-  public analyseImage(pipelines : string[]) {
-    // Send requests to analyse image with passed in pipeline here.
+  public analyseImage(pipelines: string[]) {
+    const pipelineIds = this.pipelineService.pipelines.filter((pipeline: Pipeline) => {
+      return pipelines.filter((pipelineName: string) => {
+        return pipelineName == pipeline.name;
+      });
+    }).map((el :Pipeline)=>{return  el.id});
+    for(const pipelineId of pipelineIds){
+      this.analyzedImagesService.analyzeImage(this.image.id,pipelineId);
+    }
+    console.log(this.analyzedImagesService.analyzedImages);
   }
 
   public viewAnalysedImage() {
     return; // Todo : show a new tab containing the analysed image
   }
 
-  public async showAnalyseImagePopover(ev : any){
+  public async showAnalyseImagePopover(ev: any) {
     /**
      * A popover which contains all the pipelines that the user can analyse the image with
      */
@@ -49,8 +60,8 @@ export class ImageCardComponent implements OnInit {
     await addToolPopover.present();
     await addToolPopover.onDidDismiss().then(
       data => {
-        if(data.data){
-          if(data.data.items){
+        if (data.data) {
+          if (data.data.items) {
             this.analyseImage(data.data.items);
           }
         }
@@ -59,7 +70,7 @@ export class ImageCardComponent implements OnInit {
   }
 
   async viewImageFullScreen() {
-    const newWindow = window.open(this.image.url,'_system');
+    const newWindow = window.open(this.image.url, '_system');
     newWindow.focus();
   }
 }
