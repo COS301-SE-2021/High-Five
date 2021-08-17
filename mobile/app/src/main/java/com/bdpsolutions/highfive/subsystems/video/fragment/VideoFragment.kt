@@ -61,7 +61,7 @@ class VideoFragment: Fragment() {
                         }
                         adapter.setData(itemViews.toTypedArray())
                         adapter.notifyDataSetChanged()
-                        binding?.progressBar?.visibility = View.INVISIBLE
+                        binding?.videoProgress?.visibility = View.INVISIBLE
                     }
                     is Result.Error -> {
                         Toast.makeText(context, "Unable to fetch data", Toast.LENGTH_LONG).show()

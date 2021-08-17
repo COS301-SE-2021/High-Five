@@ -91,7 +91,7 @@ class ImageFragment : Fragment() {
                         }
                         adapter.setData(itemViews.toTypedArray())
                         adapter.notifyDataSetChanged()
-                        binding?.progressBar2?.visibility = View.INVISIBLE
+                        binding?.imageProgress?.visibility = View.INVISIBLE
                     }
                     is Result.Error -> {
                         Toast.makeText(context, "Unable to fetch data", Toast.LENGTH_LONG).show()
@@ -170,7 +170,7 @@ class ImageFragment : Fragment() {
 
     fun showLoader() {
         this.requireActivity().runOnUiThread {
-            binding?.progressBar2?.visibility = View.VISIBLE
+            binding?.imageProgress?.visibility = View.VISIBLE
         }
     }
 
