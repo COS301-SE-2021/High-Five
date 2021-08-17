@@ -14,6 +14,7 @@ import {VideosService} from "../../services/videos/videos.service";
 import {PipelineService} from "../../services/pipeline/pipeline.service";
 import {AnalyzedVideosService} from "../../services/analyzed-videos/analyzed-videos.service";
 import {AnalyzedImagesService} from "../../services/analyzed-images/analyzed-images.service";
+import {MediaFilterComponent} from "../../components/media-filter/media-filter.component";
 
 @Component({
     selector: 'app-videostore',
@@ -41,6 +42,28 @@ export class VideostorePage implements OnInit {
 
     ngOnInit() {
 
+    }
+
+
+    async displayFilterPopover(ev: any) {
+        const filterPopover = await this.popoverController.create({
+            component: MediaFilterComponent,
+            cssClass: 'media-filter',
+            animated: true,
+            translucent: true,
+            backdropDismiss: true,
+            event: ev,
+        });
+        await filterPopover.present();
+        await filterPopover.onDidDismiss().then(
+            data => {
+                if (data.data != undefined) {
+                    if (data.data.segment != undefined) {
+                        this.segment = data.data.segment;
+                    }
+                }
+            }
+        );
     }
 
 
