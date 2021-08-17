@@ -8,9 +8,6 @@ import { VideostorePageRoutingModule } from './videostore-routing.module';
 
 import { VideostorePage } from './videostore.page';
 import {CustomComponentsModule} from '../../components/components.module';
-import {ImageCardComponent} from '../../components/image-card/image-card.component';
-import {AnalyzedVideostoreCardComponent} from "../../components/analyzed-videostore-card/analyzed-videostore-card.component";
-import {AnalyzedImageCardComponent} from "../../components/analyzed-image-card/analyzed-image-card.component";
 
 @NgModule({
   imports: [
@@ -20,10 +17,6 @@ import {AnalyzedImageCardComponent} from "../../components/analyzed-image-card/a
     VideostorePageRoutingModule,
     CustomComponentsModule
   ],
-  exports: [
-    ImageCardComponent,
-    AnalyzedImageCardComponent
-  ],
-  declarations: [VideostorePage, ImageCardComponent, AnalyzedVideostoreCardComponent, AnalyzedImageCardComponent]
+  declarations: [VideostorePage]
 })
 export class VideostorePageModule {}

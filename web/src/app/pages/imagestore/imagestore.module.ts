@@ -8,6 +8,7 @@ import { ImagestorePageRoutingModule } from './imagestore-routing.module';
 
 import { ImagestorePage } from './imagestore.page';
 import {VideostorePageModule} from "../videostore/videostore.module";
+import {CustomComponentsModule} from "../../components/components.module";
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import {VideostorePageModule} from "../videostore/videostore.module";
     FormsModule,
     IonicModule,
     ImagestorePageRoutingModule,
-    VideostorePageModule
+    VideostorePageModule,
+    CustomComponentsModule
   ],
   declarations: [ImagestorePage]
 })

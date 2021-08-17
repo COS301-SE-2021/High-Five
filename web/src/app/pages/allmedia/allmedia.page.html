@@ -1,13 +1,41 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>allmedia</ion-title>
-  </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
 
-
+  <div [ngSwitch]="segment">
+    <div *ngSwitchCase="'unanalyzed'">
+      <ion-grid>
+        <ion-row>
+          <ion-col *ngFor="let image of imagesService.images$ | async; trackBy: imageTrackFn" size-xl="3">
+            <app-image-card [image]="image"></app-image-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div *ngSwitchCase="'analyzed'">
+      <ion-grid>
+        <ion-row>
+          <ion-col *ngFor="let analyzedImage of analyzedImagesService.analyzedImages$ | async; trackBy: analyzedImageTrackFn" size-xl="3">
+            <app-analyzed-image-card [analyzedImage]="analyzedImage"></app-analyzed-image-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div *ngSwitchCase="'all'">
+      <ion-grid>
+        <ion-row>
+          <ion-col *ngFor="let image of imagesService.images$ | async; trackBy: imageTrackFn" size-xl="3">
+            <app-image-card [image]="image"></app-image-card>
+          </ion-col>
+          <ion-col *ngFor="let analyzedImage of analyzedImagesService.analyzedImages$ | async; trackBy: analyzedImageTrackFn" size-xl="3">
+            <app-analyzed-image-card [analyzedImage]="analyzedImage"></app-analyzed-image-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </div>
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end" style="margin-right: 2%; margin-bottom: 2%">
     <ion-fab-button>
