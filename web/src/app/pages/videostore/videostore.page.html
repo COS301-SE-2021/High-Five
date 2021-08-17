@@ -1,24 +1,9 @@
 <ion-header>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-avatar>
-          <ion-button>
-            Choose media type
-          </ion-button>
-        </ion-avatar>
-      </ion-col>
-      <ion-col>s</ion-col>
-      <ion-col>s</ion-col>
-      <ion-col>s</ion-col>
-      <ion-col>s</ion-col>
-      <ion-col>s</ion-col>
-    </ion-row>
-  </ion-grid>
+
 </ion-header>
 <ion-content>
   <div [ngSwitch]="segment">
-    <div *ngSwitchCase="'videos'">
+    <div *ngSwitchCase="'unanalyzed'">
       <ion-grid>
         <ion-row>
           <ion-col *ngFor="let video of videosService.videos$ | async; trackBy: videoTrackFn" size-xl="3">
@@ -27,11 +12,11 @@
         </ion-row>
       </ion-grid>
     </div>
-    <div *ngSwitchCase="'images'">
+    <div *ngSwitchCase="'analyzed'">
       <ion-grid>
         <ion-row>
-          <ion-col *ngFor="let img of imagesService.images$ | async; trackBy: imagesTrackFn" size-xl="3">
-            <app-image-card  [image]="img"></app-image-card>
+          <ion-col *ngFor="let analyzedVideo of analyzedVideosService.analyzedVideos$ | async; trackBy: analyzedVideoTrackFn" size-xl="3">
+            <app-analyzed-videostore-card [analyzedVideo]="analyzedVideo"></app-analyzed-videostore-card>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -39,17 +24,11 @@
     <div *ngSwitchCase="'all'">
       <ion-grid>
         <ion-row>
-          <ion-col *ngFor="let img of imagesService.images$ | async; trackBy: imagesTrackFn" size-xl="3">
-            <app-image-card [image]="img"></app-image-card>
-          </ion-col>
-          <ion-col *ngFor="let video of videosService.videos$ | async; trackBy videoTrackFn" size-xl="3">
+          <ion-col *ngFor="let video of videosService.videos$ | async; trackBy: videoTrackFn" size-xl="3">
             <app-videostore-card [video]="video"></app-videostore-card>
           </ion-col>
-          <ion-col *ngFor="let analyzedVideo of analyzedVideosService.analyzedVideos$ | async; trackBy analyzedVideoTrackFn" size-xl="3">
+          <ion-col *ngFor="let analyzedVideo of analyzedVideosService.analyzedVideos$ | async; trackBy: analyzedVideoTrackFn" size-xl="3">
             <app-analyzed-videostore-card [analyzedVideo]="analyzedVideo"></app-analyzed-videostore-card>
-          </ion-col>
-          <ion-col *ngFor="let analyzedImg of analyzedImagesService.analyzedImages$ | async; trackBy: analyzedImageTrackFn" size-xl="3">
-            <app-analyzed-image-card [analyzedImage]="analyzedImg"></app-analyzed-image-card>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -64,12 +43,8 @@
       <ion-fab-button color="tertiary" (click)="videoUpload.click()">
         <ion-icon name="videocam-outline"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button color="tertiary" (click)="imageUpload.click()">
-        <ion-icon name="image-outline"></ion-icon>
-      </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
   <input hidden type="file" accept="video/mp4" #videoUpload (change)="uploadVideo($event)">
-  <input hidden type="file" accept=".png, .jpeg, .jpg" #imageUpload (change)="uploadImage($event)">
 </ion-content>
 

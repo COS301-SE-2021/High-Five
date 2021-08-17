@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { ImagestorePageRoutingModule } from './imagestore-routing.module';
 
 import { ImagestorePage } from './imagestore.page';
+import {VideostorePageModule} from "../videostore/videostore.module";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ImagestorePageRoutingModule
+    ImagestorePageRoutingModule,
+    VideostorePageModule
   ],
   declarations: [ImagestorePage]
 })

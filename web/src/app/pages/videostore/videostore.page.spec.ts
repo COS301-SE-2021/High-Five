@@ -46,8 +46,6 @@ describe('VideostorePage', () => {
 
       fixture = TestBed.createComponent(VideostorePage);
       component = fixture.componentInstance;
-      component.videos = [];
-      component.images = [];
       fixture.detectChanges();
     }));
   };

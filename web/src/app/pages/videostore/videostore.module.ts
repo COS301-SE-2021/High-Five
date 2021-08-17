@@ -20,6 +20,10 @@ import {AnalyzedImageCardComponent} from "../../components/analyzed-image-card/a
     VideostorePageRoutingModule,
     CustomComponentsModule
   ],
+  exports: [
+    ImageCardComponent,
+    AnalyzedImageCardComponent
+  ],
   declarations: [VideostorePage, ImageCardComponent, AnalyzedVideostoreCardComponent, AnalyzedImageCardComponent]
 })
 export class VideostorePageModule {}

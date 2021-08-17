@@ -26,7 +26,6 @@ export class VideostorePage implements OnInit {
     imagesTrackFn = (i, image) => image.id;
     videoTrackFn = (v, video) => video.id;
     analyzedVideoTrackFn = (av, analyzed_video) => analyzed_video.id;
-    analyzedImageTrackFn = (ai, analyzed_image) => analyzed_image.id;
     public segment: string;
     public analyzed : boolean;
     constructor(private modal: ModalController,
@@ -34,10 +33,8 @@ export class VideostorePage implements OnInit {
                 private loadingController: LoadingController,
                 private constants: VideoStoreConstants, public imagesService: ImagesService,
                 public videosService: VideosService, private popoverController: PopoverController,
-                private pipelineService: PipelineService, public analyzedVideosService : AnalyzedVideosService,
-                public analyzedImagesService : AnalyzedImagesService) {
+                private pipelineService: PipelineService, public analyzedVideosService : AnalyzedVideosService,) {
         this.segment = 'all';
-        this.analyzed= false;
         this.pipelineService.fetchAllPipelines();
         this.pipelineService.fetchAllTools();
     }
@@ -67,20 +64,6 @@ export class VideostorePage implements OnInit {
         //     await this.videosService.addVideo(video.target.files[0]);
         // }
             await this.videosService.addVideo(video.target.files[0]);
-    }
-
-
-    /**
-     * This function will delete an image from the user's account, optimistic loading updates are used and in the event
-     * and error is thrown, the image is added back and an appropriate toast is shown
-     *
-     * @param image the data of the image we wish to upload
-     */
-
-    async uploadImage(image: any) {
-
-        await this.imagesService.addImage(image.target.files[0]);
-        //Nothing added here yet
     }
 
 }
