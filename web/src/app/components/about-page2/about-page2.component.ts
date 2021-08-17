@@ -10,6 +10,25 @@ import {MoreInfoComponent} from "../more-info/more-info.component";
 })
 export class AboutPage2Component implements OnInit{
 
+  explanations = [
+    {
+      title: "Streaming the live video to multiple clients",
+      explanation: "",
+    },
+    {
+      title: "Flying the drones using our own application",
+      explanation: "",
+    },
+    {
+      title: "Latency Between the drone and backend",
+      explanation: "",
+    },
+    {
+      title: "Another Interesting Design Consideration",
+      explanation: "",
+    }
+  ];
+
   lottieConfig: AnimationOptions ={
     path:'/assets/lottie-animations/lf30_editor_5gpajdty.json'
   }
@@ -31,15 +50,15 @@ export class AboutPage2Component implements OnInit{
   ngOnInit() {}
 
 
-  async displayModal(){
+  async displayModal(choice: number){
     const modal = await this.modalController.create({
       component: MoreInfoComponent,
       showBackdrop: true,
       animated: true,
       backdropDismiss: true,
       componentProps: {
-        title: 'Some Title',
-        description : 'Some Description'
+        title: this.explanations[choice].title,
+        description : this.explanations[choice].explanation,
       }
     });
     await modal.present();

@@ -62,7 +62,7 @@ export class AppComponent implements OnInit {
           this.msalService.instance.setActiveAccount(res.account);
           localStorage.setItem('jwt', res.idToken);
           if (!environment.production) {
-            console.log("JWT Token for login : " + res.idToken);
+            console.log(res);
           }
           this.router.navigate(['/navbar/landing']).then(() => {
             this.loading.dismiss();

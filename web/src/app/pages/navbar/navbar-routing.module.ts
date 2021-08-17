@@ -31,6 +31,10 @@ const routes: Routes = [
         loadChildren: () => import('../allmedia/allmedia.module').then( m => m.AllmediaPageModule)
       },
       {
+        path: 'live',
+        loadChildren: () => import('../live/live.module').then( m => m.LivePageModule)
+      },
+      {
         path:'',
         redirectTo : 'landing',
         pathMatch:'full',

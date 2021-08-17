@@ -26,6 +26,7 @@ export class NavbarPage implements OnInit {
   analyticsLink = ['link'];
   mediaLink = ['link'];
   controlsLink = ['link'];
+  liveLink = ['link'];
 
   isDesktop: boolean;
   private navPages;
