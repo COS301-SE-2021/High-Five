@@ -87,6 +87,11 @@ export class NavbarPage implements OnInit {
       event: ev,
       cssClass: 'navBarMediaPopover',
       showBackdrop: false,
+      componentProps: {
+        onClick: () => {
+          popoverComponent.dismiss();
+        }
+      }
     });
     await popoverComponent.present();
 

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output} from '@angular/core';
 import {Router} from "@angular/router";
 import {PopoverController} from "@ionic/angular";
 
@@ -8,6 +8,8 @@ import {PopoverController} from "@ionic/angular";
   styleUrls: ['./navbar-media-popover.component.scss'],
 })
 export class NavbarMediaPopoverComponent implements OnInit {
+
+  @Input() onClick =() => {}
   constructor(private router: Router) {
   }
 
@@ -16,19 +18,19 @@ export class NavbarMediaPopoverComponent implements OnInit {
 
   navigateAll() {
     this.router.navigate(['/navbar/all']).then(() => {
-
+      this.onClick();
     });
   }
 
   navigateImages() {
     this.router.navigate(['/navbar/images']).then(() => {
-
+      this.onClick();
     });
   }
 
   navigateVideos() {
     this.router.navigate(['/navbar/videos']).then(()=>{
-
+      this.onClick();
     });
   }
 
