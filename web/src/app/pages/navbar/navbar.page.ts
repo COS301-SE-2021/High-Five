@@ -79,16 +79,17 @@ export class NavbarPage implements OnInit {
   }
 
   async displayMediaPopover(ev: any) {
-    await this.popoverController.create({
+    const popoverComponent = await this.popoverController.create({
       component: NavbarMediaPopoverComponent,
       animated: true,
       translucent: true,
       backdropDismiss: true,
       event: ev,
-      cssClass: 'navBarMediaPopover'
-    }).then((popoverComponent)=>{
-      popoverComponent.present();
-    })
+      cssClass: 'navBarMediaPopover',
+      showBackdrop: false,
+    });
+    await popoverComponent.present();
+
   }
 
 }

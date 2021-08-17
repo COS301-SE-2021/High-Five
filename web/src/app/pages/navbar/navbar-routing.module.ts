@@ -23,11 +23,11 @@ const routes: Routes = [
         loadChildren: () => import('../videostore/videostore.module').then( m => m.VideostorePageModule),
       },
       {
-        path: 'imagestore',
+        path: 'images',
         loadChildren: () => import('../imagestore/imagestore.module').then( m => m.ImagestorePageModule)
       },
       {
-        path: 'allmedia',
+        path: 'all',
         loadChildren: () => import('../allmedia/allmedia.module').then( m => m.AllmediaPageModule)
       },
       {
