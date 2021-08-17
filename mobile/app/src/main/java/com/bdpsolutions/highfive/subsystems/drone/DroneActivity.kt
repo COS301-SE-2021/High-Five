@@ -6,10 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.util.Log
 import android.view.View
 import android.view.Window
@@ -26,11 +23,14 @@ import com.bdpsolutions.highfive.subsystems.main.MainActivity
 import com.bdpsolutions.highfive.utils.ContextHolder
 import dji.common.error.DJIError
 import dji.common.error.DJISDKError
+import dji.log.DJILog
 import dji.sdk.base.BaseComponent
 import dji.sdk.base.BaseProduct
+import dji.sdk.base.BaseProduct.ComponentKey
 import dji.sdk.products.Aircraft
 import dji.sdk.sdkmanager.DJISDKInitEvent
 import dji.sdk.sdkmanager.DJISDKManager
+import dji.sdk.sdkmanager.DJISDKManager.SDKManagerCallback
 import java.util.ArrayList
 
 import java.util.concurrent.atomic.AtomicBoolean
@@ -63,6 +63,74 @@ class DroneActivity : AppCompatActivity() {
     private fun showToast(toastMsg: String) {
         runOnUiThread { Toast.makeText(applicationContext, toastMsg, Toast.LENGTH_LONG).show() }
     }
+    private fun startSDKRegistration() {
+        if (isRegistrationInProgress.compareAndSet(false, true)) {
+            AsyncTask.execute {
+                showToast("registering, pls wait...")
+                DJISDKManager.getInstance().registerApp(applicationContext, object : SDKManagerCallback {
+                        override fun onRegister(djiError: DJIError) {
+                            if (djiError === DJISDKError.REGISTRATION_SUCCESS) {
+                                DJILog.e(
+                                    "App registration",
+                                    DJISDKError.REGISTRATION_SUCCESS.description
+                                )
+                                DJISDKManager.getInstance().startConnectionToProduct()
+                                showToast("Register Success")
+                            } else {
+                                showToast("Register sdk fails, check network is available")
+                            }
+                            Log.v(
+                                TAG,
+                                djiError.description
+                            )
+                        }
+
+                        override fun onProductDisconnect() {
+                            Log.d(
+                                TAG,
+                                "onProductDisconnect"
+                            )
+                            showToast("Product Disconnected")
+                        }
+
+                        override fun onProductConnect(baseProduct: BaseProduct) {
+                            Log.d(
+                                TAG,
+                                String.format("onProductConnect newProduct:%s", baseProduct)
+                            )
+                            showToast("Product Connected")
+                        }
+
+                        override fun onProductChanged(baseProduct: BaseProduct) {}
+                        override fun onComponentChange(
+                            componentKey: ComponentKey, oldComponent: BaseComponent,
+                            newComponent: BaseComponent
+                        ) {
+                            if (newComponent != null) {
+                                newComponent.setComponentListener { isConnected ->
+                                    Log.d(
+                                        TAG,
+                                        "onComponentConnectivityChanged: $isConnected"
+                                    )
+                                }
+                            }
+                            Log.d(
+                                TAG, String.format(
+                                    "onComponentChange key:%s, oldComponent:%s, newComponent:%s",
+                                    componentKey,
+                                    oldComponent,
+                                    newComponent
+                                )
+                            )
+                        }
+
+                        override fun onInitProcess(djisdkInitEvent: DJISDKInitEvent, i: Int) {}
+                        override fun onDatabaseDownloadProgress(l: Long, l1: Long) {}
+                    })
+            }
+        }
+    }
+
     /**
      * Checks if there is any missing permissions, and
      * requests runtime permission if needed.
@@ -106,7 +174,7 @@ class DroneActivity : AppCompatActivity() {
         }
         // If there is enough permission, we will start the registration
         if (missingPermission.isEmpty()) {
-           // startSDKRegistration()
+            startSDKRegistration()
         } else {
             showToast("Missing permissions!!!")
         }
