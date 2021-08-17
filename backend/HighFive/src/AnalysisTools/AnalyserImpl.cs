@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading;
+using FFMediaToolkit.Graphics;
 using Org.OpenAPITools.Models;
 using src.AnalysisTools.AnalysisThread;
 using src.Subsystems.Analysis;
@@ -68,11 +69,19 @@ namespace src.AnalysisTools
         public void FeedFrame(Bitmap frame)
         {
             byte[] inputFrame;
+            
+            var rect = new Rectangle(Point.Empty, frame.Size);
+            var bitLock = frame.LockBits(rect, ImageLockMode.ReadWrite, frame.PixelFormat);
+            
             using (var ms = new MemoryStream())
             {
                 frame.Save(ms, ImageFormat.Png);
                 inputFrame =  ms.ToArray();
             }
+            
+            frame.UnlockBits(bitLock);
+            
+            
             _frameCount++;
             foreach (var toolRunner in _toolRunners)
             {
