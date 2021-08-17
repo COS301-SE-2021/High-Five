@@ -8,8 +8,18 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class HighFiveApplication : Application(){
+    private var droneApplication: DroneApplication? = null
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         Helper.install(this@HighFiveApplication)
+        if (droneApplication == null) {
+            droneApplication = DroneApplication()
+            droneApplication!!.setContext(this)
+        }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        droneApplication?.onCreate()
     }
 }
