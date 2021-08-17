@@ -27,6 +27,10 @@ const routes: Routes = [
         loadChildren: () => import('../imagestore/imagestore.module').then( m => m.ImagestorePageModule)
       },
       {
+        path: 'allmedia',
+        loadChildren: () => import('../allmedia/allmedia.module').then( m => m.AllmediaPageModule)
+      },
+      {
         path:'',
         redirectTo : 'landing',
         pathMatch:'full',
