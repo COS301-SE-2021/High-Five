@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -153,10 +154,17 @@ namespace src.Subsystems.Analysis
 
             var rawVideo = _mediaStorageService.GetVideo(videoId);
             var rawVideoStream = rawVideo.ToStream().Result;
+            var watch = new Stopwatch();
+            watch.Reset();
+            watch.Start();
             var frameList = _videoDecoder.GetFramesFromVideo(rawVideoStream);
-
+            watch.Stop();
+            Console.WriteLine("Convert video to frames: " + watch.ElapsedMilliseconds + "ms");
+            
             //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
             var analyser = new AnalyserImpl();
+            watch.Reset();
+            watch.Start();
             analyser.StartAnalysis(analysisPipeline,_analysisModels);
             foreach (var frameStream in frameList)
             {
@@ -165,11 +173,16 @@ namespace src.Subsystems.Analysis
             }
             analyser.EndAnalysis();
             var analyzedFrameData = analyser.GetFrames()[0]; //TODO add functionality to save multiple images:analyser.GetFrames()[i][0]
-
+            watch.Stop();
+            Console.WriteLine("From StartAnalysis to GetFrames: " + watch.ElapsedMilliseconds + "ms");
             //---------------------------------------------------------------------------------------
 
             rawVideoStream.Seek(0, SeekOrigin.Begin);
+            watch.Reset();
+            watch.Start();
             var analyzedVideoData = _videoDecoder.EncodeVideoFromFrames(analyzedFrameData, rawVideoStream);
+            watch.Stop();
+            Console.WriteLine("Convert from frames to video: " + watch.ElapsedMilliseconds + "ms");
             return analyzedVideoData;
         }
         

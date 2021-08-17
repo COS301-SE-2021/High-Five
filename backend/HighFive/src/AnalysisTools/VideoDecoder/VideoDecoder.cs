@@ -36,10 +36,9 @@ namespace src.AnalysisTools.VideoDecoder
             {
                 var bmp = ToBitmap(imageData);
                 var ms = new MemoryStream();
-                bmp.Save(ms, ImageFormat.Png);
+                bmp.Save(ms, ImageFormat.Bmp);
                 frameList.Add(ms);
             }
-
             return frameList;
         }
 
