@@ -54,7 +54,7 @@ jobs:
           echo "END_SESSION_REDIRECT_URI=stub" >> local.properties
           echo "AUTHORIZATION_SCOPE=stub" >> local.properties
           echo "HTTPS_REQUIRED=true" >> local.properties
-          echo "DJI_SDK_API_KEY" >> local.properties
+          echo "DJI_SDK_API_KEY=stub" >> local.properties
 
       # Execute unit tests
       - name: Unit Test
