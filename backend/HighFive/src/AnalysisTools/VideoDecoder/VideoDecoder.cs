@@ -32,14 +32,11 @@ namespace src.AnalysisTools.VideoDecoder
             var frameList = new List<Stream>();
             
             var file = MediaFile.Open(videoStream);
-            var counter = 0;
             while (file.Video.TryGetNextFrame( out var imageData))
             {
                 var bmp = ToBitmap(imageData);
                 var ms = new MemoryStream();
                 bmp.Save(ms, ImageFormat.Png);
-                
-                counter++;
                 frameList.Add(ms);
             }
 

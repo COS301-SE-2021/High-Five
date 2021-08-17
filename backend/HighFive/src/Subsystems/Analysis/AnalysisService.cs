@@ -103,7 +103,7 @@ namespace src.Subsystems.Analysis
             var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
             analyzedFile.AddMetadata("mediaId", request.MediaId);
             analyzedFile.AddMetadata("pipelineId", request.PipelineId);
-            analyzedFile.UploadFile(analyzedMediaTemporaryLocation);
+            analyzedFile.UploadFile(analyzedMediaTemporaryLocation, contentType);
             return analyzedFile.GetUrl();
         }
 

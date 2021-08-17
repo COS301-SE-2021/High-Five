@@ -323,7 +323,7 @@ namespace src.Subsystems.MediaStorage
              * cloud.
              */
 
-            var allFiles = _storageManager.GetAllFilesInContainer("analyzed/" + ImageContainerName).Result;
+            var allFiles = _storageManager.GetAllFilesInContainer("analyzed/" + VideoContainerName).Result;
             if (allFiles == null)
             {
                 return new GetAnalyzedVideosResponse{Videos = new List<AnalyzedVideoMetaData>()};
