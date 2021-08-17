@@ -12,7 +12,7 @@ namespace src.AnalysisTools
     {
         private List<BlockingCollection<byte[]>> _outputQueues;
         private List<Tool> _tools;
-        private List<ToolRunner> _toolRunners;
+        private List<ToolRunner> _toolRunners = new();
         private int _frameCount;
 
         public void StartAnalysis(Pipeline pipeline, IAnalysisModels analysisModels)
@@ -32,10 +32,23 @@ namespace src.AnalysisTools
                 _outputQueues.Add(new BlockingCollection<byte[]>());
             }
 
+            count = 1;
+            var baseTools = new List<Tool>();
             foreach (var tool in _tools)
             {
-                //_toolRunners.Add(new ToolRunner(tool,_outputQueues[0]));
+                if (tool.SeparateOutput)
+                {
+                    var tempList = new List<Tool>();
+                    tempList.Add(tool);
+                    _toolRunners.Add(new ToolRunner(tempList, _outputQueues[count]));
+                    count++;
+                }
+                else
+                {
+                    baseTools.Add(tool);
+                }
             }
+            _toolRunners.Insert(0, new ToolRunner(baseTools, _outputQueues[0]));
 
             _frameCount = 0;
         }
@@ -71,9 +84,9 @@ namespace src.AnalysisTools
 
         public void EndAnalysis()
         {
-            foreach (var queue in _outputQueues)
+            foreach (var toolRunner in _toolRunners)
             {
-                queue.Add(new byte[] { 0 });
+                toolRunner.Enqueue(new byte[] { 0 });
             }
         }
     }
