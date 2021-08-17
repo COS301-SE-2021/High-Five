@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Threading;
 using Org.OpenAPITools.Models;
 using src.AnalysisTools.AnalysisThread;
@@ -59,6 +62,21 @@ namespace src.AnalysisTools
             foreach (var toolRunner in _toolRunners)
             {
                 toolRunner.Enqueue(frame);
+            }
+        }
+
+        public void FeedFrame(Bitmap frame)
+        {
+            byte[] inputFrame;
+            using (var ms = new MemoryStream())
+            {
+                frame.Save(ms, ImageFormat.Png);
+                inputFrame =  ms.ToArray();
+            }
+            _frameCount++;
+            foreach (var toolRunner in _toolRunners)
+            {
+                toolRunner.Enqueue(inputFrame);
             }
         }
 
