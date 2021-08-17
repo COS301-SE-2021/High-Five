@@ -58,9 +58,23 @@ namespace src.AnalysisTools.AnalysisThread
                     toolAlloc.Enqueue(frame);
                 }
                 if (frame.Length == 1) break;
+                List<AnalysisOutput> frameOutput = new List<AnalysisOutput>();
+                for (var i = 0; i < _toolOutputs.Count; i++)
+                {
+                    frameOutput.Add(_toolOutputs[i].GetConsumingEnumerable(CancellationToken.None).GetEnumerator().Current);
+                }
+
+                var image = BoxDrawer.DrawBoxes(frame, frameOutput);
+                byte[] outputFrame;
+                using (var ms = new MemoryStream())
+                {
+                    image.Save(ms, _frameFormat);
+                    outputFrame =  ms.ToArray();
+                }
+                
+                //Add to output queue
+                _outputQueue.Add(outputFrame);
             }
-            
-            //TODO await all outputs
             
         }
     }

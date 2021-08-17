@@ -17,14 +17,14 @@ namespace src.AnalysisTools.ConcreteTools
     {
         private const string ModelName = "ssd_mobilenet_v1_10.onnx";
         private static readonly string ModelPath = Directory.GetCurrentDirectory() + "\\Models\\" + ModelName;
-        private readonly InferenceSession _model;
-        private readonly string _modelInputLayerName;
+        private static InferenceSession _model;
+        private static string _modelInputLayerName;
         private const double MinScore=0.50;
         private const long MinClass = 2;
         private const long MaxClass = 9;
         public const string ToolPurpose = "Vehicle";
 
-        private readonly string[] _classes ={
+        private static string[] _classes ={
             "person",
             "bicycle",
             "car",
@@ -46,53 +46,51 @@ namespace src.AnalysisTools.ConcreteTools
         public override AnalysisOutput AnalyseFrame(byte[] frame)
         {
             //Convert from input type frame to 3D array
-            Bitmap originalImage;
+            
+            var modelInput = PreprocessFrame(frame);
+            
+            var result = ProcessFrame(modelInput);
+            
+            var output = PostprocessFrame(result);
+            
+            return output;
+        }
+
+        public override IDisposableReadOnlyCollection<DisposableNamedOnnxValue> ProcessFrame(List<NamedOnnxValue> modelInput)
+        {
+            return _model.Run(modelInput);
+        }
+
+        public override List<NamedOnnxValue> PreprocessFrame(byte[] frame)
+        {
+            
+            Bitmap bImage;
             using (var ms = new MemoryStream(frame))
             {
-                originalImage = new Bitmap(Image.FromStream(ms));
+                bImage = new Bitmap(Image.FromStream(ms));
             }
-            var image = PreprocessFrame(originalImage);
+
+
+            var bytes = ProcessUsingLockbitsAndUnsafeAndParallel(bImage);
             
-            int[] dimensions = { 1, originalImage.Height, originalImage.Width, 3 };
-            var inputTensor = new DenseTensor<byte>(image, dimensions);
+            int[] dimensions = { 1, bImage.Height, bImage.Width, 3 };
+            var inputTensor = new DenseTensor<byte>(bytes, dimensions);
             
             var modelInput = new List<NamedOnnxValue>
             {
                 NamedOnnxValue.CreateFromTensor(_modelInputLayerName, inputTensor)
             };
-            
-            var session = _model;
-            
-            
-            var result = session.Run(modelInput);
-            
-            
+
+            return modelInput;
+        }
+
+        public override AnalysisOutput PostprocessFrame(IDisposableReadOnlyCollection<DisposableNamedOnnxValue> result)
+        {
             var boxes=((DenseTensor<float>) result.ElementAtOrDefault(0).Value).ToArray();//Convert to output type
             var labels=((DenseTensor<float>) result.ElementAtOrDefault(1).Value).ToArray();
             var scores=((DenseTensor<float>) result.ElementAtOrDefault(2).Value).ToArray();
             var numDetections=((DenseTensor<float>) result.ElementAtOrDefault(3).Value).ToArray();
             
-            
-            var output = PostProcessFrame(originalImage, boxes, labels, scores, numDetections);
-            
-            return output;
-        }
-
-        private byte[] PreprocessFrame(Image image)
-        {
-
-
-            var bImage = new Bitmap(image);
-
-
-            var bytes = ProcessUsingLockbitsAndUnsafeAndParallel(bImage);
-            
-
-            return bytes;
-        }
-
-        private AnalysisOutput PostProcessFrame(Image image, IReadOnlyList<float> boxes, IReadOnlyList<float> labels, IReadOnlyList<float> scores, IReadOnlyList<float> numDetections)
-        {
             var output = new AnalysisOutput();
             
             output.Purpose = ToolPurpose;
@@ -115,7 +113,7 @@ namespace src.AnalysisTools.ConcreteTools
             return output;
         }
 
-        private byte[] ProcessUsingLockbitsAndUnsafeAndParallel(Bitmap img)
+        private static byte[] ProcessUsingLockbitsAndUnsafeAndParallel(Bitmap img)
         {
             unsafe
             {
