@@ -12,6 +12,8 @@ import {ImageMetaData} from '../../models/imageMetaData';
 import {ImagesService} from "../../services/images/images.service";
 import {VideosService} from "../../services/videos/videos.service";
 import {PipelineService} from "../../services/pipeline/pipeline.service";
+import {AnalyzedVideosService} from "../../services/analyzed-videos/analyzed-videos.service";
+import {AnalyzedImagesService} from "../../services/analyzed-images/analyzed-images.service";
 
 @Component({
     selector: 'app-videostore',
@@ -23,19 +25,19 @@ export class VideostorePage implements OnInit {
     @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
     imagesTrackFn = (i, image) => image.id;
     videoTrackFn = (v, video) => video.id;
-
-    public videos: VideoMetaData[] = [];
-    public videosFetched = false;
+    analyzedVideoTrackFn = (av, analyzed_video) => analyzed_video.id;
+    analyzedImageTrackFn = (ai, analyzed_image) => analyzed_image.id;
     public segment: string;
-    public images: ImageMetaData[] = [];
-
+    public analyzed : boolean;
     constructor(private modal: ModalController,
                 public toastController: ToastController,
                 private loadingController: LoadingController,
                 private constants: VideoStoreConstants, public imagesService: ImagesService,
                 public videosService: VideosService, private popoverController: PopoverController,
-                private pipelineService: PipelineService) {
+                private pipelineService: PipelineService, public analyzedVideosService : AnalyzedVideosService,
+                public analyzedImagesService : AnalyzedImagesService) {
         this.segment = 'all';
+        this.analyzed= false;
         this.pipelineService.fetchAllPipelines();
         this.pipelineService.fetchAllTools();
     }

@@ -34,5 +34,7 @@ export class AnalyzedVideosService {
     await this.mediaStorageService.getAnalyzedVideos().subscribe((res) => {
       this.analyzeVideos = res.videos;
     });
+
+
   }
 }

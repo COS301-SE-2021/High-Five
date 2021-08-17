@@ -17,7 +17,7 @@ import {AnalyzedVideosService} from "../../services/analyzed-videos/analyzed-vid
 export class VideostoreCardComponent implements OnInit {
   @Input() video: VideoMetaData;
 
-  constructor(public platform: Platform, private modal: ModalController, private videoService : VideosService,
+  constructor(public platform: Platform, private modalController: ModalController, private videoService : VideosService,
               private popoverController : PopoverController, private pipelineService : PipelineService, private analyzeVideosService : AnalyzedVideosService) {
   }
 
@@ -31,10 +31,10 @@ export class VideostoreCardComponent implements OnInit {
    * replayed to the user.
    */
   async playVideo() {
-    const videoModal = await this.modal.create({
+    const videoModal = await this.modalController.create({
       component: VideostreamCardComponent,
       componentProps: {
-        modal: this.modal,
+        modal: this.modalController,
         videoUrl: this.video.url
       }
     });
