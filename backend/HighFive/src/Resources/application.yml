@@ -467,7 +467,6 @@ components:
           type: string
         thumbnail:
           type: string
-          format: byte
 
     deleteVideoRequest:
       type: object
