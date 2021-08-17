@@ -17,7 +17,7 @@ namespace src.Storage
         public Task Delete();
         public Task<bool> Exists();
         public Task<byte[]> ToByteArray();
-        public Stream ToStream();
+        public Task<Stream> ToStream();
         public Task<string> ToText();
         public string GetUrl();
     }

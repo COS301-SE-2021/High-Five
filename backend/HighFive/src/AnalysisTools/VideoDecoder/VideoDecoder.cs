@@ -24,7 +24,7 @@ namespace src.AnalysisTools.VideoDecoder
         public List<byte[]> GetFramesFromVideo(Stream videoStream)
         {
             var frameList = new List<byte[]>();
-
+            
             var file = MediaFile.Open(videoStream);
             while (file.Video.TryGetNextFrame( out var imageData))
             {

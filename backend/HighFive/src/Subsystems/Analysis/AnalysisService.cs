@@ -150,7 +150,7 @@ namespace src.Subsystems.Analysis
              */
 
             var rawVideo = _mediaStorageService.GetVideo(videoId);
-            var rawVideoStream = rawVideo.ToStream();
+            var rawVideoStream = rawVideo.ToStream().Result;
             var frameList = _videoDecoder.GetFramesFromVideo(rawVideoStream);
 
             //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------

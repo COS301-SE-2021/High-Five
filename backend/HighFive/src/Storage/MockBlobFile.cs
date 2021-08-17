@@ -191,7 +191,7 @@ namespace src.Storage
             return array;
         }
 
-        public Stream ToStream()
+        public async Task<Stream> ToStream()
         {
             return new MemoryStream();
         }
