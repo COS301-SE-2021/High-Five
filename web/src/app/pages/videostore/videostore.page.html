@@ -46,7 +46,10 @@
             <app-videostore-card [video]="video"></app-videostore-card>
           </ion-col>
           <ion-col *ngFor="let analyzedVideo of analyzedVideosService.analyzedVideos$ | async; trackBy analyzedVideoTrackFn" size-xl="3">
-            <app-analyzed-videostore-card [video]="analyzedVideo"></app-analyzed-videostore-card>
+            <app-analyzed-videostore-card [analyzedVideo]="analyzedVideo"></app-analyzed-videostore-card>
+          </ion-col>
+          <ion-col *ngFor="let analyzedImg of analyzedImagesService.analyzedImages$ | async; trackBy: analyzedImageTrackFn" size-xl="3">
+            <app-analyzed-image-card [analyzedImage]="analyzedImg"></app-analyzed-image-card>
           </ion-col>
         </ion-row>
       </ion-grid>

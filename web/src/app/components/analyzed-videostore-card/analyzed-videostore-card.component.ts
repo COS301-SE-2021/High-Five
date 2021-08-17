@@ -9,7 +9,7 @@ import {ModalController} from "@ionic/angular";
   styleUrls: ['./analyzed-videostore-card.component.scss'],
 })
 export class AnalyzedVideostoreCardComponent implements OnInit {
-  @Input() video : AnalyzedVideoMetaData;
+  @Input() analyzedVideo : AnalyzedVideoMetaData;
   constructor(private modalController : ModalController) { }
 
   ngOnInit() {}
@@ -23,7 +23,7 @@ export class AnalyzedVideostoreCardComponent implements OnInit {
       component: VideostreamCardComponent,
       componentProps: {
         modal: this.modalController,
-        videoUrl: this.video.url
+        videoUrl: this.analyzedVideo.url
       }
     });
     videoModal.style.backgroundColor = 'rgba(0,0,0,0.85)'; //make the background for the modal darker.

@@ -10,6 +10,7 @@ import { VideostorePage } from './videostore.page';
 import {CustomComponentsModule} from '../../components/components.module';
 import {ImageCardComponent} from '../../components/image-card/image-card.component';
 import {AnalyzedVideostoreCardComponent} from "../../components/analyzed-videostore-card/analyzed-videostore-card.component";
+import {AnalyzedImageCardComponent} from "../../components/analyzed-image-card/analyzed-image-card.component";
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import {AnalyzedVideostoreCardComponent} from "../../components/analyzed-videost
     VideostorePageRoutingModule,
     CustomComponentsModule
   ],
-  declarations: [VideostorePage, ImageCardComponent, AnalyzedVideostoreCardComponent]
+  declarations: [VideostorePage, ImageCardComponent, AnalyzedVideostoreCardComponent, AnalyzedImageCardComponent]
 })
 export class VideostorePageModule {}
