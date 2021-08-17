@@ -13,7 +13,7 @@
 
 <ion-content>
   <div [ngSwitch]="segment">
-    <div *ngSwitchCase="'unanalyzed'">
+    <div *ngSwitchCase="'un-analyzed'">
       <ion-grid>
         <ion-row>
           <ion-col *ngFor="let image of imagesService.images$ | async; trackBy: imageTrackFn" size-xl="3">

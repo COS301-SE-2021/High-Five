@@ -12,7 +12,7 @@
 </ion-header>
 <ion-content>
   <div [ngSwitch]="segment">
-    <div *ngSwitchCase="'unanalyzed'">
+    <div *ngSwitchCase="'un-analyzed'">
       <ion-grid>
         <ion-row>
           <ion-col *ngFor="let video of videosService.videos$ | async; trackBy: videoTrackFn" size-xl="3">
