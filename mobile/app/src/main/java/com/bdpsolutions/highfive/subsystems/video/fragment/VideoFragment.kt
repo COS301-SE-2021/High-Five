@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.subsystems.video.adapter.VideoFragmentRecyclerViewAdapter
 import com.bdpsolutions.highfive.databinding.FragmentVideoBinding
 import com.bdpsolutions.highfive.utils.Result
@@ -21,10 +24,17 @@ class VideoFragment: Fragment() {
 
     private lateinit var videoViewModel: VideoViewModel
 
+    private val rotateOpenAnim: Animation by lazy { AnimationUtils.loadAnimation(this.context, R.anim.rotate_open_anim) }
+    private val rotateCloseAnim: Animation by lazy { AnimationUtils.loadAnimation(this.context, R.anim.rotate_close_anim) }
+    private val fromBottomAnim: Animation by lazy { AnimationUtils.loadAnimation(this.context, R.anim.from_bottom_anim) }
+    private val fromTopAnim: Animation by lazy { AnimationUtils.loadAnimation(this.context, R.anim.from_top_anim) }
+
     @Inject
     lateinit var adapter: VideoFragmentRecyclerViewAdapter
     @Inject
     lateinit var factory: ViewModelProvider.Factory
+
+    private var clicked = false
 
     var binding: FragmentVideoBinding? = null
 
@@ -69,6 +79,23 @@ class VideoFragment: Fragment() {
                 }
             }
         })
+
+        binding?.uploadVideo?.setOnClickListener {
+            if (!clicked) {
+                binding?.addFromRecorder?.visibility = View.VISIBLE
+                binding?.addFromRecorder?.startAnimation(fromBottomAnim)
+                binding?.addFromVidlibrary?.visibility = View.VISIBLE
+                binding?.addFromVidlibrary?.startAnimation(fromBottomAnim)
+                binding?.uploadVideo?.startAnimation(rotateOpenAnim)
+            } else {
+                binding?.addFromRecorder?.visibility = View.INVISIBLE
+                binding?.addFromRecorder?.startAnimation(fromTopAnim)
+                binding?.addFromVidlibrary?.visibility = View.INVISIBLE
+                binding?.addFromVidlibrary?.startAnimation(fromTopAnim)
+                binding?.uploadVideo?.startAnimation(rotateCloseAnim)
+            }
+            clicked = !clicked
+        }
 
         videoViewModel.fetchVideoData()
 
