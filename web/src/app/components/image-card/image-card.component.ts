@@ -28,7 +28,7 @@ export class ImageCardComponent implements OnInit {
     this.imagesService.removeImage(this.image.id);
   }
 
-  public analyseImage(pipelines: string[]) {
+  private analyseImage(pipelines: string[]) {
     const pipelineIds = this.pipelineService.pipelines.filter((pipeline: Pipeline) => {
       return pipelines.filter((pipelineName: string) => {
         return pipelineName == pipeline.name;
@@ -37,18 +37,17 @@ export class ImageCardComponent implements OnInit {
     for(const pipelineId of pipelineIds){
       this.analyzedImagesService.analyzeImage(this.image.id,pipelineId);
     }
-    console.log(this.analyzedImagesService.analyzedImages);
   }
 
   public viewAnalysedImage() {
     return; // Todo : show a new tab containing the analysed image
   }
 
-  public async showAnalyseImagePopover(ev: any) {
+  async showAnalyseImagePopover(ev: any) {
     /**
      * A popover which contains all the pipelines that the user can analyse the image with
      */
-    const addToolPopover = await this.popoverController.create({
+    const pipelinesPopover = await this.popoverController.create({
       component: AddItemComponent,
       event: ev,
       translucent: true,
@@ -57,11 +56,11 @@ export class ImageCardComponent implements OnInit {
         title: "Choose pipeline"
       }
     });
-    await addToolPopover.present();
-    await addToolPopover.onDidDismiss().then(
+    await pipelinesPopover.present();
+    await pipelinesPopover.onDidDismiss().then(
       data => {
-        if (data.data) {
-          if (data.data.items) {
+        if (data.data != undefined) {
+          if (data.data.items != undefined) {
             this.analyseImage(data.data.items);
           }
         }

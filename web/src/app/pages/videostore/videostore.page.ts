@@ -11,6 +11,7 @@ import {VideoStoreConstants} from '../../../constants/pages/videostore-constants
 import {ImageMetaData} from '../../models/imageMetaData';
 import {ImagesService} from "../../services/images/images.service";
 import {VideosService} from "../../services/videos/videos.service";
+import {PipelineService} from "../../services/pipeline/pipeline.service";
 
 @Component({
     selector: 'app-videostore',
@@ -32,63 +33,50 @@ export class VideostorePage implements OnInit {
                 public toastController: ToastController,
                 private loadingController: LoadingController,
                 private constants: VideoStoreConstants, public imagesService: ImagesService,
-                public videosService: VideosService, private popoverController: PopoverController) {
+                public videosService: VideosService, private popoverController: PopoverController,
+                private pipelineService: PipelineService) {
         this.segment = 'all';
+        this.pipelineService.fetchAllPipelines();
+        this.pipelineService.fetchAllTools();
     }
 
     ngOnInit() {
+
     }
 
 
     /**
-     * Sends an uploaded video to the backend using the VideoUpload service.
+     * Sends an uploaded video to the backend using the videosService service.
      *
      * @param video
      */
     async uploadVideo(video: any) {
-
-        // const loading = await this.loadingController.create({
-        //   spinner: 'circles',
-        //   animated: true,
-        // });
-        // await loading.present();
-        // this.mediaStorageService.storeVideoForm(video.target.files[0]).subscribe(() => {
-        //   this.updateVideos();
-        //   loading.dismiss();
-        // });
-        await this.videosService.addVideo(video.target.files[0]);
+        // const newArr = this.videosService.videos.map((video: VideoMetaData)=>{return video.name});
+        // if(newArr.filter((value) => {return video.target.files[0].name}).length>0 ) {
+        //     await this.toastController.create({
+        //         message: 'Videos may not have duplicate names, please choose another name',
+        //         duration: 2000,
+        //         translucent: true,
+        //         position: 'bottom'
+        //     }).then((toast)=>{
+        //         toast.present();
+        //     })
+        // }else{
+        //     await this.videosService.addVideo(video.target.files[0]);
+        // }
+            await this.videosService.addVideo(video.target.files[0]);
     }
 
-    /**
-     * Shows a toast once a video is successfully uploaded.
-     */
-    // async presentAlert() {
-    //   const alert = await this.toastController.create({
-    //     cssClass: 'alert-style',
-    //     header: this.constants.toastLabels.header,
-    //     message: this.constants.toastLabels.message,
-    //     buttons: this.constants.toastLabels.buttons
-    //   });
-    //   await alert.present();
-    // }
 
     /**
      * This function will delete an image from the user's account, optimistic loading updates are used and in the event
      * and error is thrown, the image is added back and an appropriate toast is shown
      *
-     * @param imageId the ID of the image we wish to delete
+     * @param image the data of the image we wish to upload
      */
 
     async uploadImage(image: any) {
-        // const loading = await this.loadingController.create({
-        //   spinner: 'circles',
-        //   animated: true,
-        // });
-        // await loading.present();
-        // this.mediaStorageService.storeImageForm(image.target.files[0]).subscribe(() => {
-        //   this.updateImages();
-        //   loading.dismiss();
-        // });
+
         await this.imagesService.addImage(image.target.files[0]);
         //Nothing added here yet
     }
