@@ -6,5 +6,6 @@ namespace src.Subsystems.Video
     public interface IFFmpegWrapperService
     {
         public Task registerDecoder(Stream input, Stream output);
+        public Task registerEncoder(Stream input, Stream output);
     }
 }

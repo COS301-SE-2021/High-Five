@@ -29,7 +29,10 @@ namespace src.Subsystems.Video
                 
             }
         }
-        
-        
+
+        public Task registerEncoder(Stream input, Stream output)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
