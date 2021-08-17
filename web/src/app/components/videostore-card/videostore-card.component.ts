@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component,  Input, OnInit} from '@angular/core';
 import {ModalController, Platform} from '@ionic/angular';
 import {VideostreamCardComponent} from '../videostream-card/videostream-card.component';
 import {VideoMetaData} from '../../models/videoMetaData';
+import {VideosService} from "../../services/videos/videos.service";
 
 
 @Component({
@@ -11,9 +12,8 @@ import {VideoMetaData} from '../../models/videoMetaData';
 })
 export class VideostoreCardComponent implements OnInit {
   @Input() video: VideoMetaData;
-  @Output() deleteVideo: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(public platform: Platform, private modal: ModalController) {
+  constructor(public platform: Platform, private modal: ModalController, private videoService : VideosService) {
   }
 
   ngOnInit() {
@@ -42,6 +42,6 @@ export class VideostoreCardComponent implements OnInit {
    * Deletes this video by emitting the deleteVideo event
    */
   async onDeleteVideo() {
-    this.deleteVideo.emit(this.video.id);
+    await this.videoService.removeVideo(this.video.id);
   }
 }

@@ -40,19 +40,6 @@ export class VideostorePage implements OnInit {
     }
 
 
-    deleteVideo(videoId: string) {
-        // this.videos = this.videos.filter(video => video.id !== videoId);
-        // this.mediaStorageService.deleteVideo({id: videoId}).subscribe(() => {
-        //   this.toastController.create({
-        //     message: 'Successfully deleted video',
-        //     duration: 2000,
-        //     translucent: true
-        //   }).then(m => m.present());
-        // });
-        this.videosService.removeVideo(videoId);
-
-    }
-
     /**
      * Sends an uploaded video to the backend using the VideoUpload service.
      *
@@ -91,34 +78,6 @@ export class VideostorePage implements OnInit {
      *
      * @param imageId the ID of the image we wish to delete
      */
-    deleteImage(imageId: string) {
-        // if(this.images.length==0){
-        //   return;
-        // }
-        // this.images = this.images.filter(img => img.id !== imageId);
-        // const image: ImageMetaData = this.images.filter(img => img.id === imageId)[0];
-        // try {
-        //   this.mediaStorageService.deleteImage({id: imageId}).subscribe(() => {
-        //     this.toastController.create({
-        //       message: 'Successfully deleted image',
-        //       duration: 2000,
-        //       translucent: true
-        //     }).then(m => m.present());
-        //   });
-        // } catch (e) {
-        //   this.toastController.create({
-        //     message: 'Error occurred while deleting image',
-        //     duration: 2000,
-        //     translucent: true
-        //   }).then(m => m.present());
-        //   this.images = this.images.concat([image]);
-        //   if(this.images != undefined && this.images.length>1){
-        //     this.images.sort((a, b) => a.name.localeCompare(b.name));
-        //   }
-        // }
-        this.imagesService.removeImage(imageId);
-
-    }
 
     async uploadImage(image: any) {
         // const loading = await this.loadingController.create({

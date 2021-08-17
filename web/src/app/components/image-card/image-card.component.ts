@@ -1,8 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ImageMetaData} from '../../models/imageMetaData';
 import {PopoverController} from "@ionic/angular";
 import {AddItemComponent} from "../add-item/add-item.component";
 import {PipelineService} from "../../services/pipeline/pipeline.service";
+import {ImagesService} from "../../services/images/images.service";
 
 @Component({
   selector: 'app-image-card',
@@ -11,9 +12,9 @@ import {PipelineService} from "../../services/pipeline/pipeline.service";
 })
 export class ImageCardComponent implements OnInit {
   @Input() image: ImageMetaData;
-  @Output() deleteImage: EventEmitter<string> = new EventEmitter<string>();
   public alt = '../../../assists/images/defaultprofile.svg';
-  constructor(private popoverController : PopoverController, private pipelineService : PipelineService) {
+  constructor(private popoverController : PopoverController, private pipelineService : PipelineService,
+              private imagesService : ImagesService) {
     // No constructor body needed as properties are retrieved from angular input
   }
 
@@ -21,7 +22,7 @@ export class ImageCardComponent implements OnInit {
   }
 
   public onDeleteImage() {
-    this.deleteImage.emit(this.image.id);
+    this.imagesService.removeImage(this.image.id);
   }
 
   public analyseImage(pipelines : string[]) {
