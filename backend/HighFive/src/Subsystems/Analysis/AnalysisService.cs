@@ -147,7 +147,7 @@ namespace src.Subsystems.Analysis
              */
 
             var rawVideo = _mediaStorageService.GetVideo(videoId);
-            var rawVideoByteArray = rawVideo.ToByteArray().Result;
+            var rawVideoStream = rawVideo.ToStream();
             
             //---------------------------------------------------------------------------------------
             //-----------------------------TODO: PERFORM ANALYSIS HERE-------------------------------

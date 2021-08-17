@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FFMediaToolkit.Decoding;
@@ -20,11 +21,11 @@ namespace src.AnalysisTools.VideoDecoder
         }
         
         [SuppressMessage("ReSharper.DPA", "DPA0003: Excessive memory allocations in LOH", MessageId = "type: System.Byte[]")]
-        public List<byte[]> GetFramesFromVideo(string path)
+        public List<byte[]> GetFramesFromVideo(Stream videoStream)
         {
             var frameList = new List<byte[]>();
 
-            var file = MediaFile.Open(path);
+            var file = MediaFile.Open(videoStream);
             while (file.Video.TryGetNextFrame( out var imageData))
             {
                 frameList.Add(imageData.Data.ToArray());
