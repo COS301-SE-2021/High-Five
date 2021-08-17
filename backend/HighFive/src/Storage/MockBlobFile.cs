@@ -191,6 +191,11 @@ namespace src.Storage
             return array;
         }
 
+        public Stream ToStream()
+        {
+            return new MemoryStream();
+        }
+
         public async Task<string> ToText()
         {
             /*

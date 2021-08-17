@@ -167,6 +167,13 @@ namespace src.Storage
             return byteArray;
         }
 
+        public Stream ToStream()
+        {
+            using var stream = new MemoryStream();
+            var num = _file.DownloadToStreamAsync(stream);
+            return stream;
+        }
+
         public async Task<string> ToText()
         {
             /*

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -16,6 +17,7 @@ namespace src.Storage
         public Task Delete();
         public Task<bool> Exists();
         public Task<byte[]> ToByteArray();
+        public Stream ToStream();
         public Task<string> ToText();
         public string GetUrl();
     }

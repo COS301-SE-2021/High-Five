@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using FFMediaToolkit.Decoding;
@@ -18,6 +19,7 @@ namespace src.AnalysisTools.VideoDecoder
             FFMediaToolkit.FFmpegLoader.FFmpegPath = ffMpegSharedPath;
         }
         
+        [SuppressMessage("ReSharper.DPA", "DPA0003: Excessive memory allocations in LOH", MessageId = "type: System.Byte[]")]
         public List<byte[]> GetFramesFromVideo(string path)
         {
             var frameList = new List<byte[]>();
