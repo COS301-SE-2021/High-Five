@@ -6,6 +6,12 @@ object Endpoints {
 
     object VIDEO {
         const val GET_ALL_VIDEOS = "media/getAllVideos"
+        const val STORE_VIDEO = "media/storeVideo"
+    }
+
+    object IMAGE {
+        const val GET_ALL_IMAGES = "media/getAllImages"
+        const val STORE_IMAGE = "media/storeImage"
     }
 
     object AUTH {

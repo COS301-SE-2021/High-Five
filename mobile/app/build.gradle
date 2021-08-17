@@ -145,6 +145,9 @@ dependencies {
     implementation "commons-io:commons-io:$commons_io_version"
     implementation "net.openid:appauth:$appauth_version"
     implementation "commons-codec:commons-codec:$codec_version"
+    implementation "androidx.viewpager2:viewpager2:$viewpager_version"
+    implementation "com.squareup.picasso:picasso:$picasso_version"
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 

@@ -54,7 +54,9 @@
         <!-- DJI SDK -->
 
         <activity
-            android:name="net.openid.appauth.RedirectUriReceiverActivity">
+            android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            android:exported="true"
+            android:permission="">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -71,8 +73,10 @@
             android:theme="@style/Theme.HighFive.NoActionBar"/>
 
         <activity
-            android:name="com.bdpsolutions.highfive.subsystems.splash.view.SplashActivity"
+            android:name="com.bdpsolutions.highfive.subsystems.splash.SplashActivity"
             android:exported="true"
+            android:permission=""
+            android:label="@string/app_name"
             android:theme="@style/Theme.HighFive.Splash" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -84,7 +88,7 @@
         <activity
             android:name="com.bdpsolutions.highfive.subsystems.main.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:permission=""
             android:theme="@style/Theme.HighFive.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -99,6 +103,17 @@
             android:exported="true"
             >
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
 
         <meta-data
             android:name="client_id"
@@ -119,5 +134,6 @@
             android:name="https_required"
             android:value="${HTTPS_REQUIRED}"/>
     </application>
+
 
 </manifest>

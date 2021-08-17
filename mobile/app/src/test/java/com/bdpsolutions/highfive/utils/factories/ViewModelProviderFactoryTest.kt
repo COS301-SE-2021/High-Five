@@ -1,12 +1,13 @@
 package com.bdpsolutions.highfive.utils.factories
 
 import com.bdpsolutions.highfive.helpers.TestViewModel
-import com.bdpsolutions.highfive.subsystems.login.model.LoginRepository
+import com.bdpsolutions.highfive.subsystems.login.model.AuthenticationRepositoryImpl
 import com.bdpsolutions.highfive.subsystems.login.model.source.APILogin
+import com.bdpsolutions.highfive.subsystems.login.model.source.APIRefreshToken
 import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
+import com.bdpsolutions.highfive.subsystems.splash.viewmodel.SplashViewModel
 import com.bdpsolutions.highfive.subsystems.video.model.VideoDataRepository
 import com.bdpsolutions.highfive.subsystems.video.model.source.APIVideoDataSource
-import com.bdpsolutions.highfive.subsystems.video.model.source.DatabaseVideoDataSource
 import com.bdpsolutions.highfive.subsystems.video.viewmodel.VideoViewModel
 import com.bdpsolutions.highfive.constants.Exceptions.VIEWMODEL_PROVIDER_FACTORY as vmf
 import com.google.common.truth.Truth
@@ -22,10 +23,11 @@ import org.powermock.modules.junit4.PowerMockRunner
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
     APILogin.Companion::class,
+    APIRefreshToken.Companion::class,
     LoginViewModel.Companion::class,
-    LoginRepository.Companion::class,
+    SplashViewModel.Companion::class,
+    AuthenticationRepositoryImpl.Companion::class,
     APIVideoDataSource.Companion::class,
-    DatabaseVideoDataSource.Companion::class,
     VideoDataRepository.Companion::class,
     VideoViewModel.Companion::class
 )
@@ -43,8 +45,8 @@ class ViewModelProviderFactoryTest {
             `when`(apiCompanionMock.create()).thenReturn(apiMock)
 
             //create mock LoginRepository
-            val repoMock = mock(LoginRepository::class.java)
-            val repoCompanionMock = mock(LoginRepository.Companion::class.java)
+            val repoMock = mock(AuthenticationRepositoryImpl::class.java)
+            val repoCompanionMock = mock(AuthenticationRepositoryImpl.Companion::class.java)
             `when`(repoCompanionMock.create(apiCompanionMock.create())).thenReturn(repoMock)
 
             //create mock LoginViewModel
@@ -61,8 +63,8 @@ class ViewModelProviderFactoryTest {
 
 
             //Mock repository
-            PowerMockito.mockStatic(LoginRepository.Companion::class.java)
-            PowerMockito.whenNew(LoginRepository.Companion::class.java)
+            PowerMockito.mockStatic(AuthenticationRepositoryImpl.Companion::class.java)
+            PowerMockito.whenNew(AuthenticationRepositoryImpl.Companion::class.java)
                 .withNoArguments()
                 .thenReturn(repoCompanionMock)
 
@@ -83,15 +85,11 @@ class ViewModelProviderFactoryTest {
             val apiCompanionMock = mock(APIVideoDataSource.Companion::class.java)
             `when`(apiCompanionMock.create()).thenReturn(apiMock)
 
-            //create mock DatabaseVideoDataSource class
-            val dbMock = mock(DatabaseVideoDataSource::class.java)
-            val dbCompanionMock = mock(DatabaseVideoDataSource.Companion::class.java)
-            `when`(dbCompanionMock.create()).thenReturn(dbMock)
 
             //create mock VideoDataRepository
             val repoMock = mock(VideoDataRepository::class.java)
             val repoCompanionMock = mock(VideoDataRepository.Companion::class.java)
-            `when`(repoCompanionMock.create(apiCompanionMock.create(), dbCompanionMock.create()))
+            `when`(repoCompanionMock.create(apiCompanionMock.create()))
                 .thenReturn(repoMock)
 
             //create mock VideoViewModel
@@ -99,7 +97,7 @@ class ViewModelProviderFactoryTest {
             val vmCompanionMock = mock(VideoViewModel.Companion::class.java)
             `when`(vmCompanionMock
                 .create(
-                    repoCompanionMock.create(apiCompanionMock.create(), dbCompanionMock.create())
+                    repoCompanionMock.create(apiCompanionMock.create())
                 ))
                 .thenReturn(vmMock)
 
@@ -108,11 +106,6 @@ class ViewModelProviderFactoryTest {
             PowerMockito.whenNew(APIVideoDataSource.Companion::class.java)
                 .withNoArguments()
                 .thenReturn(apiCompanionMock)
-
-            PowerMockito.mockStatic(DatabaseVideoDataSource.Companion::class.java)
-            PowerMockito.whenNew(DatabaseVideoDataSource.Companion::class.java)
-                .withNoArguments()
-                .thenReturn(dbCompanionMock)
 
 
             //Mock repository
@@ -129,6 +122,46 @@ class ViewModelProviderFactoryTest {
                 .thenReturn(vmCompanionMock)
         }
         ////////////////////////////////////////////////////////////////////////////////////////////
+
+        //Create mock objects for the SplashViewModel class
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        run {
+            //create mock APILogin class
+            val apiMock = mock(APIRefreshToken::class.java)
+            val apiCompanionMock = mock(APIRefreshToken.Companion::class.java)
+            `when`(apiCompanionMock.create()).thenReturn(apiMock)
+
+            //create mock LoginRepository
+            val repoMock = mock(AuthenticationRepositoryImpl::class.java)
+            val repoCompanionMock = mock(AuthenticationRepositoryImpl.Companion::class.java)
+            `when`(repoCompanionMock.create(apiCompanionMock.create())).thenReturn(repoMock)
+
+            //create mock LoginViewModel
+            val vmMock = mock(SplashViewModel::class.java)
+            val vmCompanionMock = mock(SplashViewModel.Companion::class.java)
+            `when`(vmCompanionMock.create(repoCompanionMock.create(APILogin.create())))
+                .thenReturn(vmMock)
+
+            //Mock data source
+            PowerMockito.mockStatic(APIRefreshToken.Companion::class.java)
+            PowerMockito.whenNew(APIRefreshToken.Companion::class.java)
+                .withNoArguments()
+                .thenReturn(apiCompanionMock)
+
+
+            //Mock repository
+            PowerMockito.mockStatic(AuthenticationRepositoryImpl.Companion::class.java)
+            PowerMockito.whenNew(AuthenticationRepositoryImpl.Companion::class.java)
+                .withNoArguments()
+                .thenReturn(repoCompanionMock)
+
+
+            //Mock view model
+            PowerMockito.mockStatic(SplashViewModel.Companion::class.java)
+            PowerMockito.whenNew(SplashViewModel.Companion::class.java)
+                .withNoArguments()
+                .thenReturn(vmCompanionMock)
+        }
     }
 
     @Test
@@ -143,6 +176,13 @@ class ViewModelProviderFactoryTest {
         val factory = ViewModelProviderFactory()
         val viewModel = factory.create(VideoViewModel::class.java)
         Truth.assertThat(viewModel).isInstanceOf(VideoViewModel::class.java)
+    }
+
+    @Test
+    fun `create SplashViewModel class from factory`() { //NOSONAR
+        val factory = ViewModelProviderFactory()
+        val viewModel = factory.create(SplashViewModel::class.java)
+        Truth.assertThat(viewModel).isInstanceOf(SplashViewModel::class.java)
     }
 
     @Test

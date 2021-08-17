@@ -1,7 +1,11 @@
 package com.bdpsolutions.highfive.utils
 
+import android.net.Uri
+import com.bdpsolutions.highfive.subsystems.image.model.dataclass.ImageInfo
+import com.bdpsolutions.highfive.subsystems.image.model.dataclass.ImageUploadResult
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenResponse
-import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
+import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoInfo
+import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoUploadResult
 import com.bdpsolutions.highfive.utils.factories.jsonElementConverterFactory
 import com.google.gson.*;
 import java.lang.reflect.Type
@@ -24,19 +28,19 @@ inline fun <reified T> JsonElement.getOrNull(name: String): T? {
 }
 
 object RetrofitDeserializers {
-    object VideoPreviewDeserializer : JsonDeserializer<VideoPreview> {
+    object VideoInfoDeserializer : JsonDeserializer<VideoInfo> {
         override fun deserialize(
             json: JsonElement,
             typeOfT: Type?,
             context: JsonDeserializationContext?
-        ): VideoPreview {
+        ): VideoInfo {
 
-            return VideoPreview(
+            return VideoInfo(
                 id = json.getOrNull<String>("id"),
                 name = json.getOrNull<String>("name"),
-                duration = json.getOrNull<Long>("duration"),
+                url = json.getOrNull<Uri>("url"),
                 dateStored = json.getOrNull<Date>("dateStored"),
-                thumbnail = json.getOrNull<String>("thumbnail")
+                //thumbnail = json.getOrNull<String>("thumbnail")
             )
         }
     }
@@ -56,5 +60,49 @@ object RetrofitDeserializers {
                 refreshToken = json.getOrNull<String>("refresh_token")
             )
         }
+    }
+
+    object ImageInfoDeserializer : JsonDeserializer<ImageInfo> {
+        override fun deserialize(
+            json: JsonElement,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): ImageInfo {
+
+            return ImageInfo(
+                id = json.getOrNull<String>("id"),
+                name = json.getOrNull<String>("name"),
+                dateStored = json.getOrNull<Date>("dateStored"),
+                url = json.getOrNull<Uri>("url")
+            )
+        }
+    }
+
+    object ImageUploadResultDeserializer : JsonDeserializer<ImageUploadResult> {
+        override fun deserialize(
+            json: JsonElement,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): ImageUploadResult {
+            return ImageUploadResult(
+                success = json.getOrNull<Boolean>("success"),
+                imageId = json.getOrNull<String>("imageId")
+            )
+        }
+
+    }
+
+    object VideoUploadResultDeserializer : JsonDeserializer<VideoUploadResult> {
+        override fun deserialize(
+            json: JsonElement,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): VideoUploadResult {
+            return VideoUploadResult(
+                success = json.getOrNull<Boolean>("success"),
+                videoId = json.getOrNull<String>("videoId")
+            )
+        }
+
     }
 }

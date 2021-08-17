@@ -159,8 +159,9 @@ export class PipelineComponent implements OnInit {
    */
   private updateToolColours() {
     Array.from(document.getElementsByClassName(this.pipeline.id + '-tool-chip') as HTMLCollectionOf<HTMLElement>).forEach(value => {
+      //SonarCloud sees this as a security threat. As it only affects colours, it can ignore this.  
       value.style.borderColor = '#' + ('000000' +
-        Math.floor(0x1000000 * Math.random()).toString(16)).slice(-6);
+        Math.floor(0x1000000 * Math.random()).toString(16)).slice(-6); //NOSONAR
     });
   }
 }
