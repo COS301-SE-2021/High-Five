@@ -1,17 +1,16 @@
+<ion-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col>s</ion-col>
+      <ion-col>s</ion-col>
+      <ion-col>s</ion-col>
+      <ion-col>s</ion-col>
+      <ion-col>s</ion-col>
+      <ion-col>s</ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-header>
 <ion-content>
-  <ion-segment [(ngModel)]="segment">
-    <ion-segment-button value="videos">
-      <ion-label>
-        Videos
-      </ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="images">
-      <ion-label>
-        Images
-      </ion-label>
-    </ion-segment-button>
-  </ion-segment>
-
   <div [ngSwitch]="segment">
     <div *ngSwitchCase="'videos'">
       <ion-grid>
@@ -31,7 +30,20 @@
         </ion-row>
       </ion-grid>
     </div>
+    <div *ngSwitchCase="'all'">
+      <ion-grid>
+        <ion-row>
+          <ion-col *ngFor="let img of imagesService.images$ | async; trackBy: imagesTrackFn" size-xl="3">
+            <app-image-card (deleteImage)="deleteImage($event)" [image]="img"></app-image-card>
+          </ion-col>
+          <ion-col *ngFor="let video of videosService.videos$ | async; trackBy videoTrackFn" size-xl="3">
+            <app-videostore-card [video]="video"></app-videostore-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
   </div>
+
   <ion-fab slot="fixed" vertical="bottom" horizontal="end" style="margin-right: 2%; margin-bottom: 2%">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>

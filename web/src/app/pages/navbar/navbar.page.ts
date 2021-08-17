@@ -5,6 +5,8 @@ import {MsalService} from '@azure/msal-angular';
 import {VideosService} from "../../services/videos/videos.service";
 import {ImagesService} from "../../services/images/images.service";
 import {PipelinesService} from "../../apis/pipelines.service";
+import {AnalyzedVideosService} from "../../services/analyzed-videos/analyzed-videos.service";
+import {AnalyzedImagesService} from "../../services/analyzed-images/analyzed-images.service";
 
 @Component({
   selector: 'app-navbar',
@@ -29,6 +31,7 @@ export class NavbarPage implements OnInit {
 
   constructor(private screenSizeService: ScreenSizeServiceService, private router: Router, private msalService: MsalService,
               private videosService: VideosService, private imagesService: ImagesService,
+              private analyzedVideoService: AnalyzedVideosService, private analyzedImageService : AnalyzedImagesService,
               private pipelineService: PipelinesService) {
     this.screenSizeService.isDesktopView().subscribe(isDesktop => {
       this.isDesktop = isDesktop;
