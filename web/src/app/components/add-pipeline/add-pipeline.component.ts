@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {ModalController, PopoverController} from '@ionic/angular';
+import {ModalController, PopoverController, ToastController} from '@ionic/angular';
 import {AddItemComponent} from '../add-item/add-item.component';
 import {PipelineService} from "../../services/pipeline/pipeline.service";
+import {Pipeline} from "../../models/pipeline";
 
 @Component({
   selector: 'app-add-pipeline',
@@ -16,13 +17,28 @@ export class AddPipelineComponent implements OnInit {
   pipelineName : string;
   tools: string[] = [];
 
-  constructor(private modalController: ModalController, private popoverController: PopoverController , public pipelineService: PipelineService) {
+  constructor(private modalController: ModalController, private popoverController: PopoverController ,
+              public pipelineService: PipelineService, private toastController : ToastController) {
     // Nothing added here
   }
 
   async dismiss() {
-    await this.pipelineService.addPipeline(this.pipelineName,this.tools);
-    await this.modalController.dismiss();
+    const newArr = this.pipelineService.pipelines.map((pipeline:Pipeline)=>{return pipeline.name});
+    if(newArr.filter((value) => {return value===this.pipelineName}).length>0 ){
+      await this.toastController.create({
+        message: 'Pipelines may not have duplicate names, please choose another name',
+        duration: 2000,
+        translucent: true,
+        position: 'bottom'
+      }).then((toast)=>{
+        toast.present();
+      })
+      await this.modalController.dismiss();
+    }else{
+      await this.pipelineService.addPipeline(this.pipelineName,this.tools);
+      await this.modalController.dismiss();
+    }
+
   }
 
   async presentAddToolPopover(ev: any) {
