@@ -73,7 +73,7 @@ namespace src.Subsystems.MediaStorage
             await video.CopyToAsync(stream);
 
             //get video thumbnail and store as separate blob
-            if (!File.Exists(thumbnailPath))
+            if (File.Exists(thumbnailPath))
             {
                 File.Delete(thumbnailPath);
             }
@@ -105,7 +105,7 @@ namespace src.Subsystems.MediaStorage
                 if (listBlobItem.Name.Contains("thumbnail"))
                 {
                     currentVideo = new VideoMetaData();
-                    var thumbnail = listBlobItem.ToByteArray().Result;
+                    var thumbnail = listBlobItem.GetUrl();
                     currentVideo.Thumbnail = thumbnail;
                 }
                 else
