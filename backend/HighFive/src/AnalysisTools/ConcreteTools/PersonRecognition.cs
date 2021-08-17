@@ -64,11 +64,14 @@ namespace src.AnalysisTools.ConcreteTools
         public override List<NamedOnnxValue> PreprocessFrame(byte[] frame)
         {
             
+            Image originalImage;
             Bitmap bImage;
             using (var ms = new MemoryStream(frame))
             {
-                bImage = new Bitmap(Image.FromStream(ms));
+                originalImage = Image.FromStream(ms);
             }
+
+            bImage = new Bitmap(originalImage);
 
 
             var bytes = ProcessUsingLockbitsAndUnsafeAndParallel(bImage);
