@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Org.OpenAPITools.Models;
 using src.AnalysisTools;
 using src.AnalysisTools.AnalysisThread;
+using src.AnalysisTools.VideoDecoder;
 using src.Storage;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
@@ -30,14 +31,16 @@ namespace src.Subsystems.Analysis
         private readonly IMediaStorageService _mediaStorageService;
         private readonly IPipelineService _pipelineService;
         private readonly IAnalysisModels _analysisModels;
+        private readonly IVideoDecoder _videoDecoder;
 
         public AnalysisService(IStorageManager storageManager, IMediaStorageService mediaStorageService,
-            IPipelineService pipelineService, IAnalysisModels analysisModels)
+            IPipelineService pipelineService, IAnalysisModels analysisModels, IVideoDecoder videoDecoder)
         {
             _storageManager = storageManager;
             _mediaStorageService = mediaStorageService;
             _pipelineService = pipelineService;
             _analysisModels = analysisModels;
+            _videoDecoder = videoDecoder;
         }
         
         public string AnalyzeMedia(AnalyzeMediaRequest request)
@@ -148,10 +151,20 @@ namespace src.Subsystems.Analysis
 
             var rawVideo = _mediaStorageService.GetVideo(videoId);
             var rawVideoStream = rawVideo.ToStream();
-            
+            var frameList = _videoDecoder.GetFramesFromVideo(rawVideoStream);
+
+            //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
+            var analyser = new AnalyserImpl();
+            analyser.StartAnalysis(analysisPipeline,_analysisModels);
+            foreach (var frameBytes in frameList)
+            {
+                analyser.FeedFrame(frameBytes);
+            }
+            analyser.EndAnalysis();
+            var analyzedFrameData = analyser.GetFrames()[0]; //TODO add functionality to save multiple images:analyser.GetFrames()[i][0]
+
             //---------------------------------------------------------------------------------------
-            //-----------------------------TODO: PERFORM ANALYSIS HERE-------------------------------
-            //---------------------------------------------------------------------------------------
+
 
             throw new System.NotImplementedException();
         }
