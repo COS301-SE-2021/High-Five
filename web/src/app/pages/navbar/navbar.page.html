@@ -27,7 +27,7 @@
           <div class="desktop-navbar" class="ion-text-left">
             <ion-button (click)="navigateTo('navbar/landing', 'homeNav')" #homeNav fill="clear" [class]="homeLink[0]">Home</ion-button>
             <ion-button (click)="navigateTo('navbar/analytics', 'analyticsNav')" #analyticsNav fill="clear" [class]="analyticsLink[0]">Analytics</ion-button>
-            <ion-button (click)="navigateTo('navbar/videos', 'videosNav')" #videoNav fill="clear" [class]="videoLink[0]">Media</ion-button>
+            <ion-button (click)="displayMediaPopover($event)" fill="clear" [class]="mediaLink[0]">Media</ion-button>
             <ion-button *ngIf="!isDesktop"  (click)="navigateTo('navbar/controls', 'controlsNav')" #controlsNav fill="clear" [class]="controlsLink[0]">Controls</ion-button>
           </div>
         </ion-col>

@@ -7,6 +7,8 @@ import {ImagesService} from "../../services/images/images.service";
 import {PipelinesService} from "../../apis/pipelines.service";
 import {AnalyzedVideosService} from "../../services/analyzed-videos/analyzed-videos.service";
 import {AnalyzedImagesService} from "../../services/analyzed-images/analyzed-images.service";
+import {PopoverController} from "@ionic/angular";
+import {NavbarMediaPopoverComponent} from "../../components/navbar-media-popover/navbar-media-popover.component";
 
 @Component({
   selector: 'app-navbar',
@@ -22,7 +24,7 @@ export class NavbarPage implements OnInit {
   //These links are arrays so that when the content is changed, it is shown in the HTML
   homeLink = ['active-link'];
   analyticsLink = ['link'];
-  videoLink = ['link'];
+  mediaLink = ['link'];
   controlsLink = ['link'];
 
   isDesktop: boolean;
@@ -31,15 +33,15 @@ export class NavbarPage implements OnInit {
 
   constructor(private screenSizeService: ScreenSizeServiceService, private router: Router, private msalService: MsalService,
               private videosService: VideosService, private imagesService: ImagesService,
-              private analyzedVideoService: AnalyzedVideosService, private analyzedImageService : AnalyzedImagesService,
-              private pipelineService: PipelinesService) {
+              private analyzedVideoService: AnalyzedVideosService, private analyzedImageService: AnalyzedImagesService,
+              private pipelineService: PipelinesService, private popoverController: PopoverController) {
     this.screenSizeService.isDesktopView().subscribe(isDesktop => {
       this.isDesktop = isDesktop;
     });
     this.navPages = {
       homeNav: this.homeLink,
       analyticsNav: this.analyticsLink,
-      videoNav: this.videoLink,
+      videoNav: this.mediaLink,
       controlsNav: this.controlsLink
     };
   }
@@ -74,6 +76,19 @@ export class NavbarPage implements OnInit {
       }
     }
     this.router.navigate([url]);
+  }
+
+  async displayMediaPopover(ev: any) {
+    await this.popoverController.create({
+      component: NavbarMediaPopoverComponent,
+      animated: true,
+      translucent: true,
+      backdropDismiss: true,
+      event: ev,
+      cssClass: 'navBarMediaPopover'
+    }).then((popoverComponent)=>{
+      popoverComponent.present();
+    })
   }
 
 }
