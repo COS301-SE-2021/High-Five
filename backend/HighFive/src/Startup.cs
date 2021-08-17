@@ -16,6 +16,7 @@ using src.Storage;
 using src.Subsystems.Analysis;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
+using src.Subsystems.Video;
 
 namespace src
 {
@@ -78,6 +79,7 @@ namespace src
             services.AddScoped<IMediaStorageService, MediaStorageService>();
             services.AddScoped<IPipelineService, PipelineService>();
             services.AddScoped<IAnalysisService, AnalysisService>();
+            services.AddScoped<IFFmpegWrapperService,FFmpegCoreService>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
