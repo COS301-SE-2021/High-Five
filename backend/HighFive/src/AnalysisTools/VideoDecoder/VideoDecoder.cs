@@ -74,7 +74,8 @@ namespace src.AnalysisTools.VideoDecoder
             {
                 using var stream = new MemoryStream(frame);
                 var bmp = Image.FromStream(stream) as Bitmap;
-                var rect = new Rectangle(System.Drawing.Point.Empty, bmp.Size);
+                if (bmp == null) continue;
+                var rect = new Rectangle(Point.Empty, bmp.Size);
                 var bitLock = bmp.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
                 var imgData = ImageData.FromPointer(bitLock.Scan0, ImagePixelFormat.Bgr24, bmp.Size);
                 file.Video.AddFrame(imgData);

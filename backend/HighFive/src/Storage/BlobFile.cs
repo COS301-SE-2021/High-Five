@@ -118,6 +118,21 @@ namespace src.Storage
             await UploadFile(file);
         }
 
+        public async Task UploadFileFromStream(Stream stream, string contentType="")
+        {
+            if (!contentType.Equals(""))
+            {
+                _file.Properties.ContentType = contentType;
+            }
+            await _file.UploadFromStreamAsync(stream);
+        }
+
+        public async Task UploadFileFromByteArray(byte[] array, string contentType = "")
+        {
+            var ms = new MemoryStream(array);
+            await UploadFileFromStream(ms, contentType);
+        }
+
         public async Task UploadText(string text)
         {
             /*

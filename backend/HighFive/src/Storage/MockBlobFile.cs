@@ -123,6 +123,16 @@ namespace src.Storage
             }
         }
 
+        public Task UploadFileFromStream(Stream stream, string contentType="")
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UploadFileFromByteArray(byte[] array, string contentType = "")
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task UploadText(string text)
         {
             /*

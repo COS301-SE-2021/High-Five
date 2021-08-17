@@ -87,7 +87,7 @@ namespace src.Subsystems.Analysis
             
             //else this media and tool combination has not yet been analyzed. Proceed to the analysis phase.
             var contentType = "";
-            var analyzedMediaTemporaryLocation = string.Empty;
+            byte[] analyzedMediaTemporaryLocation = null;
             switch (request.MediaType)
             {
                 case "image":
@@ -103,11 +103,11 @@ namespace src.Subsystems.Analysis
             var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
             analyzedFile.AddMetadata("mediaId", request.MediaId);
             analyzedFile.AddMetadata("pipelineId", request.PipelineId);
-            analyzedFile.UploadFile(analyzedMediaTemporaryLocation, contentType);
+            analyzedFile.UploadFileFromByteArray(analyzedMediaTemporaryLocation, contentType);
             return analyzedFile.GetUrl();
         }
 
-        private string AnalyzeImage(string imageId, Pipeline analysisPipeline)
+        private byte[] AnalyzeImage(string imageId, Pipeline analysisPipeline)
         {
             /*
              *      Description:
@@ -124,8 +124,7 @@ namespace src.Subsystems.Analysis
             
             var rawImage = _mediaStorageService.GetImage(imageId);
             var rawImageByteArray = rawImage.ToByteArray().Result;
-            
-            
+
             //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
             var analyser = new AnalyserImpl();
             analyser.StartAnalysis(analysisPipeline,_analysisModels);
@@ -134,13 +133,10 @@ namespace src.Subsystems.Analysis
             var analyzedImageData = analyser.GetFrames()[0][0];//TODO add functionality to save multiple images:analyser.GetFrames()[i][0]
             //---------------------------------------------------------------------------------------
 
-            var oldName = rawImage.GetMetaData("originalName");
-            var tempDirectory = Path.GetTempPath() + "\\analyzed" + oldName;
-            File.WriteAllBytes(tempDirectory, analyzedImageData);
-            return tempDirectory;
+            return analyzedImageData;
         }
 
-        private string AnalyzeVideo(string videoId ,Pipeline analysisPipeline)
+        private byte[] AnalyzeVideo(string videoId ,Pipeline analysisPipeline)
         {
             /*
              *      Description:
@@ -174,10 +170,7 @@ namespace src.Subsystems.Analysis
 
             rawVideoStream.Seek(0, SeekOrigin.Begin);
             var analyzedVideoData = _videoDecoder.EncodeVideoFromFrames(analyzedFrameData, rawVideoStream);
-            var oldName = rawVideo.GetMetaData("originalName");
-            var tempDirectory = Path.GetTempPath() + "\\analyzed" + oldName;
-            File.WriteAllBytes(tempDirectory, analyzedVideoData);
-            return tempDirectory;
+            return analyzedVideoData;
         }
         
         public void SetBaseContainer(string containerName)
