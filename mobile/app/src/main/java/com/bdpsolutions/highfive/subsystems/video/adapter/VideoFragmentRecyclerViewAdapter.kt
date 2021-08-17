@@ -29,4 +29,8 @@ abstract class VideoFragmentRecyclerViewAdapter:
     fun setData(value: Array<VideoItemView>) {
         dataSet = value
     }
+
+    fun clearData() {
+        dataSet = null
+    }
 }

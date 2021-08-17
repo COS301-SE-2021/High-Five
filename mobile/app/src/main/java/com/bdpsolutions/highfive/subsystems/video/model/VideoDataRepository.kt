@@ -3,6 +3,7 @@ package com.bdpsolutions.highfive.subsystems.video.model
 import androidx.lifecycle.MutableLiveData
 import com.bdpsolutions.highfive.subsystems.video.model.source.VideoDataSource
 import com.bdpsolutions.highfive.subsystems.video.viewmodel.VideoResult
+import java.io.File
 
 /**
  * @author Kyle Barry (u19232510@tuks.co.za)
@@ -30,6 +31,10 @@ class VideoDataRepository private constructor(private val source: VideoDataSourc
      */
     fun fetchVideoData(videoObservable: MutableLiveData<VideoResult>) {
         source.fetchAllVideos(videoObservable)
+    }
+
+    fun storeVideo(image: File, callback: (() -> Unit)? = null) {
+        source.loadVideo(image, callback)
     }
 
     companion object {

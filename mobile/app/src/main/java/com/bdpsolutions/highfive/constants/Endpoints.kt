@@ -6,6 +6,7 @@ object Endpoints {
 
     object VIDEO {
         const val GET_ALL_VIDEOS = "media/getAllVideos"
+        const val STORE_VIDEO = "media/storeVideo"
     }
 
     object IMAGE {

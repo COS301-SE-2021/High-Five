@@ -5,6 +5,7 @@ import com.bdpsolutions.highfive.subsystems.image.model.dataclass.ImageInfo
 import com.bdpsolutions.highfive.subsystems.image.model.dataclass.ImageUploadResult
 import com.bdpsolutions.highfive.subsystems.login.model.dataclass.AccessTokenResponse
 import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoInfo
+import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoUploadResult
 import com.bdpsolutions.highfive.utils.factories.jsonElementConverterFactory
 import com.google.gson.*;
 import java.lang.reflect.Type
@@ -86,6 +87,20 @@ object RetrofitDeserializers {
             return ImageUploadResult(
                 success = json.getOrNull<Boolean>("success"),
                 imageId = json.getOrNull<String>("imageId")
+            )
+        }
+
+    }
+
+    object VideoUploadResultDeserializer : JsonDeserializer<VideoUploadResult> {
+        override fun deserialize(
+            json: JsonElement,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): VideoUploadResult {
+            return VideoUploadResult(
+                success = json.getOrNull<Boolean>("success"),
+                videoId = json.getOrNull<String>("videoId")
             )
         }
 
