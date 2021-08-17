@@ -3,6 +3,9 @@ import {VideosService} from "../../services/videos/videos.service";
 import {ImagesService} from "../../services/images/images.service";
 import {AnalyzedVideosService} from "../../services/analyzed-videos/analyzed-videos.service";
 import {AnalyzedImagesService} from "../../services/analyzed-images/analyzed-images.service";
+import {PopoverController} from "@ionic/angular";
+import {MediaFilterComponent} from "../../components/media-filter/media-filter.component";
+import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'app-allmedia',
@@ -18,7 +21,8 @@ export class AllmediaPage implements OnInit {
   segment: string;
 
   constructor(public videosService: VideosService, public imagesService: ImagesService,
-              public analyzedVideosService: AnalyzedVideosService, public analyzedImagesService: AnalyzedImagesService) {
+              public analyzedVideosService: AnalyzedVideosService, public analyzedImagesService: AnalyzedImagesService,
+              private popoverController: PopoverController) {
     this.segment = 'all'
   }
 
@@ -60,5 +64,26 @@ export class AllmediaPage implements OnInit {
 
     await this.imagesService.addImage(image.target.files[0]);
     //Nothing added here yet
+  }
+
+  async displayFilterPopover(ev: any) {
+    const filterPopover = await this.popoverController.create({
+      component: MediaFilterComponent,
+      cssClass: 'media-filter',
+      animated: true,
+      translucent: true,
+      backdropDismiss: true,
+      event: ev,
+    });
+    await filterPopover.present();
+    await filterPopover.onDidDismiss().then(
+      data => {
+        if (data.data != undefined) {
+          if (data.data.segment != undefined) {
+            this.segment = data.data.segment;
+          }
+        }
+      }
+    );
   }
 }

@@ -1,4 +1,14 @@
 <ion-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col size-xl="1" size-lg="1">
+          <ion-button fill="outline" color="tertiary" shape="round" mode="md" (click)="displayFilterPopover($event)">
+            <ion-label color="dark">Filter : {{segment}}</ion-label>
+            <ion-icon color="dark" name="filter-outline"></ion-icon>
+          </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-header>
 
 <ion-content>

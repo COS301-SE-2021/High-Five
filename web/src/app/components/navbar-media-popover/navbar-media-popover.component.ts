@@ -1,6 +1,5 @@
 import {Component, Input, OnInit, Output} from '@angular/core';
 import {Router} from "@angular/router";
-import {PopoverController} from "@ionic/angular";
 
 @Component({
   selector: 'app-navbar-media-popover',

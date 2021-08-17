@@ -69,7 +69,7 @@ export class PipelineComponent implements OnInit {
               spinner: 'dots',
               animated: true,
               message: 'Adding tools'
-            }).then((e)=>{
+            }).then((e: HTMLIonLoadingElement)=>{
               e.present();
               this.onAddTool(data.data.items);
               e.dismiss();

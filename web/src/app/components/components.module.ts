@@ -22,11 +22,12 @@ import {RegisterCardComponent} from "./register-card/register-card.component";
 import {WelcomeCardComponent} from "./welcome-card/welcome-card.component";
 import {LottieModule} from "ngx-lottie";
 import {SwiperModule} from "swiper/angular";
+import {MediaFilterComponent} from "./media-filter/media-filter.component";
 
 @NgModule({
   declarations: [VideostoreCardComponent, VideostreamCardComponent, AboutPage1Component, AboutPage2Component, AboutPage3Component,AddItemComponent,
     AddPipelineComponent, AnalyzedImageCardComponent, AnalyzedVideostoreCardComponent, ImageCardComponent, MoreInfoComponent,
-    NavbarMediaPopoverComponent,PipelineComponent,RegisterCardComponent,WelcomeCardComponent],
+    NavbarMediaPopoverComponent,PipelineComponent,RegisterCardComponent,WelcomeCardComponent, MediaFilterComponent],
   imports: [
     CommonModule,
     IonicModule,
@@ -39,6 +40,6 @@ import {SwiperModule} from "swiper/angular";
   ],
   exports: [VideostoreCardComponent, VideostreamCardComponent, AboutPage1Component, AboutPage2Component, AboutPage3Component,AddItemComponent,
   AddPipelineComponent, AnalyzedImageCardComponent, AnalyzedVideostoreCardComponent, ImageCardComponent, MoreInfoComponent,
-    NavbarMediaPopoverComponent,PipelineComponent,RegisterCardComponent,WelcomeCardComponent]
+    NavbarMediaPopoverComponent,PipelineComponent,RegisterCardComponent,WelcomeCardComponent,MediaFilterComponent]
 })
 export class CustomComponentsModule {}
