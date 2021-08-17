@@ -5,13 +5,33 @@ import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoInfo
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.JsonObject
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import java.text.SimpleDateFormat
 import java.util.*
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 
+import org.powermock.api.mockito.PowerMockito
+import org.powermock.core.classloader.annotations.PrepareForTest
+import org.powermock.modules.junit4.PowerMockRunner
+
+
+@RunWith(PowerMockRunner::class)
+@PrepareForTest(Uri::class)
 internal class RetrofitDeserializersTest {
 
     @Test
     fun `deserialize a VideoPreview object from a JSON object`() { //NOSONAR
+
+        PowerMockito.mockStatic(Uri::class.java)
+        val uri: Uri = mock(Uri::class.java)
+
+        PowerMockito.`when`(Uri.parse(any(String::class.java))).thenAnswer {
+            return@thenAnswer uri
+        }
 
         val jsonObject = JsonObject()
         jsonObject.addProperty("id", "ID001")
