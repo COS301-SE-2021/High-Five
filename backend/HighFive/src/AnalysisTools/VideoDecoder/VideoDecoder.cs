@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Xabe.FFmpeg;
 using Xabe.FFmpeg.Downloader;
 
@@ -25,7 +26,7 @@ namespace src.AnalysisTools.VideoDecoder
             return frameList;
         }
 
-        public async void GetThumbnailFromVideo(string videoPath, string thumbnailPath)
+        public async Task GetThumbnailFromVideo(string videoPath, string thumbnailPath)
         {
             var info = await FFmpeg.GetMediaInfo(videoPath).ConfigureAwait(false);
             var videoStream = info.VideoStreams.First()?.SetCodec(VideoCodec.png);

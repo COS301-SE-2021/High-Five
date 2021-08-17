@@ -77,7 +77,7 @@ namespace src.Subsystems.MediaStorage
             {
                 File.Delete(thumbnailPath);
             }
-            _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);
+            await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);
             
             var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", VideoContainerName).Result;
             await thumbnailBlob.UploadFile(thumbnailPath);
