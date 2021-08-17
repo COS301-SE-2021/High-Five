@@ -23,6 +23,10 @@ const routes: Routes = [
         loadChildren: () => import('../videostore/videostore.module').then( m => m.VideostorePageModule),
       },
       {
+        path: 'imagestore',
+        loadChildren: () => import('../imagestore/imagestore.module').then( m => m.ImagestorePageModule)
+      },
+      {
         path:'',
         redirectTo : 'landing',
         pathMatch:'full',
