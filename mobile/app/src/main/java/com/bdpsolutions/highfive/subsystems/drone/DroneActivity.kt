@@ -3,6 +3,7 @@ package com.bdpsolutions.highfive.subsystems.drone
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -27,11 +28,15 @@ import dji.sdk.base.BaseComponent
 import dji.sdk.base.BaseProduct
 import dji.sdk.sdkmanager.DJISDKInitEvent
 import dji.sdk.sdkmanager.DJISDKManager
+import java.util.ArrayList
+
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 class DroneActivity : AppCompatActivity() {
     private val TAG: String = DroneActivity::class.java.getName()
     private lateinit var binding: ActivityDroneBinding
+    private val REQUEST_PERMISSION_CODE = 12345
     private val REQUIRED_PERMISSION_LIST = arrayOf(
         Manifest.permission.VIBRATE,
         Manifest.permission.INTERNET,
@@ -47,6 +52,32 @@ class DroneActivity : AppCompatActivity() {
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.READ_PHONE_STATE
     )
+    private val missingPermission: MutableList<String> = ArrayList()
+    private val isRegistrationInProgress = AtomicBoolean(false)
+
+    /**
+     * Checks if there is any missing permissions, and
+     * requests runtime permission if needed.
+     */
+    private fun checkAndRequestPermissions() {
+        // Check for permissions
+        for (eachPermission in REQUIRED_PERMISSION_LIST) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    eachPermission
+                ) != PackageManager.PERMISSION_GRANTED) {
+                missingPermission.add(eachPermission)
+            }
+        }
+        // Request for missing permissions
+        if (!missingPermission.isEmpty() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(
+                this,
+                missingPermission.toTypedArray(),
+                REQUEST_PERMISSION_CODE
+            )
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // When the compile and target version is higher than 22, please request the
