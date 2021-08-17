@@ -1,4 +1,7 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -83,14 +86,16 @@ namespace src.Subsystems.Analysis
             }
             
             //else this media and tool combination has not yet been analyzed. Proceed to the analysis phase.
-            
+            var contentType = "";
             var analyzedMediaTemporaryLocation = string.Empty;
             switch (request.MediaType)
             {
                 case "image":
+                    contentType = "image/jpg";
                     analyzedMediaTemporaryLocation = AnalyzeImage(request.MediaId, analysisPipeline);
                     break;
                 case "video":
+                    contentType = "video/mp4";
                     analyzedMediaTemporaryLocation = AnalyzeVideo(request.MediaId, analysisPipeline);
                     break;
             }
@@ -157,17 +162,22 @@ namespace src.Subsystems.Analysis
             //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
             var analyser = new AnalyserImpl();
             analyser.StartAnalysis(analysisPipeline,_analysisModels);
-            foreach (var frameBytes in frameList)
+            foreach (var frameStream in frameList)
             {
-                analyser.FeedFrame(frameBytes);
+                var bytes = ((MemoryStream) frameStream).ToArray();
+                analyser.FeedFrame(bytes);
             }
             analyser.EndAnalysis();
             var analyzedFrameData = analyser.GetFrames()[0]; //TODO add functionality to save multiple images:analyser.GetFrames()[i][0]
 
             //---------------------------------------------------------------------------------------
 
-
-            throw new System.NotImplementedException();
+            rawVideoStream.Seek(0, SeekOrigin.Begin);
+            var analyzedVideoData = _videoDecoder.EncodeVideoFromFrames(analyzedFrameData, rawVideoStream);
+            var oldName = rawVideo.GetMetaData("originalName");
+            var tempDirectory = Path.GetTempPath() + "\\analyzed" + oldName;
+            File.WriteAllBytes(tempDirectory, analyzedVideoData);
+            return tempDirectory;
         }
         
         public void SetBaseContainer(string containerName)

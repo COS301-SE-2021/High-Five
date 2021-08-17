@@ -94,7 +94,7 @@ namespace src.Storage
             await _file.UploadFromByteArrayAsync(fileBytes, 0, (int) newFile.Length);
         }
 
-        public async Task UploadFile(string path)
+        public async Task UploadFile(string path, string contentType = "")
         {
             /*
              *      Description:
@@ -109,8 +109,11 @@ namespace src.Storage
             var file = new FormFile(fs, 0, fs.Length, null, Path.GetFileName(fs.Name))
             {
                 Headers = new HeaderDictionary(),
-                ContentType = "image/" + Path.GetFileName(fs.Name).Split(".")[Path.GetFileName(fs.Name).Split(".").Length-1]
             };
+            if (!contentType.Equals(""))
+            {
+                file.ContentType = contentType;
+            }
 
             await UploadFile(file);
         }

@@ -105,7 +105,7 @@ namespace src.Storage
             }
         }
 
-        public async Task UploadFile(string path)
+        public async Task UploadFile(string path, string contentType)
         {
             /*
              *      Description:
