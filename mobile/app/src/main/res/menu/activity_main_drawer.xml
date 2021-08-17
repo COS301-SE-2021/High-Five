@@ -18,5 +18,10 @@
             android:id="@+id/navigation_media"
             android:icon="@android:drawable/ic_menu_gallery"
             android:title="@string/media_fragment" />
+
+        <item
+            android:id="@+id/navigation_drone"
+            android:icon="@drawable/ic_notifications_black_24dp"
+            android:title="Drone" />
     </group>
 </menu>

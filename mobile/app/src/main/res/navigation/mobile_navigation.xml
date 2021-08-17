@@ -22,4 +22,10 @@
         android:name="com.bdpsolutions.highfive.subsystems.media.MediaFragment"
         android:label="@string/media_fragment"
         tools:layout="@layout/media_fragment" />
+
+    <fragment
+        android:id="@+id/navigation_drone"
+        android:name="com.bdpsolutions.highfive.subsystems.drone.DroneNavigationFragment"
+        android:label="Drone Fragment"
+        />
 </navigation>
