@@ -10,7 +10,11 @@ import android.os.*
 import android.util.Log
 import android.view.View
 import android.view.Window
+import android.view.WindowInsets
+import android.view.WindowManager
+import android.widget.Button
 import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -39,6 +43,8 @@ import javax.inject.Inject
 class DroneActivity : AppCompatActivity() {
     private val TAG: String = DroneActivity::class.java.getName()
     private lateinit var binding: ActivityDroneBinding
+
+    private val mBtnOpen: ToggleButton? = null
 
     private val REQUEST_PERMISSION_CODE = 12345
     private val REQUIRED_PERMISSION_LIST = arrayOf(
@@ -188,9 +194,19 @@ class DroneActivity : AppCompatActivity() {
         // following permissions at runtime to ensure the
         // SDK work well.
 
-
         binding = ActivityDroneBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // Hiding status bars, since this is the splash screen
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.hide(WindowInsets.Type.statusBars())
+        } else {
+            // Hiding status bar for older versions of Android.
+            @Suppress("DEPRECATION")
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            )
+        }
     }
 
 

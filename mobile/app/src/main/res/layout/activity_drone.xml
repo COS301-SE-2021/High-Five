@@ -10,7 +10,9 @@
     <!-- Widget to see first person view (FPV) -->
     <dji.ux.widget.FPVWidget
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+/>
 
     <dji.ux.widget.FPVOverlayWidget
         android:layout_width="match_parent"
@@ -74,6 +76,14 @@
             android:layout_height="40dp"
             android:layout_marginTop="12dp"/>
     </LinearLayout>
+    <ToggleButton
+        android:id="@+id/chkState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/toggle_selector"
+        android:layout_above="@+id/CameraCapturePanel"
+        android:textOff="OFFLINE"
+        android:textOn="LIVE"/>
 
     <dji.ux.widget.controls.CameraControlsWidget
         android:id="@+id/CameraCapturePanel"
