@@ -23,7 +23,9 @@
         android:label="@string/video_fragment"
         tools:layout="@layout/fragment_video" />
 
-    <fragment android:id="@+id/navigation_drone"
-        android:name="com.bdpsolutions.highfive.subsystems.video.fragment.VideoFragment"
-        android:label="Drone Fragment" />
+    <fragment
+        android:id="@+id/navigation_drone"
+        android:name="com.bdpsolutions.highfive.subsystems.drone.DroneNavigationFragment"
+        android:label="Drone Fragment"
+        />
 </navigation>

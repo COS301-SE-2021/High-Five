@@ -1,14 +1,25 @@
 package com.bdpsolutions.highfive.subsystems.drone
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
 import com.bdpsolutions.highfive.R
+import com.bdpsolutions.highfive.databinding.ActivityDroneBinding
+import com.bdpsolutions.highfive.databinding.ActivityLoginBinding
+import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
+import com.bdpsolutions.highfive.subsystems.main.MainActivity
+import com.bdpsolutions.highfive.utils.ContextHolder
+import javax.inject.Inject
 
 class DroneActivity : AppCompatActivity() {
-
+    private lateinit var binding: ActivityDroneBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // When the compile and target version is higher than 22, please request the
@@ -34,6 +45,7 @@ class DroneActivity : AppCompatActivity() {
             )
         }
 
-        setContentView(R.layout.activity_drone)
+        binding = ActivityDroneBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 }

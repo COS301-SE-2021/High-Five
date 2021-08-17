@@ -11,11 +11,18 @@ import com.bdpsolutions.highfive.databinding.AnalysisFragmentBinding
 import com.bdpsolutions.highfive.subsystems.analysis.viewmodel.AnalysisViewModel
 
 class DroneNavigationFragment: Fragment(){
-    override fun onStart() {
-        super.onStart()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         var switchActivityIntent : Intent = Intent(activity, DroneActivity::class.java);
         startActivity(switchActivityIntent)
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
+
+
 
 
 }
