@@ -72,7 +72,7 @@ namespace src.AnalysisTools.ConcreteTools
             var scores=((DenseTensor<float>) result.ElementAtOrDefault(2).Value).ToArray();
 
 
-            return PostProcessFrame(originalImage, boxes, labels, scores);
+            return PostprocessFrame(originalImage, boxes, labels, scores);
         }
 
         private static float[][][] PreprocessFrame(Image image)
@@ -116,7 +116,7 @@ namespace src.AnalysisTools.ConcreteTools
             return processedFrame;
         }
 
-        private AnalysisOutput PostProcessFrame(Image image, IReadOnlyList<float> boxes, IReadOnlyList<long> labels, IReadOnlyList<float> scores)
+        private AnalysisOutput PostprocessFrame(Image image, IReadOnlyList<float> boxes, IReadOnlyList<long> labels, IReadOnlyList<float> scores)
         {
             //get scale
             var oldWidth = image.Width;
@@ -162,6 +162,22 @@ namespace src.AnalysisTools.ConcreteTools
             graphics.DrawImage(image, destRect, 0, 0, image.Width,image.Height, GraphicsUnit.Pixel, wrapMode);
 
             return destImage;
+        }
+
+        public override IDisposableReadOnlyCollection<DisposableNamedOnnxValue> ProcessFrame(
+            List<NamedOnnxValue> modelInput)
+        {
+            return null;
+        }
+
+        public override List<NamedOnnxValue> PreprocessFrame(byte[] frame)
+        {
+            return null;
+        }
+
+        public override AnalysisOutput PostprocessFrame(IDisposableReadOnlyCollection<DisposableNamedOnnxValue> result)
+        {
+            return new AnalysisOutput();
         }
     }
 }

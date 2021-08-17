@@ -171,5 +171,21 @@ namespace src.AnalysisTools.ConcreteTools
                 return output;
             }
         }
+        
+        public override IDisposableReadOnlyCollection<DisposableNamedOnnxValue> ProcessFrame(
+            List<NamedOnnxValue> modelInput)
+        {
+            return null;
+        }
+
+        public override List<NamedOnnxValue> PreprocessFrame(byte[] frame)
+        {
+            return null;
+        }
+
+        public override AnalysisOutput PostprocessFrame(IDisposableReadOnlyCollection<DisposableNamedOnnxValue> result)
+        {
+            return new AnalysisOutput();
+        }
     }
 }
