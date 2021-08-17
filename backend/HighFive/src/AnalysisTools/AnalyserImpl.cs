@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 using Org.OpenAPITools.Models;
 using src.AnalysisTools.AnalysisThread;
 using src.Subsystems.Analysis;
@@ -12,6 +13,7 @@ namespace src.AnalysisTools
         private List<BlockingCollection<byte[]>> _outputQueues;
         private List<Tool> _tools;
         private List<IToolRunner> _toolRunners;
+        private int _frameCount;
 
         public void StartAnalysis(Pipeline pipeline, IAnalysisModels analysisModels)
         {
@@ -34,10 +36,13 @@ namespace src.AnalysisTools
             {
                 //_toolRunners.Add(new ToolRunner(tool,_outputQueues[0]));
             }
+
+            _frameCount = 0;
         }
 
         public void FeedFrame(byte[] frame)
         {
+            _frameCount++;
             foreach (var toolRunner in _toolRunners)
             {
                 toolRunner.Enqueue(frame);
@@ -46,7 +51,22 @@ namespace src.AnalysisTools
 
         public List<List<byte[]>> GetFrames()
         {
-            throw new System.NotImplementedException();
+            var output = new List<List<byte[]>>();
+            
+            for (var i = 0; i < _outputQueues.Count; i++)
+            {
+                output.Add(new List<byte[]>());
+                if (_frameCount == 0) break;
+                var count = 0;
+                foreach (var frame in _outputQueues[i].GetConsumingEnumerable(CancellationToken.None))
+                {
+                    output[i].Add(frame);
+                    count++;
+                    if (count == _frameCount) break;
+                }
+            }
+
+            return output;
         }
 
         public void EndAnalysis()
