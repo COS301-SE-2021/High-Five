@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Org.OpenAPITools.Models;
+using src.AnalysisTools.VideoDecoder;
 using src.Storage;
 using static System.String;
 
@@ -23,12 +24,14 @@ namespace src.Subsystems.MediaStorage
          */
 
         private readonly IStorageManager _storageManager;
+        private readonly IVideoDecoder _videoDecoder;
         private const string VideoContainerName = "video";
         private const string ImageContainerName = "image";
 
-        public MediaStorageService(IStorageManager storageManager)
+        public MediaStorageService(IStorageManager storageManager, IVideoDecoder videoDecoder)
         {
             _storageManager = storageManager;
+            _videoDecoder = videoDecoder;
         }
 
         public async Task StoreVideo(IFormFile video)
@@ -72,25 +75,14 @@ namespace src.Subsystems.MediaStorage
             await video.CopyToAsync(stream);
 
             //get video thumbnail and store as separate blob
-            /*var inputFile = new MediaFile {Filename = videoPath};
-            var thumbnail = new MediaFile {Filename = thumbnailPath};
-            using (var engine = new Engine())
-            {
-                engine.GetMetadata(inputFile);
-                var options = new ConversionOptions {Seek = TimeSpan.FromSeconds(1), VideoSize = VideoSize.Cif};
-                engine.GetThumbnail(inputFile, thumbnail, options);
-            }*/
+            _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);
+            
             if (!File.Exists(thumbnailPath))
             {
                 File.Create(thumbnailPath).Close();
             }
             var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", VideoContainerName).Result;
             await thumbnailBlob.UploadFile(thumbnailPath);
-
-            //get video duration in seconds
-            //var seconds = Math.Truncate(inputFile.Metadata.Duration.TotalSeconds);
-            var seconds = 0;
-            videoBlob.AddMetadata("duration", seconds.ToString());
 
             //upload to Azure Blob Storage
             await videoBlob.UploadFile(video);
