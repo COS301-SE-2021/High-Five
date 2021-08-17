@@ -82,8 +82,11 @@
         android:layout_height="wrap_content"
         android:background="@drawable/toggle_selector"
         android:layout_above="@+id/CameraCapturePanel"
+        android:textColor="@drawa"
         android:textOff="OFFLINE"
-        android:textOn="LIVE"/>
+        android:textOn="LIVE"
+        />
+
 
     <dji.ux.widget.controls.CameraControlsWidget
         android:id="@+id/CameraCapturePanel"
