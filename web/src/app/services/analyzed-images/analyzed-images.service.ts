@@ -3,7 +3,6 @@ import {BehaviorSubject} from "rxjs";
 import {MediaStorageService} from "../../apis/mediaStorage.service";
 import {AnalyzedImageMetaData} from "../../models/analyzedImageMetaData";
 import {AnalysisService} from "../../apis/analysis.service";
-
 @Injectable({
   providedIn: 'root'
 })
