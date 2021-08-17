@@ -12,7 +12,7 @@ namespace src.AnalysisTools
     {
         private List<BlockingCollection<byte[]>> _outputQueues;
         private List<Tool> _tools;
-        private List<IToolRunner> _toolRunners;
+        private List<ToolRunner> _toolRunners;
         private int _frameCount;
 
         public void StartAnalysis(Pipeline pipeline, IAnalysisModels analysisModels)
