@@ -68,7 +68,7 @@ namespace src.AnalysisTools.ConcreteTools
             Bitmap bImage;
             using (var ms = new MemoryStream(frame))
             {
-                originalImage = Image.FromStream(ms);
+                originalImage = Image.FromStream(ms, true);
             }
 
             bImage = new Bitmap(originalImage);
