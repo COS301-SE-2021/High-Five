@@ -14,18 +14,7 @@ class VideoViewModel private constructor(private val repo: VideoDataRepository) 
     private var cacheValidUntil: Int = 0
 
     fun fetchVideoData() {
-        repo.refreshData {
-            result -> run {
-                when(result) {
-                    is Result.Success<*> -> {
-                        _videoResult.value = VideoResult(success = result)
-                    }
-                    is Result.Error -> {
-                        _videoResult.value = VideoResult(error = -1)
-                    }
-                }
-            }
-        }
+        repo.fetchVideoData(_videoResult)
     }
 
     companion object {

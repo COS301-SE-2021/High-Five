@@ -69,7 +69,7 @@ class ImageRecyclerViewAdapterImpl @Inject constructor() : ImageRecyclerViewAdap
                                 val outputDir: File =
                                     ContextHolder.appContext!!.cacheDir
 
-                                val outputFile = File.createTempFile("tmp", ".png", outputDir);
+                                val outputFile = File(outputDir, "tmp.png")
                                 val fos = FileOutputStream(outputFile)
                                 fos.write(bitmapdata)
                                 fos.flush()

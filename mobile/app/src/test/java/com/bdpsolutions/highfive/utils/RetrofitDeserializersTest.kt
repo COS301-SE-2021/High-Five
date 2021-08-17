@@ -1,6 +1,7 @@
 package com.bdpsolutions.highfive.utils
 
-import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoPreview
+import android.net.Uri
+import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoInfo
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.JsonObject
 import org.junit.Test
@@ -15,19 +16,19 @@ internal class RetrofitDeserializersTest {
         val jsonObject = JsonObject()
         jsonObject.addProperty("id", "ID001")
         jsonObject.addProperty("name", "TestOBJ")
-        jsonObject.addProperty("duration", 100)
+        jsonObject.addProperty("url", "http://example.org")
         jsonObject.addProperty("dateStored", "1970-01-01T00:00:00")
         jsonObject.addProperty("thumbnail", "Thumb")
 
-        val expected = VideoPreview(
+        val expected = VideoInfo(
             id = "ID001",
             name = "TestOBJ",
-            duration = 100,
+            url = Uri.parse("http://example.org"),
             dateStored = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).parse("1970-01-01T00:00:00")!!,
-            thumbnail = "Thumb"
+            //thumbnail = "Thumb"
         )
 
-        val obj = RetrofitDeserializers.VideoPreviewDeserializer.deserialize(jsonObject, null, null)
+        val obj = RetrofitDeserializers.VideoInfoDeserializer.deserialize(jsonObject, null, null)
         assertThat(obj).isEqualTo(expected)
     }
 
@@ -37,30 +38,30 @@ internal class RetrofitDeserializersTest {
         jsonObject.addProperty("id", "ID001")
         jsonObject.addProperty("name", "TestOBJ")
 
-        val expected = VideoPreview(
+        val expected = VideoInfo(
             id = "ID001",
             name = "TestOBJ",
-            duration = null,
+            url = null,
             dateStored = null,
-            thumbnail = null
+            //thumbnail = null
         )
 
-        val obj = RetrofitDeserializers.VideoPreviewDeserializer.deserialize(jsonObject, null, null)
+        val obj = RetrofitDeserializers.VideoInfoDeserializer.deserialize(jsonObject, null, null)
         assertThat(obj).isEqualTo(expected)
     }
 
     @Test
     fun `deserialize an empty JSON object`() { //NOSONAR
         val jsonObject = JsonObject()
-        val expected = VideoPreview(
+        val expected = VideoInfo(
             id = null,
             name = null,
-            duration = null,
+            url = null,
             dateStored = null,
-            thumbnail = null
+            //thumbnail = null
         )
 
-        val obj = RetrofitDeserializers.VideoPreviewDeserializer.deserialize(jsonObject, null, null)
+        val obj = RetrofitDeserializers.VideoInfoDeserializer.deserialize(jsonObject, null, null)
         assertThat(obj).isEqualTo(expected)
     }
 }

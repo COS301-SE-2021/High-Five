@@ -50,7 +50,7 @@ class VideoFragment: Fragment() {
                 when(videoResult.success) {
                     is Result.Success<*> -> {
                         val itemViews = ArrayList<VideoItemView>()
-                        for (item in videoResult.success.getResult()) {
+                        for (item in videoResult.success.getResult().videos!!) {
                             itemViews.add(
                                 VideoItemView(
                                     videoName = item.name!!,
@@ -61,6 +61,7 @@ class VideoFragment: Fragment() {
                         }
                         adapter.setData(itemViews.toTypedArray())
                         adapter.notifyDataSetChanged()
+                        binding?.progressBar?.visibility = View.INVISIBLE
                     }
                     is Result.Error -> {
                         Toast.makeText(context, "Unable to fetch data", Toast.LENGTH_LONG).show()
@@ -69,9 +70,8 @@ class VideoFragment: Fragment() {
             }
         })
 
-        //videoViewModel.fetchVideoData()
+        videoViewModel.fetchVideoData()
 
         return binding?.root
-        //return inflater.inflate(R.layout.fragment_video, container, false)
     }
 }

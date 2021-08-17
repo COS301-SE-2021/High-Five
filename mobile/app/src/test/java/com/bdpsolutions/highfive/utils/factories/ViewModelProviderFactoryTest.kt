@@ -8,7 +8,6 @@ import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
 import com.bdpsolutions.highfive.subsystems.splash.viewmodel.SplashViewModel
 import com.bdpsolutions.highfive.subsystems.video.model.VideoDataRepository
 import com.bdpsolutions.highfive.subsystems.video.model.source.APIVideoDataSource
-import com.bdpsolutions.highfive.subsystems.video.model.source.DatabaseVideoDataSource
 import com.bdpsolutions.highfive.subsystems.video.viewmodel.VideoViewModel
 import com.bdpsolutions.highfive.constants.Exceptions.VIEWMODEL_PROVIDER_FACTORY as vmf
 import com.google.common.truth.Truth
@@ -29,7 +28,6 @@ import org.powermock.modules.junit4.PowerMockRunner
     SplashViewModel.Companion::class,
     AuthenticationRepositoryImpl.Companion::class,
     APIVideoDataSource.Companion::class,
-    DatabaseVideoDataSource.Companion::class,
     VideoDataRepository.Companion::class,
     VideoViewModel.Companion::class
 )
@@ -87,15 +85,11 @@ class ViewModelProviderFactoryTest {
             val apiCompanionMock = mock(APIVideoDataSource.Companion::class.java)
             `when`(apiCompanionMock.create()).thenReturn(apiMock)
 
-            //create mock DatabaseVideoDataSource class
-            val dbMock = mock(DatabaseVideoDataSource::class.java)
-            val dbCompanionMock = mock(DatabaseVideoDataSource.Companion::class.java)
-            `when`(dbCompanionMock.create()).thenReturn(dbMock)
 
             //create mock VideoDataRepository
             val repoMock = mock(VideoDataRepository::class.java)
             val repoCompanionMock = mock(VideoDataRepository.Companion::class.java)
-            `when`(repoCompanionMock.create(apiCompanionMock.create(), dbCompanionMock.create()))
+            `when`(repoCompanionMock.create(apiCompanionMock.create()))
                 .thenReturn(repoMock)
 
             //create mock VideoViewModel
@@ -103,7 +97,7 @@ class ViewModelProviderFactoryTest {
             val vmCompanionMock = mock(VideoViewModel.Companion::class.java)
             `when`(vmCompanionMock
                 .create(
-                    repoCompanionMock.create(apiCompanionMock.create(), dbCompanionMock.create())
+                    repoCompanionMock.create(apiCompanionMock.create())
                 ))
                 .thenReturn(vmMock)
 
@@ -112,11 +106,6 @@ class ViewModelProviderFactoryTest {
             PowerMockito.whenNew(APIVideoDataSource.Companion::class.java)
                 .withNoArguments()
                 .thenReturn(apiCompanionMock)
-
-            PowerMockito.mockStatic(DatabaseVideoDataSource.Companion::class.java)
-            PowerMockito.whenNew(DatabaseVideoDataSource.Companion::class.java)
-                .withNoArguments()
-                .thenReturn(dbCompanionMock)
 
 
             //Mock repository

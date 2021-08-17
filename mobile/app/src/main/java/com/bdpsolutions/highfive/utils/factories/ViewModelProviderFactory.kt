@@ -35,7 +35,7 @@ class ViewModelProviderFactory @Inject constructor(): ViewModelProvider.Factory 
             }
             modelClass.isAssignableFrom(VideoViewModel::class.java) -> {
                 return VideoViewModel.create(
-                    VideoDataRepository.create(APIVideoDataSource.create(), APIVideoDataSource.create())
+                    VideoDataRepository.create(APIVideoDataSource.create())
                 ) as T
             }
             modelClass.isAssignableFrom(SplashViewModel::class.java) -> {
