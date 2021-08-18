@@ -11,10 +11,11 @@ using Xunit;
 
 namespace tests.UnitTests
 {
+    [Trait("Category","UnitTests")]
     public class AnalysisUnitTests
     {
         
-    private readonly IMediaStorageService _mockMediaStorageService;
+        private readonly IMediaStorageService _mockMediaStorageService;
         private readonly IStorageManager _mockStorageManager;
         public AnalysisUnitTests()
         {
