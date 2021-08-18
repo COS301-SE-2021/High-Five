@@ -78,14 +78,14 @@ namespace src.Subsystems.MediaStorage
                 File.Delete(thumbnailPath);
             }
             await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);
-            
+
             var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", VideoContainerName).Result;
-            await thumbnailBlob.UploadFile(thumbnailPath);
+            await thumbnailBlob.UploadFile(thumbnailPath, "image/png");
 
             //upload to Azure Blob Storage
             await videoBlob.UploadFile(video);
         }
- 
+
         public List<VideoMetaData> GetAllVideos()
         {
             /*
@@ -283,7 +283,7 @@ namespace src.Subsystems.MediaStorage
              *      Parameters:
              * -> videoId: the id of the video to be retrieved.
              */
-            
+
             return _storageManager.GetFile(videoId + ".mp4", VideoContainerName).Result;
         }
 
