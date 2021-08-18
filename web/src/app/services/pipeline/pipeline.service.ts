@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from "rxjs";
-import {Pipeline} from "../../models/pipeline";
-import {PipelinesService} from "../../apis/pipelines.service";
+import {BehaviorSubject} from 'rxjs';
+import {Pipeline} from '../../models/pipeline';
+import {PipelinesService} from '../../apis/pipelines.service';
 
 
 @Injectable({
@@ -9,9 +9,11 @@ import {PipelinesService} from "../../apis/pipelines.service";
 })
 export class PipelineService {
 
-  private readonly _pipelines = new BehaviorSubject<Pipeline[]>([])
+  private readonly _pipelines = new BehaviorSubject<Pipeline[]>([]);
+  // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly pipelines$ = this._pipelines.asObservable();
-  private readonly _tools = new BehaviorSubject<string[]>([])
+  private readonly _tools = new BehaviorSubject<string[]>([]);
+  // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly tools$ = this._tools.asObservable();
 
   constructor(private pipelinesService: PipelinesService) {
@@ -20,36 +22,40 @@ export class PipelineService {
   }
 
   get pipelines(): Pipeline[] {
+    // eslint-disable-next-line no-underscore-dangle
     return this._pipelines.getValue();
   }
 
   set pipelines(val: Pipeline[]) {
+    // eslint-disable-next-line no-underscore-dangle
     this._pipelines.next(val);
   }
 
   get tools(): string[] {
+    // eslint-disable-next-line no-underscore-dangle
     return this._tools.getValue();
   }
 
   set tools(val: string[]) {
+    // eslint-disable-next-line no-underscore-dangle
     this._tools.next(val);
   }
 
   async addPipeline(name: string, tools: string[]) {
     try {
-      await this.pipelinesService.createPipeline({pipeline: {name: name, tools: tools}}).toPromise();
-      this.fetchAllPipelines();
+      await this.pipelinesService.createPipeline({pipeline: {name, tools}}).toPromise();
+      await this.fetchAllPipelines();
     } catch (e) {
       console.log(e);
     }
   }
 
-  async removePipeline(pipelineId: string, serverRemove: boolean = true) {
+  public async removePipeline(pipelineId: string, serverRemove: boolean = true) {
     const pipeline = this.pipelines.find(p => p.id === pipelineId);
-    this.pipelines = this.pipelines.filter(pipeline => pipeline.id !== pipelineId);
+    this.pipelines = this.pipelines.filter(p => p.id !== pipelineId);
     if (serverRemove) {
       try {
-        await this.pipelinesService.deletePipeline({pipelineId: pipelineId}).toPromise();
+        await this.pipelinesService.deletePipeline({pipelineId}).toPromise();
       } catch (e) {
         console.error(e);
         this.pipelines = [...this.pipelines, pipeline];
@@ -57,66 +63,62 @@ export class PipelineService {
     }
   }
 
-  async addTool(id: string, tools: string[]) {
-    const pipeline = this.pipelines.find(pipeline => pipeline.id === id);
-    console.log("Old ")
+  public async addTool(id: string, tools: string[]) {
+    const pipeline = this.pipelines.find(p => p.id === id);
+    console.log('Old ');
     if (pipeline) {
       const index = this.pipelines.indexOf(pipeline);
 
       this.pipelines[index] = {
         ...pipeline,
         tools: pipeline.tools.concat(tools)
-      }
+      };
 
       this.pipelines = [...this.pipelines];
 
       try {
-        await this.pipelinesService.addTools({pipelineId: id,tools: tools}).toPromise();
+        await this.pipelinesService.addTools({pipelineId: id, tools}).toPromise();
       } catch (e) {
         console.error(e);
         this.pipelines[index] = {
           ...pipeline,
           tools: pipeline.tools
-        }
+        };
       }
     }
   }
 
-  async removeTool(id: string, tools: string[]) {
-    const pipeline = this.pipelines.find(pipeline => pipeline.id === id);
+  public async removeTool(id: string, tools: string[]) {
+    const pipeline = this.pipelines.find(p => p.id === id);
     if (pipeline) {
       const index = this.pipelines.indexOf(pipeline);
 
       this.pipelines[index] = {
         ...pipeline,
-        tools: pipeline.tools.filter((e) => {
-          return tools.some((f) => {
-            return e !== f;
-          })
-        })
-      }
+        tools: pipeline.tools.filter((e) => tools.some((f) => e !== f))
+      };
 
       this.pipelines = [...this.pipelines];
 
       try {
-        await this.pipelinesService.removeTools({pipelineId: id,tools: tools}).toPromise();
+        await this.pipelinesService.removeTools({pipelineId: id, tools}).toPromise();
       } catch (e) {
         console.error(e);
         this.pipelines[index] = {
           ...pipeline,
           tools: pipeline.tools
-        }
+        };
       }
     }
   }
 
-  async fetchAllPipelines() {
+  public async fetchAllPipelines() {
     await this.pipelinesService.getPipelines().subscribe((res) => {
       this.pipelines = res.pipelines;
     });
   }
 
-  async fetchAllTools() {
+  public async fetchAllTools() {
     this.tools = await this.pipelinesService.getAllTools().toPromise();
   }
 }

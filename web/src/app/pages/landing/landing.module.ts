@@ -9,9 +9,7 @@ import {LandingPage} from './landing.page';
 import {SwiperModule} from "swiper/angular";
 import {LottieModule} from "ngx-lottie";
 import player from 'lottie-web';
-import {AboutPage1Component} from "../../components/about-page1/about-page1.component";
-import {AboutPage2Component} from "../../components/about-page2/about-page2.component";
-import {AboutPage3Component} from "../../components/about-page3/about-page3.component";
+import {CustomComponentsModule} from "../../components/components.module";
 export function playerFactory() {
   return player;
 }
@@ -23,9 +21,10 @@ export function playerFactory() {
     IonicModule,
     LandingPageRoutingModule,
     SwiperModule,
-    LottieModule.forRoot({player: playerFactory})
+    LottieModule.forRoot({player: playerFactory}),
+    CustomComponentsModule
   ],
-  declarations: [LandingPage, AboutPage1Component, AboutPage2Component, AboutPage3Component]
+  declarations: [LandingPage]
 })
 export class LandingPageModule {
 }

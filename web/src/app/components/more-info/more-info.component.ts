@@ -6,10 +6,13 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./more-info.component.scss'],
 })
 export class MoreInfoComponent implements OnInit {
-  @Input() title : string;
-  @Input() description : string;
-  constructor() { }
+  @Input() title: string;
+  @Input() description: string;
 
-  ngOnInit() {}
+  constructor() {
+  }
+
+  ngOnInit() {
+  }
 
 }

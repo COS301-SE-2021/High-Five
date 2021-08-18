@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Pipeline} from '../../models/pipeline';
 import {LoadingController, Platform, PopoverController, ToastController} from '@ionic/angular';
 import {AddItemComponent} from '../add-item/add-item.component';
-import {PipelineService} from "../../services/pipeline/pipeline.service";
+import {PipelineService} from '../../services/pipeline/pipeline.service';
 
 @Component({
   selector: 'app-pipeline',
@@ -11,8 +11,9 @@ import {PipelineService} from "../../services/pipeline/pipeline.service";
 })
 export class PipelineComponent implements OnInit {
   @Input() pipeline: Pipeline;
+
   constructor(private platform: Platform, private loadingController: LoadingController, private toastController: ToastController,
-              private popoverController: PopoverController, private pipelineService : PipelineService) {
+              private popoverController: PopoverController, private pipelineService: PipelineService) {
   }
 
   ngOnInit() {
@@ -57,19 +58,19 @@ export class PipelineComponent implements OnInit {
        */
       componentProps: {
         availableItems: this.pipelineService.tools.filter(tool => !this.pipeline.tools.includes(tool)),
-        title: "Add Tool"
+        title: 'Add Tool'
       }
     });
     await addToolPopover.present();
     await addToolPopover.onDidDismiss().then(
       data => {
-        if(data.data!=undefined){
-          if (data.data.items!= undefined){
+        if (data.data !== undefined) {
+          if (data.data.items !== undefined) {
             this.loadingController.create({
               spinner: 'dots',
               animated: true,
               message: 'Adding tools'
-            }).then((e)=>{
+            }).then((e: HTMLIonLoadingElement) => {
               e.present();
               this.onAddTool(data.data.items);
               e.dismiss();
