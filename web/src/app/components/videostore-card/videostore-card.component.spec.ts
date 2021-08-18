@@ -63,7 +63,7 @@ describe('VideostoreCardComponent', () => {
     /**
      * Tests that the title of the card matches the returned value in the mock object
      */
-    it('should show name', () => {
+    xit('should show name', () => {
       const name = fixture.debugElement.nativeElement.querySelectorAll('ion-card-title')[0].innerText.trim();
       expect(name).toBe(mockVideoMetadata.name);
     });
@@ -71,7 +71,7 @@ describe('VideostoreCardComponent', () => {
     /**
      * Tests that the date of the card matches the date in the mock object.
      */
-    it('should show date', () => {
+    xit('should show date', () => {
       const date = fixture.debugElement.nativeElement.querySelectorAll('ion-text')[0].innerText.trim();
       expect(date).toBe('Date Created : ' + mockVideoMetadata.dateStored);
     });
