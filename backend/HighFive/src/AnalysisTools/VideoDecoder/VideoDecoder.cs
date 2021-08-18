@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -31,12 +32,12 @@ namespace src.AnalysisTools.VideoDecoder
                 _ffmpegLoaded = true;
             }
         }
-        
+
         [SuppressMessage("ReSharper.DPA", "DPA0003: Excessive memory allocations in LOH", MessageId = "type: System.Byte[]")]
         public List<Stream> GetFramesFromVideo(Stream videoStream)
         {
             var frameList = new List<Stream>();
-            
+
             var file = MediaFile.Open(videoStream);
             while (file.Video.TryGetNextFrame( out var imageData))
             {
@@ -69,13 +70,14 @@ namespace src.AnalysisTools.VideoDecoder
 
             var settings = new VideoEncoderSettings(width, height, (int) avgFrameRate, codec)
             {
-                EncoderPreset = EncoderPreset.Fast, CRF = 17
+                EncoderPreset = EncoderPreset.Fast, 
+                CRF = 17
             };
 
             var basePath = Path.GetTempPath();
             using var file = MediaBuilder.CreateContainer(basePath + "\\analyzedVideo.mp4").WithVideo(settings)
                 .Create();
-            foreach (var frame in frameList)
+            foreach(var frame in frameList)
             {
                 using var stream = new MemoryStream(frame);
                 var bmp = Image.FromStream(stream) as Bitmap;
