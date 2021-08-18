@@ -12,7 +12,7 @@ using src.Subsystems.Analysis;
 
 namespace src.AnalysisTools
 {
-    
+
     public class AnalyserImpl: IAnalyser
     {
         /*
@@ -29,7 +29,7 @@ namespace src.AnalysisTools
          * -> _toolRunners: used to run analysis for different tools.
          * -> _frameCount: counts how many frames have been fed to the feedFrame function.
          */
-        
+
         private List<BlockingCollection<byte[]>> _outputQueues;
         private List<Tool> _tools;
         private List<ToolRunner> _toolRunners = new();
@@ -50,10 +50,10 @@ namespace src.AnalysisTools
              * -> analysisModels: a class that gives a singleton of each tool with an already
              *                    loaded model that can be used for inference.
              */
-            
+
             _outputQueues = new List<BlockingCollection<byte[]>>();
             _tools = new List<Tool>();
-            
+
             var count = 1;
             foreach (var toolName in pipeline.Tools)
             {
@@ -99,7 +99,7 @@ namespace src.AnalysisTools
              * -> frame: this function recieves a byte array of a single frame that will be used
              *           for analysis
              */
-            
+
             _frameCount++;
             foreach (var toolRunner in _toolRunners)
             {
@@ -119,21 +119,21 @@ namespace src.AnalysisTools
              * -> frame: this function recieves a bitmap which will be converted to a byte array
              *           so that it can be analysed
              */
-            
+
             byte[] inputFrame;
-            
+
             var rect = new Rectangle(Point.Empty, frame.Size);
             var bitLock = frame.LockBits(rect, ImageLockMode.ReadWrite, frame.PixelFormat);
-            
+
             using (var ms = new MemoryStream())
             {
                 frame.Save(ms, ImageFormat.Png);
                 inputFrame =  ms.ToArray();
             }
-            
+
             frame.UnlockBits(bitLock);
-            
-            
+
+
             _frameCount++;
             foreach (var toolRunner in _toolRunners)
             {
@@ -151,9 +151,9 @@ namespace src.AnalysisTools
              * all the fed frames.
              *
              */
-            
+
             var output = new List<List<byte[]>>();
-            
+
             for (var i = 0; i < _outputQueues.Count; i++)
             {
                 output.Add(new List<byte[]>());
@@ -177,9 +177,9 @@ namespace src.AnalysisTools
              * This function is called to end the analysis and allow the threads to stop working.
              * It feeds a byte array of size one to the end of the input queue, and the threads
              * will know that it is the end of the queue.
-             * 
+             *
              */
-            
+
             foreach (var toolRunner in _toolRunners)
             {
                 toolRunner.Enqueue(new byte[] { 0 });
