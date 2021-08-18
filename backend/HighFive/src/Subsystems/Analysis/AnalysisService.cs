@@ -47,7 +47,7 @@ namespace src.Subsystems.Analysis
             _analysisModels = analysisModels;
             _videoDecoder = videoDecoder;
         }
-        
+
         public async Task<string> AnalyzeMedia(AnalyzeMediaRequest request)
         {
             /*
@@ -59,14 +59,14 @@ namespace src.Subsystems.Analysis
              *      Parameters:
              * -> request: the request object for this function containing all the necessary id's.
              */
-            
+
             var pipelineSearchRequest = new GetPipelineRequest {PipelineId = request.PipelineId};
             var analysisPipeline = _pipelineService.GetPipeline(pipelineSearchRequest).Result;
             if (analysisPipeline == null)
             {
                 return string.Empty; //invalid pipelineId provided
             }
-            
+
             /* First, check if the Media and Pipeline combination has already been analyzed and stored before.
              * If this is the case, no analysis needs to be done. Simply return the url of the already analyzed
              * media
@@ -85,7 +85,7 @@ namespace src.Subsystems.Analysis
             {
                 return testFile.GetUrl();
             }
-            
+
             //else this media and tool combination has not yet been analyzed. Proceed to the analysis phase.
             var contentType = "";
             byte[] analyzedMediaTemporaryLocation = null;
@@ -122,7 +122,7 @@ namespace src.Subsystems.Analysis
              * -> analysisPipeline: the pipeline object containing the tools that will be applied to the image
              *      during the analysis phase.
              */
-            
+
             var rawImage = _mediaStorageService.GetImage(imageId);
             var rawImageByteArray = rawImage.ToByteArray().Result;
 
@@ -145,7 +145,7 @@ namespace src.Subsystems.Analysis
              * the analysis tools present within analysisPipeline.
              * A temporary file will be created in local storage containing the contents of the analyzed
              * video, the path to this file will be returned.
-             * 
+             *
              *      Parameters:
              * -> videoId: the id of the video to be analyzed
              * -> analysisPipeline: the pipeline object containing the tools that will be applied to the video
@@ -160,7 +160,7 @@ namespace src.Subsystems.Analysis
             var frameList = _videoDecoder.GetFramesFromVideo(rawVideoStream);
             watch.Stop();
             Console.WriteLine("Convert video to frames: " + watch.ElapsedMilliseconds + "ms");
-            
+
             //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
             var analyser = new AnalyserImpl();
             watch.Reset();
@@ -183,9 +183,10 @@ namespace src.Subsystems.Analysis
             var analyzedVideoData = _videoDecoder.EncodeVideoFromFrames(analyzedFrameData, rawVideoStream);
             watch.Stop();
             Console.WriteLine("Convert from frames to video: " + watch.ElapsedMilliseconds + "ms");
+            
             return analyzedVideoData;
         }
-        
+
         public void SetBaseContainer(string containerName)
         {
             /*
@@ -200,7 +201,7 @@ namespace src.Subsystems.Analysis
              */
 
             if (_storageManager.IsContainerSet()) return;
-            
+
             _storageManager.SetBaseContainer(containerName);
             _pipelineService.SetBaseContainer(containerName);
             _mediaStorageService.SetBaseContainer(containerName);

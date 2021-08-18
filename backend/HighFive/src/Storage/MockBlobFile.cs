@@ -115,7 +115,7 @@ namespace src.Storage
              * -> path: the full path pointing to where the file is stored.
              */
 
-            _file = File.OpenRead(path);
+            //_file = File.OpenRead(path);
 
             if (!_container.Contains(this))
             {
