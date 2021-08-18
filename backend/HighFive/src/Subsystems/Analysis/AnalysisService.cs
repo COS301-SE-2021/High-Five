@@ -183,6 +183,7 @@ namespace src.Subsystems.Analysis
             var analyzedVideoData = _videoDecoder.EncodeVideoFromFrames(analyzedFrameData, rawVideoStream);
             watch.Stop();
             Console.WriteLine("Convert from frames to video: " + watch.ElapsedMilliseconds + "ms");
+            
             return analyzedVideoData;
         }
         

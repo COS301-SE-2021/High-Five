@@ -17,7 +17,7 @@ namespace tests.UnitTests
         public MediaStorageUnitTests()
         {
             _mockStorageManager = new MockStorageManager();
-            _mockMediaStorageService = new MediaStorageService(_mockStorageManager, new VideoDecoder());
+            _mockMediaStorageService = new MediaStorageService(_mockStorageManager, new MockVideoDecoder());
         }
 
         [Fact]
