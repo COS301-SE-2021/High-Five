@@ -87,15 +87,22 @@ High Five is a real-time image analysis platform for images and videos taken by 
 
 #### Demo 1
 * []()[BDP Solutions - Demo1](https://drive.google.com/file/d/1eK1aoB-zd5L3d2GkG10BPtbhP_gGUUHX/view?usp=sharing)
-* []()[Software Requirements Specification - Demo1 (SRS)](https://drive.google.com/file/d/1BYFmZhJphzAOLJm7mU-x7vVI2vvxT8V4/view?usp=sharing)
+* []()[Software Requirements Specification - Demo1](https://drive.google.com/file/d/1BYFmZhJphzAOLJm7mU-x7vVI2vvxT8V4/view?usp=sharing)
 
 #### Demo 2
 * []()[BDP Solutions - Demo2](https://drive.google.com/file/d/1K5mNdgFBeGa1tp_Fl8Fh_CcXkf_9zz-h/view?usp=sharing)
-* []()[Software Requirements Specification - Demo2 (SRS)](https://drive.google.com/file/d/1pA2TqDQkoDK0Kvq6weMCwAaWwQO4EX78/view?usp=sharing)
-* []()[Architectural Requirements Document - Demo2 (SRS)](https://drive.google.com/file/d/1x4INlpjzYA9-NPKbc0kl0ijKud58cmGo/view?usp=sharing)
-* []()[User Manual - Demo2 (SRS)](https://drive.google.com/file/d/1AjHnnmrIYHzJ_tqd5kKdCd7cyxjT9Zpw/view?usp=sharing)
-* []()[Coding Standards - Demo2 (SRS)](https://drive.google.com/file/d/1tvIkCgz74yAf9RBsicJtToGem8FsMj5i/view?usp=sharing)
+* []()[Software Requirements Specification - Demo2](https://drive.google.com/file/d/1pA2TqDQkoDK0Kvq6weMCwAaWwQO4EX78/view?usp=sharing)
+* []()[Architectural Requirements Document - Demo2](https://drive.google.com/file/d/1x4INlpjzYA9-NPKbc0kl0ijKud58cmGo/view?usp=sharing)
+* []()[User Manual - Demo2](https://drive.google.com/file/d/1AjHnnmrIYHzJ_tqd5kKdCd7cyxjT9Zpw/view?usp=sharing)
+* []()[Coding Standards - Demo2](https://drive.google.com/file/d/1tvIkCgz74yAf9RBsicJtToGem8FsMj5i/view?usp=sharing)
 
+#### Demo 3
+* []()[BDP Solutions - Demo3]()
+* []()[Software Requirements Specification - Demo3](https://drive.google.com/file/d/1uLGZ6yso0EESTOSO0BwXLwre_7U83pQq/view?usp=sharing)
+* []()[Architectural Requirements Document - Demo3](https://drive.google.com/file/d/1865YDaMbVFa22zk9fvqJ3EPl5Junztco/view?usp=sharing)
+* []()[User Manual - Demo3]()
+* []()[Coding Standards - Demo3](https://drive.google.com/file/d/1e1-PX2OBPiQ1S_2w70eEDOxTWvQDhU5l/view?usp=sharing)
+* []()[Technical Installations Manual - Demo3](https://drive.google.com/file/d/1AsGNJ7Lewy66ocaAaJBX8hny2qk_xgIF/view?usp=sharing)
 
 
 ### Technology Stack
@@ -155,6 +162,7 @@ of concerns. Feature branches are used for both front-end and back-end to develo
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/.NET%20Core%20Unit%20Tests/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/aspnet_unittests.yml)
 <br>
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/.NET%20Core%20Integration%20Tests/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/aspnet_integrationtests.yml)
+<br>
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Android%20Unit%20Tests/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/android_unittests.yml)
 <br>
 #### Monitoring
