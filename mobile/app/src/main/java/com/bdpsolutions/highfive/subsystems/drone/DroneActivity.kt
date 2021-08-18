@@ -44,30 +44,29 @@ import java.util.ArrayList
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
-class DroneActivity : AppCompatActivity(), View.OnClickListener {
+class DroneActivity : AppCompatActivity() {
     private val TAG: String = DroneActivity::class.java.getName()
     private lateinit var binding: ActivityDroneBinding
 
 
     private var btnLive: ToggleButton? = null
-    //private var djiStreamer : DjiStreamer = DjiStreamer()
 
-    private fun showToast(toastMsg: String) {
-        runOnUiThread { Toast.makeText(applicationContext, toastMsg, Toast.LENGTH_LONG).show() }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // When the compile and target version is higher than 22, please request the
         // following permissions at runtime to ensure the
         // SDK work well.
-
+        var djiStreamer : DjiStreamer = DjiStreamer()
         binding = ActivityDroneBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // Hiding status bars, since this is the splash screen
         btnLive = binding.toggleLive
-        binding.toggleLive.setOnClickListener(this)
-
+        binding.toggleLive.setOnClickListener{
+            if(binding.toggleLive.isChecked){
+                djiStreamer.setupLiveStream()
+            }
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.hide(WindowInsets.Type.statusBars())
@@ -98,24 +97,11 @@ class DroneActivity : AppCompatActivity(), View.OnClickListener {
                     Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS,
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.SYSTEM_ALERT_WINDOW,
-                    Manifest.permission.READ_PHONE_STATE
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.RECORD_AUDIO
                 ), 1
             )
         }
     }
-
-    override fun onClick(v: View?) = when (v!!.id) {
-        binding.toggleLive.id -> {
-            if(binding.toggleLive.isChecked){
-                //djiStreamer.setupLiveStream()
-            }else{
-                //djiStreamer.stopStream()
-            }
-        }
-
-        else -> {
-        }
-    }
-
 
 }

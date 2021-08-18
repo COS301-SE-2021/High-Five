@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
-/>
+ />
 
     <dji.ux.widget.FPVOverlayWidget
         android:layout_width="match_parent"
@@ -28,6 +28,7 @@
         android:layout_height="25dp"
         android:background="@color/dark_gray"
         android:orientation="horizontal">
+
 
         <dji.ux.widget.FlightModeWidget
             android:layout_width="103dp"
@@ -84,7 +85,7 @@
         android:layout_above="@+id/CameraCapturePanel"
         android:layout_alignLeft="@id/CameraCapturePanel"
         android:textColor="@drawable/color_selector"
-        android:textOff="OFFLINE"
+        android:textOff="LIVE"
         android:textOn="LIVE"
         />
 
@@ -116,7 +117,6 @@
         android:gravity="center"
         android:visibility="invisible"
         tools:ignore="RtlHardcoded"/>
-
     <!-- Pre-flight checklist panel -->
     <dji.ux.panel.PreFlightCheckListPanel
         android:layout_width="400dp"
@@ -124,4 +124,5 @@
         android:layout_below="@id/signal"
         custom:excludeItem="ESCStatus"
         android:visibility="gone"/>
+
 </RelativeLayout>
