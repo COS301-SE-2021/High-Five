@@ -1,5 +1,5 @@
 using System;
-using System.IO; 
+using System.IO;
 
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,7 +15,7 @@ using Image = System.Drawing.Image;
 
 namespace src.AnalysisTools.ConcreteTools
 {
-    public class AnimalRecognition : ITool
+    public class AnimalRecognition : Tool
     {
         private const string ModelName = "FasterRCNN-10.onnx";
         private static readonly string ModelPath = Directory.GetCurrentDirectory() + "\\Models\\" + ModelName;
@@ -25,7 +25,7 @@ namespace src.AnalysisTools.ConcreteTools
         private const long MinClass = 15;
         private const long MaxClass = 24;
         public const string ToolPurpose = "Animal";
-        
+
         private readonly string[] _classes ={
             "__background", "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat",
             "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse",
@@ -42,8 +42,9 @@ namespace src.AnalysisTools.ConcreteTools
             //Load object recognition model and get ready for analysis
             _model = new InferenceSession(ModelPath);
             _modelInputLayerName = _model.InputMetadata.Keys.Single();
+            SeparateOutput = false;
         }
-        public AnalysisOutput AnalyseFrame(byte[] frame)
+        public override AnalysisOutput AnalyseFrame(byte[] frame)
         {
             //Convert from input type frame to 3D array
             Image originalImage;
@@ -51,27 +52,27 @@ namespace src.AnalysisTools.ConcreteTools
             {
                 originalImage = Image.FromStream(ms);
             }
-            
+
             var image = PreprocessFrame(originalImage);
-            
+
             int[] dimensions = {3, image[0].Length, image[0][0].Length};
             var inputTensor = new DenseTensor<float>(image.Flatten().Flatten(),dimensions); //image.ToTensor();
-            
+
             var modelInput = new List<NamedOnnxValue>
             {
                 NamedOnnxValue.CreateFromTensor(_modelInputLayerName, inputTensor)
             };
             using var session = _model;
-            
+
             var result = session.Run(modelInput);
-            
-            
+
+
             var boxes=((DenseTensor<float>) result.ElementAtOrDefault(0).Value).ToArray();//Convert to output type
             var labels=((DenseTensor<long>) result.ElementAtOrDefault(1).Value).ToArray();
             var scores=((DenseTensor<float>) result.ElementAtOrDefault(2).Value).ToArray();
-            
-            
-            return PostProcessFrame(originalImage, boxes, labels, scores);
+
+
+            return PostprocessFrame(originalImage, boxes, labels, scores);
         }
 
         private static float[][][] PreprocessFrame(Image image)
@@ -97,13 +98,13 @@ namespace src.AnalysisTools.ConcreteTools
             processedFrame[0] = new float[bImage.Height][];
             processedFrame[1] = new float[bImage.Height][];
             processedFrame[2] = new float[bImage.Height][];
-            
+
             for (var i = 0; i < processedFrame[0].Length; i++) //Might replace with parallel for loop
             {
                 processedFrame[0][i] = new float[bImage.Width];
                 processedFrame[1][i] = new float[bImage.Width];
                 processedFrame[2][i] = new float[bImage.Width];
-                
+
                 for (var j = 0; j < processedFrame[0][0].Length; j++)
                 {
                     processedFrame[0][i][j] = bImage.GetPixel(j,i).B - colourMeans[0];
@@ -114,14 +115,14 @@ namespace src.AnalysisTools.ConcreteTools
 
             return processedFrame;
         }
-        
-        private AnalysisOutput PostProcessFrame(Image image, IReadOnlyList<float> boxes, IReadOnlyList<long> labels, IReadOnlyList<float> scores)
+
+        private AnalysisOutput PostprocessFrame(Image image, IReadOnlyList<float> boxes, IReadOnlyList<long> labels, IReadOnlyList<float> scores)
         {
             //get scale
             var oldWidth = image.Width;
             var oldHeight = image.Height;
             var ratio = Convert.ToSingle(800.0 / Math.Min(oldWidth, oldHeight));
-            
+
             var output = new AnalysisOutput();
             output.Purpose = ToolPurpose;
             output.Boxes = new List<float>();
@@ -134,7 +135,7 @@ namespace src.AnalysisTools.ConcreteTools
                     output.Boxes.Add(boxes[i*4+1] / ratio);
                     output.Boxes.Add((boxes[i*4+2]-boxes[i*4]) / ratio);
                     output.Boxes.Add((boxes[i*4+3]-boxes[i*4+1]) / ratio);
-                    
+
                     output.Classes.Add(_classes[labels[i]]);
                 }
             }
@@ -161,6 +162,22 @@ namespace src.AnalysisTools.ConcreteTools
             graphics.DrawImage(image, destRect, 0, 0, image.Width,image.Height, GraphicsUnit.Pixel, wrapMode);
 
             return destImage;
+        }
+
+        public override IDisposableReadOnlyCollection<DisposableNamedOnnxValue> ProcessFrame(
+            List<NamedOnnxValue> modelInput)
+        {
+            return null;
+        }
+
+        public override List<NamedOnnxValue> PreprocessFrame(byte[] frame)
+        {
+            return null;
+        }
+
+        public override AnalysisOutput PostprocessFrame(IDisposableReadOnlyCollection<DisposableNamedOnnxValue> result)
+        {
+            return new AnalysisOutput();
         }
     }
 }

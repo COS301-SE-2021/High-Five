@@ -1,9 +1,16 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Accord.IO;
 using Org.OpenAPITools.Models;
+using src.AnalysisTools;
 using src.AnalysisTools.AnalysisThread;
+using src.AnalysisTools.VideoDecoder;
 using src.Storage;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
@@ -29,17 +36,19 @@ namespace src.Subsystems.Analysis
         private readonly IMediaStorageService _mediaStorageService;
         private readonly IPipelineService _pipelineService;
         private readonly IAnalysisModels _analysisModels;
+        private readonly IVideoDecoder _videoDecoder;
 
         public AnalysisService(IStorageManager storageManager, IMediaStorageService mediaStorageService,
-            IPipelineService pipelineService, IAnalysisModels analysisModels)
+            IPipelineService pipelineService, IAnalysisModels analysisModels, IVideoDecoder videoDecoder)
         {
             _storageManager = storageManager;
             _mediaStorageService = mediaStorageService;
             _pipelineService = pipelineService;
             _analysisModels = analysisModels;
+            _videoDecoder = videoDecoder;
         }
         
-        public string AnalyzeMedia(AnalyzeMediaRequest request)
+        public async Task<string> AnalyzeMedia(AnalyzeMediaRequest request)
         {
             /*
              *      Description:
@@ -70,7 +79,7 @@ namespace src.Subsystems.Analysis
                 "video" => ".mp4",
                 _ => string.Empty
             };
-            var analyzedMediaName = _storageManager.HashMd5(request.MediaId + "|" + analysisPipeline.Tools) + fileExtension;
+            var analyzedMediaName = _storageManager.HashMd5(request.MediaId + "|" + string.Join(",",analysisPipeline.Tools)) + fileExtension;
             var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
             if (testFile != null) //This means the media has already been analyzed with this pipeline combination
             {
@@ -78,14 +87,16 @@ namespace src.Subsystems.Analysis
             }
             
             //else this media and tool combination has not yet been analyzed. Proceed to the analysis phase.
-            
-            var analyzedMediaTemporaryLocation = string.Empty;
+            var contentType = "";
+            byte[] analyzedMediaTemporaryLocation = null;
             switch (request.MediaType)
             {
                 case "image":
+                    contentType = "image/jpg";
                     analyzedMediaTemporaryLocation = AnalyzeImage(request.MediaId, analysisPipeline);
                     break;
                 case "video":
+                    contentType = "video/mp4";
                     analyzedMediaTemporaryLocation = AnalyzeVideo(request.MediaId, analysisPipeline);
                     break;
             }
@@ -93,11 +104,11 @@ namespace src.Subsystems.Analysis
             var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
             analyzedFile.AddMetadata("mediaId", request.MediaId);
             analyzedFile.AddMetadata("pipelineId", request.PipelineId);
-            analyzedFile.UploadFile(analyzedMediaTemporaryLocation);
+            await analyzedFile.UploadFileFromByteArray(analyzedMediaTemporaryLocation, contentType);
             return analyzedFile.GetUrl();
         }
 
-        private string AnalyzeImage(string imageId, Pipeline analysisPipeline)
+        private byte[] AnalyzeImage(string imageId, Pipeline analysisPipeline)
         {
             /*
              *      Description:
@@ -114,29 +125,19 @@ namespace src.Subsystems.Analysis
             
             var rawImage = _mediaStorageService.GetImage(imageId);
             var rawImageByteArray = rawImage.ToByteArray().Result;
-            
-            
-            //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
-            var outputQueue = new BlockingCollection<byte[]>();
-            var analysisThread = new ToolRunner(_analysisModels, outputQueue, analysisPipeline);
-            analysisThread.Enqueue(rawImageByteArray);
-            analysisThread.Enqueue(new byte[]{0});//ByteArray of length 1 indicates end of input
 
-            var analyzedImageData= System.Array.Empty<byte>();
-            foreach (var frame in outputQueue.GetConsumingEnumerable(CancellationToken.None))
-            {
-                analyzedImageData = frame;//Get Frame from outputqueue
-                break;
-            }
+            //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
+            var analyser = new AnalyserImpl();
+            analyser.StartAnalysis(analysisPipeline,_analysisModels);
+            analyser.FeedFrame(rawImageByteArray);
+            analyser.EndAnalysis();
+            var analyzedImageData = analyser.GetFrames()[0][0];//TODO add functionality to save multiple images:analyser.GetFrames()[i][0]
             //---------------------------------------------------------------------------------------
 
-            var oldName = rawImage.GetMetaData("originalName");
-            var tempDirectory = Path.GetTempPath() + "\\analyzed" + oldName;
-            File.WriteAllBytes(tempDirectory, analyzedImageData);
-            return tempDirectory;
+            return analyzedImageData;
         }
 
-        private string AnalyzeVideo(string videoId ,Pipeline analysisPipeline)
+        private byte[] AnalyzeVideo(string videoId ,Pipeline analysisPipeline)
         {
             /*
              *      Description:
@@ -152,13 +153,37 @@ namespace src.Subsystems.Analysis
              */
 
             var rawVideo = _mediaStorageService.GetVideo(videoId);
-            var rawVideoByteArray = rawVideo.ToByteArray().Result;
+            var rawVideoStream = rawVideo.ToStream().Result;
+            var watch = new Stopwatch();
+            watch.Reset();
+            watch.Start();
+            var frameList = _videoDecoder.GetFramesFromVideo(rawVideoStream);
+            watch.Stop();
+            Console.WriteLine("Convert video to frames: " + watch.ElapsedMilliseconds + "ms");
             
-            //---------------------------------------------------------------------------------------
-            //-----------------------------TODO: PERFORM ANALYSIS HERE-------------------------------
+            //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
+            var analyser = new AnalyserImpl();
+            watch.Reset();
+            watch.Start();
+            analyser.StartAnalysis(analysisPipeline,_analysisModels);
+            foreach (var frameStream in frameList)
+            {
+                var bytes = ((MemoryStream) frameStream).ToArray();
+                analyser.FeedFrame(bytes);
+            }
+            analyser.EndAnalysis();
+            var analyzedFrameData = analyser.GetFrames()[0]; //TODO add functionality to save multiple images:analyser.GetFrames()[i][0]
+            watch.Stop();
+            Console.WriteLine("From StartAnalysis to GetFrames: " + watch.ElapsedMilliseconds + "ms");
             //---------------------------------------------------------------------------------------
 
-            throw new System.NotImplementedException();
+            rawVideoStream.Seek(0, SeekOrigin.Begin);
+            watch.Reset();
+            watch.Start();
+            var analyzedVideoData = _videoDecoder.EncodeVideoFromFrames(analyzedFrameData, rawVideoStream);
+            watch.Stop();
+            Console.WriteLine("Convert from frames to video: " + watch.ElapsedMilliseconds + "ms");
+            return analyzedVideoData;
         }
         
         public void SetBaseContainer(string containerName)

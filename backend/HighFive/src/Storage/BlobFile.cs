@@ -94,7 +94,7 @@ namespace src.Storage
             await _file.UploadFromByteArrayAsync(fileBytes, 0, (int) newFile.Length);
         }
 
-        public async Task UploadFile(string path)
+        public async Task UploadFile(string path, string contentType = "")
         {
             /*
              *      Description:
@@ -109,10 +109,28 @@ namespace src.Storage
             var file = new FormFile(fs, 0, fs.Length, null, Path.GetFileName(fs.Name))
             {
                 Headers = new HeaderDictionary(),
-                ContentType = "image/" + Path.GetFileName(fs.Name).Split(".")[Path.GetFileName(fs.Name).Split(".").Length-1]
             };
+            if (!contentType.Equals(""))
+            {
+                file.ContentType = contentType;
+            }
 
             await UploadFile(file);
+        }
+
+        public async Task UploadFileFromStream(Stream stream, string contentType="")
+        {
+            if (!contentType.Equals(""))
+            {
+                _file.Properties.ContentType = contentType;
+            }
+            await _file.UploadFromStreamAsync(stream);
+        }
+
+        public async Task UploadFileFromByteArray(byte[] array, string contentType = "")
+        {
+            var ms = new MemoryStream(array);
+            await UploadFileFromStream(ms, contentType);
         }
 
         public async Task UploadText(string text)
@@ -165,6 +183,14 @@ namespace src.Storage
             }
             await _file.DownloadToByteArrayAsync(byteArray, 0);
             return byteArray;
+        }
+
+        public async Task<Stream> ToStream()
+        {
+            var stream = new MemoryStream();
+            await _file.DownloadToStreamAsync(stream);
+            stream.Seek(0, SeekOrigin.Begin);
+            return stream;
         }
 
         public async Task<string> ToText()

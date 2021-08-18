@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,13 +26,13 @@ namespace src.Subsystems.Analysis
                 ConfigureStorageManager();
             }
 
-            var url = _analysisService.AnalyzeMedia(analyzeMediaRequest);
-            if (url.Equals(string.Empty))
+            Task.Run(() => _analysisService.AnalyzeMedia(analyzeMediaRequest));
+            /*if (url.Equals(string.Empty))
             {
                 return StatusCode(400, null);
-            }
+            }*/
 
-            var response = new AnalyzeMediaResponse {Url = url};
+            var response = new AnalyzeMediaResponse {Url = "No Url yet, media is being analyzed. Check back later :)."};
             return StatusCode(200, response);
         }
         
