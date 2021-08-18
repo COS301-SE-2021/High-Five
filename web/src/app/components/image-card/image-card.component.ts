@@ -73,11 +73,10 @@ export class ImageCardComponent implements OnInit {
     newWindow.focus();
   }
 
-  private analyseImage(pipelines: string[]) {
-    const pipelineIds = this.pipelineService.pipelines.filter((pipeline: Pipeline) => pipelines.filter(
-      (pipelineName: string) => pipelineName === pipeline.name)).map((el: Pipeline) => el.id);
-    for (const pipelineId of pipelineIds) {
-      this.analyzedImagesService.analyzeImage(this.image.id, pipelineId);
+  private async analyseImage(pipelines: string[]) {
+    for (const pipelineName of pipelines) {
+      const selectedPipeline = this.pipelineService.pipelines.find((pipeline: Pipeline) => pipeline.name === pipelineName);
+      await this.analyzedImagesService.analyzeImage(this.image.id, selectedPipeline.id);
     }
   }
 }

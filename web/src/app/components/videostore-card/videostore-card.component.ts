@@ -77,10 +77,9 @@ export class VideostoreCardComponent implements OnInit {
   }
 
   private async analyseVideo(pipelines: string[]) {
-    const pipelineIds = this.pipelineService.pipelines.filter((pipeline: Pipeline) => pipelines.filter(
-      (pipelineName: string) => pipelineName === pipeline.name)).map((el: Pipeline) => el.id);
-    for (const pipelineId of pipelineIds) {
-      await this.analyzeVideosService.analyzeVideo(this.video.id, pipelineId);
+    for (const pipelineName of pipelines) {
+      const selectedPipeline = this.pipelineService.pipelines.find((pipeline: Pipeline) => pipeline.name === pipelineName);
+      await this.analyzeVideosService.analyzeVideo(this.video.id, selectedPipeline.id);
     }
   }
 
