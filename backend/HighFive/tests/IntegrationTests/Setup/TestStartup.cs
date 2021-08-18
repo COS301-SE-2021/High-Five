@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using src.AnalysisTools.VideoDecoder;
 using src.Storage;
 using src.Subsystems.Analysis;
 using src.Subsystems.MediaStorage;
@@ -68,6 +69,7 @@ namespace tests.IntegrationTests
             services.AddScoped<IMediaStorageService, MediaStorageService>();
             services.AddScoped<IPipelineService, PipelineService>();
             services.AddScoped<IAnalysisService, AnalysisService>();
+            services.AddScoped<IVideoDecoder, MockVideoDecoder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

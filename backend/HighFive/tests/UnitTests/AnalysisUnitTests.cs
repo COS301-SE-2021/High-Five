@@ -4,24 +4,27 @@ using Microsoft.AspNetCore.Http;
 using Org.OpenAPITools.Models;
 using src.AnalysisTools.VideoDecoder;
 using src.Storage;
+using src.Subsystems.Analysis;
 using src.Subsystems.MediaStorage;
+using src.Subsystems.Pipelines;
 using Xunit;
 
 namespace tests.UnitTests
 {
     [Trait("Category","UnitTests")]
-    public class MediaStorageUnitTests
+    public class AnalysisUnitTests
     {
+        
         private readonly IMediaStorageService _mockMediaStorageService;
         private readonly IStorageManager _mockStorageManager;
-        public MediaStorageUnitTests()
+        public AnalysisUnitTests()
         {
             _mockStorageManager = new MockStorageManager();
             _mockMediaStorageService = new MediaStorageService(_mockStorageManager, new MockVideoDecoder());
         }
 
         [Fact]
-        public async Task TestStoreValidVideo()
+        public async Task TestAnalyzeValidImageValidPipeline()
         {
             var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
             var validVideo = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validVideo", "validVideo");
@@ -31,7 +34,7 @@ namespace tests.UnitTests
         }
         
         [Fact]
-        public async Task TestStoreValidImage()
+        public async Task TestAnalyzeInvalidImageValidPipeline()
         {
             var imageCountBeforeInsert = _mockMediaStorageService.GetAllImages().Count;
             var validImage = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validImage.png", "validImage.png");
@@ -41,7 +44,7 @@ namespace tests.UnitTests
         }
 
         [Fact]
-        public void TestStoreNullVideo()
+        public void TestAnalyzeInvalidImageInvalidPipeline()
         {
             var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
             FormFile invalidVideo = null;
@@ -51,7 +54,7 @@ namespace tests.UnitTests
         }
         
         [Fact]
-        public async Task TestStoreNullImage()
+        public async Task TestAnalyzeValidImageInvalidPipeline()
         {
             var imageCountBeforeInsert = _mockMediaStorageService.GetAllImages().Count;
             FormFile invalidImage = null;
@@ -61,28 +64,28 @@ namespace tests.UnitTests
         }
         
         [Fact]
-        public async Task TestStoreImageInvalidExtension()
+        public async Task TestAnalyzeValidVideoValidPipeline()
         {
             var validImage = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validImage", "validImage");
             await Assert.ThrowsAsync<InvalidDataException>(() => _mockMediaStorageService.StoreImage(validImage));
         }
 
         [Fact]
-        public void TestGetAllVideos()
+        public void TestAnalyzeInvalidVideoValidPipeline()
         {
             var response = _mockMediaStorageService.GetAllVideos();
             Assert.NotNull(response);
         }
         
         [Fact]
-        public void TestGetAllImages()
+        public void TestAnalyzeValidVideoInvalidPipeline()
         {
             var response = _mockMediaStorageService.GetAllImages();
             Assert.NotNull(response);
         }
 
         [Fact]
-        public void TestDeleteVideoValidVideoId()
+        public void TestAnalyzeInvalidVideoInvalidPipeline()
         {
             var allVids = _mockMediaStorageService.GetAllVideos();
             var videoCountBeforeInsert = allVids.Count;
@@ -101,7 +104,7 @@ namespace tests.UnitTests
         }
         
         [Fact]
-        public void TestDeleteImageValidVideoId()
+        public void TestAnalyzeAlreadyAnalyzedImage()
         {
             var allImages = _mockMediaStorageService.GetAllImages();
             var imageCountBeforeInsert = allImages.Count;
@@ -120,7 +123,7 @@ namespace tests.UnitTests
         }
 
         [Fact]
-        public void TestDeleteVideoInvalidVideoId()
+        public void TestAnalyzeAlreadyAnalyzedVideo()
         {
             var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
             var invalidVideoId = "5";
@@ -131,21 +134,6 @@ namespace tests.UnitTests
             _mockMediaStorageService.DeleteVideo(request);
             var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
             Assert.Equal(videoCountBeforeInsert, videoCountAfterInsert);
-        }
-
-        
-        [Fact]
-        public void TestDeleteImageInvalidVideoId()
-        {
-            var imageCountBeforeInsert = _mockMediaStorageService.GetAllImages().Count;
-            var invalidImageId = "5";
-            var request = new DeleteImageRequest
-            {
-                Id = invalidImageId
-            };
-            _mockMediaStorageService.DeleteImage(request);
-            var imageCountAfterInsert = _mockMediaStorageService.GetAllImages().Count;
-            Assert.Equal(imageCountBeforeInsert, imageCountAfterInsert);
         }
 
     }
