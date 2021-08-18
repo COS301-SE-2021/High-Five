@@ -36,7 +36,7 @@ var listener = LiveStreamManager.OnLiveChangeListener {  }
         }
         object : Thread() {
             override fun run() {
-                DJISDKManager.getInstance().liveStreamManager.liveUrl = // + vehicleID);
+                DJISDKManager.getInstance().liveStreamManager.liveUrl = "rtmp//:192.168.11.174:1935"// + vehicleID);
                 val result = DJISDKManager.getInstance().liveStreamManager.startStream()
                 DJISDKManager.getInstance().liveStreamManager.setStartTime()
                 setResultToToast(
