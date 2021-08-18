@@ -154,23 +154,25 @@ of concerns. Feature branches are used for both front-end and back-end to develo
 [![Issues][issues-shield]][issues-url]<br><br>
 
 ### Sonar Cloud
-<div align="center">
-
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_High-Five&metric=bugs)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_High-Five)
+<br>
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_High-Five&metric=code_smells)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_High-Five)
+<br>
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_High-Five&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_High-Five)
+<br>
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_High-Five&metric=ncloc)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_High-Five)
+<br>
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_High-Five&metric=alert_status)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_High-Five)
-
-</div>
-<div align="center">
-
+<br>
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_High-Five&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_High-Five)
+<br>
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_High-Five&metric=security_rating)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_High-Five)
+<br>
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_High-Five&metric=sqale_index)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_High-Five)
+<br>
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_High-Five&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_High-Five)
+<br>
 
-</div>
 
 #### Builds
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Ionic%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/ionic.yml)
