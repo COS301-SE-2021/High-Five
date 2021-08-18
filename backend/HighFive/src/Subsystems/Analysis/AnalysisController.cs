@@ -26,13 +26,13 @@ namespace src.Subsystems.Analysis
                 ConfigureStorageManager();
             }
 
-            Task.Run(() => _analysisService.AnalyzeMedia(analyzeMediaRequest));
-            /*if (url.Equals(string.Empty))
+            var url = _analysisService.AnalyzeMedia(analyzeMediaRequest).Result;
+            if (url.Equals(string.Empty))
             {
                 return StatusCode(400, null);
-            }*/
+            }
 
-            var response = new AnalyzeMediaResponse {Url = "No Url yet, media is being analyzed. Check back later :)."};
+            var response = new AnalyzeMediaResponse {Url = url};
             return StatusCode(200, response);
         }
         
