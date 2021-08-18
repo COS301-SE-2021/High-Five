@@ -6,18 +6,9 @@ import {ImageCardComponent} from './image-card.component';
 /**
  * Mock image model to be used in the component to represent an image that has not been analysed
  */
-const mockImageModelNotAnalysed = jasmine.createSpyObj('image', [], {
+const mockImageMetadataModel = jasmine.createSpyObj('image', [], {
   id: 'test_id', url: 'test_url',
-  title: 'test_title', analysed: false, analysedId: 'test_analysedId'
-});
-
-
-/**
- * Mock image model to be used in the component to represent an image that has been analysed
- */
-const mockImageModelAnalysed = jasmine.createSpyObj('image', [], {
-  id: 'test_id', url: 'test_url',
-  title: 'test_title', analysed: false, analysedId: 'test_analysedId'
+  name: 'test_name', dateStored : new Date(2017, 4, 4, 17, 23, 42, 11)
 });
 
 describe('ImageCardComponent', () => {
@@ -32,7 +23,7 @@ describe('ImageCardComponent', () => {
 
     fixture = TestBed.createComponent(ImageCardComponent);
     component = fixture.componentInstance;
-    component.image = mockImageModelNotAnalysed;
+    component.image = mockImageMetadataModel;
     fixture.detectChanges();
   }));
 
@@ -48,15 +39,15 @@ describe('ImageCardComponent', () => {
    */
   it('should show correct image', () => {
     const imageUrl = fixture.debugElement.nativeElement.querySelector('ion-img').src;
-    expect(imageUrl).toBe(mockImageModelNotAnalysed.url);
+    expect(imageUrl).toBe(mockImageMetadataModel.url);
   });
 
   /**
-   * Checks that the image tittle matches the mock image model's title
+   * Checks that the image name matches the mock image model's name
    */
-  it('should show correct title', () => {
-    const cardTitle = fixture.debugElement.nativeElement.querySelector('ion-card-title').innerText.trim();
-    expect(cardTitle).toBe(mockImageModelNotAnalysed.title);
+  it('should show correct name', () => {
+    const cardname = fixture.debugElement.nativeElement.querySelector('ion-card-title').innerText.trim();
+    expect(cardname).toBe(mockImageMetadataModel.name);
   });
 
   /**
@@ -64,7 +55,7 @@ describe('ImageCardComponent', () => {
    */
   it('should call onDeleteImage method', () => {
     spyOn(component, 'onDeleteImage');
-    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[2];
+    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[1];
     deleteButton.click();
     expect(component.onDeleteImage).toHaveBeenCalled();
   });
@@ -74,7 +65,7 @@ describe('ImageCardComponent', () => {
    */
   it('should emit the deleteImage event on click', () => {
     spyOn(component.deleteImage, 'emit');
-    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[2];
+    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[1];
     deleteButton.click();
     expect(component.deleteImage.emit).toHaveBeenCalled();
   });
@@ -84,25 +75,29 @@ describe('ImageCardComponent', () => {
    */
   it('deleteImage event should contain correct payload', () => {
     spyOn(component.deleteImage, 'emit');
-    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[2];
+    const deleteButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[1];
     deleteButton.click();
-    expect(component.deleteImage.emit).toHaveBeenCalledWith(mockImageModelNotAnalysed.id);
+    expect(component.deleteImage.emit).toHaveBeenCalledWith(mockImageMetadataModel.id);
   });
 
 
   /**
    * Checks that the view analysed image button is present if the analysed property of the image model = true
+   *
+   *    * Currently ignored in unit test, since analyse Image has not yet been finalised
    */
-  it('should create view analysed image button', () => {
-    component.image = mockImageModelAnalysed;
+  xit('should create view analysed image button', () => {
+    component.image = mockImageMetadataModel;
     const viewAnalysedImageButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[0];
     expect(viewAnalysedImageButton).toBeTruthy();
   });
 
   /**
    * Checks that the analyse image button press calls the correct function in the component
+   *
+   * Currently ignored in unit test, since analyse Image has not yet been finalised
    */
-  it('should call correct component function once pressed', () => {
+  xit('should call correct component function once pressed', () => {
     spyOn(component, 'analyseImage');
     const analyseImageButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[0];
     analyseImageButton.click();
@@ -113,24 +108,7 @@ describe('ImageCardComponent', () => {
    * Checks that the view analysed image button press calls the correct function in the component
    */
   it('should call viewAnalysedImage method in the component', () => {
-    mockImageModelNotAnalysed.analysed = true;
-    component.image = mockImageModelNotAnalysed;
-  });
-
-
-  /**
-   * Checks that the analyse image button press changes the analysed value of the image model, the component's image
-   * object needs to be set explicitly here as the spy objects that are defined at the start of the unit tests, will
-   * not be able to be manipulated (their properties can't be changed) causing the test to fail.
-   */
-  it('should change analysed value of image model', () => {
-    component.image = {
-      id: 'test_id', url: 'test_url',
-      title: 'test_title', analysed: false, analysedId: 'test_analysedId'
-    };
-    const analysed = component.image.analysed;
-    component.analyseImage();
-    expect(component.image.analysed).toBe(!analysed);
+    component.image = mockImageMetadataModel;
   });
 
   /**
@@ -138,7 +116,7 @@ describe('ImageCardComponent', () => {
    */
   it('should call viewImageFullScreen method of component', () => {
     spyOn(component, 'viewImageFullScreen');
-    const openImageFullScreenButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[1];
+    const openImageFullScreenButton = fixture.debugElement.nativeElement.querySelectorAll('ion-button')[0];
     openImageFullScreenButton.click();
     expect(component.viewImageFullScreen).toHaveBeenCalled();
   });

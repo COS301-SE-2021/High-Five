@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ModalController, PopoverController} from '@ionic/angular';
 import {Pipeline} from '../../models/pipeline';
-import {AddToolComponent} from '../add-tool/add-tool.component';
+import {AddItemComponent} from '../add-item/add-item.component';
 
 @Component({
   selector: 'app-add-pipeline',
@@ -36,11 +36,11 @@ export class AddPipelineComponent implements OnInit {
 
   async presentAddToolPopover(ev: any) {
     const addToolPopover = await this.popoverController.create({
-      component: AddToolComponent,
+      component: AddItemComponent,
       event: ev,
       translucent: true,
       componentProps: {
-        availableTools: this.availableTools.filter(tool => !this.tools.includes(tool))
+        availableItems: this.availableTools.filter(tool => !this.tools.includes(tool))
       }
     });
     await addToolPopover.present();
