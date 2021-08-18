@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -13,11 +13,11 @@ using Xunit;
 namespace tests.IntegrationTests
 {
     [Trait("Category","IntegrationTests")]
-    public class MediaStorageIntegrationTests
+    public class AnalysisIntegrationTests
     {
         /*
          *      Description:
-         * This class runs integration tests on the MediaStorage subsystem controller with various
+         * This class runs integration tests on the Analysis subsystem controller with various
          * combinations of valid and invalid inputs.
          *
          *      Attributes:
@@ -28,7 +28,7 @@ namespace tests.IntegrationTests
         private TestServer _server;
         private HttpClient _client;
 
-        public MediaStorageIntegrationTests()
+        public AnalysisIntegrationTests()
         {
             /*
              *      Description:
@@ -43,7 +43,7 @@ namespace tests.IntegrationTests
         }
 
         [Fact]
-        public async Task TestStoreValidVideo()
+        public async Task TestAnalyzeValidImageValidPipeline()
         {
             var basePath = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.ToString());
             var file = File.OpenRead(basePath?.FullName + "/IntegrationTests/Setup/MockVideo.mp4");
@@ -56,7 +56,7 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
-        public async Task TestStoreValidImage()
+        public async Task TestAnalyzeInvalidImageValidPipeline()
         {
             var basePath = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.ToString());
             var file = File.OpenRead(basePath?.FullName + "/IntegrationTests/Setup/MockVideo.mp4");
@@ -69,7 +69,7 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
-        public async Task TestStoreImageInvalidFormat()
+        public async Task TestAnalyzeInvalidImageInvalidPipeline()
         {
             var basePath = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.ToString());
             var file = File.OpenRead(basePath?.FullName + "/IntegrationTests/Setup/MockVideo.mp4");
@@ -82,21 +82,21 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
-        public async Task TestStoreNullVideo()
+        public async Task TestAnalyzeValidImageInvalidPipeline()
         {
             var response = await _client.PostAsync("/media/storeVideo", null!);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
         
         [Fact]
-        public async Task TestStoreNullImage()
+        public async Task TestAnalyzeValidVideoValidPipeline()
         {
             var response = await _client.PostAsync("/media/storeImage", null!);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
         
         [Fact]
-        public async Task TestGetAllVideos()
+        public async Task TestAnalyzeInvalidVideoValidPipeline()
         {
             await UploadVideo();
             var response = await _client.PostAsync("/media/getAllVideos", null!);
@@ -107,7 +107,7 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
-        public async Task TestGetAllImages()
+        public async Task TestAnalyzeValidVideoInvalidPipeline()
         {
             await UploadImage();
             var response = await _client.PostAsync("/media/getAllImages", null!);
@@ -118,7 +118,7 @@ namespace tests.IntegrationTests
         }
 
         [Fact]
-        public async Task TestDeleteExistingVideo()
+        public async Task TestAnalyzeInvalidVideoInvalidPipeline()
         {
             try
             {
@@ -135,14 +135,14 @@ namespace tests.IntegrationTests
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 Assert.True(responseObject.Success);
             }
-            catch
+            catch (Exception e)
             {
                 // ignored
             }
         }
         
         [Fact]
-        public async Task TestDeleteExistingImage()
+        public async Task TestAnalyzeAlreadyAnalyzedImage()
         {
             var validId = await UploadImage();
             var requestObject = new DeleteImageRequest {Id = validId};
@@ -159,7 +159,7 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
-        public async Task TestDeleteNonExistingVideo()
+        public async Task TestAnalyzeAlreadyAnalyzedVideo()
         {
             var invalidId = "123";
             var requestObject = new DeleteVideoRequest {Id = invalidId};
@@ -169,23 +169,6 @@ namespace tests.IntegrationTests
             byteContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
             var response = await _client.PostAsync("/media/deleteVideo", byteContent);
-            var responseBody = response.Content.ReadAsStringAsync().Result;
-            var responseObject = JsonConvert.DeserializeObject<EmptyObject>(responseBody);
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.False(responseObject.Success);
-        }
-        
-        [Fact]
-        public async Task TestDeleteNonExistingImage()
-        {
-            var invalidId = "123";
-            var requestObject = new DeleteImageRequest {Id = invalidId};
-            var jsonRequest = JsonConvert.SerializeObject(requestObject);
-            var buffer = System.Text.Encoding.UTF8.GetBytes(jsonRequest);
-            var byteContent = new ByteArrayContent(buffer);
-            byteContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-
-            var response = await _client.PostAsync("/media/deleteImage", byteContent);
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var responseObject = JsonConvert.DeserializeObject<EmptyObject>(responseBody);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -204,7 +187,7 @@ namespace tests.IntegrationTests
             var response = await _client.PostAsync("/media/getAllVideos", null!);
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var responseObject = JsonConvert.DeserializeObject<GetAllVideosResponse>(responseBody);
-            var validId = responseObject.Videos[0].Id;
+            var validId = responseObject.Videos[0]?.Id;
             return validId;
         }
         

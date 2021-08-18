@@ -24,7 +24,7 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class GetImageResponse : IEquatable<GetImageResponse>
+    public class AnalyzedVideoMetaData : IEquatable<AnalyzedVideoMetaData>
     {
         /// <summary>
         /// Gets or Sets Id
@@ -33,23 +33,29 @@ namespace Org.OpenAPITools.Models
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or Sets Name
-        /// </summary>
-        [DataMember(Name="name", EmitDefaultValue=false)]
-        public string Name { get; set; }
-
-        /// <summary>
         /// The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Zring
         /// </summary>
         /// <value>The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Zring</value>
-        [DataMember(Name="dateStored", EmitDefaultValue=false)]
-        public DateTime DateStored { get; set; }
+        [DataMember(Name="dateAnalyzed", EmitDefaultValue=false)]
+        public DateTime DateAnalyzed { get; set; }
 
         /// <summary>
-        /// Gets or Sets File
+        /// Gets or Sets Url
         /// </summary>
-        [DataMember(Name="file", EmitDefaultValue=false)]
-        public byte[] File { get; set; }
+        [DataMember(Name="url", EmitDefaultValue=false)]
+        public string Url { get; set; }
+
+        /// <summary>
+        /// Gets or Sets VideoId
+        /// </summary>
+        [DataMember(Name="videoId", EmitDefaultValue=false)]
+        public string VideoId { get; set; }
+
+        /// <summary>
+        /// Gets or Sets PipelineId
+        /// </summary>
+        [DataMember(Name="pipelineId", EmitDefaultValue=false)]
+        public string PipelineId { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -58,11 +64,12 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class GetImageResponse {\n");
+            sb.Append("class AnalyzedVideoMetaData {\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  DateStored: ").Append(DateStored).Append("\n");
-            sb.Append("  File: ").Append(File).Append("\n");
+            sb.Append("  DateAnalyzed: ").Append(DateAnalyzed).Append("\n");
+            sb.Append("  Url: ").Append(Url).Append("\n");
+            sb.Append("  VideoId: ").Append(VideoId).Append("\n");
+            sb.Append("  PipelineId: ").Append(PipelineId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -85,15 +92,15 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((GetImageResponse)obj);
+            return obj.GetType() == GetType() && Equals((AnalyzedVideoMetaData)obj);
         }
 
         /// <summary>
-        /// Returns true if GetImageResponse instances are equal
+        /// Returns true if AnalyzedVideoMetaData instances are equal
         /// </summary>
-        /// <param name="other">Instance of GetImageResponse to be compared</param>
+        /// <param name="other">Instance of AnalyzedVideoMetaData to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(GetImageResponse other)
+        public bool Equals(AnalyzedVideoMetaData other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -105,19 +112,24 @@ namespace Org.OpenAPITools.Models
                     Id.Equals(other.Id)
                 ) && 
                 (
-                    Name == other.Name ||
-                    Name != null &&
-                    Name.Equals(other.Name)
+                    DateAnalyzed == other.DateAnalyzed ||
+                    DateAnalyzed != null &&
+                    DateAnalyzed.Equals(other.DateAnalyzed)
                 ) && 
                 (
-                    DateStored == other.DateStored ||
-                    DateStored != null &&
-                    DateStored.Equals(other.DateStored)
+                    Url == other.Url ||
+                    Url != null &&
+                    Url.Equals(other.Url)
                 ) && 
                 (
-                    File == other.File ||
-                    File != null &&
-                    File.Equals(other.File)
+                    VideoId == other.VideoId ||
+                    VideoId != null &&
+                    VideoId.Equals(other.VideoId)
+                ) && 
+                (
+                    PipelineId == other.PipelineId ||
+                    PipelineId != null &&
+                    PipelineId.Equals(other.PipelineId)
                 );
         }
 
@@ -133,12 +145,14 @@ namespace Org.OpenAPITools.Models
                 // Suitable nullity checks etc, of course :)
                     if (Id != null)
                     hashCode = hashCode * 59 + Id.GetHashCode();
-                    if (Name != null)
-                    hashCode = hashCode * 59 + Name.GetHashCode();
-                    if (DateStored != null)
-                    hashCode = hashCode * 59 + DateStored.GetHashCode();
-                    if (File != null)
-                    hashCode = hashCode * 59 + File.GetHashCode();
+                    if (DateAnalyzed != null)
+                    hashCode = hashCode * 59 + DateAnalyzed.GetHashCode();
+                    if (Url != null)
+                    hashCode = hashCode * 59 + Url.GetHashCode();
+                    if (VideoId != null)
+                    hashCode = hashCode * 59 + VideoId.GetHashCode();
+                    if (PipelineId != null)
+                    hashCode = hashCode * 59 + PipelineId.GetHashCode();
                 return hashCode;
             }
         }
@@ -146,12 +160,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(GetImageResponse left, GetImageResponse right)
+        public static bool operator ==(AnalyzedVideoMetaData left, AnalyzedVideoMetaData right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(GetImageResponse left, GetImageResponse right)
+        public static bool operator !=(AnalyzedVideoMetaData left, AnalyzedVideoMetaData right)
         {
             return !Equals(left, right);
         }

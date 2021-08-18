@@ -24,38 +24,13 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class VideoMetaData : IEquatable<VideoMetaData>
+    public class AnalyzeMediaResponse : IEquatable<AnalyzeMediaResponse>
     {
-        /// <summary>
-        /// Gets or Sets Id
-        /// </summary>
-        [DataMember(Name="id", EmitDefaultValue=false)]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Name
-        /// </summary>
-        [DataMember(Name="name", EmitDefaultValue=false)]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Z
-        /// </summary>
-        /// <value>The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Z</value>
-        [DataMember(Name="dateStored", EmitDefaultValue=false)]
-        public DateTime DateStored { get; set; }
-
         /// <summary>
         /// Gets or Sets Url
         /// </summary>
         [DataMember(Name="url", EmitDefaultValue=false)]
         public string Url { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Thumbnail
-        /// </summary>
-        [DataMember(Name="thumbnail", EmitDefaultValue=false)]
-        public string Thumbnail { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -64,12 +39,8 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VideoMetaData {\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  DateStored: ").Append(DateStored).Append("\n");
+            sb.Append("class AnalyzeMediaResponse {\n");
             sb.Append("  Url: ").Append(Url).Append("\n");
-            sb.Append("  Thumbnail: ").Append(Thumbnail).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -92,44 +63,24 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((VideoMetaData)obj);
+            return obj.GetType() == GetType() && Equals((AnalyzeMediaResponse)obj);
         }
 
         /// <summary>
-        /// Returns true if VideoMetaData instances are equal
+        /// Returns true if AnalyzeMediaResponse instances are equal
         /// </summary>
-        /// <param name="other">Instance of VideoMetaData to be compared</param>
+        /// <param name="other">Instance of AnalyzeMediaResponse to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VideoMetaData other)
+        public bool Equals(AnalyzeMediaResponse other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    Id == other.Id ||
-                    Id != null &&
-                    Id.Equals(other.Id)
-                ) && 
-                (
-                    Name == other.Name ||
-                    Name != null &&
-                    Name.Equals(other.Name)
-                ) && 
-                (
-                    DateStored == other.DateStored ||
-                    DateStored != null &&
-                    DateStored.Equals(other.DateStored)
-                ) && 
-                (
                     Url == other.Url ||
                     Url != null &&
                     Url.Equals(other.Url)
-                ) && 
-                (
-                    Thumbnail == other.Thumbnail ||
-                    Thumbnail != null &&
-                    Thumbnail.Equals(other.Thumbnail)
                 );
         }
 
@@ -143,16 +94,8 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Id != null)
-                    hashCode = hashCode * 59 + Id.GetHashCode();
-                    if (Name != null)
-                    hashCode = hashCode * 59 + Name.GetHashCode();
-                    if (DateStored != null)
-                    hashCode = hashCode * 59 + DateStored.GetHashCode();
                     if (Url != null)
                     hashCode = hashCode * 59 + Url.GetHashCode();
-                    if (Thumbnail != null)
-                    hashCode = hashCode * 59 + Thumbnail.GetHashCode();
                 return hashCode;
             }
         }
@@ -160,12 +103,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(VideoMetaData left, VideoMetaData right)
+        public static bool operator ==(AnalyzeMediaResponse left, AnalyzeMediaResponse right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(VideoMetaData left, VideoMetaData right)
+        public static bool operator !=(AnalyzeMediaResponse left, AnalyzeMediaResponse right)
         {
             return !Equals(left, right);
         }
