@@ -100,7 +100,7 @@ High Five is a real-time image analysis platform for images and videos taken by 
 * []()[BDP Solutions - Demo3]()
 * []()[Software Requirements Specification - Demo3](https://drive.google.com/file/d/1uLGZ6yso0EESTOSO0BwXLwre_7U83pQq/view?usp=sharing)
 * []()[Architectural Requirements Document - Demo3](https://drive.google.com/file/d/1865YDaMbVFa22zk9fvqJ3EPl5Junztco/view?usp=sharing)
-* []()[User Manual - Demo3]()
+* []()[User Manual - Demo3](https://drive.google.com/file/d/1NcWNqmqXlfQ9QIWWSMWXryCidAUOc_1p/view?usp=sharing)
 * []()[Coding Standards - Demo3](https://drive.google.com/file/d/1e1-PX2OBPiQ1S_2w70eEDOxTWvQDhU5l/view?usp=sharing)
 * []()[Technical Installations Manual - Demo3](https://drive.google.com/file/d/1AsGNJ7Lewy66ocaAaJBX8hny2qk_xgIF/view?usp=sharing)
 
