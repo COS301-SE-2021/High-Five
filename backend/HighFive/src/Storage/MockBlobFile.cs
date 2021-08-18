@@ -105,7 +105,7 @@ namespace src.Storage
             }
         }
 
-        public async Task UploadFile(string path)
+        public async Task UploadFile(string path, string contentType)
         {
             /*
              *      Description:
@@ -121,6 +121,16 @@ namespace src.Storage
             {
                 _container.Add(this);
             }
+        }
+
+        public Task UploadFileFromStream(Stream stream, string contentType="")
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UploadFileFromByteArray(byte[] array, string contentType = "")
+        {
+            throw new NotImplementedException();
         }
 
         public async Task UploadText(string text)
@@ -189,6 +199,11 @@ namespace src.Storage
             await _file.ReadAsync(array.AsMemory(0, array.Length));
             _file.Seek(0, SeekOrigin.Begin);
             return array;
+        }
+
+        public async Task<Stream> ToStream()
+        {
+            return new MemoryStream();
         }
 
         public async Task<string> ToText()
