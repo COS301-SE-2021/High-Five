@@ -29,7 +29,7 @@ export class VideostorePage implements OnInit {
               private loadingController: LoadingController,
               private constants: VideoStoreConstants, public imagesService: ImagesService,
               public videosService: VideosService, private popoverController: PopoverController,
-              public analyzedVideosService: AnalyzedVideosService,) {
+              public analyzedVideosService: AnalyzedVideosService) {
     this.segment = 'all';
   }
 

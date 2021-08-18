@@ -1,7 +1,9 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {IonicModule} from '@ionic/angular';
 
-import { NavbarMediaPopoverComponent } from './navbar-media-popover.component';
+import {NavbarMediaPopoverComponent} from './navbar-media-popover.component';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('NavbarMediaPopoverComponent', () => {
   let component: NavbarMediaPopoverComponent;
@@ -9,8 +11,8 @@ describe('NavbarMediaPopoverComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NavbarMediaPopoverComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [NavbarMediaPopoverComponent],
+      imports: [IonicModule.forRoot(), HttpClientTestingModule, RouterTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavbarMediaPopoverComponent);

@@ -1,20 +1,23 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { LivePageRoutingModule } from './live-routing.module';
+import {LivePageRoutingModule} from './live-routing.module';
 
-import { LivePage } from './live.page';
+import {LivePage} from './live.page';
+import {CustomComponentsModule} from '../../components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    LivePageRoutingModule
+    LivePageRoutingModule,
+    CustomComponentsModule
   ],
   declarations: [LivePage]
 })
-export class LivePageModule {}
+export class LivePageModule {
+}

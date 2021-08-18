@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {AnimationOptions} from 'ngx-lottie';
 
 @Component({
   selector: 'app-live',
@@ -7,7 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LivePage implements OnInit {
 
-  constructor() { }
+
+  public lottieConfig: AnimationOptions = {
+    path: '/assets/lottie-animations/67783-drones-isometric-lottie-animation.json'
+  };
+
+  constructor() {
+  }
 
   ngOnInit() {
   }

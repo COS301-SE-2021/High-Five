@@ -1,9 +1,12 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import {IonicModule, ModalController} from '@ionic/angular';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {AngularDelegate, IonicModule, ModalController, PopoverController} from '@ionic/angular';
 
-import { VideostoreCardComponent } from './videostore-card.component';
+import {VideostoreCardComponent} from './videostore-card.component';
 import {HttpClient} from '@angular/common/http';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {MediaStorageService} from '../../apis/mediaStorage.service';
+import {PipelinesService} from '../../apis/pipelines.service';
+import {AnalysisService} from '../../apis/analysis.service';
 
 let component: VideostoreCardComponent;
 let fixture: ComponentFixture<VideostoreCardComponent>;
@@ -14,9 +17,8 @@ let fixture: ComponentFixture<VideostoreCardComponent>;
  * instead of using data from the real object (which gets created outside the VideostoreCardComponent and is passed to the
  * component)
  */
-const mockVideoMetadata = jasmine.createSpyObj('VideoMetaData', [ ],
-  {id: 'test id', name: 'test name', dateStored: new Date(), url: 'test_url', thumbnail : 'test_thumbnail'});
-
+const mockVideoMetadata = jasmine.createSpyObj('VideoMetaData', [],
+  {id: 'test id', name: 'test name', dateStored: new Date(), url: 'test_url', thumbnail: 'test_thumbnail'});
 
 
 const mockModalController = jasmine.createSpyObj('ModalController', ['create', 'present'], ['style']);
@@ -26,12 +28,12 @@ const mockModalController = jasmine.createSpyObj('ModalController', ['create', '
  */
 describe('VideostoreCardComponent', () => {
 
-  const setBeforeEach=(imports, providers) =>{
+  const setBeforeEach = (imports, providers) => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ VideostoreCardComponent ],
-        imports,
-        providers
+        declarations: [VideostoreCardComponent],
+        imports: [HttpClientTestingModule],
+        providers: [MediaStorageService, ModalController, AngularDelegate, PopoverController, PipelinesService, AnalysisService]
       }).compileComponents();
 
       fixture = TestBed.createComponent(VideostoreCardComponent);
@@ -48,7 +50,7 @@ describe('VideostoreCardComponent', () => {
     /**
      * This runs pre-flight code before each unit test.
      */
-    setBeforeEach([IonicModule.forRoot()], [ {provide: ModalController, useValue: mockModalController},
+    setBeforeEach([IonicModule.forRoot()], [{provide: ModalController, useValue: mockModalController},
       {provide: HttpClient, useValue: HttpClientTestingModule}]);
 
     /**
@@ -71,7 +73,7 @@ describe('VideostoreCardComponent', () => {
      */
     it('should show date', () => {
       const date = fixture.debugElement.nativeElement.querySelectorAll('ion-text')[0].innerText.trim();
-      expect(date).toBe('Date Created : ' +mockVideoMetadata.dateStored);
+      expect(date).toBe('Date Created : ' + mockVideoMetadata.dateStored);
     });
 
     /**

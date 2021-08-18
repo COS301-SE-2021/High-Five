@@ -1,12 +1,18 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { AnalyzedImagesService } from './analyzed-images.service';
+import {AnalyzedImagesService} from './analyzed-images.service';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {MediaStorageService} from '../../apis/mediaStorage.service';
+import {AnalysisService} from '../../apis/analysis.service';
 
 describe('AnalyzedImagesService', () => {
   let service: AnalyzedImagesService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [MediaStorageService, AnalysisService]
+    });
     service = TestBed.inject(AnalyzedImagesService);
   });
 

@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {IonicModule} from '@ionic/angular';
 
-import { AnalyzedVideostoreCardComponent } from './analyzed-videostore-card.component';
+import {AnalyzedVideostoreCardComponent} from './analyzed-videostore-card.component';
 
 describe('AnalyzedVideostoreCardComponent', () => {
   let component: AnalyzedVideostoreCardComponent;
@@ -9,12 +9,13 @@ describe('AnalyzedVideostoreCardComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AnalyzedVideostoreCardComponent ],
+      declarations: [AnalyzedVideostoreCardComponent],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AnalyzedVideostoreCardComponent);
     component = fixture.componentInstance;
+    component.analyzedVideo = {id: '', videoId: '', pipelineId: '', url: '', dateAnalyzed: new Date()};
     fixture.detectChanges();
   }));
 
