@@ -16,7 +16,7 @@ export class AnalyzedImageCardComponent implements OnInit {
   ngOnInit() {
   }
 
-  async viewImageFullScreen() {
+  public async viewImageFullScreen() {
     const newWindow = window.open(this.analyzedImage.url, '_system');
     newWindow.focus();
   }

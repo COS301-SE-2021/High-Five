@@ -21,7 +21,7 @@ export class AnalyzedVideostoreCardComponent implements OnInit {
    * This function creates a modal where the recorded drone footage can be
    * replayed to the user.
    */
-  async playVideo() {
+  public async playVideo() {
     const videoModal = await this.modalController.create({
       component: VideostreamCardComponent,
       componentProps: {

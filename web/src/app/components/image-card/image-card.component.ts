@@ -14,7 +14,7 @@ import {AnalyzedImagesService} from '../../services/analyzed-images/analyzed-ima
 })
 export class ImageCardComponent implements OnInit {
   @Input() image: ImageMetaData;
-  public alt = '../../../assists/images/defaultprofile.svg';
+  public alt = 'assets/images/defaultprofile.svg';
 
   constructor(private popoverController: PopoverController, private pipelineService: PipelineService,
               private imagesService: ImagesService, private analyzedImagesService: AnalyzedImagesService) {
@@ -24,6 +24,10 @@ export class ImageCardComponent implements OnInit {
   ngOnInit() {
   }
 
+
+  /**
+   * Function that deletes the image from the user's account
+   */
   public onDeleteImage() {
     this.imagesService.removeImage(this.image.id);
   }
@@ -33,10 +37,13 @@ export class ImageCardComponent implements OnInit {
     return; // Todo : show a new tab containing the analysed image
   }
 
-  async showAnalyseImagePopover(ev: any) {
-    /**
-     * A popover which contains all the pipelines that the user can analyse the image with
-     */
+  /**
+   * A popover which contains all the pipelines that the user can analyse the image with
+   *
+   * @param ev the event needed to display the popover
+   */
+  public async showAnalyseImagePopover(ev: any) {
+
     const pipelinesPopover = await this.popoverController.create({
       component: AddItemComponent,
       event: ev,
@@ -58,7 +65,10 @@ export class ImageCardComponent implements OnInit {
     );
   }
 
-  public async viewImageFullScreen() {
+  /**
+   * Opens the image in a new tab , to view fullscreen
+   */
+  public async viewImageFullScreen(){
     const newWindow = window.open(this.image.url, '_system');
     newWindow.focus();
   }
