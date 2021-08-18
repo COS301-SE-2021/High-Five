@@ -6,19 +6,16 @@
     <ion-card-title class="ion-text-center">
       {{image.name}}
     </ion-card-title>
-    <ion-card-subtitle class="ion-text-center">
-      Some Random text here that is not useful
-    </ion-card-subtitle>
     <ion-buttons class="ion-justify-content-center">
       <ion-button color="primary" (click)="viewImageFullScreen()">
         <ion-icon name="expand-outline"  slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button color="primary" (click)="showAnalyseImagePopover($event)">
+        <ion-icon name="eye-outline" slot="icon-only"></ion-icon>
       </ion-button>
       <ion-button (click)="onDeleteImage()" color="danger">
         <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-
-
   </ion-card-content>
-
 </ion-card>
