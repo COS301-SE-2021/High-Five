@@ -185,7 +185,7 @@ class DroneActivity : AppCompatActivity(), View.OnClickListener {
         }
         // If there is enough permission, we will start the registration
         if (missingPermission.isEmpty()) {
-            startSDKRegistration()
+            //startSDKRegistration()
         } else {
             showToast("Missing permissions!!!")
         }
@@ -221,7 +221,7 @@ class DroneActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) = when (v!!.id) {
         binding.toggleLive.id -> {
             if(binding.toggleLive.isChecked){
-                djiStreamer.startStream()
+                djiStreamer.setupLiveStream()
             }else{
                 //djiStreamer.stopStream()
             }
