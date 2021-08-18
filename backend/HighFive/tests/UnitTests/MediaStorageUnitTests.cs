@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Org.OpenAPITools.Models;
+using src.AnalysisTools.VideoDecoder;
 using src.Storage;
 using src.Subsystems.MediaStorage;
 using Xunit;
@@ -16,7 +17,7 @@ namespace tests.UnitTests
         public MediaStorageUnitTests()
         {
             _mockStorageManager = new MockStorageManager();
-            _mockMediaStorageService = new MediaStorageService(_mockStorageManager);
+            _mockMediaStorageService = new MediaStorageService(_mockStorageManager, new VideoDecoder());
         }
 
         [Fact]

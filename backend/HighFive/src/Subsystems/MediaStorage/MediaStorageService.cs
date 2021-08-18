@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Org.OpenAPITools.Models;
+using src.AnalysisTools.VideoDecoder;
 using src.Storage;
 using static System.String;
 
@@ -23,12 +22,14 @@ namespace src.Subsystems.MediaStorage
          */
 
         private readonly IStorageManager _storageManager;
+        private readonly IVideoDecoder _videoDecoder;
         private const string VideoContainerName = "video";
         private const string ImageContainerName = "image";
 
-        public MediaStorageService(IStorageManager storageManager)
+        public MediaStorageService(IStorageManager storageManager, IVideoDecoder videoDecoder)
         {
             _storageManager = storageManager;
+            _videoDecoder = videoDecoder;
         }
 
         public async Task StoreVideo(IFormFile video)
@@ -65,32 +66,21 @@ namespace src.Subsystems.MediaStorage
 
             //create local temp copy of video file and thumbnail
             //var baseDirectory = "d:\\local\\";
-            var baseDirectory = Path.GetTempPath() + "\\";
-            var thumbnailPath = baseDirectory + "thumbnail.jpg";
+            var baseDirectory = Path.GetTempPath();
+            var thumbnailPath = baseDirectory + generatedName +"thumbnail.jpg";
             var videoPath = baseDirectory + video.Name;
             await using var stream = new FileStream(videoPath, FileMode.Create);
             await video.CopyToAsync(stream);
 
             //get video thumbnail and store as separate blob
-            /*var inputFile = new MediaFile {Filename = videoPath};
-            var thumbnail = new MediaFile {Filename = thumbnailPath};
-            using (var engine = new Engine())
+            if (File.Exists(thumbnailPath))
             {
-                engine.GetMetadata(inputFile);
-                var options = new ConversionOptions {Seek = TimeSpan.FromSeconds(1), VideoSize = VideoSize.Cif};
-                engine.GetThumbnail(inputFile, thumbnail, options);
-            }*/
-            if (!File.Exists(thumbnailPath))
-            {
-                File.Create(thumbnailPath).Close();
+                File.Delete(thumbnailPath);
             }
+            await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);
+            
             var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", VideoContainerName).Result;
-            await thumbnailBlob.UploadFile(thumbnailPath);
-
-            //get video duration in seconds
-            //var seconds = Math.Truncate(inputFile.Metadata.Duration.TotalSeconds);
-            var seconds = 0;
-            videoBlob.AddMetadata("duration", seconds.ToString());
+            await thumbnailBlob.UploadFile(thumbnailPath, "image/png");
 
             //upload to Azure Blob Storage
             await videoBlob.UploadFile(video);
@@ -115,7 +105,7 @@ namespace src.Subsystems.MediaStorage
                 if (listBlobItem.Name.Contains("thumbnail"))
                 {
                     currentVideo = new VideoMetaData();
-                    var thumbnail = listBlobItem.ToByteArray().Result;
+                    var thumbnail = listBlobItem.GetUrl();
                     currentVideo.Thumbnail = thumbnail;
                 }
                 else
@@ -333,7 +323,7 @@ namespace src.Subsystems.MediaStorage
              * cloud.
              */
 
-            var allFiles = _storageManager.GetAllFilesInContainer("analyzed/" + ImageContainerName).Result;
+            var allFiles = _storageManager.GetAllFilesInContainer("analyzed/" + VideoContainerName).Result;
             if (allFiles == null)
             {
                 return new GetAnalyzedVideosResponse{Videos = new List<AnalyzedVideoMetaData>()};

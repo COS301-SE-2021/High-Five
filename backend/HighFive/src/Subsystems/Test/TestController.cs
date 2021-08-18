@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
 using Org.OpenAPITools.Models;
+using src.AnalysisTools.VideoDecoder;
 
 namespace src.Subsystems.Test
 {
@@ -27,6 +28,7 @@ namespace src.Subsystems.Test
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
             response.Message += " User id: " + jsonToken.Subject;
+
             return StatusCode(200, response);
         }
         
