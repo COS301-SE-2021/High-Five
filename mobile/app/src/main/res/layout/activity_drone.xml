@@ -77,12 +77,13 @@
             android:layout_marginTop="12dp"/>
     </LinearLayout>
     <ToggleButton
-        android:id="@+id/chkState"
+        android:id="@+id/toggle_live"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/toggle_selector"
         android:layout_above="@+id/CameraCapturePanel"
-        android:textColor="@drawa"
+        android:layout_alignLeft="@id/CameraCapturePanel"
+        android:textColor="@drawable/color_selector"
         android:textOff="OFFLINE"
         android:textOn="LIVE"
         />

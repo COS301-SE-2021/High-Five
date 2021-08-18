@@ -25,6 +25,7 @@ import com.bdpsolutions.highfive.databinding.ActivityLoginBinding
 import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
 import com.bdpsolutions.highfive.subsystems.main.MainActivity
 import com.bdpsolutions.highfive.utils.ContextHolder
+import dji.common.camera.SettingsDefinitions
 import dji.common.error.DJIError
 import dji.common.error.DJISDKError
 import dji.log.DJILog
@@ -35,17 +36,21 @@ import dji.sdk.products.Aircraft
 import dji.sdk.sdkmanager.DJISDKInitEvent
 import dji.sdk.sdkmanager.DJISDKManager
 import dji.sdk.sdkmanager.DJISDKManager.SDKManagerCallback
+import dji.sdk.sdkmanager.LiveStreamManager
+import dji.sdk.sdkmanager.LiveStreamManager.LiveStreamVideoSource
+import dji.sdk.sdkmanager.LiveStreamManager.OnLiveChangeListener
 import java.util.ArrayList
 
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
-class DroneActivity : AppCompatActivity() {
+class DroneActivity : AppCompatActivity(), View.OnClickListener {
     private val TAG: String = DroneActivity::class.java.getName()
     private lateinit var binding: ActivityDroneBinding
 
-    private val mBtnOpen: ToggleButton? = null
 
+    private var btnLive: ToggleButton? = null
+    private var djiStreamer : DjiStreamer = DjiStreamer()
     private val REQUEST_PERMISSION_CODE = 12345
     private val REQUIRED_PERMISSION_LIST = arrayOf(
         Manifest.permission.VIBRATE,
@@ -197,6 +202,10 @@ class DroneActivity : AppCompatActivity() {
         binding = ActivityDroneBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // Hiding status bars, since this is the splash screen
+        btnLive = binding.toggleLive
+        binding.toggleLive.setOnClickListener(this)
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.hide(WindowInsets.Type.statusBars())
         } else {
@@ -206,6 +215,19 @@ class DroneActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
             )
+        }
+    }
+
+    override fun onClick(v: View?) = when (v!!.id) {
+        binding.toggleLive.id -> {
+            if(binding.toggleLive.isChecked){
+                djiStreamer.startStream()
+            }else{
+                //djiStreamer.stopStream()
+            }
+        }
+
+        else -> {
         }
     }
 
