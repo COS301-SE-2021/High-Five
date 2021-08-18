@@ -1,28 +1,51 @@
 package com.bdpsolutions.highfive.subsystems.drone
 
 import android.util.Log
+import com.bdpsolutions.highfive.utils.ToastUtils.setResultToToast
 import dji.sdk.camera.VideoFeeder
+import dji.sdk.camera.VideoFeeder.VideoDataListener
+import dji.sdk.camera.VideoFeeder.VideoFeed
 import dji.sdk.sdkmanager.LiveStreamManager
 import dji.sdk.sdkmanager.DJISDKManager
+import dji.sdk.sdkmanager.LiveStreamManager.OnLiveChangeListener
 
 
-
-
-class DjiStreamer : Runnable {
+class DjiStreamer{
     private val rtmpServerUrl = "rtmp//:192.168.11.174:1935"
-    private var runner = Thread(this)
     private val l = DJISDKManager.getInstance().liveStreamManager
-    fun startStream(){
-        runner.start()
+
+    }
+var listener = LiveStreamManager.OnLiveChangeListener {  }
+    private fun setupLiveStream() {
+        DJISDKManager.getInstance().liveStreamManager.registerListener(listener)
+        initListener()
+        DJISDKManager.getInstance().liveStreamManager.setAudioStreamingEnabled(false)
+        DJISDKManager.getInstance().liveStreamManager.setVideoSource(LiveStreamManager.LiveStreamVideoSource.Primary)
+
     }
 
-    override fun run() {
-        Log.d("MavicMini", "LiveStream:live_streaming_start:$rtmpServerUrl")
-        l.registerListener { x -> Log.d("MavicMini", "LiveStream callback:$x") }
-        l.setVideoSource(LiveStreamManager.LiveStreamVideoSource.Primary)
-        l.setVideoEncodingEnabled(true)
-        l.setLiveUrl(rtmpServerUrl)
-        var r = 0
-        r = l.startStream()
+    private fun initListener() {
+        listener = OnLiveChangeListener { i -> setResultToToast("status changed : $i") }
     }
+
+    private fun StartStreaming() {
+
+        if (DJISDKManager.getInstance().liveStreamManager.isStreaming) {
+            setResultToToast("already started the Stream!")
+            return
+        }
+        object : Thread() {
+            override fun run() {
+                DJISDKManager.getInstance().liveStreamManager.liveUrl = // + vehicleID);
+                val result = DJISDKManager.getInstance().liveStreamManager.startStream()
+                DJISDKManager.getInstance().liveStreamManager.setStartTime()
+                setResultToToast(
+                    """LiveStream Start: $result
+ isVideoStreamSpeedConfigurable:${DJISDKManager.getInstance().liveStreamManager.isVideoStreamSpeedConfigurable}
+ isLiveAudioEnabled:${DJISDKManager.getInstance().liveStreamManager.isLiveAudioEnabled}"""
+                )
+            }
+        }.start()
+    }
+
 }
