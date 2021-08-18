@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Org.OpenAPITools.Models;
 using src.AnalysisTools.VideoDecoder;
 using src.Storage;
 using src.Subsystems.Analysis;
@@ -12,41 +13,127 @@ namespace tests.UnitTests
 {
     public class AnalysisUnitTests
     {
-        private readonly IAnalysisService _mockAnalysisService;
-        private readonly IMediaStorageService _mockMediaStorageService;
-        private readonly IPipelineService _mockPipelineService;
-        private readonly IStorageManager _mockStorageManager;
-        private readonly IVideoDecoder _mockVideoDecoder;
         
+    private readonly IMediaStorageService _mockMediaStorageService;
+        private readonly IStorageManager _mockStorageManager;
         public AnalysisUnitTests()
         {
-            _mockVideoDecoder = new MockVideoDecoder();
             _mockStorageManager = new MockStorageManager();
             _mockMediaStorageService = new MediaStorageService(_mockStorageManager, new MockVideoDecoder());
-            _mockPipelineService = new PipelineService(_mockStorageManager);
-            _mockAnalysisService = new AnalysisService(_mockStorageManager,_mockMediaStorageService, _mockPipelineService, new AnalysisModels(), _mockVideoDecoder);
         }
 
         [Fact]
-        public void AnalyzeExistingImageExistingPipeline()
+        public async Task TestAnalyzeValidImageValidPipeline()
         {
-            
-        }
-
-        private async Task<string> GetValidVideoId()
-        {
+            var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
             var validVideo = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validVideo", "validVideo");
             await _mockMediaStorageService.StoreVideo(validVideo);
-            var response = _mockMediaStorageService.GetAllVideos();
-            return response[0].Id;
+            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
+            Assert.NotEqual(videoCountBeforeInsert, videoCountAfterInsert);
+        }
+        
+        [Fact]
+        public async Task TestAnalyzeInvalidImageValidPipeline()
+        {
+            var imageCountBeforeInsert = _mockMediaStorageService.GetAllImages().Count;
+            var validImage = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validImage.png", "validImage.png");
+            await _mockMediaStorageService.StoreImage(validImage);
+            var imageCountAfterInsert = _mockMediaStorageService.GetAllImages().Count;
+            Assert.NotEqual(imageCountBeforeInsert, imageCountAfterInsert);
         }
 
-        private async Task<string> GetValidImageId()
+        [Fact]
+        public void TestAnalyzeInvalidImageInvalidPipeline()
         {
-            var validVideo = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validVideo", "validVideo");
-            await _mockMediaStorageService.StoreImage(validVideo);
-            var response = _mockMediaStorageService.GetAllImages();
-            return response[0].Id;
+            var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
+            FormFile invalidVideo = null;
+            _mockMediaStorageService.StoreVideo(invalidVideo);
+            var imageCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
+            Assert.Equal(videoCountBeforeInsert, imageCountAfterInsert);
         }
+        
+        [Fact]
+        public async Task TestAnalyzeValidImageInvalidPipeline()
+        {
+            var imageCountBeforeInsert = _mockMediaStorageService.GetAllImages().Count;
+            FormFile invalidImage = null;
+            await _mockMediaStorageService.StoreImage(invalidImage);
+            var imageCountAfterInsert = _mockMediaStorageService.GetAllImages().Count;
+            Assert.Equal(imageCountBeforeInsert, imageCountAfterInsert);
+        }
+        
+        [Fact]
+        public async Task TestAnalyzeValidVideoValidPipeline()
+        {
+            var validImage = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "validImage", "validImage");
+            await Assert.ThrowsAsync<InvalidDataException>(() => _mockMediaStorageService.StoreImage(validImage));
+        }
+
+        [Fact]
+        public void TestAnalyzeInvalidVideoValidPipeline()
+        {
+            var response = _mockMediaStorageService.GetAllVideos();
+            Assert.NotNull(response);
+        }
+        
+        [Fact]
+        public void TestAnalyzeValidVideoInvalidPipeline()
+        {
+            var response = _mockMediaStorageService.GetAllImages();
+            Assert.NotNull(response);
+        }
+
+        [Fact]
+        public void TestAnalyzeInvalidVideoInvalidPipeline()
+        {
+            var allVids = _mockMediaStorageService.GetAllVideos();
+            var videoCountBeforeInsert = allVids.Count;
+            if (allVids.Count == 0)
+            {
+                return;
+            }
+            var validVideoId = allVids[0].Id;
+            var request = new DeleteVideoRequest
+            {
+                Id = validVideoId
+            };
+            _mockMediaStorageService.DeleteVideo(request);
+            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
+            Assert.Equal(videoCountBeforeInsert, videoCountAfterInsert);
+        }
+        
+        [Fact]
+        public void TestAnalyzeAlreadyAnalyzedImage()
+        {
+            var allImages = _mockMediaStorageService.GetAllImages();
+            var imageCountBeforeInsert = allImages.Count;
+            if (allImages.Count == 0)
+            {
+                return;
+            }
+            var validImageId = allImages[0].Id;
+            var request = new DeleteImageRequest
+            {
+                Id = validImageId
+            };
+            _mockMediaStorageService.DeleteImage(request);
+            var imageCountAfterInsert = _mockMediaStorageService.GetAllImages().Count;
+            Assert.Equal(imageCountBeforeInsert, imageCountAfterInsert);
+        }
+
+        [Fact]
+        public void TestAnalyzeAlreadyAnalyzedVideo()
+        {
+            var videoCountBeforeInsert = _mockMediaStorageService.GetAllVideos().Count;
+            var invalidVideoId = "5";
+            var request = new DeleteVideoRequest
+            {
+                Id = invalidVideoId
+            };
+            _mockMediaStorageService.DeleteVideo(request);
+            var videoCountAfterInsert = _mockMediaStorageService.GetAllVideos().Count;
+            Assert.Equal(videoCountBeforeInsert, videoCountAfterInsert);
+        }
+
     }
 }
