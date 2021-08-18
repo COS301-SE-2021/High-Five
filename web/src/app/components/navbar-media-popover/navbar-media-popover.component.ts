@@ -1,5 +1,5 @@
-import {Component, Input, OnInit, Output} from '@angular/core';
-import {Router} from "@angular/router";
+import {Component, Input, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-navbar-media-popover',
@@ -8,27 +8,31 @@ import {Router} from "@angular/router";
 })
 export class NavbarMediaPopoverComponent implements OnInit {
 
-  @Input() onClick =() => {}
+
   constructor(private router: Router) {
   }
+
+  @Input() onClick = () => {
+  };
+
 
   ngOnInit() {
   }
 
-  navigateAll() {
+  public navigateAll() {
     this.router.navigate(['/navbar/all']).then(() => {
       this.onClick();
     });
   }
 
-  navigateImages() {
+  public navigateImages() {
     this.router.navigate(['/navbar/images']).then(() => {
       this.onClick();
     });
   }
 
-  navigateVideos() {
-    this.router.navigate(['/navbar/videos']).then(()=>{
+  public navigateVideos() {
+    this.router.navigate(['/navbar/videos']).then(() => {
       this.onClick();
     });
   }

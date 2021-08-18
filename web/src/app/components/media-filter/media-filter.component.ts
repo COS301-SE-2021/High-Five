@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {PopoverController} from "@ionic/angular";
+import {Component, OnInit} from '@angular/core';
+import {PopoverController} from '@ionic/angular';
 
 @Component({
   selector: 'app-media-filter',
@@ -7,13 +7,16 @@ import {PopoverController} from "@ionic/angular";
   styleUrls: ['./media-filter.component.scss'],
 })
 export class MediaFilterComponent implements OnInit {
-  segment : string = 'all';
-  constructor(private popoverController : PopoverController) { }
+  public segment = 'all';
 
-  ngOnInit() {}
+  constructor(private popoverController: PopoverController) {
+  }
 
-  async click(segment: string) {
-    this.segment=segment;
+  ngOnInit() {
+  }
+
+  public async onClick(segment: string) {
+    this.segment = segment;
     await this.popoverController.dismiss({segment: this.segment});
   }
 }

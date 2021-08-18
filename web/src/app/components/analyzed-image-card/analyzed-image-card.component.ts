@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {AnalyzedImageMetaData} from "../../models/analyzedImageMetaData";
+import {AnalyzedImageMetaData} from '../../models/analyzedImageMetaData';
 
 @Component({
   selector: 'app-analyzed-image-card',
@@ -9,9 +9,12 @@ import {AnalyzedImageMetaData} from "../../models/analyzedImageMetaData";
 export class AnalyzedImageCardComponent implements OnInit {
 
   @Input() analyzedImage: AnalyzedImageMetaData;
-  constructor() { }
 
-  ngOnInit() {}
+  constructor() {
+  }
+
+  ngOnInit() {
+  }
 
   async viewImageFullScreen() {
     const newWindow = window.open(this.analyzedImage.url, '_system');

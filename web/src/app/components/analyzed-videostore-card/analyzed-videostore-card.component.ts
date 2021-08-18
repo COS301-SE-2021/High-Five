@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {AnalyzedVideoMetaData} from "../../models/analyzedVideoMetaData";
-import {VideostreamCardComponent} from "../videostream-card/videostream-card.component";
-import {ModalController} from "@ionic/angular";
+import {AnalyzedVideoMetaData} from '../../models/analyzedVideoMetaData';
+import {VideostreamCardComponent} from '../videostream-card/videostream-card.component';
+import {ModalController} from '@ionic/angular';
 
 @Component({
   selector: 'app-analyzed-videostore-card',
@@ -9,10 +9,13 @@ import {ModalController} from "@ionic/angular";
   styleUrls: ['./analyzed-videostore-card.component.scss'],
 })
 export class AnalyzedVideostoreCardComponent implements OnInit {
-  @Input() analyzedVideo : AnalyzedVideoMetaData;
-  constructor(private modalController : ModalController) { }
+  @Input() analyzedVideo: AnalyzedVideoMetaData;
 
-  ngOnInit() {}
+  constructor(private modalController: ModalController) {
+  }
+
+  ngOnInit() {
+  }
 
   /**
    * This function creates a modal where the recorded drone footage can be

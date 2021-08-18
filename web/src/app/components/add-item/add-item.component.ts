@@ -9,9 +9,11 @@ import {PopoverController} from '@ionic/angular';
 export class AddItemComponent implements OnInit {
 
   @Input() availableItems: string[];
-  @Input() title : string;
+  @Input() title: string;
   private items: string[] = [];
-  constructor(private popoverControl: PopoverController) { }
+
+  constructor(private popoverControl: PopoverController) {
+  }
 
   ngOnInit() {
     // Nothing to add here yet
@@ -19,10 +21,10 @@ export class AddItemComponent implements OnInit {
   }
 
   changeCheckbox(checked: boolean, tool: string) {
-    if(checked){
+    if (checked) {
       this.items.push(tool);
     } else {
-      this.items= this.items.filter(t => t!== tool);
+      this.items = this.items.filter(t => t !== tool);
     }
   }
 

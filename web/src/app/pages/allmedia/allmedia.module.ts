@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { AllmediaPageRoutingModule } from './allmedia-routing.module';
 
 import { AllmediaPage } from './allmedia.page';
-import {CustomComponentsModule} from "../../components/components.module";
+import {CustomComponentsModule} from '../../components/components.module';
 
 @NgModule({
   imports: [

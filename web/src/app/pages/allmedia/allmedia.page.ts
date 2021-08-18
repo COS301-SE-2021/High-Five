@@ -1,11 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {VideosService} from "../../services/videos/videos.service";
-import {ImagesService} from "../../services/images/images.service";
-import {AnalyzedVideosService} from "../../services/analyzed-videos/analyzed-videos.service";
-import {AnalyzedImagesService} from "../../services/analyzed-images/analyzed-images.service";
-import {PopoverController} from "@ionic/angular";
-import {MediaFilterComponent} from "../../components/media-filter/media-filter.component";
-import {filter} from "rxjs/operators";
+import {VideosService} from '../../services/videos/videos.service';
+import {ImagesService} from '../../services/images/images.service';
+import {AnalyzedVideosService} from '../../services/analyzed-videos/analyzed-videos.service';
+import {AnalyzedImagesService} from '../../services/analyzed-images/analyzed-images.service';
+import {PopoverController} from '@ionic/angular';
+import {MediaFilterComponent} from '../../components/media-filter/media-filter.component';
 
 @Component({
   selector: 'app-allmedia',
@@ -13,60 +12,49 @@ import {filter} from "rxjs/operators";
   styleUrls: ['./allmedia.page.scss'],
 })
 export class AllmediaPage implements OnInit {
+  public segment: string;
 
-  analyzedImageTrackFn = (ai, analyzed_image) => analyzed_image.id;
-  imageTrackFn = (i, image) => image.id;
-  videoTrackFn = (v, video) => video.id;
-  analyzedVideoTrackFn = (av, analyzed_video) => analyzed_video.id;
-  segment: string;
 
   constructor(public videosService: VideosService, public imagesService: ImagesService,
               public analyzedVideosService: AnalyzedVideosService, public analyzedImagesService: AnalyzedImagesService,
               private popoverController: PopoverController) {
-    this.segment = 'all'
+    this.segment = 'all';
   }
+
+  public analyzedImageTrackFn = (ai, analyzedImage) => analyzedImage.id;
+  public imageTrackFn = (i, image) => image.id;
+  public videoTrackFn = (v, video) => video.id;
+  public analyzedVideoTrackFn = (av, analyzedVideo) => analyzedVideo.id;
 
   ngOnInit() {
   }
 
 
   /**
-   * Sends an uploaded video to the backend using the videosService service.
+   * Sends an uploaded video to the backend using the videosService.
    *
-   * @param video
+   * @param video, the data of the video that is going to be uploaded
    */
-  async uploadVideo(video: any) {
-    // const newArr = this.videosService.videos.map((video: VideoMetaData)=>{return video.name});
-    // if(newArr.filter((value) => {return video.target.files[0].name}).length>0 ) {
-    //     await this.toastController.create({
-    //         message: 'Videos may not have duplicate names, please choose another name',
-    //         duration: 2000,
-    //         translucent: true,
-    //         position: 'bottom'
-    //     }).then((toast)=>{
-    //         toast.present();
-    //     })
-    // }else{
-    //     await this.videosService.addVideo(video.target.files[0]);
-    // }
+  public async uploadVideo(video: any) {
     await this.videosService.addVideo(video.target.files[0]);
   }
 
 
   /**
-   * This function will delete an image from the user's account, optimistic loading updates are used and in the event
-   * and error is thrown, the image is added back and an appropriate toast is shown
+   * Sends an uploaded image to the backend to be saved using the imagesService
    *
-   * @param image the data of the image we wish to upload
+   * @param image, the data of the image that is going to be uploaded
    */
-
-  async uploadImage(image: any) {
-
+  public async uploadImage(image: any) {
     await this.imagesService.addImage(image.target.files[0]);
-    //Nothing added here yet
   }
 
-  async displayFilterPopover(ev: any) {
+  /**
+   * Displays a popover that contains the filter options
+   *
+   * @param ev the event which is required by the popover
+   */
+  public async displayFilterPopover(ev: any) {
     const filterPopover = await this.popoverController.create({
       component: MediaFilterComponent,
       cssClass: 'media-filter',
@@ -78,8 +66,12 @@ export class AllmediaPage implements OnInit {
     await filterPopover.present();
     await filterPopover.onDidDismiss().then(
       data => {
-        if (data.data != undefined) {
-          if (data.data.segment != undefined) {
+        /**
+         * The below is to ensure the popover isn't dismissed from the backdrop, in which case the data.data and
+         * data.data.segment will be undefined.
+         */
+        if (data.data !== undefined) {
+          if (data.data.segment !== undefined) {
             this.segment = data.data.segment;
           }
         }

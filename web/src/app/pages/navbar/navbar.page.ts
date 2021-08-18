@@ -2,13 +2,13 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
 import {Router} from '@angular/router';
 import {MsalService} from '@azure/msal-angular';
-import {VideosService} from "../../services/videos/videos.service";
-import {ImagesService} from "../../services/images/images.service";
-import {PipelinesService} from "../../apis/pipelines.service";
-import {AnalyzedVideosService} from "../../services/analyzed-videos/analyzed-videos.service";
-import {AnalyzedImagesService} from "../../services/analyzed-images/analyzed-images.service";
-import {PopoverController} from "@ionic/angular";
-import {NavbarMediaPopoverComponent} from "../../components/navbar-media-popover/navbar-media-popover.component";
+import {VideosService} from '../../services/videos/videos.service';
+import {ImagesService} from '../../services/images/images.service';
+import {PipelinesService} from '../../apis/pipelines.service';
+import {AnalyzedVideosService} from '../../services/analyzed-videos/analyzed-videos.service';
+import {AnalyzedImagesService} from '../../services/analyzed-images/analyzed-images.service';
+import {PopoverController} from '@ionic/angular';
+import {NavbarMediaPopoverComponent} from '../../components/navbar-media-popover/navbar-media-popover.component';
 
 @Component({
   selector: 'app-navbar',
@@ -79,6 +79,11 @@ export class NavbarPage implements OnInit {
     this.router.navigate([url]);
   }
 
+  /**
+   * This function will display a popover containing the different media type pages' link to which the user can navigate
+   *
+   * @param ev, the event which calls this function, needed by the popoverController to create a popover
+   */
   async displayMediaPopover(ev: any) {
     const popoverComponent = await this.popoverController.create({
       component: NavbarMediaPopoverComponent,

@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ModalController, PopoverController, ToastController} from '@ionic/angular';
 import {AddItemComponent} from '../add-item/add-item.component';
-import {PipelineService} from "../../services/pipeline/pipeline.service";
-import {Pipeline} from "../../models/pipeline";
+import {PipelineService} from '../../services/pipeline/pipeline.service';
+import {Pipeline} from '../../models/pipeline';
 
 @Component({
   selector: 'app-add-pipeline',
@@ -14,28 +14,28 @@ import {Pipeline} from "../../models/pipeline";
  * This class serves as a way to add pipelines
  */
 export class AddPipelineComponent implements OnInit {
-  pipelineName : string;
+  pipelineName: string;
   tools: string[] = [];
 
-  constructor(private modalController: ModalController, private popoverController: PopoverController ,
-              public pipelineService: PipelineService, private toastController : ToastController) {
+  constructor(private modalController: ModalController, private popoverController: PopoverController,
+              public pipelineService: PipelineService, private toastController: ToastController) {
     // Nothing added here
   }
 
   async dismiss() {
-    const newArr = this.pipelineService.pipelines.map((pipeline:Pipeline)=>{return pipeline.name});
-    if(newArr.filter((value) => {return value===this.pipelineName}).length>0 ){
+    const newArr = this.pipelineService.pipelines.map((pipeline: Pipeline) => pipeline.name);
+    if (newArr.filter((value) => value === this.pipelineName).length > 0) {
       await this.toastController.create({
         message: 'Pipelines may not have duplicate names, please choose another name',
         duration: 2000,
         translucent: true,
         position: 'bottom'
-      }).then((toast)=>{
+      }).then((toast) => {
         toast.present();
-      })
+      });
       await this.modalController.dismiss();
-    }else{
-      await this.pipelineService.addPipeline(this.pipelineName,this.tools);
+    } else {
+      await this.pipelineService.addPipeline(this.pipelineName, this.tools);
       await this.modalController.dismiss();
     }
 
@@ -51,7 +51,7 @@ export class AddPipelineComponent implements OnInit {
       }
     });
     await addToolPopover.present();
-    await addToolPopover.onDidDismiss().then(data =>{
+    await addToolPopover.onDidDismiss().then(data => {
       this.tools = this.tools.concat(data.data.items);
     });
   }

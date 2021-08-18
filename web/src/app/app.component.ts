@@ -3,7 +3,7 @@ import {LoadingController, Platform} from '@ionic/angular';
 import {ScreenSizeServiceService} from './services/screen-size-service.service';
 import {MsalService} from '@azure/msal-angular';
 import {NavigationEnd, NavigationStart, Router, RouterEvent} from '@angular/router';
-import {environment} from "../environments/environment";
+import {environment} from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +11,8 @@ import {environment} from "../environments/environment";
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  public isIframe = false;
   private loading;
-  isIframe: boolean = false;
 
   constructor(private platform: Platform, private screenSizeService: ScreenSizeServiceService, private msalService: MsalService,
               private router: Router, private loadingController: LoadingController) {
@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
         }
       });
       if (msalService.instance.getAllAccounts().length > 0) {
-        router.navigate(['/navbar/landing'])
+        router.navigate(['/navbar/landing']);
       }
     });
 
