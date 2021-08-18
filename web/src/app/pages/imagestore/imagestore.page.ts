@@ -15,6 +15,7 @@ export class ImagestorePage implements OnInit {
 
   constructor(public imagesService: ImagesService, public analyzedImagesService: AnalyzedImagesService,
               private popoverController: PopoverController) {
+    //Setting the segment's property to all, ensures that on page load, all media is shown
     this.segment = 'all';
   }
 

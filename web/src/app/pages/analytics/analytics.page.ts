@@ -26,6 +26,9 @@ export class AnalyticsPage implements OnInit {
   }
 
 
+  /**
+   * Function opens a modal containing the add pipeline component, which will allow the user to create a pipeline
+   */
   public async openAddPipelineModal() {
     const modal = await this.modalController.create({
       component: AddPipelineComponent,

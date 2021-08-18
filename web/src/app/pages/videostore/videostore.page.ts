@@ -9,7 +9,6 @@ import {
 import {VideoStoreConstants} from '../../../constants/pages/videostore-constants';
 import {ImagesService} from '../../services/images/images.service';
 import {VideosService} from '../../services/videos/videos.service';
-import {PipelineService} from '../../services/pipeline/pipeline.service';
 import {AnalyzedVideosService} from '../../services/analyzed-videos/analyzed-videos.service';
 import {MediaFilterComponent} from '../../components/media-filter/media-filter.component';
 
@@ -30,10 +29,8 @@ export class VideostorePage implements OnInit {
               private loadingController: LoadingController,
               private constants: VideoStoreConstants, public imagesService: ImagesService,
               public videosService: VideosService, private popoverController: PopoverController,
-              private pipelineService: PipelineService, public analyzedVideosService: AnalyzedVideosService,) {
+              public analyzedVideosService: AnalyzedVideosService,) {
     this.segment = 'all';
-    this.pipelineService.fetchAllPipelines();
-    this.pipelineService.fetchAllTools();
   }
 
   public imagesTrackFn = (i, image) => image.id;

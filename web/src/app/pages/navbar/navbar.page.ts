@@ -2,11 +2,6 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
 import {Router} from '@angular/router';
 import {MsalService} from '@azure/msal-angular';
-import {VideosService} from '../../services/videos/videos.service';
-import {ImagesService} from '../../services/images/images.service';
-import {PipelinesService} from '../../apis/pipelines.service';
-import {AnalyzedVideosService} from '../../services/analyzed-videos/analyzed-videos.service';
-import {AnalyzedImagesService} from '../../services/analyzed-images/analyzed-images.service';
 import {PopoverController} from '@ionic/angular';
 import {NavbarMediaPopoverComponent} from '../../components/navbar-media-popover/navbar-media-popover.component';
 
@@ -32,10 +27,8 @@ export class NavbarPage implements OnInit {
   private navPages;
 
 
-  constructor(private screenSizeService: ScreenSizeServiceService, private router: Router, private msalService: MsalService,
-              private videosService: VideosService, private imagesService: ImagesService,
-              private analyzedVideoService: AnalyzedVideosService, private analyzedImageService: AnalyzedImagesService,
-              private pipelineService: PipelinesService, private popoverController: PopoverController) {
+  constructor(private screenSizeService: ScreenSizeServiceService, private router: Router,
+              private msalService: MsalService, private popoverController: PopoverController) {
     this.screenSizeService.isDesktopView().subscribe(isDesktop => {
       this.isDesktop = isDesktop;
     });
@@ -52,10 +45,13 @@ export class NavbarPage implements OnInit {
 
   }
 
+  /**
+   * Function that calls the MSAL service's logout popup method to logout and then clears the localstorage
+   */
   logout() {
     this.msalService.logoutPopup();
     this.router.navigate(['/welcome']).then(() => {
-      localStorage.removeItem('jwt');
+      localStorage.clear();
     });
   }
 

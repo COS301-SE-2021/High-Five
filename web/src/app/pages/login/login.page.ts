@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {MsalService} from '@azure/msal-angular';
 
 @Component({
   selector: 'app-login',
@@ -7,9 +6,9 @@ import {MsalService} from '@azure/msal-angular';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  email: string;
-  password: string;
-  isIframe = false;
+  public email: string;
+  public password: string;
+  public isIframe = false;
 
   constructor() {
     //Nothing added here yet

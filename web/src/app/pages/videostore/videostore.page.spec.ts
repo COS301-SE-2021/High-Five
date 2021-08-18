@@ -2,11 +2,12 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {VideostorePage} from './videostore.page';
 import {IonicModule} from '@ionic/angular';
-import {MediaStorageService} from "../../apis/mediaStorage.service";
-import {BehaviorSubject} from "rxjs";
-import {distinctUntilChanged} from "rxjs/operators";
+import {MediaStorageService} from '../../apis/mediaStorage.service';
+import {BehaviorSubject} from 'rxjs';
+import {distinctUntilChanged} from 'rxjs/operators';
 
-const mockMediaStorageService = jasmine.createSpyObj('MediaStorageService', ['deleteImage', 'deleteVideo', 'getAllImages', 'getAllVideos', 'storeImageForm', 'storeVideoForm']);
+const mockMediaStorageService = jasmine.createSpyObj('MediaStorageService',
+  ['deleteImage', 'deleteVideo', 'getAllImages', 'getAllVideos', 'storeImageForm', 'storeVideoForm']);
 mockMediaStorageService.getAllVideos.and.callFake(
   (func) => func([{
     name: 'testVideoName',

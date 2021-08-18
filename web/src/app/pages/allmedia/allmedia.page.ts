@@ -18,8 +18,10 @@ export class AllmediaPage implements OnInit {
   constructor(public videosService: VideosService, public imagesService: ImagesService,
               public analyzedVideosService: AnalyzedVideosService, public analyzedImagesService: AnalyzedImagesService,
               private popoverController: PopoverController) {
+    //Setting the segment's property to all, ensures that on page load, all media is shown
     this.segment = 'all';
   }
+
 
   public analyzedImageTrackFn = (ai, analyzedImage) => analyzedImage.id;
   public imageTrackFn = (i, image) => image.id;

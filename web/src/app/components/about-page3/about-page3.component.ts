@@ -13,7 +13,10 @@ SwiperCore.use([Mousewheel, Autoplay]);
 })
 export class AboutPage3Component implements OnInit, AfterContentChecked {
   @ViewChild('swiper2') swiper2: SwiperComponent;
-  swiperConfig2: SwiperOptions = {
+  /**
+   * Swiper config for the swiper component
+   */
+  public swiperConfig2: SwiperOptions = {
     direction: 'vertical',
     slidesPerView: 1,
     mousewheel: true,
@@ -21,13 +24,16 @@ export class AboutPage3Component implements OnInit, AfterContentChecked {
     allowTouchMove: true,
   };
 
-  lottieScrollDownConfig: AnimationOptions = {
+  /**
+   * Configs for the lottie animations
+   */
+  public lottieScrollDownConfig: AnimationOptions = {
     path: '/assets/lottie-animations/scroll-down-animation.json'
   };
-  lottieServerConfig: AnimationOptions = {
+  public lottieServerConfig: AnimationOptions = {
     path: '/assets/lottie-animations/41703-cloud-server.json'
   };
-  lottieExplainConfig: AnimationOptions = {
+  public lottieExplainConfig: AnimationOptions = {
     path: '/assets/lottie-animations/explain.json'
   };
 
@@ -37,6 +43,9 @@ export class AboutPage3Component implements OnInit, AfterContentChecked {
   ngOnInit() {
   }
 
+  /**
+   * Fix to swiper bug which causes the swiper to render improperly
+   */
   ngAfterContentChecked(): void {
     if (this.swiper2) {
       this.swiper2.updateSwiper({});

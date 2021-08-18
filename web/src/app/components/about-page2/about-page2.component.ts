@@ -10,7 +10,30 @@ import {MoreInfoComponent} from '../more-info/more-info.component';
 })
 export class AboutPage2Component implements OnInit {
 
-  explanations = [
+
+  /**
+   * The below AnimationOptions are the configurations for the lottie animations in the component
+   */
+  public lottieConfig: AnimationOptions = {
+    path: '/assets/lottie-animations/lf30_editor_5gpajdty.json'
+  };
+
+  public lottieMulticastConfig: AnimationOptions = {
+    path: '/assets/lottie-animations/multicast.json',
+  };
+
+  public lottieMobileAppConfig: AnimationOptions = {
+    path: '/assets/lottie-animations/72680-mobile-app.json',
+  };
+
+  lottieLatencyConfig: AnimationOptions = {
+    path: '/assets/lottie-animations/speed.json',
+  };
+
+  /**
+   * Explanations for the key design considerations
+   */
+  private explanations = [
     {
       title: 'Streaming the live video to multiple clients',
       explanation: '',
@@ -29,22 +52,6 @@ export class AboutPage2Component implements OnInit {
     }
   ];
 
-  lottieConfig: AnimationOptions = {
-    path: '/assets/lottie-animations/lf30_editor_5gpajdty.json'
-  };
-
-  lottieMulticastConfig: AnimationOptions = {
-    path: '/assets/lottie-animations/multicast.json',
-  };
-
-  lottieMobileAppConfig: AnimationOptions = {
-    path: '/assets/lottie-animations/72680-mobile-app.json',
-  };
-
-  lottieLatencyConfig: AnimationOptions = {
-    path: '/assets/lottie-animations/speed.json',
-  };
-
   constructor(private modalController: ModalController) {
   }
 
@@ -52,7 +59,12 @@ export class AboutPage2Component implements OnInit {
   }
 
 
-  async displayModal(choice: number) {
+  /**
+   * Displays a modal containing a title and brief description based off of the choice parameter passed in
+   *
+   * @param choice a number representing an index in the explanations array
+   */
+  public async displayModal(choice: number) {
     const modal = await this.modalController.create({
       component: MoreInfoComponent,
       showBackdrop: true,
