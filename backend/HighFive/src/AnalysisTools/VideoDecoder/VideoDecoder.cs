@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Accord.IO;
+using FFMediaToolkit;
 using FFMediaToolkit.Decoding;
 using FFMediaToolkit.Encoding;
 using FFMediaToolkit.Graphics;
@@ -17,13 +18,18 @@ namespace src.AnalysisTools.VideoDecoder
 {
     public class VideoDecoder: IVideoDecoder
     {
-    
+        private static bool _ffmpegLoaded;
+        private readonly string _ffMpegPath = Directory.GetCurrentDirectory() + "\\ffmpegs\\ffmpeg\\bin";//@"D:\ffmpeg\bin";//TODO: Add ffmpeg path here
+        private readonly string _ffMpegSharedPath = Directory.GetCurrentDirectory() + "\\ffmpegs\\ffmpegshared\\bin";//@"D:\ffmpegshared\bin";
+
         public VideoDecoder()
         {
-            const string ffMpegPath = @"D:\ffmpeg\bin";//TODO: Add ffmpeg path here
-            const string ffMpegSharedPath = @"D:\ffmpegshared\bin";
-            Xabe.FFmpeg.FFmpeg.SetExecutablesPath(ffMpegPath, "ffmpeg");
-            FFMediaToolkit.FFmpegLoader.FFmpegPath = ffMpegSharedPath;
+            if (!_ffmpegLoaded)
+            {
+                Xabe.FFmpeg.FFmpeg.SetExecutablesPath(_ffMpegPath);
+                FFmpegLoader.FFmpegPath = _ffMpegSharedPath;
+                _ffmpegLoaded = true;
+            }
         }
         
         [SuppressMessage("ReSharper.DPA", "DPA0003: Excessive memory allocations in LOH", MessageId = "type: System.Byte[]")]

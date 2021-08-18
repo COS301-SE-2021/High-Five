@@ -25,7 +25,7 @@ namespace src.Subsystems.Analysis
                 ConfigureStorageManager();
             }
 
-            var url = _analysisService.AnalyzeMedia(analyzeMediaRequest);
+            var url = _analysisService.AnalyzeMedia(analyzeMediaRequest).Result;
             if (url.Equals(string.Empty))
             {
                 return StatusCode(400, null);

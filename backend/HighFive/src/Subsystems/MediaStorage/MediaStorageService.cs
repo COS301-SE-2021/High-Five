@@ -80,7 +80,7 @@ namespace src.Subsystems.MediaStorage
             await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);
             
             var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", VideoContainerName).Result;
-            await thumbnailBlob.UploadFile(thumbnailPath);
+            await thumbnailBlob.UploadFile(thumbnailPath, "image/png");
 
             //upload to Azure Blob Storage
             await videoBlob.UploadFile(video);

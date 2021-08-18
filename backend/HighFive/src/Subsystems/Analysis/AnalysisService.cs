@@ -48,7 +48,7 @@ namespace src.Subsystems.Analysis
             _videoDecoder = videoDecoder;
         }
         
-        public string AnalyzeMedia(AnalyzeMediaRequest request)
+        public async Task<string> AnalyzeMedia(AnalyzeMediaRequest request)
         {
             /*
              *      Description:
@@ -79,7 +79,7 @@ namespace src.Subsystems.Analysis
                 "video" => ".mp4",
                 _ => string.Empty
             };
-            var analyzedMediaName = _storageManager.HashMd5(request.MediaId + "|" + analysisPipeline.Tools) + fileExtension;
+            var analyzedMediaName = _storageManager.HashMd5(request.MediaId + "|" + string.Join(",",analysisPipeline.Tools)) + fileExtension;
             var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
             if (testFile != null) //This means the media has already been analyzed with this pipeline combination
             {
@@ -104,7 +104,7 @@ namespace src.Subsystems.Analysis
             var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
             analyzedFile.AddMetadata("mediaId", request.MediaId);
             analyzedFile.AddMetadata("pipelineId", request.PipelineId);
-            analyzedFile.UploadFileFromByteArray(analyzedMediaTemporaryLocation, contentType);
+            await analyzedFile.UploadFileFromByteArray(analyzedMediaTemporaryLocation, contentType);
             return analyzedFile.GetUrl();
         }
 
