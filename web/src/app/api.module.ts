@@ -1,21 +1,27 @@
-import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core';
-import { Configuration } from './configuration';
-import { HttpClient } from '@angular/common/http';
+import {NgModule, ModuleWithProviders, SkipSelf, Optional} from '@angular/core';
+import {Configuration} from './configuration';
+import {HttpClient} from '@angular/common/http';
 
 
-import { PipelinesService } from './apis/pipelines.service';
+import {AnalysisService} from './apis/analysis.service';
+import {MediaStorageService} from './apis/mediaStorage.service';
+import {PipelinesService} from './apis/pipelines.service';
+import {TestService} from './apis/test.service';
 
 @NgModule({
-  imports:      [],
+  imports: [],
   declarations: [],
-  exports:      [],
+  exports: [],
   providers: [
+    AnalysisService,
+    MediaStorageService,
     PipelinesService,
-     ]
+    TestService]
 })
 export class ApiModule {
-  constructor( @Optional() @SkipSelf() parentModule: ApiModule,
-               @Optional() http: HttpClient) {
+
+  constructor(@Optional() @SkipSelf() parentModule: ApiModule,
+              @Optional() http: HttpClient) {
     if (parentModule) {
       throw new Error('ApiModule is already loaded. Import in your base AppModule only.');
     }
@@ -25,10 +31,10 @@ export class ApiModule {
     }
   }
 
-    public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders<any> {
-        return {
-            ngModule: ApiModule,
-            providers: [ { provide: Configuration, useFactory: configurationFactory } ]
-        };
-    }
+  public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders<any> {
+    return {
+      ngModule: ApiModule,
+      providers: [{provide: Configuration, useFactory: configurationFactory}]
+    };
+  }
 }

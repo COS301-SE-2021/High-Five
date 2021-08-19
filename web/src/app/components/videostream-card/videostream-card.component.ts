@@ -8,7 +8,7 @@ import {Endpoints} from '../../../constants/endpoints';
 })
 export class VideostreamCardComponent implements OnInit {
   @Input() modal: ModalController;
-  @Input() vidId: string;
+  @Input() videoUrl: string;
   constructor(public readonly endpoints: Endpoints) { }
 
   ngOnInit() {
@@ -19,7 +19,7 @@ export class VideostreamCardComponent implements OnInit {
   /**
    * Dismisses the video playback modal.
    */
-  async dismissModal() {
+  public async dismissModal() {
     await this.modal.dismiss();
   }
 
