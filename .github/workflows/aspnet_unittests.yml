@@ -1,11 +1,9 @@
-﻿name: .NET Core Unit Tests
+name: .NET Core Unit Tests
 
 on:
   push:
     branches:
-      - 'development'
       - 'master'
-      - 'backend-development'
   pull_request:
     branches:
       - 'development'
