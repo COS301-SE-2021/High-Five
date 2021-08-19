@@ -29,7 +29,6 @@
         android:background="@color/dark_gray"
         android:orientation="horizontal">
 
-
         <dji.ux.widget.FlightModeWidget
             android:layout_width="103dp"
             android:layout_height="22dp"/>
