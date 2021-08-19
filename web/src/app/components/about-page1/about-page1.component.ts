@@ -8,6 +8,10 @@ import {AnimationOptions} from 'ngx-lottie';
 })
 export class AboutPage1Component implements OnInit {
 
+
+  /**
+   * The below AnimationOptions are the lottie configurations used by the ng-lottie components in html
+   */
   lottieConfig: AnimationOptions = {
     path: '/assets/lottie-animations/67783-drones-isometric-lottie-animation.json'
   };
@@ -27,6 +31,7 @@ export class AboutPage1Component implements OnInit {
   };
 
   constructor() {
+    // Nothing added here
   }
 
   ngOnInit() {

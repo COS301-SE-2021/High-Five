@@ -26,6 +26,11 @@ export class ImagesService {
     this._images.next(val);
   }
 
+  /**
+   * Uploads a video
+   *
+   * @param image the raw data of the video which must be uploaded
+   */
   async addImage(image: any) {
     try {
       await this.mediaStorageService.storeImageForm(image).toPromise();
@@ -35,6 +40,14 @@ export class ImagesService {
     }
   }
 
+
+  /**
+   * Removes an images either locally or locally and with a request to the backend
+   *
+   * @param imageId the id of the image which to remove (string)
+   * @param serverRemove boolean, if true  will send a request to the backend to remove the image, otherwise
+   * the image will only be removed locally, by default this parameter is set to true
+   */
   public async removeImage(imageId: string, serverRemove: boolean = true) {
     const image = this.images.find(i => i.id === imageId);
     this.images = this.images.filter(i => i.id !== imageId);
@@ -49,6 +62,9 @@ export class ImagesService {
     }
   }
 
+  /**
+   * Makes a request to retrieve all images
+   */
   public async fetchAll() {
     await this.mediaStorageService.getAllImages().subscribe((res) => {
       this.images = res.images;
