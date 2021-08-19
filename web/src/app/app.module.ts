@@ -12,8 +12,8 @@ import {PipelinesService} from './apis/pipelines.service';
 import {MsalGuard, MsalModule} from '@azure/msal-angular';
 import {InteractionType, PublicClientApplication} from '@azure/msal-browser';
 import {environment} from '../environments/environment';
-
-const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
+import {MediaStorageService} from './apis/mediaStorage.service';
+import {AnalysisService} from "./apis/analysis.service";
 
 
 @NgModule({
@@ -27,7 +27,7 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
       redirectUri: environment.redirectUri,
     },
     cache: {
-      cacheLocation: 'sessionStorage',
+      cacheLocation: 'localStorage',
       storeAuthStateInCookie: false
     }
   }), {
@@ -40,7 +40,7 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
   providers: [{
     provide: RouteReuseStrategy,
     useClass: IonicRouteStrategy
-  }, VideoPlayer, PipelinesService, MsalGuard],
+  }, VideoPlayer, PipelinesService, MsalGuard, MediaStorageService, AnalysisService],
   bootstrap: [AppComponent],
 })
 export class AppModule {
