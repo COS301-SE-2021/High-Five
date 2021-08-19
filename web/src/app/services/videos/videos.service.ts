@@ -26,6 +26,11 @@ export class VideosService {
     this._videos.next(val);
   }
 
+  /**
+   * Uploads a video
+   *
+   * @param video the raw data of the video which must be uploaded
+   */
   public async addVideo(video: any) {
     try {
       await this.mediaStorageService.storeVideoForm(video).toPromise();
@@ -35,6 +40,12 @@ export class VideosService {
     }
   }
 
+  /**
+   *
+   * @param videoId the id of the video which to remove (string)
+   * @param serverRemove boolean, if true  will send a request to the backend to remove the video, otherwise
+   * the video will only be removed locally, by default this parameter is set to true
+   */
   public async removeVideo(videoId: string, serverRemove: boolean = true) {
     const video = this.videos.find(v => v.id === videoId);
     this.videos = this.videos.filter(v => v.id !== videoId);
@@ -49,6 +60,9 @@ export class VideosService {
     }
   }
 
+  /**
+   * Makes a request to retrieve all videos
+   */
   public async fetchAll() {
     await this.mediaStorageService.getAllVideos().subscribe((res) => {
       this.videos = res.videos;
