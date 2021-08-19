@@ -10,7 +10,9 @@
     <!-- Widget to see first person view (FPV) -->
     <dji.ux.widget.FPVWidget
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+ />
 
     <dji.ux.widget.FPVOverlayWidget
         android:layout_width="match_parent"
@@ -74,6 +76,18 @@
             android:layout_height="40dp"
             android:layout_marginTop="12dp"/>
     </LinearLayout>
+    <ToggleButton
+        android:id="@+id/toggle_live"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/toggle_selector"
+        android:layout_above="@+id/CameraCapturePanel"
+        android:layout_alignLeft="@id/CameraCapturePanel"
+        android:textColor="@drawable/color_selector"
+        android:textOff="LIVE"
+        android:textOn="LIVE"
+        />
+
 
     <dji.ux.widget.controls.CameraControlsWidget
         android:id="@+id/CameraCapturePanel"
@@ -102,7 +116,6 @@
         android:gravity="center"
         android:visibility="invisible"
         tools:ignore="RtlHardcoded"/>
-
     <!-- Pre-flight checklist panel -->
     <dji.ux.panel.PreFlightCheckListPanel
         android:layout_width="400dp"
@@ -110,4 +123,5 @@
         android:layout_below="@id/signal"
         custom:excludeItem="ESCStatus"
         android:visibility="gone"/>
+
 </RelativeLayout>
