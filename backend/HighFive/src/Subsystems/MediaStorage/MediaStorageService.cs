@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Org.OpenAPITools.Models;
+using src.AnalysisTools.VideoDecoder;
 using src.Storage;
 using static System.String;
 
@@ -23,12 +22,14 @@ namespace src.Subsystems.MediaStorage
          */
 
         private readonly IStorageManager _storageManager;
+        private readonly IVideoDecoder _videoDecoder;
         private const string VideoContainerName = "video";
         private const string ImageContainerName = "image";
 
-        public MediaStorageService(IStorageManager storageManager)
+        public MediaStorageService(IStorageManager storageManager, IVideoDecoder videoDecoder)
         {
             _storageManager = storageManager;
+            _videoDecoder = videoDecoder;
         }
 
         public async Task StoreVideo(IFormFile video)
@@ -65,32 +66,21 @@ namespace src.Subsystems.MediaStorage
 
             //create local temp copy of video file and thumbnail
             //var baseDirectory = "d:\\local\\";
-            var baseDirectory = Directory.GetCurrentDirectory() + "\\";
-            var thumbnailPath = baseDirectory + "thumbnail.jpg";
+            var baseDirectory = Path.GetTempPath();
+            var thumbnailPath = baseDirectory + generatedName +"thumbnail.jpg";
             var videoPath = baseDirectory + video.Name;
             await using var stream = new FileStream(videoPath, FileMode.Create);
             await video.CopyToAsync(stream);
 
             //get video thumbnail and store as separate blob
-            /*var inputFile = new MediaFile {Filename = videoPath};
-            var thumbnail = new MediaFile {Filename = thumbnailPath};
-            using (var engine = new Engine())
+            if (File.Exists(thumbnailPath))
             {
-                engine.GetMetadata(inputFile);
-                var options = new ConversionOptions {Seek = TimeSpan.FromSeconds(1), VideoSize = VideoSize.Cif};
-                engine.GetThumbnail(inputFile, thumbnail, options);
-            }*/
-            if (!File.Exists(thumbnailPath))
-            {
-                File.Create(thumbnailPath).Close();
+                File.Delete(thumbnailPath);
             }
-            var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", VideoContainerName).Result;
-            await thumbnailBlob.UploadFile(thumbnailPath);
+            await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);
 
-            //get video duration in seconds
-            //var seconds = Math.Truncate(inputFile.Metadata.Duration.TotalSeconds);
-            var seconds = 0;
-            videoBlob.AddMetadata("duration", seconds.ToString());
+            var thumbnailBlob = _storageManager.CreateNewFile(generatedName + "-thumbnail.jpg", VideoContainerName).Result;
+            await thumbnailBlob.UploadFile(thumbnailPath, "image/png");
 
             //upload to Azure Blob Storage
             await videoBlob.UploadFile(video);
@@ -115,7 +105,7 @@ namespace src.Subsystems.MediaStorage
                 if (listBlobItem.Name.Contains("thumbnail"))
                 {
                     currentVideo = new VideoMetaData();
-                    var thumbnail = listBlobItem.ToByteArray().Result;
+                    var thumbnail = listBlobItem.GetUrl();
                     currentVideo.Thumbnail = thumbnail;
                 }
                 else
@@ -181,7 +171,7 @@ namespace src.Subsystems.MediaStorage
             var extension = "." + splitName[1];
             if(!(extension.Equals(".jpg") || extension.Equals(".jpeg") || extension.Equals(".png")))
             {
-                throw new InvalidDataException("Invalid extension provided."); 
+                throw new InvalidDataException("Invalid extension provided.");
             }
             var imageBlob = _storageManager.CreateNewFile(generatedName + ".img", ImageContainerName).Result;
             var salt = "";
@@ -238,18 +228,18 @@ namespace src.Subsystems.MediaStorage
              *      Parameters:
              * -> request: the request object for this service contract.
              */
-            
+
             var imageFile = _storageManager.GetFile(request.Id + ".img",ImageContainerName).Result;
             if (imageFile == null)
             {
                 return false;
             }
-            
+
             await imageFile.Delete();
             return true;
         }
-        
-        public void SetBaseContainer(string id)
+
+        public void SetBaseContainer(string containerName)
         {
             /*
              *      Description:
@@ -259,13 +249,98 @@ namespace src.Subsystems.MediaStorage
              * id - hence pointing towards the user's own container within the storage.
              *
              *      Parameters:
-             * -> id: the user's id that will be used as the container name.
+             * -> containerName: the user's id that will be used as the container name.
              */
             if (!_storageManager.IsContainerSet())
             {
-                _storageManager.SetBaseContainer(id);
+                _storageManager.SetBaseContainer(containerName);
             }
         }
-        
+
+        public IBlobFile GetImage(string imageId)
+        {
+            /*
+             *      Description:
+             * This function will retrieve a single, raw image from the blob storage belonging to imageId and
+             * return a BlobFile or null if it does not exist.
+             * This function is for internal use only and should not be called by any controllers.
+             *
+             *      Parameters:
+             * -> imageId: the id of the image to be retrieved.
+             */
+
+            return _storageManager.GetFile(imageId + ".img", ImageContainerName).Result;
+        }
+
+        public IBlobFile GetVideo(string videoId)
+        {
+            /*
+             *      Description:
+             * This function will retrieve a single, raw video from the blob storage belonging to videoId and
+             * return a BlobFile or null if it does not exist.
+             * This function is for internal use only and should not be called by any controllers.
+             *
+             *      Parameters:
+             * -> videoId: the id of the video to be retrieved.
+             */
+
+            return _storageManager.GetFile(videoId + ".mp4", VideoContainerName).Result;
+        }
+
+        public GetAnalyzedImagesResponse GetAnalyzedImages()
+        {
+            /*
+             *      Description:
+             * This function will return all images that a user has analyzed and that has been stored in the
+             * cloud.
+             */
+
+            var allFiles = _storageManager.GetAllFilesInContainer("analyzed/" + ImageContainerName).Result;
+            if (allFiles == null)
+            {
+                return new GetAnalyzedImagesResponse{Images = new List<AnalyzedImageMetaData>()};
+            }
+            var resultList = new List<AnalyzedImageMetaData>();
+            foreach(var listBlobItem in allFiles)
+            {
+                var currentImage = new AnalyzedImageMetaData {Id = listBlobItem.Name.Replace(".img", "")};
+                if (listBlobItem.Properties is {LastModified: { }})
+                    currentImage.DateAnalyzed = listBlobItem.Properties.LastModified.Value.DateTime;
+                currentImage.ImageId = listBlobItem.GetMetaData("mediaId");
+                currentImage.PipelineId = listBlobItem.GetMetaData("pipelineId");
+                currentImage.Url = listBlobItem.GetUrl();
+                resultList.Add(currentImage);
+            }
+
+            return new GetAnalyzedImagesResponse {Images = resultList};
+        }
+
+        public GetAnalyzedVideosResponse GetAnalyzedVideos()
+        {
+            /*
+             *      Description:
+             * This function will return all videos that a user has analyzed and that has been stored in the
+             * cloud.
+             */
+
+            var allFiles = _storageManager.GetAllFilesInContainer("analyzed/" + VideoContainerName).Result;
+            if (allFiles == null)
+            {
+                return new GetAnalyzedVideosResponse{Videos = new List<AnalyzedVideoMetaData>()};
+            }
+            var resultList = new List<AnalyzedVideoMetaData>();
+            foreach(var listBlobItem in allFiles)
+            {
+                var currentImage = new AnalyzedVideoMetaData {Id = listBlobItem.Name.Replace(".mp4", "")};
+                if (listBlobItem.Properties is {LastModified: { }})
+                    currentImage.DateAnalyzed = listBlobItem.Properties.LastModified.Value.DateTime;
+                currentImage.VideoId = listBlobItem.GetMetaData("mediaId");
+                currentImage.PipelineId = listBlobItem.GetMetaData("pipelineId");
+                currentImage.Url = listBlobItem.GetUrl();
+                resultList.Add(currentImage);
+            }
+
+            return new GetAnalyzedVideosResponse {Videos = resultList};
+        }
     }
 }
