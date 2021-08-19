@@ -1,7 +1,6 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-import {AddItemComponent} from "./add-item.component";
-
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {IonicModule} from '@ionic/angular';
+import {AddItemComponent} from './add-item.component';
 
 
 describe('AddToolComponent', () => {
@@ -10,7 +9,7 @@ describe('AddToolComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddItemComponent ],
+      declarations: [AddItemComponent],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 

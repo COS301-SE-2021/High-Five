@@ -1,5 +1,5 @@
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {IonicModule} from '@ionic/angular';
+import {AngularDelegate, IonicModule, PopoverController} from '@ionic/angular';
 
 import {NavbarPage} from './navbar.page';
 import {Router} from '@angular/router';
@@ -25,7 +25,8 @@ describe('NavbarPage', () => {
       imports: [],
       providers: [
         {provide: Router, useValue: routerMock},
-        {provide: MsalService, useValue: msalServiceMock}
+        {provide: MsalService, useValue: msalServiceMock},
+        PopoverController, AngularDelegate
       ]
     }).compileComponents();
 

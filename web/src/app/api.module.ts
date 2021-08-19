@@ -3,6 +3,7 @@ import {Configuration} from './configuration';
 import {HttpClient} from '@angular/common/http';
 
 
+import {AnalysisService} from './apis/analysis.service';
 import {MediaStorageService} from './apis/mediaStorage.service';
 import {PipelinesService} from './apis/pipelines.service';
 import {TestService} from './apis/test.service';
@@ -12,11 +13,13 @@ import {TestService} from './apis/test.service';
   declarations: [],
   exports: [],
   providers: [
+    AnalysisService,
     MediaStorageService,
     PipelinesService,
     TestService]
 })
 export class ApiModule {
+
   constructor(@Optional() @SkipSelf() parentModule: ApiModule,
               @Optional() http: HttpClient) {
     if (parentModule) {
@@ -34,6 +37,4 @@ export class ApiModule {
       providers: [{provide: Configuration, useFactory: configurationFactory}]
     };
   }
-
-
 }
