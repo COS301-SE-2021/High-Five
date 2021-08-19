@@ -1,3 +1,13 @@
 <ion-content>
-
+  <swiper #swiper [config]="swiperConfig" class="swiper1">
+    <ng-template swiperSlide>
+      <app-about-page1></app-about-page1>
+    </ng-template>
+    <ng-template swiperSlide>
+      <app-about-page2></app-about-page2>
+    </ng-template>
+    <ng-template swiperSlide>
+      <app-about-page3></app-about-page3>
+    </ng-template>
+  </swiper>
 </ion-content>

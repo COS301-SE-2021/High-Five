@@ -8,9 +8,8 @@ import {AnalyticsPageRoutingModule} from './analytics-routing.module';
 
 import {AnalyticsPage} from './analytics.page';
 import {SwiperModule} from 'swiper/angular';
-import {PipelineComponent} from '../../components/pipeline/pipeline.component';
 import {AddPipelineComponent} from '../../components/add-pipeline/add-pipeline.component';
-import {AddToolComponent} from '../../components/add-tool/add-tool.component';
+import {CustomComponentsModule} from "../../components/components.module";
 
 @NgModule({
   imports: [
@@ -18,8 +17,10 @@ import {AddToolComponent} from '../../components/add-tool/add-tool.component';
     FormsModule,
     IonicModule,
     AnalyticsPageRoutingModule,
-    SwiperModule],
-  declarations: [AnalyticsPage, PipelineComponent, AddPipelineComponent, AddToolComponent],
+    SwiperModule,
+    CustomComponentsModule
+  ],
+  declarations: [AnalyticsPage],
   entryComponents: [AddPipelineComponent]
 })
 export class AnalyticsPageModule {

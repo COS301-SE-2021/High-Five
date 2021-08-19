@@ -2,6 +2,8 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
 import {Router} from '@angular/router';
 import {MsalService} from '@azure/msal-angular';
+import {PopoverController} from '@ionic/angular';
+import {NavbarMediaPopoverComponent} from '../../components/navbar-media-popover/navbar-media-popover.component';
 
 @Component({
   selector: 'app-navbar',
@@ -17,21 +19,23 @@ export class NavbarPage implements OnInit {
   //These links are arrays so that when the content is changed, it is shown in the HTML
   homeLink = ['active-link'];
   analyticsLink = ['link'];
-  videoLink = ['link'];
+  mediaLink = ['link'];
   controlsLink = ['link'];
+  liveLink = ['link'];
 
   isDesktop: boolean;
   private navPages;
 
 
-  constructor(private screenSizeService: ScreenSizeServiceService, private nav: Router, private msalService: MsalService) {
+  constructor(private screenSizeService: ScreenSizeServiceService, private router: Router,
+              private msalService: MsalService, private popoverController: PopoverController) {
     this.screenSizeService.isDesktopView().subscribe(isDesktop => {
       this.isDesktop = isDesktop;
     });
     this.navPages = {
       homeNav: this.homeLink,
       analyticsNav: this.analyticsLink,
-      videoNav: this.videoLink,
+      videoNav: this.mediaLink,
       controlsNav: this.controlsLink
     };
   }
@@ -41,9 +45,14 @@ export class NavbarPage implements OnInit {
 
   }
 
+  /**
+   * Function that calls the MSAL service's logout popup method to logout and then clears the localstorage
+   */
   logout() {
-    this.msalService.logout();
-    localStorage.removeItem('jwt');
+    this.msalService.logoutPopup();
+    this.router.navigate(['/welcome']).then(() => {
+      localStorage.clear();
+    });
   }
 
   /**
@@ -63,7 +72,31 @@ export class NavbarPage implements OnInit {
         value[0] = 'active-link';
       }
     }
-    this.nav.navigate([url]);
+    this.router.navigate([url]);
+  }
+
+  /**
+   * This function will display a popover containing the different media type pages' link to which the user can navigate
+   *
+   * @param ev, the event which calls this function, needed by the popoverController to create a popover
+   */
+  async displayMediaPopover(ev: any) {
+    const popoverComponent = await this.popoverController.create({
+      component: NavbarMediaPopoverComponent,
+      animated: true,
+      translucent: true,
+      backdropDismiss: true,
+      event: ev,
+      cssClass: 'navBarMediaPopover',
+      showBackdrop: false,
+      componentProps: {
+        onClick: () => {
+          popoverComponent.dismiss();
+        }
+      }
+    });
+    await popoverComponent.present();
+
   }
 
 }

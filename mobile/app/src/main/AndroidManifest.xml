@@ -1,20 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bdpsolutions.highfive">
+    package="com.bdpsolutions.highfive" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application
+        android:name="com.bdpsolutions.highfive.subsystems.main.HighFiveApplication"
         android:allowBackup="true"
         android:icon="@mipmap/logo1_2"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/logo1_2round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.HighFive">
+        android:theme="@style/Theme.HighFive" >
         <activity
-            android:name=".view.activities.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:name="net.openid.appauth.RedirectUriReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https"
+                    android:host="com.bdpsolutions.highfive"
+                    android:path="/oauth2redirect"/>
+            </intent-filter>
+        </activity>
         <activity
-            android:name=".view.activities.SplashActivity"
-            android:theme="@style/Theme.HighFive.Splash">
+            android:name=".subsystems.login.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.HighFive.NoActionBar"/>
+        <activity
+            android:name="com.bdpsolutions.highfive.subsystems.splash.view.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.HighFive.Splash" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,14 +39,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.activities.MainActivity"
-            android:label="@string/app_name">
+            android:name="com.bdpsolutions.highfive.subsystems.main.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.HighFive.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="client_id"
+            android:value="${CLIENT_ID}" />
+        <meta-data
+            android:name="discovery_uri"
+            android:value="${DISCOVERY_URI}"/>
+        <meta-data
+            android:name="redirect_uri"
+            android:value="${REDIRECT_URI}"/>
+        <meta-data
+            android:name="end_session_redirect_uri"
+            android:value="${END_SESSION_REDIRECT_URI}"/>
+        <meta-data
+            android:name="authorization_scope"
+            android:value="${AUTHORIZATION_SCOPE}"/>
+        <meta-data
+            android:name="https_required"
+            android:value="${HTTPS_REQUIRED}"/>
     </application>
 
 </manifest>

@@ -13,6 +13,7 @@ export class Endpoints {
     getAllVideos: 'https://high5api.azurewebsites.net/media/getAllVideos',
     storeVideo: 'https://high5api.azurewebsites.net/media/storeVideo',
     getVideo: 'https://high5api.azurewebsites.net/media/getVideo',
-    deleteVideo: 'https://high5api.azurewebsites.net/media/deleteVideo'
+    deleteVideo: 'https://high5api.azurewebsites.net/media/deleteVideo',
+    storeImage: 'https://high5api.azurewebsites.net/media/storeImage',
   };
 }
