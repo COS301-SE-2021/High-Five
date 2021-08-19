@@ -15,14 +15,14 @@ namespace tests.UnitTests
         {
             _mockPipelineService = new PipelineService(new MockStorageManager());
         }
-        
+
         [Fact]
         public void TestGetPipelines()
         {
             var pipelines = _mockPipelineService.GetPipelines().Pipelines;
             Assert.Empty(pipelines);
         }
-        
+
         [Fact]
         public async Task TestCreatePipeline()
         {
@@ -40,7 +40,7 @@ namespace tests.UnitTests
             var pipelineCountAfterInsert = _mockPipelineService.GetPipelines().Pipelines.Count;
             Assert.NotEqual(pipelineCountBeforeInsert, pipelineCountAfterInsert);
         }
-        
+
         [Fact]
         public void TestDeleteValidPipeline()
         {
@@ -52,7 +52,7 @@ namespace tests.UnitTests
             var response = _mockPipelineService.DeletePipeline(request).Result;
             Assert.True(response);
         }
-        
+
         [Fact]
         public void TestDeleteInvalidPipeline()
         {
@@ -64,7 +64,7 @@ namespace tests.UnitTests
             var response = _mockPipelineService.DeletePipeline(request).Result;
             Assert.False(response);
         }
-        
+
         [Fact]
         public void TestAddToolToValidPipeline()
         {
@@ -78,7 +78,7 @@ namespace tests.UnitTests
             var response = _mockPipelineService.AddTools(request).Result;
             Assert.True(response);
         }
-        
+
         [Fact]
         public void TestAddToolToInvalidPipeline()
         {
@@ -93,7 +93,7 @@ namespace tests.UnitTests
             var response = _mockPipelineService.AddTools(request).Result;
             Assert.False(response);
         }
-        
+
         [Fact]
         public void TestRemoveExistingToolFromValidPipeline()
         {
@@ -107,7 +107,7 @@ namespace tests.UnitTests
             var response = _mockPipelineService.RemoveTools(request).Result;
             Assert.True(response);
         }
-        
+
         [Fact]
         public void TestRemoveExistingToolFromInvalidPipeline()
         {
@@ -121,7 +121,7 @@ namespace tests.UnitTests
             var response = _mockPipelineService.RemoveTools(request).Result;
             Assert.False(response);
         }
-        
+
         [Fact]
         public void TestRemoveNonexistingToolFromValidPipeline()
         {
@@ -135,7 +135,7 @@ namespace tests.UnitTests
             var response = _mockPipelineService.RemoveTools(request).Result;
             Assert.True(response);
         }
-        
+
         [Fact]
         public void TestRemoveNonexistingToolFromInvalidPipeline()
         {
@@ -148,6 +148,38 @@ namespace tests.UnitTests
             };
             var response = _mockPipelineService.RemoveTools(request).Result;
             Assert.False(response);
+        }
+        
+        [Fact]
+        public async Task TestGetPipelineIds()
+        {
+            await GetValidPipelineId();
+            var pipelineIds = _mockPipelineService.GetPipelines().Pipelines;
+            Assert.NotEmpty(pipelineIds);
+        }
+        
+        [Fact]
+        public void TestGetPipelineValidId()
+        {
+            var validId = GetValidPipelineId().Result;
+            var request = new GetPipelineRequest
+            {
+                PipelineId = validId
+            };
+            var response = _mockPipelineService.GetPipeline(request).Result;
+            Assert.NotNull(response);
+        }
+        
+        [Fact]
+        public void TestGetPipelineInvalidId()
+        {
+            var invalidId = "5";
+            var request = new GetPipelineRequest
+            {
+                PipelineId = invalidId
+            };
+            var response = _mockPipelineService.GetPipeline(request).Result;
+            Assert.Null(response);
         }
 
         private async Task<string> GetValidPipelineId()

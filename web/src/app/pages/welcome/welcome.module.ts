@@ -7,15 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { WelcomePageRoutingModule } from './welcome-routing.module';
 
 import { WelcomePage } from './welcome.page';
-import {WelcomeCardComponent} from '../../components/welcome-card/welcome-card.component';
+import {CustomComponentsModule} from "../../components/components.module";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    WelcomePageRoutingModule
+    WelcomePageRoutingModule,
+    CustomComponentsModule
   ],
-  declarations: [WelcomePage,WelcomeCardComponent]
+  declarations: [WelcomePage]
 })
 export class WelcomePageModule {}

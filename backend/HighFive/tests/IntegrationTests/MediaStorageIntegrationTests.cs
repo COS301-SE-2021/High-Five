@@ -41,15 +41,7 @@ namespace tests.IntegrationTests
                 .UseStartup<TestStartup>());
             _client = _server.CreateClient();
         }
-        
-        [Fact]
-        public async Task Test()
-        {
-            var response = await _client.PostAsync("/test/ping", null!);
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-            var responseCode = response.StatusCode;
-        }
-        
+
         [Fact]
         public async Task TestStoreValidVideo()
         {
@@ -64,6 +56,32 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
+        public async Task TestStoreValidImage()
+        {
+            var basePath = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.ToString());
+            var file = File.OpenRead(basePath?.FullName + "/IntegrationTests/Setup/MockVideo.mp4");
+            var streamContent = new StreamContent(file);
+            streamContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+            var request = new MultipartFormDataContent {{streamContent, "file", "MockImage.jpeg"}};
+
+            var response = await _client.PostAsync("/media/storeImage", request);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+        
+        [Fact]
+        public async Task TestStoreImageInvalidFormat()
+        {
+            var basePath = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.ToString());
+            var file = File.OpenRead(basePath?.FullName + "/IntegrationTests/Setup/MockVideo.mp4");
+            var streamContent = new StreamContent(file);
+            streamContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+            var request = new MultipartFormDataContent {{streamContent, "file", "MockImage"}};
+
+            var response = await _client.PostAsync("/media/storeImage", request);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+        
+        [Fact]
         public async Task TestStoreNullVideo()
         {
             var response = await _client.PostAsync("/media/storeVideo", null!);
@@ -71,47 +89,69 @@ namespace tests.IntegrationTests
         }
         
         [Fact]
+        public async Task TestStoreNullImage()
+        {
+            var response = await _client.PostAsync("/media/storeImage", null!);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+        
+        [Fact]
         public async Task TestGetAllVideos()
         {
-
             await UploadVideo();
-            
             var response = await _client.PostAsync("/media/getAllVideos", null!);
             var responseBody = response.Content.ReadAsStringAsync().Result;
-            var responseObject = JsonConvert.DeserializeObject<List<VideoMetaData>>(responseBody);
+            var responseObject = JsonConvert.DeserializeObject<GetAllVideosResponse>(responseBody);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotEmpty(responseObject);
+            Assert.NotEmpty(responseObject.Videos);
         }
         
         [Fact]
-        public async Task TestGetExistingVideo()
+        public async Task TestGetAllImages()
         {
-            var validId = await UploadVideo();
+            await UploadImage();
+            var response = await _client.PostAsync("/media/getAllImages", null!);
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            var responseObject = JsonConvert.DeserializeObject<GetAllImagesResponse>(responseBody);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(responseObject.Images);
+        }
 
-            var response = await _client.GetAsync("/media/getVideo/" + validId);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-        
-        [Fact]
-        public async Task TestGetNonExistingVideo()
-        {
-            const string invalidId = "123";
-            var response = await _client.GetAsync("/media/getVideo/" + invalidId);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Empty(response.Content.ReadAsByteArrayAsync().Result);
-        }
-        
         [Fact]
         public async Task TestDeleteExistingVideo()
         {
-            var validId = await UploadVideo();
-            var requestObject = new DeleteVideoRequest {Id = validId};
+            try
+            {
+                var validId = await UploadVideo();
+                var requestObject = new DeleteVideoRequest {Id = validId};
+                var jsonRequest = JsonConvert.SerializeObject(requestObject);
+                var buffer = System.Text.Encoding.UTF8.GetBytes(jsonRequest);
+                var byteContent = new ByteArrayContent(buffer);
+                byteContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                var response = await _client.PostAsync("/media/deleteVideo", byteContent);
+                var responseBody = response.Content.ReadAsStringAsync().Result;
+                var responseObject = JsonConvert.DeserializeObject<EmptyObject>(responseBody);
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                Assert.True(responseObject.Success);
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+        
+        [Fact]
+        public async Task TestDeleteExistingImage()
+        {
+            var validId = await UploadImage();
+            var requestObject = new DeleteImageRequest {Id = validId};
             var jsonRequest = JsonConvert.SerializeObject(requestObject);
             var buffer = System.Text.Encoding.UTF8.GetBytes(jsonRequest);
             var byteContent = new ByteArrayContent(buffer);
             byteContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
-            var response = await _client.PostAsync("/media/deleteVideo", byteContent);
+            var response = await _client.PostAsync("/media/deleteImage", byteContent);
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var responseObject = JsonConvert.DeserializeObject<EmptyObject>(responseBody);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -134,6 +174,23 @@ namespace tests.IntegrationTests
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.False(responseObject.Success);
         }
+        
+        [Fact]
+        public async Task TestDeleteNonExistingImage()
+        {
+            var invalidId = "123";
+            var requestObject = new DeleteImageRequest {Id = invalidId};
+            var jsonRequest = JsonConvert.SerializeObject(requestObject);
+            var buffer = System.Text.Encoding.UTF8.GetBytes(jsonRequest);
+            var byteContent = new ByteArrayContent(buffer);
+            byteContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+            var response = await _client.PostAsync("/media/deleteImage", byteContent);
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            var responseObject = JsonConvert.DeserializeObject<EmptyObject>(responseBody);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.False(responseObject.Success);
+        }
 
         private async Task<string> UploadVideo()
         {
@@ -146,8 +203,24 @@ namespace tests.IntegrationTests
             
             var response = await _client.PostAsync("/media/getAllVideos", null!);
             var responseBody = response.Content.ReadAsStringAsync().Result;
-            var responseObject = JsonConvert.DeserializeObject<List<VideoMetaData>>(responseBody);
-            var validId = responseObject[0].Id;
+            var responseObject = JsonConvert.DeserializeObject<GetAllVideosResponse>(responseBody);
+            var validId = responseObject.Videos[0].Id;
+            return validId;
+        }
+        
+        private async Task<string> UploadImage()
+        {
+            var basePath = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.ToString());
+            var file = File.OpenRead(basePath?.FullName + "/IntegrationTests/Setup/MockImage.jpeg");
+            var streamContent = new StreamContent(file);
+            streamContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+            var storeRequest = new MultipartFormDataContent {{streamContent, "file", "MockImage.jpeg"}};
+            await _client.PostAsync("/media/storeImage", storeRequest);
+            
+            var response = await _client.PostAsync("/media/getAllImages", null!);
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            var responseObject = JsonConvert.DeserializeObject<GetAllImagesResponse>(responseBody);
+            var validId = responseObject.Images[0].Id;
             return validId;
         }
     }

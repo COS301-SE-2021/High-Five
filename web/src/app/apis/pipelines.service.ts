@@ -19,9 +19,13 @@ import { Observable }                                        from 'rxjs';
 
 import { AddToolsRequest } from '../models/addToolsRequest';
 import { CreatePipelineRequest } from '../models/createPipelineRequest';
+import { CreatePipelineResponse } from '../models/createPipelineResponse';
 import { DeletePipelineRequest } from '../models/deletePipelineRequest';
 import { EmptyObject } from '../models/emptyObject';
+import { GetPipelineIdsResponse } from '../models/getPipelineIdsResponse';
+import { GetPipelineRequest } from '../models/getPipelineRequest';
 import { GetPipelinesResponse } from '../models/getPipelinesResponse';
+import { Pipeline } from '../models/pipeline';
 import { RemoveToolsRequest } from '../models/removeToolsRequest';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -30,12 +34,12 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class PipelinesService {
-    public defaultHeaders = new HttpHeaders();
-    public configuration = new Configuration();
-    protected basePath = 'https://high5api.azurewebsites.net';
 
+  protected basePath =  'https://high5api.azurewebsites.net';
+  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('jwt'));
 
-  // eslint-disable-next-line max-len
+  public configuration = new Configuration();
+
     constructor(protected httpClient: HttpClient, @Optional()@Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
         if (basePath) {
             this.basePath = basePath;
@@ -64,7 +68,6 @@ export class PipelinesService {
     /**
      *
      * Endpoint for Add Tools use case
-     *
      * @param body
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -81,7 +84,7 @@ export class PipelinesService {
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
+        let httpHeaderAccepts: string[] = [
             'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
@@ -100,11 +103,11 @@ export class PipelinesService {
 
         return this.httpClient.request<EmptyObject>('post',`${this.basePath}/pipelines/addTools`,
             {
-                body,
+                body: body,
                 withCredentials: this.configuration.withCredentials,
-                headers,
-                observe,
-                reportProgress
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
             }
         );
     }
@@ -112,15 +115,13 @@ export class PipelinesService {
     /**
      *
      * Endpoint for Create Pipeline use case
-     *
      * @param body
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-
-    public createPipeline(body: CreatePipelineRequest, observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
-    public createPipeline(body: CreatePipelineRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
-    public createPipeline(body: CreatePipelineRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
+    public createPipeline(body: CreatePipelineRequest, observe?: 'body', reportProgress?: boolean): Observable<CreatePipelineResponse>;
+    public createPipeline(body: CreatePipelineRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<CreatePipelineResponse>>;
+    public createPipeline(body: CreatePipelineRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<CreatePipelineResponse>>;
     public createPipeline(body: CreatePipelineRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (body === null || body === undefined) {
@@ -130,7 +131,7 @@ export class PipelinesService {
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
+        let httpHeaderAccepts: string[] = [
             'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
@@ -147,13 +148,13 @@ export class PipelinesService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.request<EmptyObject>('post',`${this.basePath}/pipelines/createPipeline`,
+        return this.httpClient.request<CreatePipelineResponse>('post',`${this.basePath}/pipelines/createPipeline`,
             {
-                body,
+                body: body,
                 withCredentials: this.configuration.withCredentials,
-                headers,
-                observe,
-                reportProgress
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
             }
         );
     }
@@ -161,7 +162,6 @@ export class PipelinesService {
     /**
      *
      * Endpoint for Delete Pipeline use case
-     *
      * @param body
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -178,7 +178,7 @@ export class PipelinesService {
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
+        let httpHeaderAccepts: string[] = [
             'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
@@ -197,11 +197,130 @@ export class PipelinesService {
 
         return this.httpClient.request<EmptyObject>('post',`${this.basePath}/pipelines/deletePipeline`,
             {
-                body,
+                body: body,
                 withCredentials: this.configuration.withCredentials,
-                headers,
-                observe,
-                reportProgress
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     *
+     * Endpoint for Get All Tools use case
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAllTools(observe?: 'body', reportProgress?: boolean): Observable<Array<string>>;
+    public getAllTools(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<string>>>;
+    public getAllTools(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<string>>>;
+    public getAllTools(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.request<Array<string>>('post',`${this.basePath}/pipelines/getAllTools`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     *
+     * Endpoint for Get Pipeline use case
+     * @param body
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getPipeline(body: GetPipelineRequest, observe?: 'body', reportProgress?: boolean): Observable<Pipeline>;
+    public getPipeline(body: GetPipelineRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Pipeline>>;
+    public getPipeline(body: GetPipelineRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Pipeline>>;
+    public getPipeline(body: GetPipelineRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling getPipeline.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.request<Pipeline>('post',`${this.basePath}/pipelines/getPipeline`,
+            {
+                body: body,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     *
+     * Endpoint for Get Pipeline Ids use case
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getPipelineIds(observe?: 'body', reportProgress?: boolean): Observable<GetPipelineIdsResponse>;
+    public getPipelineIds(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GetPipelineIdsResponse>>;
+    public getPipelineIds(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GetPipelineIdsResponse>>;
+    public getPipelineIds(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.request<GetPipelineIdsResponse>('post',`${this.basePath}/pipelines/getPipelineIds`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
             }
         );
     }
@@ -209,7 +328,6 @@ export class PipelinesService {
     /**
      *
      * Endpoint for Get Pipelines use case
-     *
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -221,7 +339,7 @@ export class PipelinesService {
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
+        let httpHeaderAccepts: string[] = [
             'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
@@ -236,9 +354,9 @@ export class PipelinesService {
         return this.httpClient.request<GetPipelinesResponse>('post',`${this.basePath}/pipelines/getPipelines`,
             {
                 withCredentials: this.configuration.withCredentials,
-                headers,
-                observe,
-                reportProgress
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
             }
         );
     }
@@ -246,7 +364,6 @@ export class PipelinesService {
     /**
      *
      * Endpoint for Remove Tools use case
-     *
      * @param body
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -263,7 +380,7 @@ export class PipelinesService {
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
+        let httpHeaderAccepts: string[] = [
             'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
@@ -282,11 +399,11 @@ export class PipelinesService {
 
         return this.httpClient.request<EmptyObject>('post',`${this.basePath}/pipelines/removeTools`,
             {
-                body,
+                body: body,
                 withCredentials: this.configuration.withCredentials,
-                headers,
-                observe,
-                reportProgress
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
             }
         );
     }

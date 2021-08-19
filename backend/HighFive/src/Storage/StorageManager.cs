@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using MediaToolkit;
-using MediaToolkit.Model;
-using MediaToolkit.Options;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using Org.OpenAPITools.Models;
-using static System.String;
 
 namespace src.Storage
 {
@@ -32,14 +25,21 @@ namespace src.Storage
          * -> _random: this is a random object that is used to generate unique id's for uploaded files.
          * -> Alphanumeric: this is a simple alphanumeric string used to generate salt during the process
          *      where uploaded files are granted unique id's.
+         * -> _baseContainer: the name of the base container from which the blobs will be retrieved. It will
+         *      usually be the user's Azure AD B2C object Id, or "public". All other "container" parameters that
+         *      are passed through in methods will be sub-containers within the baseContainer. Sub-container in
+         *      this context simply refers to a prefix naming convention of the blob files.
          */
 
         private readonly CloudStorageAccount _cloudStorageAccount;
         private readonly Random _random;
         private const string Alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
+        private string _baseContainer;
+        private CloudBlobContainer _cloudBlobContainer;
 
         public StorageManager(IConfiguration config)
         {
+            SetBaseContainer("unset");//This initial value indicates that the initial container has not yet been set
             var connectionString = config.GetConnectionString("StorageConnection");
             _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             _random = new Random();
@@ -50,7 +50,7 @@ namespace src.Storage
             /*
              *      Description:
              * This function returns a reference to an existing blob file in some container within the storage,
-             * or null if the searched file does not exist in the storage. A BlobFile object is returns which
+             * or null if the searched file does not exist in the storage. A BlobFile object is returned which
              * contains the CloudBlockBlob itself.
              *
              *      Parameters:
@@ -62,19 +62,21 @@ namespace src.Storage
              *      or may not be in storage. The creation of the file itself will be handled by the
              *      CreateNewFile function.
              */
-
-            var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
-            var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
-            if (create)
+            if (!container.Equals(""))
             {
-                return new BlobFile(cloudBlobContainer.GetBlockBlobReference(fileName));
+                fileName = container + "/" + fileName;
             }
 
-            if (!await cloudBlobContainer.ExistsAsync())
+            if (create)
+            {
+                return new BlobFile(_cloudBlobContainer.GetBlockBlobReference(fileName));
+            }
+
+            if (!await _cloudBlobContainer.ExistsAsync())
             {
                 return null;
             }
-            var file = cloudBlobContainer.GetBlockBlobReference(fileName);
+            var file = _cloudBlobContainer.GetBlockBlobReference(fileName);
             if (await file.ExistsAsync())
             {
                 return new BlobFile(file);
@@ -91,23 +93,24 @@ namespace src.Storage
              *      Parameters:
              * -> container: the name of the container which will contain all the blob files returned.
              */
-
-            var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
-            var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
-            if (await cloudBlobContainer.ExistsAsync())
+            
+            if (await _cloudBlobContainer.ExistsAsync())
             {
-                await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions()
+                await _cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions()
                     {PublicAccess = BlobContainerPublicAccessType.Off});
             }
             var subdirectory = "";
-            var blobResultSegment = await cloudBlobContainer.ListBlobsSegmentedAsync(subdirectory, true, BlobListingDetails.All,
+            var blobResultSegment = await _cloudBlobContainer.ListBlobsSegmentedAsync(subdirectory, true, BlobListingDetails.All,
                 int.MaxValue, null, null, null);
             var allFiles = blobResultSegment.Results;
             var blobFileList = new List<IBlobFile>();
             foreach (var listBlobItem in allFiles)
             {
                 var blob = (CloudBlockBlob) listBlobItem;
-                blobFileList.Add(new BlobFile(blob));
+                if (blob.Name.Contains(container) && !blob.Name.Replace(container + "/", string.Empty).Contains("/"))
+                {
+                    blobFileList.Add(new BlobFile(blob));
+                }
             }
             return blobFileList;
         }
@@ -155,6 +158,58 @@ namespace src.Storage
                 sb.Append(t.ToString("X2"));
             }
             return sb.ToString();
+        }
+
+        public bool SetBaseContainer(string container)
+        {
+            /*
+             *      Description:
+             * This function will set the base container of the StorageManager. It will usually be set to the
+             * user's unique Azure Active Directory ID (obtained from the JWT authentication token), or it
+             * will be set to "public" if publicly accessible data must be retrieved.
+             * The function will return true if the provided container exists and false if the provided base
+             * container does not initially exist.
+             * If the container does not initially exist, a new container will be made for this user in the
+             * cloud storage.
+             *
+             *      Parameters:
+             * -> container: the name of the new base container.
+             */
+            
+            _baseContainer = container;
+            if (_baseContainer.Equals("unset"))
+            {
+                return false;
+            }
+            var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
+            _cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
+
+            var created = _cloudBlobContainer.ExistsAsync().Result;
+            if (created) return true;
+            
+            /*the following code will create a new container for the user and will be called when a new user first
+                tries to access the cloud storage. */
+            _cloudBlobContainer.CreateAsync(); //TODO: this not being called with Async may cause problems later.
+            return false;
+        }
+
+        public bool IsContainerSet()
+        {
+            /*
+             *      Description:
+             * This function returns whether or not the storage manager's base container has been set yet.
+             */
+            return !_baseContainer.Equals("unset");
+        }
+
+        public string GetCurrentContainer()
+        {
+            /*
+             *      Description:
+             * Returns the current baseContainer;
+             */
+            
+            return _baseContainer;
         }
 
         public string RandomString()

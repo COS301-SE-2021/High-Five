@@ -1,15 +1,15 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { AnalyticsPageRoutingModule } from './analytics-routing.module';
+import {AnalyticsPageRoutingModule} from './analytics-routing.module';
 
-import { AnalyticsPage } from './analytics.page';
-import {CustomComponentsModule} from '../../components/components.module';
+import {AnalyticsPage} from './analytics.page';
 import {SwiperModule} from 'swiper/angular';
-import {EditPipelineComponent} from '../../components/edit-pipeline/edit-pipeline.component';
+import {AddPipelineComponent} from '../../components/add-pipeline/add-pipeline.component';
+import {CustomComponentsModule} from "../../components/components.module";
 
 @NgModule({
   imports: [
@@ -17,10 +17,11 @@ import {EditPipelineComponent} from '../../components/edit-pipeline/edit-pipelin
     FormsModule,
     IonicModule,
     AnalyticsPageRoutingModule,
-    CustomComponentsModule,
-    SwiperModule
+    SwiperModule,
+    CustomComponentsModule
   ],
-  declarations: [AnalyticsPage,EditPipelineComponent],
-  entryComponents: [EditPipelineComponent]
+  declarations: [AnalyticsPage],
+  entryComponents: [AddPipelineComponent]
 })
-export class AnalyticsPageModule {}
+export class AnalyticsPageModule {
+}

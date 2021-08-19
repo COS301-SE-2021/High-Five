@@ -23,11 +23,11 @@ namespace src.Storage
          * -> _container: a reference to the container in which this mocked file is located. Will be handled
          *      externally by the StorageManager
         */
-        
+
         public BlobProperties Properties { get; }
         private Stream _file;
         public string Name { get; }
-        
+
         //mock variables
         private Hashtable _metaData;
         private List<IBlobFile> _container;
@@ -48,10 +48,10 @@ namespace src.Storage
              * The MockBlobFile's finalizer is responsible for closing the filestream of the temporary mock
              * object in the case that it contained data.
              */
-            
+
             _file?.Close();
         }
-        
+
         public void AddMetadata(string key, string value)
         {
             /*
@@ -62,7 +62,7 @@ namespace src.Storage
              * -> key: this parameter represents the key in the key-value pair being added as meta-data.
              * -> value: this parameter represents the value in the key-value pair being added as meta-data.
              */
-            
+
             _metaData.Add(key, value);
         }
 
@@ -98,14 +98,14 @@ namespace src.Storage
             var ms = new MemoryStream();
             await newFile.CopyToAsync(ms);
             _file = ms;
-            
+
             if (!_container.Contains(this))
             {
                 _container.Add(this);
             }
         }
 
-        public async Task UploadFile(string path)
+        public async Task UploadFile(string path, string contentType)
         {
             /*
              *      Description:
@@ -115,12 +115,22 @@ namespace src.Storage
              * -> path: the full path pointing to where the file is stored.
              */
 
-            _file = File.OpenRead(path);
+            //_file = File.OpenRead(path);
 
             if (!_container.Contains(this))
             {
                 _container.Add(this);
             }
+        }
+
+        public Task UploadFileFromStream(Stream stream, string contentType="")
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UploadFileFromByteArray(byte[] array, string contentType = "")
+        {
+            throw new NotImplementedException();
         }
 
         public async Task UploadText(string text)
@@ -132,7 +142,7 @@ namespace src.Storage
              *      Parameters:
              * -> text: the text file stored as a single string to be uploaded to the blob storage.
              */
-            
+
             var baseDirectory = Path.GetTempFileName();
 
             _file = File.Create(baseDirectory);
@@ -140,7 +150,7 @@ namespace src.Storage
             await writer.WriteAsync(text);
             writer.Close();
             _file = File.OpenRead(baseDirectory);
-            
+
             if (!_container.Contains(this))
             {
                 _container.Add(this);
@@ -153,7 +163,7 @@ namespace src.Storage
              *      Description:
              * This function will remove the mocked file from the mocked storage completely.
              */
-            
+
             _container.Remove(this);
         }
 
@@ -164,7 +174,7 @@ namespace src.Storage
              * This function returns a boolean indicating whether or not the contained CloudBlockBlob object
              * exists in the mocked storage.
              */
-            
+
             return _container.Contains(this);
         }
 
@@ -182,13 +192,18 @@ namespace src.Storage
 
             if (!_file.CanSeek)
             {
-                
+
             }
             _file.Seek(0, SeekOrigin.Begin);
             var array = new byte[_file.Length];
             await _file.ReadAsync(array.AsMemory(0, array.Length));
             _file.Seek(0, SeekOrigin.Begin);
             return array;
+        }
+
+        public async Task<Stream> ToStream()
+        {
+            return new MemoryStream();
         }
 
         public async Task<string> ToText()
@@ -208,6 +223,16 @@ namespace src.Storage
             _file.Seek(0, SeekOrigin.Begin);
             var reader = new StreamReader(_file);
             return await reader.ReadToEndAsync();
+        }
+
+        public string GetUrl()
+        {
+            /*
+             *      Description:
+             * This function will generate a SAS token for this blob file and return a temporary URL with
+             * the token to allow temporary viewing of the file.
+             */
+            return "https://notarealurl.com";
         }
     }
 }

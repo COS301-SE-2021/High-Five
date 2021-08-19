@@ -1,16 +1,14 @@
-
-
-<ion-content *ngIf="!isDesktop">
-  <div id = "pipelinesMobile">
-    <app-pipeline></app-pipeline>
-  </div>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngFor="let pipeline of pipelineService.pipelines$ | async; trackBy : pipelinesTrackFn " size-xl="3">
+        <app-pipeline [pipeline]="pipeline"></app-pipeline>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openAddPipelineModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
-
-<ion-content *ngIf="isDesktop" >
-  <div id="pipelinesDesktop">
-    <app-pipeline></app-pipeline>
-  </div>
-</ion-content>
-<ion-footer>
-  <app-add-pipeline></app-add-pipeline>
-</ion-footer>

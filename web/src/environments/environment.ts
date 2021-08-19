@@ -3,9 +3,26 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  clientId: 'undefined',
+  authorityId: 'undefined',
+  redirectUri: 'http://localhost:8100/navbar/landing',
+  b2cPolicies: {
+    names: {
+      signUpSignIn: 'undefined',
+      editProfile: 'undefined'
+    },
+    authorities: {
+      signUpSignIn: {
+        authority: 'undefined',
+      },
+      editProfile: {
+        authority: 'undefined'
+      }
+    },
+    authorityDomain: 'undefined'
+  }
 };
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

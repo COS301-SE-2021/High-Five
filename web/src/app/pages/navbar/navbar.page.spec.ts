@@ -1,25 +1,32 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {AngularDelegate, IonicModule, PopoverController} from '@ionic/angular';
 
-import { NavbarPage } from './navbar.page';
+import {NavbarPage} from './navbar.page';
 import {Router} from '@angular/router';
+import {MsalService} from '@azure/msal-angular';
 
-let routerMock;
 
 describe('NavbarPage', () => {
   let component: NavbarPage;
   let fixture: ComponentFixture<NavbarPage>;
 
-  routerMock = {
+
+  const routerMock = {
     navigate: jasmine.createSpy('navigate')
+  };
+
+  const msalServiceMock = {
+    logout: jasmine.createSpy('logout')
   };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NavbarPage ],
+      declarations: [NavbarPage],
       imports: [],
       providers: [
-        {provide: Router, useValue: routerMock}
+        {provide: Router, useValue: routerMock},
+        {provide: MsalService, useValue: msalServiceMock},
+        PopoverController, AngularDelegate
       ]
     }).compileComponents();
 

@@ -10,7 +10,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using src.AnalysisTools.VideoDecoder;
 using src.Storage;
+using src.Subsystems.Analysis;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
 
@@ -39,7 +41,7 @@ namespace tests.IntegrationTests
             services.AddMvc().AddApplicationPart(typeof(Org.OpenAPITools.Controllers.TestApiController).Assembly)
                 .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.MediaStorageApiController).Assembly)
                 .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.PipelinesApiController).Assembly)
-                .AddApplicationPart(typeof(src.Utils.Controller.GetVideoApiController).Assembly);
+                .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.AnalysisApiController).Assembly);
 
             // Configuring of Azure AD B2C Authentication
             services.AddAuthentication(options =>
@@ -66,7 +68,8 @@ namespace tests.IntegrationTests
             services.Add(new ServiceDescriptor(typeof(IStorageManager), new MockStorageManager()));//singleton
             services.AddScoped<IMediaStorageService, MediaStorageService>();
             services.AddScoped<IPipelineService, PipelineService>();
-
+            services.AddScoped<IAnalysisService, AnalysisService>();
+            services.AddScoped<IVideoDecoder, MockVideoDecoder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,13 +1,16 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using src.AnalysisTools.VideoDecoder;
 using src.Storage;
+using src.Subsystems.Analysis;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
 
@@ -22,8 +25,7 @@ namespace src
 
         
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -42,6 +44,7 @@ namespace src
                 {
                     jwtOptions.Authority = $"https://highfiveactivedirectory.b2clogin.com/tfp/{Configuration["AzureAdB2C:Tenant"]}/{Configuration["AzureAdB2C:SignUpSignInPolicyId"]}/v2.0/";
                     jwtOptions.Audience = Configuration["AzureAdB2C:ClientId"];
+                    jwtOptions.SaveToken = true;
                     jwtOptions.Events = new JwtBearerEvents
                     {
                         OnAuthenticationFailed = async c =>
@@ -54,13 +57,27 @@ namespace src
                     };
                 });
 
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.Limits.MaxRequestBodySize = int.MaxValue;
+            });
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueLengthLimit = int.MaxValue;
+                options.MultipartBodyLengthLimit = int.MaxValue;
+            });
+            
+            // Singletons
+            services.Add(new ServiceDescriptor(typeof(IConfiguration), Configuration));
+            services.Add(new ServiceDescriptor(typeof(IAnalysisModels), new AnalysisModels()));
             // Dependency Injections
-            services.Add(new ServiceDescriptor(typeof(IStorageManager), new StorageManager(Configuration)));//singleton
+            services.AddScoped<IStorageManager, StorageManager>();
             services.AddScoped<IMediaStorageService, MediaStorageService>();
             services.AddScoped<IPipelineService, PipelineService>();
+            services.AddScoped<IAnalysisService, AnalysisService>();
+            services.AddScoped<IVideoDecoder, VideoDecoder>();
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -72,7 +89,7 @@ namespace src
             app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "High Five");
-                    c.RoutePrefix = String.Empty;
+                    c.RoutePrefix = string.Empty;
                 });
             app.UseHttpsRedirection();
             app.UseRouting();
