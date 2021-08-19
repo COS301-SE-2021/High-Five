@@ -15,6 +15,10 @@ export class MediaFilterComponent implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   *
+   * @param segment, the value to which the segment property should be set to and the value which will be in the data
+   */
   public async onClick(segment: string) {
     this.segment = segment;
     await this.popoverController.dismiss({segment: this.segment});

@@ -67,6 +67,9 @@ export class VideostoreCardComponent implements OnInit {
     await pipelinesPopover.present();
     await pipelinesPopover.onDidDismiss().then(
       data => {
+        /**
+         * The below if statements ensure that no error is caused when trying to access a property of an undefined value
+         */
         if (data.data !== undefined) {
           if (data.data.items !== undefined) {
             this.analyseVideo(data.data.items);
@@ -76,6 +79,14 @@ export class VideostoreCardComponent implements OnInit {
     );
   }
 
+
+  /**
+   * The function will analyse a video based on the pielines passed in
+   *
+   * @param pipelines the names of the pipelines with which to analyse the video, the function will retrieve the ids of
+   * these pipelines and use them to send the requests
+   * @private
+   */
   private async analyseVideo(pipelines: string[]) {
     for (const pipelineName of pipelines) {
       const selectedPipeline = this.pipelineService.pipelines.find((pipeline: Pipeline) => pipeline.name === pipelineName);

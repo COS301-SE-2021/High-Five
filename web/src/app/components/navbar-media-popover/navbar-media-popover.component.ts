@@ -19,18 +19,27 @@ export class NavbarMediaPopoverComponent implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * Redirects the user to the all page
+   */
   public navigateAll() {
     this.router.navigate(['/navbar/all']).then(() => {
       this.onClick();
     });
   }
 
+  /**
+   * Redirects the user to the images page
+   */
   public navigateImages() {
     this.router.navigate(['/navbar/images']).then(() => {
       this.onClick();
     });
   }
 
+  /**
+   * Redirects the user to the videos page
+   */
   public navigateVideos() {
     this.router.navigate(['/navbar/videos']).then(() => {
       this.onClick();

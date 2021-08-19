@@ -41,6 +41,12 @@ export class PipelineService {
     this._tools.next(val);
   }
 
+  /**
+   * Function adds a pipeline by sending a request using the OpenAPI generate PipelinesService
+   *
+   * @param name a string representing the name of the pipeline
+   * @param tools an array of string representing the tools of the pipeline
+   */
   async addPipeline(name: string, tools: string[]) {
     try {
       await this.pipelinesService.createPipeline({pipeline: {name, tools}}).toPromise();
@@ -50,6 +56,12 @@ export class PipelineService {
     }
   }
 
+  /**
+   *
+   * @param pipelineId the id of the pipeline which to remove (string)
+   * @param serverRemove boolean, if true  will send a request to the backend to remove the pipeline, otherwise
+   * the pipeline will only be removed locally, by default this parameter is set to true
+   */
   public async removePipeline(pipelineId: string, serverRemove: boolean = true) {
     const pipeline = this.pipelines.find(p => p.id === pipelineId);
     this.pipelines = this.pipelines.filter(p => p.id !== pipelineId);

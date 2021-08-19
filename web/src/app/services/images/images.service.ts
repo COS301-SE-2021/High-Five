@@ -35,6 +35,8 @@ export class ImagesService {
     }
   }
 
+
+
   public async removeImage(imageId: string, serverRemove: boolean = true) {
     const image = this.images.find(i => i.id === imageId);
     this.images = this.images.filter(i => i.id !== imageId);
@@ -49,6 +51,9 @@ export class ImagesService {
     }
   }
 
+  /**
+   * Makes a request to retrieve all images
+   */
   public async fetchAll() {
     await this.mediaStorageService.getAllImages().subscribe((res) => {
       this.images = res.images;
