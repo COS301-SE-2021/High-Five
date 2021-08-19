@@ -179,6 +179,8 @@ of concerns. Feature branches are used for both front-end and back-end to develo
 <br>
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/.NET%20Core%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/aspnet.yml)
 <br>
+[![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Android%20Build/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/android_build.yml)
+<br>
 #### Testing
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Ionic%20Unit%20Tests/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/ionic_unittests.yml)
 <br>
