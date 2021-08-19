@@ -36,6 +36,7 @@ export class AnalyzedImagesService {
   }
 
   /**
+   * Function will send a request to analyze a media with the specified mediaId, pipelineId and media type
    *
    * @param mediaId the id of the media which to analyze (video or image)
    * @param pipelineId the id of the pipeline with which to analyze the media
