@@ -9,6 +9,7 @@ import dagger.hilt.android.HiltAndroidApp
 @HiltAndroidApp
 class HighFiveApplication : Application(){
     private var droneApplication: DroneApplication? = null
+    //This is commented out to run on AVD. Uncomment to run on real device
 //    override fun attachBaseContext(base: Context?) {
 //        super.attachBaseContext(base)
 //        Helper.install(this@HighFiveApplication)
@@ -21,5 +22,12 @@ class HighFiveApplication : Application(){
     override fun onCreate() {
         super.onCreate()
         droneApplication?.onCreate()
+    }
+
+    companion object{
+        var app:Application? = null
+        fun getInstance(): Application? {
+            return app
+        }
     }
 }
