@@ -4,24 +4,24 @@
 
 export const environment = {
   production: false,
-  clientId: '315e72e5-4305-47d2-bd7b-406155e610d0',
-  authorityId: '607eec4d-ca5f-417d-a9d3-6f794248e805',
-  redirectUri: 'http://localhost:8100/navbar/landing',
+  apiEndpoint: '',
+  clientId: 'undefined',
+  authorityId: 'undefined',
+  redirectUri: '',
   b2cPolicies: {
     names: {
-      signUpSignIn: 'B2C_1_signupsignin1',
-      editProfile: 'B2C_1_profileediting1'
+      signUpSignIn: 'undefined',
+      editProfile: 'undefined'
     },
     authorities: {
       signUpSignIn: {
-        // authority: 'https://fabrikamb2c.b2clogin.com/fabrikamb2c.onmicrosoft.com/b2c_1_susi',
-        authority: 'https://highfiveactivedirectory.b2clogin.com/highfiveactivedirectory.onmicrosoft.com/B2C_1_signupsignin1',
+        authority: 'undefined',
       },
       editProfile: {
-        authority: 'https://highfiveactivedirectory.b2clogin.com/highfiveactivedirectory.onmicrosoft.com/B2C_1_profileediting1'
+        authority: 'undefined'
       }
     },
-    authorityDomain: 'highfiveactivedirectory.b2clogin.com'
+    authorityDomain: 'undefined'
   }
 };
 /*
