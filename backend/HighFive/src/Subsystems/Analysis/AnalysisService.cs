@@ -48,82 +48,45 @@ namespace src.Subsystems.Analysis
             _videoDecoder = videoDecoder;
         }
 
-        public async Task<string> AnalyzeMedia(AnalyzeMediaRequest request)
+        public async Task<AnalyzedImageMetaData> AnalyzeImage(AnalyzeImageRequest request)
         {
-            /*
-             *      Description:
-             * This function will determine the type of media that needs to be analysed and call the
-             * corresponding helper function to perform the analysis, but not before the provided
-             * analysis pipeline will be searched for and saved for the forthcoming analysis.
-             *
-             *      Parameters:
-             * -> request: the request object for this function containing all the necessary id's.
-             */
-
             var pipelineSearchRequest = new GetPipelineRequest {PipelineId = request.PipelineId};
             var analysisPipeline = _pipelineService.GetPipeline(pipelineSearchRequest).Result;
             if (analysisPipeline == null)
             {
-                return string.Empty; //invalid pipelineId provided
+                return null; //invalid pipelineId provided
             }
 
             /* First, check if the Media and Pipeline combination has already been analyzed and stored before.
-             * If this is the case, no analysis needs to be done. Simply return the url of the already analyzed
+             * If this is the case, no analysis needs to be done. Simply return the already analyzed
              * media
              */
+            
             analysisPipeline.Tools.Sort();
-            var storageContainer = "analyzed/" + request.MediaType;
-            var fileExtension = request.MediaType switch
-            {
-                "image" => ".img",
-                "video" => ".mp4",
-                _ => string.Empty
-            };
-            var analyzedMediaName = _storageManager.HashMd5(request.MediaId + "|" + string.Join(",",analysisPipeline.Tools)) + fileExtension;
+            const string storageContainer = "analyzed/image";
+            const string fileExtension = ".img";
+            var analyzedMediaName = _storageManager.HashMd5(request.ImageId + "|" + string.Join(",",analysisPipeline.Tools)) + fileExtension;
             var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
+            var response = new AnalyzedImageMetaData
+            {
+                ImageId = request.ImageId,
+                PipelineId = request.PipelineId
+            };
             if (testFile != null) //This means the media has already been analyzed with this pipeline combination
             {
-                return testFile.GetUrl();
+                if (testFile.Properties is {LastModified: { }})
+                    response.DateAnalyzed = testFile.Properties.LastModified.Value.DateTime;
+                response.Id = testFile.Name;
+                response.Url = testFile.GetUrl();
+                return response;
             }
-
-            //else this media and tool combination has not yet been analyzed. Proceed to the analysis phase.
-            var contentType = "";
-            byte[] analyzedMediaTemporaryLocation = null;
-            switch (request.MediaType)
+            
+            var rawImage = _mediaStorageService.GetImage(request.ImageId);
+            if (rawImage == null)
             {
-                case "image":
-                    contentType = "image/jpg";
-                    analyzedMediaTemporaryLocation = AnalyzeImage(request.MediaId, analysisPipeline);
-                    break;
-                case "video":
-                    contentType = "video/mp4";
-                    analyzedMediaTemporaryLocation = AnalyzeVideo(request.MediaId, analysisPipeline);
-                    break;
+                return null;//Invalid imageId provided
             }
 
-            var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
-            analyzedFile.AddMetadata("mediaId", request.MediaId);
-            analyzedFile.AddMetadata("pipelineId", request.PipelineId);
-            await analyzedFile.UploadFileFromByteArray(analyzedMediaTemporaryLocation, contentType);
-            return analyzedFile.GetUrl();
-        }
-
-        private byte[] AnalyzeImage(string imageId, Pipeline analysisPipeline)
-        {
-            /*
-             *      Description:
-             * This function will call the functions necessary to analyze an image belonging to imageId with
-             * the analysis tools present within analysisPipeline.
-             * A temporary file will be created in local storage containing the contents of the analyzed
-             * image, the path to this file will be returned.
-             *
-             *      Parameters:
-             * -> imageId: the id of the image to be analyzed
-             * -> analysisPipeline: the pipeline object containing the tools that will be applied to the image
-             *      during the analysis phase.
-             */
-
-            var rawImage = _mediaStorageService.GetImage(imageId);
             var rawImageByteArray = rawImage.ToByteArray().Result;
 
             //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
@@ -134,25 +97,56 @@ namespace src.Subsystems.Analysis
             var analyzedImageData = analyser.GetFrames()[0][0];//TODO add functionality to save multiple images:analyser.GetFrames()[i][0]
             //---------------------------------------------------------------------------------------
 
-            return analyzedImageData;
+            var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
+            analyzedFile.AddMetadata("imageId", request.ImageId);
+            analyzedFile.AddMetadata("pipelineId", request.PipelineId);
+            const string contentType = "image/jpg";
+            await analyzedFile.UploadFileFromByteArray(analyzedImageData, contentType);
+
+            if (analyzedFile.Properties.LastModified != null)
+                response.DateAnalyzed = analyzedFile.Properties.LastModified.Value.DateTime;
+            response.Id = analyzedFile.Name;
+            response.Url = analyzedFile.GetUrl();
+            return response;
         }
 
-        private byte[] AnalyzeVideo(string videoId ,Pipeline analysisPipeline)
+        public async Task<AnalyzedVideoMetaData> AnalyzeVideo(AnalyzeVideoRequest request)
         {
-            /*
-             *      Description:
-             * This function will call the functions necessary to analyze a video belonging to videoId with
-             * the analysis tools present within analysisPipeline.
-             * A temporary file will be created in local storage containing the contents of the analyzed
-             * video, the path to this file will be returned.
-             *
-             *      Parameters:
-             * -> videoId: the id of the video to be analyzed
-             * -> analysisPipeline: the pipeline object containing the tools that will be applied to the video
-             *      during the analysis phase.
-             */
+            var pipelineSearchRequest = new GetPipelineRequest {PipelineId = request.PipelineId};
+            var analysisPipeline = _pipelineService.GetPipeline(pipelineSearchRequest).Result;
+            if (analysisPipeline == null)
+            {
+                return null; //invalid pipelineId provided
+            }
 
-            var rawVideo = _mediaStorageService.GetVideo(videoId);
+            /* First, check if the Media and Pipeline combination has already been analyzed and stored before.
+             * If this is the case, no analysis needs to be done. Simply return the already analyzed
+             * media
+             */
+            analysisPipeline.Tools.Sort();
+            const string storageContainer = "analyzed/video";
+            const string fileExtension = ".mp4";
+            var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + string.Join(",",analysisPipeline.Tools)) + fileExtension;
+            var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
+            var response = new AnalyzedVideoMetaData
+            {
+                VideoId = request.VideoId,
+                PipelineId = request.PipelineId
+            };
+            if (testFile != null) //This means the media has already been analyzed with this pipeline combination
+            {
+                if (testFile.Properties is {LastModified: { }})
+                    response.DateAnalyzed = testFile.Properties.LastModified.Value.DateTime;
+                response.Id = testFile.Name;
+                response.Url = testFile.GetUrl();
+                return response;
+            }
+            
+            var rawVideo = _mediaStorageService.GetVideo(request.VideoId);
+            if (rawVideo == null)
+            {
+                return null;//Invalid videoId provided
+            }
             var rawVideoStream = rawVideo.ToStream().Result;
             var watch = new Stopwatch();
             watch.Reset();
@@ -172,7 +166,7 @@ namespace src.Subsystems.Analysis
                 analyser.FeedFrame(bytes);
             }
             analyser.EndAnalysis();
-            var analyzedFrameData = analyser.GetFrames()[0]; //TODO add functionality to save multiple images:analyser.GetFrames()[i][0]
+            var analyzedFrameData = analyser.GetFrames()[0];
             watch.Stop();
             Console.WriteLine("From StartAnalysis to GetFrames: " + watch.ElapsedMilliseconds + "ms");
             //---------------------------------------------------------------------------------------
@@ -184,7 +178,17 @@ namespace src.Subsystems.Analysis
             watch.Stop();
             Console.WriteLine("Convert from frames to video: " + watch.ElapsedMilliseconds + "ms");
             
-            return analyzedVideoData;
+            var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
+            analyzedFile.AddMetadata("videoId", request.VideoId);
+            analyzedFile.AddMetadata("pipelineId", request.PipelineId);
+            const string contentType = "video/mp4";
+            await analyzedFile.UploadFileFromByteArray(analyzedVideoData, contentType);
+
+            if (analyzedFile.Properties.LastModified != null)
+                response.DateAnalyzed = analyzedFile.Properties.LastModified.Value.DateTime;
+            response.Id = analyzedFile.Name;
+            response.Url = analyzedFile.GetUrl();
+            return response;
         }
 
         public void SetBaseContainer(string containerName)

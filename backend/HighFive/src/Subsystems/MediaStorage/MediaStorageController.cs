@@ -92,10 +92,7 @@ namespace src.Subsystems.MediaStorage
                      return StatusCode(400, response400);
                  }
 
-                 var response = new StoreVideoResponse
-                 {
-                     VideoId = "Image stored successfully", Success = true
-                 };
+                 var response = new ImageMetaData();
                  await _mediaStorageService.StoreImage(file);
                  return StatusCode(200, response);
              }
@@ -120,10 +117,7 @@ namespace src.Subsystems.MediaStorage
                     return StatusCode(400, response400);
                 }
 
-                var response = new StoreVideoResponse
-                {
-                    VideoId = "Video stored successfully.", Success = true
-                };
+                var response = new VideoMetaData();
                 await _mediaStorageService.StoreVideo(file);
                 return StatusCode(200, response);
             }

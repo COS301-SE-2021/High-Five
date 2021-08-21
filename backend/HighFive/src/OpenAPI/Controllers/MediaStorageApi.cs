@@ -106,7 +106,7 @@ namespace Org.OpenAPITools.Controllers
         [Route("/media/storeImage")]
         [Consumes("multipart/form-data")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(StoreImageResponse))]
+        [ProducesResponseType(statusCode: 200, type: typeof(ImageMetaData))]
         public abstract Task<IActionResult> StoreImage(IFormFile file);
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Org.OpenAPITools.Controllers
         [Route("/media/storeVideo")]
         [Consumes("multipart/form-data")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(StoreVideoResponse))]
+        [ProducesResponseType(statusCode: 200, type: typeof(VideoMetaData))]
         public abstract Task<IActionResult> StoreVideo(IFormFile file);
     }
 }

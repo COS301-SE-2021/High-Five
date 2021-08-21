@@ -26,12 +26,6 @@ paths:
         - "Test"
       description: Test if the server is online
       operationId: Ping
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       responses:
         "200":
           description: Ping successful
@@ -46,12 +40,6 @@ paths:
         - "Test"
       description: Test if the server is online
       operationId: Echo
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       requestBody:
         required: true
         content:
@@ -76,12 +64,6 @@ paths:
         - "MediaStorage"
       description: Endpoint for Store Video use case
       operationId: StoreVideo
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       requestBody:
         required: true
         content:
@@ -102,12 +84,6 @@ paths:
         - "MediaStorage"
       description: Endpoint for Get All Videos use case
       operationId: GetAllVideos
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       responses:
         "200":
           description: Returns a list of metadata objects of all the videos in the blob storage
@@ -122,12 +98,6 @@ paths:
         - "MediaStorage"
       description: Endpoint for Delete Video use case
       operationId: DeleteVideo
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       requestBody:
         required: true
         content:
@@ -148,12 +118,6 @@ paths:
         - "MediaStorage"
       description: Endpoint for Store Image use case
       operationId: StoreImage
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       requestBody:
         required: true
         content:
@@ -174,12 +138,6 @@ paths:
         - "MediaStorage"
       description: Endpoint for Get All Images use case
       operationId: GetAllImages
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       responses:
         "200":
           description: Returns a list of images in the blob storage
@@ -194,12 +152,6 @@ paths:
         - "MediaStorage"
       description: Endpoint for Delete Image use case
       operationId: DeleteImage
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       requestBody:
         required: true
         content:
@@ -220,12 +172,6 @@ paths:
         - "MediaStorage"
       description: Endpoint for Get Analyzed Images use case
       operationId: GetAnalyzedImages
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       responses:
         "200":
           description: All previously analyzed images are returned
@@ -240,12 +186,6 @@ paths:
         - "MediaStorage"
       description: Endpoint for Get Analyzed Videos use case
       operationId: GetAnalyzedVideos
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       responses:
         "200":
           description: All previously analyzed videos are returned
@@ -263,12 +203,6 @@ paths:
         - "Pipelines"
       description: Endpoint for Create Pipeline use case
       operationId: CreatePipeline
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       requestBody:
         required: true
         content:
@@ -289,12 +223,6 @@ paths:
         - "Pipelines"
       description: Endpoint for Get Pipelines use case
       operationId: GetPipelines
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       responses:
         "200":
           description: All pipelines have been returned
@@ -309,12 +237,6 @@ paths:
         - "Pipelines"
       description: Endpoint for Get Pipeline Ids use case
       operationId: GetPipelineIds
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       responses:
         "200":
           description: All pipeline Id's have been returned
@@ -329,12 +251,6 @@ paths:
         - "Pipelines"
       description: Endpoint for Get Pipeline use case
       operationId: GetPipeline
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       requestBody:
         required: true
         content:
@@ -355,12 +271,6 @@ paths:
         - "Pipelines"
       description: Endpoint for Add Tools use case
       operationId: AddTools
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       requestBody:
         required: true
         content:
@@ -381,12 +291,6 @@ paths:
         - "Pipelines"
       description: Endpoint for Remove Tools use case
       operationId: RemoveTools
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       requestBody:
         required: true
         content:
@@ -407,12 +311,6 @@ paths:
         - "Pipelines"
       description: Endpoint for Delete Pipeline use case
       operationId: DeletePipeline
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       requestBody:
         required: true
         content:
@@ -433,12 +331,6 @@ paths:
         - "Pipelines"
       description: Endpoint for Get All Tools use case
       operationId: GetAllTools
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       responses:
         "200":
           description: All existing tools have been returned
@@ -459,12 +351,6 @@ paths:
         - "Analysis"
       description: Endpoint for Analyze Image use case
       operationId: AnalyzeImage
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       requestBody:
         required: true
         content:
@@ -485,12 +371,6 @@ paths:
         - "Analysis"
       description: Endpoint for Analyze Video use case
       operationId: AnalyzeVideo
-      parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
       requestBody:
         required: true
         content:
