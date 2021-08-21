@@ -19,5 +19,7 @@ namespace src.Subsystems.MediaStorage
         public IBlobFile GetVideo(string videoId);
         public GetAnalyzedImagesResponse GetAnalyzedImages();
         public GetAnalyzedVideosResponse GetAnalyzedVideos();
+        public Task<bool> DeleteAnalyzedImage(DeleteImageRequest request);
+        public Task<bool> DeleteAnalyzedVideo(DeleteVideoRequest request);
     }
 }

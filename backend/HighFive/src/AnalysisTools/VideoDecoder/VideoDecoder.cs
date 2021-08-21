@@ -20,15 +20,14 @@ namespace src.AnalysisTools.VideoDecoder
     public class VideoDecoder: IVideoDecoder
     {
         private static bool _ffmpegLoaded;
-        private readonly string _ffMpegPath = Directory.GetCurrentDirectory() + "\\ffmpegs\\ffmpeg\\bin";//@"D:\ffmpeg\bin";
-        private readonly string _ffMpegSharedPath = Directory.GetCurrentDirectory() + "\\ffmpegs\\ffmpegshared\\bin";//@"D:\ffmpegshared\bin";
+        private readonly string _ffMpegPath = Directory.GetCurrentDirectory() + "\\ffmpeg\\bin";//@"D:\ffmpeg\bin";
 
         public VideoDecoder()
         {
             if (!_ffmpegLoaded)
             {
                 Xabe.FFmpeg.FFmpeg.SetExecutablesPath(_ffMpegPath);
-                FFmpegLoader.FFmpegPath = _ffMpegSharedPath;
+                FFmpegLoader.FFmpegPath = _ffMpegPath;
                 _ffmpegLoaded = true;
             }
         }

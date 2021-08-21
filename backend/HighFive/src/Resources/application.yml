@@ -76,7 +76,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/storeVideoResponse'
+                $ref: '#/components/schemas/videoMetaData'
 
   /media/getAllVideos:
     post:
@@ -130,7 +130,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/storeImageResponse'
+                $ref: '#/components/schemas/imageMetaData'
 
   /media/getAllImages:
     post:
@@ -193,6 +193,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getAnalyzedVideosResponse'
+
+  /media/deleteAnalyzedImage:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Delete Analyzed Image use case
+      operationId: DeleteAnalyzedImage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteImageRequest'
+      responses:
+        "200":
+          description: Deletes analyzed image
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /media/deleteAnalyzedVideo:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Delete Analyzed Video use case
+      operationId: DeleteAnalyzedVideo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteVideoRequest'
+      responses:
+        "200":
+          description: Deletes analyzed video
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
   #==========================================================
   #     PIPELINES SUBSYSTEM PATHING
   #==========================================================
@@ -345,25 +385,45 @@ paths:
   #     ANALYSIS SUBSYSTEM PATHING
   #==========================================================
 
-  /analysis/analyzeMedia:
+  /analysis/analyzeImage:
     post:
       tags:
         - "Analysis"
-      description: Endpoint for Analyze Media use case
-      operationId: AnalyzeMedia
+      description: Endpoint for Analyze Image use case
+      operationId: AnalyzeImage
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/analyzeMediaRequest'
+              $ref: '#/components/schemas/analyzeImageRequest'
       responses:
         "200":
           description: A url of the analyzed media is returned
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/analyzeMediaResponse'
+                $ref: '#/components/schemas/analyzedImageMetaData'
+
+  /analysis/analyzeVideo:
+    post:
+      tags:
+        - "Analysis"
+      description: Endpoint for Analyze Video use case
+      operationId: AnalyzeVideo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/analyzeVideoRequest'
+      responses:
+        "200":
+          description: A url of the analyzed media is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/analyzedVideoMetaData'
 
 
   #==========================================================
@@ -399,28 +459,12 @@ components:
           type: string
           format: binary
 
-    storeVideoResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        videoId:
-          type: string
-
     storeImageRequest:
       type: object
       properties:
         file:
           type: string
           format: binary
-
-    storeImageResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        imageId:
-          type: string
 
     getAllVideosResponse:
       type: object
@@ -481,7 +525,7 @@ components:
         id:
           type: string
           description: unique id assossciated with a certain image stored on the blob storage
-          
+
     getAnalyzedImagesResponse:
       type: object
       properties:
@@ -529,7 +573,9 @@ components:
           type: string
         pipelineId:
           type: string
-        
+        thumbnail:
+          type: string
+
 
     #==========================================================
     #     PIPELINES COMPONENTS
@@ -624,22 +670,27 @@ components:
     #     ANALYSIS COMPONENTS
     #==========================================================
 
-    analyzeMediaRequest:
+    analyzeImageRequest:
       type: object
       properties:
-        mediaId:
+        imageId:
           type: string
         pipelineId:
           type: string
-        mediaType:
+
+    analyzeVideoRequest:
+      type: object
+      properties:
+        videoId:
           type: string
-          description: This string can only be "image" or "video"
+        pipelineId:
+          type: string
 
     analyzeMediaResponse:
       type: object
       properties:
         url:
-          type: string      
+          type: string
 
     #==========================================================
     #     GENERIC COMPONENTS
