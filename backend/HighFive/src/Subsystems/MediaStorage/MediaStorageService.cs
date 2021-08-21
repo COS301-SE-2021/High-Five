@@ -369,13 +369,15 @@ namespace src.Subsystems.MediaStorage
 
         public async Task<bool> DeleteAnalyzedVideo(DeleteVideoRequest request)
         {
-            var imageFile = _storageManager.GetFile(request.Id + ".mp4","analyzed/" +VideoContainerName).Result;
-            if (imageFile == null)
+            var videoFile = _storageManager.GetFile(request.Id + ".mp4","analyzed/" + VideoContainerName).Result;
+            if (videoFile == null)
             {
                 return false;
             }
 
-            await imageFile.Delete();
+            var thumbnail = _storageManager.GetFile(request.Id + "-thumbnail.jpg", "analyzed/" + VideoContainerName).Result;
+            await videoFile.Delete();
+            await thumbnail.Delete();
             return true;
         }
     }
