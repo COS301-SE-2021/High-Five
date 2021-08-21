@@ -22,7 +22,7 @@ export class AddPipelineComponent implements OnInit {
     // Nothing added here
   }
 
-  async dismiss() {
+  public async dismiss() {
     const newArr = this.pipelineService.pipelines.map((pipeline: Pipeline) => pipeline.name);
     if (newArr.filter((value) => value === this.pipelineName).length > 0) {
       await this.toastController.create({
@@ -41,7 +41,14 @@ export class AddPipelineComponent implements OnInit {
 
   }
 
-  async presentAddToolPopover(ev: any) {
+
+  /**
+   * Shows a popover containing all the tools which are available to add, excluding the tools already present in the
+   * tools array
+   *
+   * @param ev the event which activates the popover
+   */
+  public async presentAddToolPopover(ev: any) {
     const addToolPopover = await this.popoverController.create({
       component: AddItemComponent,
       event: ev,
@@ -60,13 +67,21 @@ export class AddPipelineComponent implements OnInit {
     //Nothing to add here yet
   }
 
-  async dismissWithoutSaving() {
+  /**
+   * Dismisses the modal without sending any data back to the parent component
+   */
+  public async dismissWithoutSaving() {
     await this.modalController.dismiss({
       dismissed: true,
     });
   }
 
-  removeTool(tool: string) {
+  /**
+   * removes a tool from the array of tools
+   *
+   * @param tool a string representing which tool should be removed
+   */
+  public removeTool(tool: string) {
     this.tools = this.tools.filter(t => t !== tool);
   }
 }

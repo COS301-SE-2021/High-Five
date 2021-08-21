@@ -28,6 +28,14 @@ export class AnalyzedVideosService {
     this._analyzeVideos.next(val);
   }
 
+
+  /**
+   * Function will send a request to analyze a media with the specified mediaId, pipelineId and media type
+   *
+   * @param mediaId the id of the media which to analyze (video or image)
+   * @param pipelineId the id of the pipeline with which to analyze the media
+   * @param mediaType the media type, video or image
+   */
   public async analyzeVideo(mediaId: string, pipelineId: string, mediaType: string = 'video') {
     await this.analysisService.analyzeMedia({
       mediaId,

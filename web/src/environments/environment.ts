@@ -4,9 +4,10 @@
 
 export const environment = {
   production: false,
+  apiEndpoint: '',
   clientId: 'undefined',
   authorityId: 'undefined',
-  redirectUri: 'http://localhost:8100/navbar/landing',
+  redirectUri: '',
   b2cPolicies: {
     names: {
       signUpSignIn: 'undefined',
