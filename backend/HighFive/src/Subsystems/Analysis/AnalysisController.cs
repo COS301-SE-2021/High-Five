@@ -18,24 +18,7 @@ namespace src.Subsystems.Analysis
             _analysisService = analysisService;
             _baseContainerSet = false;
         }
-        
-        public override IActionResult AnalyzeMedia(AnalyzeMediaRequest analyzeMediaRequest)
-        {
-            if (!_baseContainerSet)
-            {
-                ConfigureStorageManager();
-            }
 
-            var url = _analysisService.AnalyzeMedia(analyzeMediaRequest).Result;
-            if (url.Equals(string.Empty))
-            {
-                return StatusCode(400, null);
-            }
-
-            var response = new AnalyzeMediaResponse {Url = url};
-            return StatusCode(200, response);
-        }
-        
         private void ConfigureStorageManager()
         {
             var tokenString = HttpContext.GetTokenAsync("access_token").Result;
@@ -47,6 +30,38 @@ namespace src.Subsystems.Analysis
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
             _analysisService.SetBaseContainer(jsonToken.Subject);
             _baseContainerSet = true;
+        }
+
+        public override IActionResult AnalyzeImage(AnalyzeImageRequest analyzeImageRequest)
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            
+            var response = _analysisService.AnalyzeImage(analyzeImageRequest).Result;
+            if (response == null)
+            {
+                return StatusCode(400, null);
+            }
+            
+            return StatusCode(200, response);
+        }
+
+        public override IActionResult AnalyzeVideo(AnalyzeVideoRequest analyzeVideoRequest)
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            
+            var response = _analysisService.AnalyzeVideo(analyzeVideoRequest).Result;
+            if (response == null)
+            {
+                return StatusCode(400, null);
+            }
+            
+            return StatusCode(200, response);
         }
     }
 }

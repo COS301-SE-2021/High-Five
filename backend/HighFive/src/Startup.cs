@@ -52,7 +52,7 @@ namespace src
                             c.NoResult();
                             c.Response.StatusCode = 401;
                             c.Response.ContentType = "application/json";
-                            await c.Response.WriteAsync("{\"error\":\"Invalid token provided. (Developer's note, this error might also mean something else went wrong with the back-end)\"}");
+                            await c.Response.WriteAsync("{\"error\":\"Invalid token provided.\"}");
                         }
                     };
                 });

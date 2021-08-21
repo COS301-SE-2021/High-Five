@@ -11,7 +11,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -25,18 +24,31 @@ namespace Org.OpenAPITools.Controllers
     /// </summary>
     [ApiController]
     public abstract class AnalysisApiController : ControllerBase
-    {
+    { 
         /// <summary>
         /// 
         /// </summary>
-        /// <remarks>Endpoint for Analyze Media use case</remarks>
-        /// <param name="analyzeMediaRequest"></param>
+        /// <remarks>Endpoint for Analyze Image use case</remarks>
+        /// <param name="analyzeImageRequest"></param>
         /// <response code="200">A url of the analyzed media is returned</response>
         [HttpPost]
-        [Route("/analysis/analyzeMedia")]
+        [Route("/analysis/analyzeImage")]
         [Consumes("application/json")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(AnalyzeMediaResponse))]
-        public abstract IActionResult AnalyzeMedia([FromBody] AnalyzeMediaRequest analyzeMediaRequest);
+        [ProducesResponseType(statusCode: 200, type: typeof(AnalyzedImageMetaData))]
+        public abstract IActionResult AnalyzeImage([FromBody]AnalyzeImageRequest analyzeImageRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Analyze Video use case</remarks>
+        /// <param name="analyzeVideoRequest"></param>
+        /// <response code="200">A url of the analyzed media is returned</response>
+        [HttpPost]
+        [Route("/analysis/analyzeVideo")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(AnalyzedVideoMetaData))]
+        public abstract IActionResult AnalyzeVideo([FromBody]AnalyzeVideoRequest analyzeVideoRequest);
     }
 }
