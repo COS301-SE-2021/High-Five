@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Org.OpenAPITools.Controllers;
 using Org.OpenAPITools.Models;
 
@@ -28,12 +30,20 @@ namespace src.Subsystems.MediaStorage
             {
                 ConfigureStorageManager();
             }
-            var resultList = _mediaStorageService.GetAllImages();
-            var result = new GetAllImagesResponse
+
+            try
             {
-                Images = resultList
-            };
-            return StatusCode(200, result);
+                var resultList = _mediaStorageService.GetAllImages();
+                var result = new GetAllImagesResponse
+                {
+                    Images = resultList
+                };
+                return StatusCode(200, result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(200, new List<ImageMetaData>());
+            }
         }
 
         public override IActionResult GetAllVideos()
@@ -42,12 +52,20 @@ namespace src.Subsystems.MediaStorage
             {
                 ConfigureStorageManager();
             }
-            var resultList = _mediaStorageService.GetAllVideos();
-            var result = new GetAllVideosResponse
+
+            try
             {
-                Videos = resultList
-            };
-            return StatusCode(200, result);
+                var resultList = _mediaStorageService.GetAllVideos();
+                var result = new GetAllVideosResponse
+                {
+                    Videos = resultList
+                };
+                return StatusCode(200, result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(200, new List<VideoMetaData>());
+            }
         }
 
         public override IActionResult GetAnalyzedImages()
@@ -56,12 +74,20 @@ namespace src.Subsystems.MediaStorage
             {
                 ConfigureStorageManager();
             }
-            var resultList = _mediaStorageService.GetAnalyzedImages()?.Images;
-            var result = new GetAnalyzedImagesResponse
+
+            try
             {
-                Images = resultList
-            };
-            return StatusCode(200, result);
+                var resultList = _mediaStorageService.GetAnalyzedImages()?.Images;
+                var result = new GetAnalyzedImagesResponse
+                {
+                    Images = resultList
+                };
+                return StatusCode(200, result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(200, new List<AnalyzedImageMetaData>());
+            }
         }
 
         public override IActionResult GetAnalyzedVideos()
@@ -70,15 +96,23 @@ namespace src.Subsystems.MediaStorage
             {
                 ConfigureStorageManager();
             }
-            var resultList = _mediaStorageService.GetAnalyzedVideos().Videos;
-            var result = new GetAnalyzedVideosResponse
+
+            try
             {
-                Videos = resultList
-            };
-            return StatusCode(200, result);
+                var resultList = _mediaStorageService.GetAnalyzedVideos().Videos;
+                var result = new GetAnalyzedVideosResponse
+                {
+                    Videos = resultList
+                };
+                return StatusCode(200, result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(200, new List<AnalyzedVideoMetaData>());
+            }
         }
 
-        public override async Task<IActionResult> StoreImage(IFormFile file)
+         public override async Task<IActionResult> StoreImage(IFormFile file)
          {
              if (!_baseContainerSet)
              {
@@ -103,7 +137,7 @@ namespace src.Subsystems.MediaStorage
              }
          }
 
-         public override async Task<IActionResult> StoreVideo(IFormFile file)
+        public override async Task<IActionResult> StoreVideo(IFormFile file)
         {
             if (!_baseContainerSet)
             {
@@ -128,7 +162,33 @@ namespace src.Subsystems.MediaStorage
             }
         }
 
-        public override IActionResult DeleteImage(DeleteImageRequest deleteImageRequest)
+         public override IActionResult DeleteAnalyzedImage(DeleteImageRequest deleteImageRequest)
+         {
+             if (!_baseContainerSet)
+             {
+                 ConfigureStorageManager();
+             }
+             var response = new EmptyObject {Success = true};
+             if (_mediaStorageService.DeleteAnalyzedImage(deleteImageRequest).Result) return StatusCode(200, response);
+             response.Success = false;
+             response.Message = "Image could not be deleted.";
+             return StatusCode(400, response);
+         }
+
+         public override IActionResult DeleteAnalyzedVideo(DeleteVideoRequest deleteVideoRequest)
+         {
+             if (!_baseContainerSet)
+             {
+                 ConfigureStorageManager();
+             }
+             var response = new EmptyObject {Success = true};
+             if (_mediaStorageService.DeleteAnalyzedVideo(deleteVideoRequest).Result) return StatusCode(200, response);
+             response.Success = false;
+             response.Message = "Video could not be deleted.";
+             return StatusCode(400, response);
+         }
+
+         public override IActionResult DeleteImage(DeleteImageRequest deleteImageRequest)
         {
             if (!_baseContainerSet)
             {

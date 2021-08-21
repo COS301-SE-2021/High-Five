@@ -342,5 +342,29 @@ namespace src.Subsystems.MediaStorage
 
             return new GetAnalyzedVideosResponse {Videos = resultList};
         }
+
+        public async Task<bool> DeleteAnalyzedImage(DeleteImageRequest request)
+        {
+            var imageFile = _storageManager.GetFile(request.Id + ".img","analyzed/" +ImageContainerName).Result;
+            if (imageFile == null)
+            {
+                return false;
+            }
+
+            await imageFile.Delete();
+            return true;
+        }
+
+        public async Task<bool> DeleteAnalyzedVideo(DeleteVideoRequest request)
+        {
+            var imageFile = _storageManager.GetFile(request.Id + ".mp4","analyzed/" +VideoContainerName).Result;
+            if (imageFile == null)
+            {
+                return false;
+            }
+
+            await imageFile.Delete();
+            return true;
+        }
     }
 }

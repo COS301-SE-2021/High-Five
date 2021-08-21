@@ -29,6 +29,32 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Delete Analyzed Image use case</remarks>
+        /// <param name="deleteImageRequest"></param>
+        /// <response code="200">Deletes analyzed image</response>
+        [HttpPost]
+        [Route("/media/deleteAnalyzedImage")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult DeleteAnalyzedImage([FromBody]DeleteImageRequest deleteImageRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Delete Analyzed Video use case</remarks>
+        /// <param name="deleteVideoRequest"></param>
+        /// <response code="200">Deletes analyzed video</response>
+        [HttpPost]
+        [Route("/media/deleteAnalyzedVideo")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult DeleteAnalyzedVideo([FromBody]DeleteVideoRequest deleteVideoRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Delete Image use case</remarks>
         /// <param name="deleteImageRequest"></param>
         /// <response code="200">Image successfully deleted</response>

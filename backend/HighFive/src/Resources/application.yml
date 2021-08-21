@@ -193,6 +193,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getAnalyzedVideosResponse'
+
+  /media/deleteAnalyzedImage:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Delete Analyzed Image use case
+      operationId: DeleteAnalyzedImage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteImageRequest'
+      responses:
+        "200":
+          description: Deletes analyzed image
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /media/deleteAnalyzedVideo:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Delete Analyzed Video use case
+      operationId: DeleteAnalyzedVideo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteVideoRequest'
+      responses:
+        "200":
+          description: Deletes analyzed video
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
   #==========================================================
   #     PIPELINES SUBSYSTEM PATHING
   #==========================================================
