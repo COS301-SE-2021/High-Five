@@ -58,6 +58,12 @@ namespace Org.OpenAPITools.Models
         public string PipelineId { get; set; }
 
         /// <summary>
+        /// Gets or Sets Thumbnail
+        /// </summary>
+        [DataMember(Name="thumbnail", EmitDefaultValue=false)]
+        public string Thumbnail { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -70,6 +76,7 @@ namespace Org.OpenAPITools.Models
             sb.Append("  Url: ").Append(Url).Append("\n");
             sb.Append("  VideoId: ").Append(VideoId).Append("\n");
             sb.Append("  PipelineId: ").Append(PipelineId).Append("\n");
+            sb.Append("  Thumbnail: ").Append(Thumbnail).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -130,6 +137,11 @@ namespace Org.OpenAPITools.Models
                     PipelineId == other.PipelineId ||
                     PipelineId != null &&
                     PipelineId.Equals(other.PipelineId)
+                ) && 
+                (
+                    Thumbnail == other.Thumbnail ||
+                    Thumbnail != null &&
+                    Thumbnail.Equals(other.Thumbnail)
                 );
         }
 
@@ -153,6 +165,8 @@ namespace Org.OpenAPITools.Models
                     hashCode = hashCode * 59 + VideoId.GetHashCode();
                     if (PipelineId != null)
                     hashCode = hashCode * 59 + PipelineId.GetHashCode();
+                    if (Thumbnail != null)
+                    hashCode = hashCode * 59 + Thumbnail.GetHashCode();
                 return hashCode;
             }
         }

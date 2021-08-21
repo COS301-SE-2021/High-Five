@@ -24,13 +24,13 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class AnalyzeMediaRequest : IEquatable<AnalyzeMediaRequest>
+    public class AnalyzeVideoRequest : IEquatable<AnalyzeVideoRequest>
     {
         /// <summary>
-        /// Gets or Sets MediaId
+        /// Gets or Sets VideoId
         /// </summary>
-        [DataMember(Name="mediaId", EmitDefaultValue=false)]
-        public string MediaId { get; set; }
+        [DataMember(Name="videoId", EmitDefaultValue=false)]
+        public string VideoId { get; set; }
 
         /// <summary>
         /// Gets or Sets PipelineId
@@ -39,23 +39,15 @@ namespace Org.OpenAPITools.Models
         public string PipelineId { get; set; }
 
         /// <summary>
-        /// This string can only be \&quot;image\&quot; or \&quot;video\&quot;
-        /// </summary>
-        /// <value>This string can only be \&quot;image\&quot; or \&quot;video\&quot;</value>
-        [DataMember(Name="mediaType", EmitDefaultValue=false)]
-        public string MediaType { get; set; }
-
-        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class AnalyzeMediaRequest {\n");
-            sb.Append("  MediaId: ").Append(MediaId).Append("\n");
+            sb.Append("class AnalyzeVideoRequest {\n");
+            sb.Append("  VideoId: ").Append(VideoId).Append("\n");
             sb.Append("  PipelineId: ").Append(PipelineId).Append("\n");
-            sb.Append("  MediaType: ").Append(MediaType).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -78,34 +70,29 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((AnalyzeMediaRequest)obj);
+            return obj.GetType() == GetType() && Equals((AnalyzeVideoRequest)obj);
         }
 
         /// <summary>
-        /// Returns true if AnalyzeMediaRequest instances are equal
+        /// Returns true if AnalyzeVideoRequest instances are equal
         /// </summary>
-        /// <param name="other">Instance of AnalyzeMediaRequest to be compared</param>
+        /// <param name="other">Instance of AnalyzeVideoRequest to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(AnalyzeMediaRequest other)
+        public bool Equals(AnalyzeVideoRequest other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    MediaId == other.MediaId ||
-                    MediaId != null &&
-                    MediaId.Equals(other.MediaId)
+                    VideoId == other.VideoId ||
+                    VideoId != null &&
+                    VideoId.Equals(other.VideoId)
                 ) && 
                 (
                     PipelineId == other.PipelineId ||
                     PipelineId != null &&
                     PipelineId.Equals(other.PipelineId)
-                ) && 
-                (
-                    MediaType == other.MediaType ||
-                    MediaType != null &&
-                    MediaType.Equals(other.MediaType)
                 );
         }
 
@@ -119,12 +106,10 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (MediaId != null)
-                    hashCode = hashCode * 59 + MediaId.GetHashCode();
+                    if (VideoId != null)
+                    hashCode = hashCode * 59 + VideoId.GetHashCode();
                     if (PipelineId != null)
                     hashCode = hashCode * 59 + PipelineId.GetHashCode();
-                    if (MediaType != null)
-                    hashCode = hashCode * 59 + MediaType.GetHashCode();
                 return hashCode;
             }
         }
@@ -132,12 +117,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(AnalyzeMediaRequest left, AnalyzeMediaRequest right)
+        public static bool operator ==(AnalyzeVideoRequest left, AnalyzeVideoRequest right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(AnalyzeMediaRequest left, AnalyzeMediaRequest right)
+        public static bool operator !=(AnalyzeVideoRequest left, AnalyzeVideoRequest right)
         {
             return !Equals(left, right);
         }
