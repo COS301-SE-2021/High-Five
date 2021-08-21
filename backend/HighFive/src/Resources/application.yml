@@ -573,6 +573,8 @@ components:
           type: string
         pipelineId:
           type: string
+        thumbnail:
+          type: string
 
 
     #==========================================================

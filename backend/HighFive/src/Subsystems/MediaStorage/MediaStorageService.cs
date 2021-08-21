@@ -326,18 +326,30 @@ namespace src.Subsystems.MediaStorage
             var allFiles = _storageManager.GetAllFilesInContainer("analyzed/" + VideoContainerName).Result;
             if (allFiles == null)
             {
-                return new GetAnalyzedVideosResponse{Videos = new List<AnalyzedVideoMetaData>()};
+                return new GetAnalyzedVideosResponse {Videos = new List<AnalyzedVideoMetaData>()};
             }
             var resultList = new List<AnalyzedVideoMetaData>();
-            foreach(var listBlobItem in allFiles)
+            var currentVideo = new AnalyzedVideoMetaData();
+            foreach(var listBlobItem in allFiles)//NOTE: Assuming here that a thumbnail will be immediately followed by its corresponding mp4 file
             {
-                var currentImage = new AnalyzedVideoMetaData {Id = listBlobItem.Name.Replace(".mp4", "")};
-                if (listBlobItem.Properties is {LastModified: { }})
-                    currentImage.DateAnalyzed = listBlobItem.Properties.LastModified.Value.DateTime;
-                currentImage.VideoId = listBlobItem.GetMetaData("videoId");
-                currentImage.PipelineId = listBlobItem.GetMetaData("pipelineId");
-                currentImage.Url = listBlobItem.GetUrl();
-                resultList.Add(currentImage);
+                if (listBlobItem.Name.Contains("thumbnail"))
+                {
+                    currentVideo = new AnalyzedVideoMetaData();
+                    var thumbnail = listBlobItem.GetUrl();
+                    currentVideo.Thumbnail = thumbnail;
+                }
+                else
+                {
+                    currentVideo.Id = listBlobItem.Name.Replace(".mp4", "");
+                    if (listBlobItem.Properties is {LastModified: { }})
+                        currentVideo.DateAnalyzed = listBlobItem.Properties.LastModified.Value.DateTime;
+                    //var oldName = listBlobItem.GetMetaData("originalName");
+                    //currentVideo.Name = oldName;
+                    currentVideo.Url = listBlobItem.GetUrl();
+                    currentVideo.VideoId = listBlobItem.GetMetaData("videoId");
+                    currentVideo.PipelineId = listBlobItem.GetMetaData("pipelineId");
+                    resultList.Add(currentVideo);
+                }
             }
 
             return new GetAnalyzedVideosResponse {Videos = resultList};
