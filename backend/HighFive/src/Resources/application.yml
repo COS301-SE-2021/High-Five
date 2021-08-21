@@ -345,25 +345,45 @@ paths:
   #     ANALYSIS SUBSYSTEM PATHING
   #==========================================================
 
-  /analysis/analyzeMedia:
+  /analysis/analyzeImage:
     post:
       tags:
         - "Analysis"
-      description: Endpoint for Analyze Media use case
-      operationId: AnalyzeMedia
+      description: Endpoint for Analyze Image use case
+      operationId: AnalyzeImage
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/analyzeMediaRequest'
+              $ref: '#/components/schemas/analyzeImageRequest'
       responses:
         "200":
           description: A url of the analyzed media is returned
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/analyzeMediaResponse'
+                $ref: '#/components/schemas/analyzedImageMetaData'
+
+  /analysis/analyzeVideo:
+    post:
+      tags:
+        - "Analysis"
+      description: Endpoint for Analyze Video use case
+      operationId: AnalyzeVideo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/analyzeVideoRequest'
+      responses:
+        "200":
+          description: A url of the analyzed media is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/analyzedVideoMetaData'
 
 
   #==========================================================
@@ -481,7 +501,7 @@ components:
         id:
           type: string
           description: unique id assossciated with a certain image stored on the blob storage
-          
+
     getAnalyzedImagesResponse:
       type: object
       properties:
@@ -529,7 +549,7 @@ components:
           type: string
         pipelineId:
           type: string
-        
+
 
     #==========================================================
     #     PIPELINES COMPONENTS
@@ -624,22 +644,27 @@ components:
     #     ANALYSIS COMPONENTS
     #==========================================================
 
-    analyzeMediaRequest:
+    analyzeImageRequest:
       type: object
       properties:
-        mediaId:
+        imageId:
           type: string
         pipelineId:
           type: string
-        mediaType:
+
+    analyzeVideoRequest:
+      type: object
+      properties:
+        videoId:
           type: string
-          description: This string can only be "image" or "video"
+        pipelineId:
+          type: string
 
     analyzeMediaResponse:
       type: object
       properties:
         url:
-          type: string      
+          type: string
 
     #==========================================================
     #     GENERIC COMPONENTS
