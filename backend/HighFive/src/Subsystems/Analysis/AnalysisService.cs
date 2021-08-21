@@ -105,7 +105,7 @@ namespace src.Subsystems.Analysis
 
             if (analyzedFile.Properties.LastModified != null)
                 response.DateAnalyzed = analyzedFile.Properties.LastModified.Value.DateTime;
-            response.Id = analyzedMediaName;
+            response.Id = analyzedMediaName.Replace(fileExtension, "");
             response.Url = analyzedFile.GetUrl();
             return response;
         }
@@ -137,8 +137,10 @@ namespace src.Subsystems.Analysis
             {
                 if (testFile.Properties is {LastModified: { }})
                     response.DateAnalyzed = testFile.Properties.LastModified.Value.DateTime;
-                response.Id = analyzedMediaName;
+                response.Id = analyzedMediaName.Replace(fileExtension, "");
                 response.Url = testFile.GetUrl();
+                var thumbnailFile = _storageManager.GetFile(analyzedMediaName.Replace(".mp4", "-thumbnail.jpg"), storageContainer).Result;
+                response.Thumbnail = thumbnailFile.GetUrl();
                 return response;
             }
             
@@ -153,6 +155,7 @@ namespace src.Subsystems.Analysis
             watch.Start();
             var frameList = _videoDecoder.GetFramesFromVideo(rawVideoStream);
             watch.Stop();
+            Console.WriteLine("-------------------------------------------------------------------------");
             Console.WriteLine("Convert video to frames: " + watch.ElapsedMilliseconds + "ms");
 
             //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
@@ -196,7 +199,7 @@ namespace src.Subsystems.Analysis
 
             if (analyzedFile.Properties.LastModified != null)
                 response.DateAnalyzed = analyzedFile.Properties.LastModified.Value.DateTime;
-            response.Id = analyzedFile.Name;
+            response.Id = analyzedMediaName.Replace(fileExtension, "");
             response.Url = analyzedFile.GetUrl();
             response.Thumbnail = thumbnail.GetUrl();
             return response;
