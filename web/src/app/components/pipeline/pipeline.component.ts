@@ -26,11 +26,22 @@ export class PipelineComponent implements OnInit {
     });
   }
 
+
+  /**
+   * Will remove a tool from the current pipeline, by sending a request using the injected pieplineService
+   *
+   * @param tool a string representing a tool which should be removed from the pipeline
+   */
   public async onRemoveTool(tool: string) {
     await this.pipelineService.removeTool(this.pipeline.id, [tool]);
 
   }
 
+  /**
+   * Will send a request to add tools to the pipeline using the injected pipelineService
+   *
+   * @param tools, an array of strings representing the tools which must be added to the pipeline
+   */
   public async onAddTool(tools: string[]) {
     await this.pipelineService.addTool(this.pipeline.id, tools);
 
@@ -90,8 +101,9 @@ export class PipelineComponent implements OnInit {
    */
   private updateToolColours() {
     Array.from(document.getElementsByClassName(this.pipeline.id + '-tool-chip') as HTMLCollectionOf<HTMLElement>).forEach(value => {
+      //SonarCloud sees this as a security threat. As it only affects colours, it can ignore this.  
       value.style.borderColor = '#' + ('000000' +
-        Math.floor(0x1000000 * Math.random()).toString(16)).slice(-6);
+        Math.floor(0x1000000 * Math.random()).toString(16)).slice(-6); //NOSONAR
     });
   }
 }

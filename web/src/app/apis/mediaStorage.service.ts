@@ -29,12 +29,13 @@ import { StoreVideoResponse } from '../models/storeVideoResponse';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
+import {environment} from "../../environments/environment";
 
 
 @Injectable()
 export class MediaStorageService {
 
-  protected basePath =  'https://high5api.azurewebsites.net';
+  protected basePath = environment.apiEndpoint;
   public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('jwt'));
 
   public configuration = new Configuration();

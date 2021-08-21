@@ -68,11 +68,19 @@ export class ImageCardComponent implements OnInit {
   /**
    * Opens the image in a new tab , to view fullscreen
    */
-  public async viewImageFullScreen(){
+  public async viewImageFullScreen() {
     const newWindow = window.open(this.image.url, '_system');
     newWindow.focus();
   }
 
+
+  /**
+   * This function will iterate through the passed in pipelines, get their ids and then use the pipelineService
+   * to send a request to analyze the present image with (the image property)
+   *
+   * @param pipelines, a string of pipeline names , which the user would like to analyze the image with
+   * @private
+   */
   private async analyseImage(pipelines: string[]) {
     for (const pipelineName of pipelines) {
       const selectedPipeline = this.pipelineService.pipelines.find((pipeline: Pipeline) => pipeline.name === pipelineName);
