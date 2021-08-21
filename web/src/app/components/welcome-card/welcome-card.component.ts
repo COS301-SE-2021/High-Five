@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {MsalService} from '@azure/msal-angular';
-import {AuthenticationResult} from '@azure/msal-browser';
 
 @Component({
   selector: 'app-welcome-card',
@@ -18,6 +17,11 @@ export class WelcomeCardComponent implements OnInit {
 
   }
 
+
+  /**
+   * This function calls the loginRedirect method of the official microsoft authentication library, starting the userflow
+   * for login/register/ forgot password
+   */
   login() {
     this.msalService.loginRedirect();
   }

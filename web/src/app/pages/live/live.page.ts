@@ -9,6 +9,9 @@ import {AnimationOptions} from 'ngx-lottie';
 export class LivePage implements OnInit {
 
 
+  /**
+   * The configuration of the lottie animation on this page (not present currently)
+   */
   public lottieConfig: AnimationOptions = {
     path: '/assets/lottie-animations/67783-drones-isometric-lottie-animation.json'
   };

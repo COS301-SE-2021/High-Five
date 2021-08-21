@@ -27,11 +27,17 @@ buildscript {
     ext.mockito_version = "3.11.2"
     ext.commons_io_version = "2.11.0"
     ext.appauth_version = "0.9.1"
+    ext.powermock_version = "2.0.4"
+    ext.codec_version = "1.15"
+    ext.viewpager_version = "1.0.0"
+    ext.picasso_version = "2.8"
 
 
     repositories {
         google()
+        jcenter()
         mavenCentral()
+        maven { url "https://www.jitpack.io" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.0'
@@ -46,7 +52,9 @@ buildscript {
 allprojects {
     repositories {
         mavenCentral()
+        jcenter()
         google()
+        maven { url "https://jitpack.io" }
         mavenLocal()
     }
 }
