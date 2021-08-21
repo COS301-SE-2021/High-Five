@@ -178,6 +178,12 @@ namespace src.Subsystems.Analysis
             watch.Stop();
             Console.WriteLine("Convert from frames to video: " + watch.ElapsedMilliseconds + "ms");
             
+            //create thumbnail from analyzed video
+            var thumbnail =
+                _storageManager.CreateNewFile(analyzedMediaName.Replace(fileExtension, "") + "-thumbnail.jpg",
+                    storageContainer).Result;
+            thumbnail.UploadFileFromByteArray(analyzedFrameData[0], "image/jpg");//uploads synchronously
+
             var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
             analyzedFile.AddMetadata("videoId", request.VideoId);
             analyzedFile.AddMetadata("pipelineId", request.PipelineId);
