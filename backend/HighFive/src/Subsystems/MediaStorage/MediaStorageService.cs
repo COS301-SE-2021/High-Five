@@ -306,7 +306,7 @@ namespace src.Subsystems.MediaStorage
                 var currentImage = new AnalyzedImageMetaData {Id = listBlobItem.Name.Replace(".img", "")};
                 if (listBlobItem.Properties is {LastModified: { }})
                     currentImage.DateAnalyzed = listBlobItem.Properties.LastModified.Value.DateTime;
-                currentImage.ImageId = listBlobItem.GetMetaData("mediaId");
+                currentImage.ImageId = listBlobItem.GetMetaData("imageId");
                 currentImage.PipelineId = listBlobItem.GetMetaData("pipelineId");
                 currentImage.Url = listBlobItem.GetUrl();
                 resultList.Add(currentImage);
@@ -334,7 +334,7 @@ namespace src.Subsystems.MediaStorage
                 var currentImage = new AnalyzedVideoMetaData {Id = listBlobItem.Name.Replace(".mp4", "")};
                 if (listBlobItem.Properties is {LastModified: { }})
                     currentImage.DateAnalyzed = listBlobItem.Properties.LastModified.Value.DateTime;
-                currentImage.VideoId = listBlobItem.GetMetaData("mediaId");
+                currentImage.VideoId = listBlobItem.GetMetaData("videoId");
                 currentImage.PipelineId = listBlobItem.GetMetaData("pipelineId");
                 currentImage.Url = listBlobItem.GetUrl();
                 resultList.Add(currentImage);

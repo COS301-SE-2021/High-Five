@@ -41,7 +41,7 @@ namespace src.Storage
             var splitName = file.Name.Split("/");
             if (splitName.Length >= 2)
             {
-                Name = splitName[1];
+                Name = splitName[^1];
             }
         }
 

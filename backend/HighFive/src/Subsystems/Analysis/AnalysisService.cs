@@ -105,7 +105,7 @@ namespace src.Subsystems.Analysis
 
             if (analyzedFile.Properties.LastModified != null)
                 response.DateAnalyzed = analyzedFile.Properties.LastModified.Value.DateTime;
-            response.Id = analyzedFile.Name;
+            response.Id = analyzedMediaName;
             response.Url = analyzedFile.GetUrl();
             return response;
         }
@@ -137,7 +137,7 @@ namespace src.Subsystems.Analysis
             {
                 if (testFile.Properties is {LastModified: { }})
                     response.DateAnalyzed = testFile.Properties.LastModified.Value.DateTime;
-                response.Id = testFile.Name;
+                response.Id = analyzedMediaName;
                 response.Url = testFile.GetUrl();
                 return response;
             }
