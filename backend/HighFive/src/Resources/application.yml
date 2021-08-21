@@ -76,7 +76,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/storeVideoResponse'
+                $ref: '#/components/schemas/videoMetaData'
 
   /media/getAllVideos:
     post:
@@ -130,7 +130,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/storeImageResponse'
+                $ref: '#/components/schemas/imageMetaData'
 
   /media/getAllImages:
     post:
@@ -419,28 +419,12 @@ components:
           type: string
           format: binary
 
-    storeVideoResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        videoId:
-          type: string
-
     storeImageRequest:
       type: object
       properties:
         file:
           type: string
           format: binary
-
-    storeImageResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        imageId:
-          type: string
 
     getAllVideosResponse:
       type: object
