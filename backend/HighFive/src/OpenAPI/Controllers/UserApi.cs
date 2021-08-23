@@ -29,12 +29,38 @@ namespace Org.OpenAPITools.Controllers
         /// 
         /// </summary>
         /// <remarks>Endpoint for Delete Media use case</remarks>
-        /// <response code="200">A user&#39;s media is purged</response>
+        /// <param name="userRequest"></param>
+        /// <response code="200">Called by an admin to delete all the media of another user</response>
         [HttpPost]
         [Route("/users/deleteMedia")]
+        [Consumes("application/json")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
-        public abstract IActionResult DeleteMedia();
+        public abstract IActionResult DeleteMedia([FromBody]UserRequest userRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Delete Own Media use case</remarks>
+        /// <response code="200">Called by a user to delete all of their own media</response>
+        [HttpPost]
+        [Route("/users/deleteOwnMedia")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult DeleteOwnMedia();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Delete User use case</remarks>
+        /// <param name="userRequest"></param>
+        /// <response code="200">Called by an admin to delete a user and all associated media from High-Five system</response>
+        [HttpPost]
+        [Route("/users/deleteUser")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult DeleteUser([FromBody]UserRequest userRequest);
 
         /// <summary>
         /// 

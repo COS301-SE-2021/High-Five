@@ -449,10 +449,50 @@ paths:
       tags:
         - "User"
       description: Endpoint for Delete Media use case
-      operationId: Delete Media
+      operationId: DeleteMedia
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userRequest'
       responses:
         "200":
-          description: A user's media is purged
+          description: Called by an admin to delete all the media of another user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /users/deleteOwnMedia:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Delete Own Media use case
+      operationId: DeleteOwnMedia
+      responses:
+        "200":
+          description: Called by a user to delete all of their own media
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /users/deleteUser:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Delete User use case
+      operationId: DeleteUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userRequest'
+      responses:
+        "200":
+          description: Called by an admin to delete a user and all associated media from High-Five system
           content:
             application/json:
               schema:
@@ -744,6 +784,13 @@ components:
           type: string
         email:
           type: string
+    
+    userRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: user id
     
     #==========================================================
     #     GENERIC COMPONENTS

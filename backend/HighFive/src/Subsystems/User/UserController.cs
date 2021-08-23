@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
+using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.User
 {
-    [Authorize(Policy = "Admin")]
+    [Authorize]
     public class UserController: UserApiController
     {
         private readonly IUserService _userService;
@@ -13,12 +14,25 @@ namespace src.Subsystems.User
         {
             _userService = userService;
         }
-        
-        public override IActionResult DeleteMedia()
+
+        [Authorize(Policy = "Admin")]
+        public override IActionResult DeleteMedia(UserRequest userRequest)
         {
             throw new System.NotImplementedException();
         }
 
+        public override IActionResult DeleteOwnMedia()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        [Authorize(Policy = "Admin")]
+        public override IActionResult DeleteUser(UserRequest userRequest)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        [Authorize(Policy = "Admin")]
         public override IActionResult GetAllUsers()
         {
             throw new System.NotImplementedException();
