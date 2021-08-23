@@ -72,5 +72,18 @@ namespace Org.OpenAPITools.Controllers
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetAllUsersResponse))]
         public abstract IActionResult GetAllUsers();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Upgrade To Admin use case</remarks>
+        /// <param name="userRequest"></param>
+        /// <response code="200">Called by an admin to upgrade a normal use to an administrator</response>
+        [HttpPost]
+        [Route("/users/upgradeToAdmin")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult UpgradeToAdmin([FromBody]UserRequest userRequest);
     }
 }

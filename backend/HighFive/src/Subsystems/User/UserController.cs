@@ -37,5 +37,11 @@ namespace src.Subsystems.User
         {
             throw new System.NotImplementedException();
         }
+
+        [Authorize(Policy = "Admin")]
+        public override IActionResult UpgradeToAdmin(UserRequest userRequest)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -497,7 +497,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
-
+    
+  /users/upgradeToAdmin:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Upgrade To Admin use case
+      operationId: UpgradeToAdmin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userRequest'
+      responses:
+        "200":
+          description: Called by an admin to upgrade a normal use to an administrator
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
 
   #==========================================================
   #     SCHEMAS
