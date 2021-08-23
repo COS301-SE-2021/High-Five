@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
  */
 export class VideoUploadConstants {
   public labels = {
-    'file_name': "File Name",
-    'file_upload': "Upload"
+    file_name: 'File Name',
+    file_upload: 'Upload'
   };
 }

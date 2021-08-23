@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using MediaToolkit;
-using MediaToolkit.Model;
-using MediaToolkit.Options;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -56,7 +50,7 @@ namespace src.Storage
             /*
              *      Description:
              * This function returns a reference to an existing blob file in some container within the storage,
-             * or null if the searched file does not exist in the storage. A BlobFile object is returns which
+             * or null if the searched file does not exist in the storage. A BlobFile object is returned which
              * contains the CloudBlockBlob itself.
              *
              *      Parameters:
@@ -113,7 +107,7 @@ namespace src.Storage
             foreach (var listBlobItem in allFiles)
             {
                 var blob = (CloudBlockBlob) listBlobItem;
-                if (blob.Name.Contains(container))
+                if (blob.Name.Contains(container) && !blob.Name.Replace(container + "/", string.Empty).Contains("/"))
                 {
                     blobFileList.Add(new BlobFile(blob));
                 }

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
@@ -17,7 +15,7 @@ namespace src.Subsystems.MediaStorage
     {
         private readonly IMediaStorageService _mediaStorageService;
         private bool _baseContainerSet;
-        
+
         public MediaStorageController(IMediaStorageService mediaStorageService)
         {
             _mediaStorageService = mediaStorageService;
@@ -46,6 +44,34 @@ namespace src.Subsystems.MediaStorage
             }
             var resultList = _mediaStorageService.GetAllVideos();
             var result = new GetAllVideosResponse
+            {
+                Videos = resultList
+            };
+            return StatusCode(200, result);
+        }
+
+        public override IActionResult GetAnalyzedImages()
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            var resultList = _mediaStorageService.GetAnalyzedImages()?.Images;
+            var result = new GetAnalyzedImagesResponse
+            {
+                Images = resultList
+            };
+            return StatusCode(200, result);
+        }
+
+        public override IActionResult GetAnalyzedVideos()
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            var resultList = _mediaStorageService.GetAnalyzedVideos().Videos;
+            var result = new GetAnalyzedVideosResponse
             {
                 Videos = resultList
             };
@@ -139,8 +165,6 @@ namespace src.Subsystems.MediaStorage
             var tokenString = HttpContext.GetTokenAsync("access_token").Result;
             if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
             {
-                _mediaStorageService.SetBaseContainer("demo2"); // This line of code is for contingency's sake, to not break code still working on the old Storage system.
-                //TODO: Remove above code when front-end is compatible with new storage structure.
                 return;
             }
             var handler = new JwtSecurityTokenHandler();

@@ -23,6 +23,18 @@ const routes: Routes = [
         loadChildren: () => import('../videostore/videostore.module').then( m => m.VideostorePageModule),
       },
       {
+        path: 'images',
+        loadChildren: () => import('../imagestore/imagestore.module').then( m => m.ImagestorePageModule)
+      },
+      {
+        path: 'all',
+        loadChildren: () => import('../allmedia/allmedia.module').then( m => m.AllmediaPageModule)
+      },
+      {
+        path: 'live',
+        loadChildren: () => import('../live/live.module').then( m => m.LivePageModule)
+      },
+      {
         path:'',
         redirectTo : 'landing',
         pathMatch:'full',
