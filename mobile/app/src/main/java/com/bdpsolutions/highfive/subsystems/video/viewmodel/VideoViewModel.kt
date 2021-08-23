@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.bdpsolutions.highfive.services.mediaupload.MediaUploadService
 import com.bdpsolutions.highfive.subsystems.video.fragment.VideoFragment
 import com.bdpsolutions.highfive.subsystems.video.model.VideoDataRepository
 import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
@@ -55,9 +56,15 @@ class VideoViewModel private constructor(private val repo: VideoDataRepository) 
                         val idx: Int = cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA)
                         val path = cursor.getString(idx)
                         cursor.close()
-                        repo.storeVideo(File(path)) {
-                            activity.refresh()
-                        }
+
+                        val uploadFileIntent = Intent(activity.requireContext(), MediaUploadService::class.java)
+                        uploadFileIntent.putExtra("media_file", path)
+
+                        activity.requireActivity().startService(uploadFileIntent)
+
+//                        repo.storeVideo(File(path)) {
+//                            activity.refresh()
+//                        }
                     }
                 }
             }
