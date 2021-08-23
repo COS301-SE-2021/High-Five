@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.WebSockets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -84,7 +86,7 @@ namespace src
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseSwagger();
             app.UseSwaggerUI(c =>
                 {
@@ -96,6 +98,11 @@ namespace src
             app.UseCors("AllowOrigin");
             app.UseAuthentication();
             app.UseAuthorization();
+            var webSocketOptions = new WebSocketOptions
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(120)
+            };
+            app.UseWebSockets(webSocketOptions);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
