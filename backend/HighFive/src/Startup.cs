@@ -15,6 +15,7 @@ using src.Storage;
 using src.Subsystems.Analysis;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
+using src.Subsystems.User;
 
 namespace src
 {
@@ -37,6 +38,18 @@ namespace src
                 c.AddPolicy("AllowOrigin", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             });
             
+            // Singletons
+            services.Add(new ServiceDescriptor(typeof(IConfiguration), Configuration));
+            services.Add(new ServiceDescriptor(typeof(IAnalysisModels), new AnalysisModels()));
+            // Dependency Injections
+            services.AddScoped<IStorageManager, StorageManager>();
+            services.AddScoped<IVideoDecoder, VideoDecoder>();
+            services.AddScoped<IMediaStorageService, MediaStorageService>();
+            services.AddScoped<IPipelineService, PipelineService>();
+            services.AddScoped<IAnalysisService, AnalysisService>();
+            services.AddScoped<IUserService, UserService>();
+
+
             // Configuring of Azure AD B2C Authentication
             services.AddAuthentication(options =>
                 {
@@ -55,6 +68,10 @@ namespace src
                             c.Response.StatusCode = 401;
                             c.Response.ContentType = "application/json";
                             await c.Response.WriteAsync("{\"error\":\"Invalid token provided.\"}");
+                        },
+                        OnTokenValidated = async ctx =>
+                        {
+                            
                         }
                     };
                 });
@@ -68,16 +85,6 @@ namespace src
                 options.ValueLengthLimit = int.MaxValue;
                 options.MultipartBodyLengthLimit = int.MaxValue;
             });
-            
-            // Singletons
-            services.Add(new ServiceDescriptor(typeof(IConfiguration), Configuration));
-            services.Add(new ServiceDescriptor(typeof(IAnalysisModels), new AnalysisModels()));
-            // Dependency Injections
-            services.AddScoped<IStorageManager, StorageManager>();
-            services.AddScoped<IMediaStorageService, MediaStorageService>();
-            services.AddScoped<IPipelineService, PipelineService>();
-            services.AddScoped<IAnalysisService, AnalysisService>();
-            services.AddScoped<IVideoDecoder, VideoDecoder>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
