@@ -1,4 +1,5 @@
 ﻿using System;
+using Org.OpenAPITools.Models;
 using src.Storage;
 
 namespace src.Subsystems.User
@@ -11,6 +12,30 @@ namespace src.Subsystems.User
         {
             _storageManager = storageManager;
         }
-        
+
+        public GetAllUsersResponse GetAllUsers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteMedia(UserRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteOwnMedia()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteUser(UserRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpgradeToAdmin(UserRequest request)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
