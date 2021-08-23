@@ -54,25 +54,25 @@ class VideoViewModel private constructor(private val repo: VideoDataRepository) 
     private var fetchVideoResultLauncher: ActivityResultLauncher<Intent>? = null
     private var permissionResultLauncher: ActivityResultLauncher<String>? = null
 
-    fun registerFetchVideo(activity: FragmentActivity) {
-        fetchVideoResultLauncher = activity.registerForActivityResult(
+    fun registerFetchVideo(fragment: Fragment) {
+        fetchVideoResultLauncher = fragment.registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val selectedVideo: Uri = result.data?.data!!
-                if (activity.contentResolver != null) {
-                    val cursor: Cursor? = activity.contentResolver.query(selectedVideo, null, null, null, null)
+                if (fragment.requireActivity().contentResolver != null) {
+                    val cursor: Cursor? = fragment.requireActivity().contentResolver.query(selectedVideo, null, null, null, null)
                     if (cursor != null) {
                         cursor.moveToFirst()
                         val idx: Int = cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA)
                         val path = cursor.getString(idx)
                         cursor.close()
 
-                        val uploadFileIntent = Intent(activity, MediaUploadService::class.java)
+                        val uploadFileIntent = Intent(fragment.requireActivity(), MediaUploadService::class.java)
                         uploadFileIntent.putExtra("media_file", path)
                         uploadFileIntent.putExtra("media_type", MediaTypes.VIDEO)
 
-                        activity.startService(uploadFileIntent)
+                        fragment.requireActivity().startService(uploadFileIntent)
                     }
                 }
             }

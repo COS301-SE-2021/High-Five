@@ -6,6 +6,7 @@ import android.os.*
 import android.os.Process.THREAD_PRIORITY_BACKGROUND
 import android.util.Log
 import android.widget.Toast
+import com.bdpsolutions.highfive.constants.MediaTypes
 
 class MediaUploadService : Service() {
     private var serviceLooper: Looper? = null
@@ -18,8 +19,16 @@ class MediaUploadService : Service() {
             // Normally we would do some work here, like download a file.
             // For our sample, we just sleep for 5 seconds.
             try {
-                Log.d("Service", "Service started3")
                 Thread.sleep(5000)
+                val type = msg.data.getString("media_type")
+                val path = msg.data.getString("media_file")
+
+                if (type == MediaTypes.IMAGE) {
+                    Log.d("SERVICE", "You want to upload the following image path: $path")
+                } else if (type == MediaTypes.VIDEO) {
+                    Log.d("SERVICE", "You want to upload the following video path: $path")
+                }
+
             } catch (e: InterruptedException) {
                 // Restore interrupt status.
                 Thread.currentThread().interrupt()
@@ -38,7 +47,6 @@ class MediaUploadService : Service() {
         // background priority so CPU-intensive work will not disrupt our UI.
         HandlerThread("ServiceStartArguments", THREAD_PRIORITY_BACKGROUND).apply {
             start()
-            Log.d("Service", "Service started2")
 
             // Get the HandlerThread's Looper and use it for our Handler
             serviceLooper = looper
@@ -52,8 +60,10 @@ class MediaUploadService : Service() {
 
         // For each start request, send a message to start a job and deliver the
         // start ID so we know which request we're stopping when we finish the job
+
         serviceHandler?.obtainMessage()?.also { msg ->
             msg.arg1 = startId
+            msg.data = intent.extras
             serviceHandler?.sendMessage(msg)
         }
 

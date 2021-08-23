@@ -66,7 +66,7 @@ class ImageFragment : Fragment() {
 
         binding?.recyclerView?.adapter = adapter
 
-        viewModel.registerFetchFromGallery(requireActivity())
+        viewModel.registerFetchFromGallery(this)
         viewModel.registerServiceReceiver(requireActivity())
         viewModel.registerFetchFromCamera(this)
         viewModel.registerPermission(this, permissionCallBack)

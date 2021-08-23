@@ -58,25 +58,25 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
     private var cameraResultLauncher: ActivityResultLauncher<Intent>? = null
     private var permissionResultLauncher: ActivityResultLauncher<String>? = null
 
-    fun registerFetchFromGallery(activity: FragmentActivity) {
-        galleryResultLauncher = activity.registerForActivityResult(
+    fun registerFetchFromGallery(fragment: Fragment) {
+        galleryResultLauncher = fragment.registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result:ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val selectedImage: Uri = result.data?.data!!
-                if (activity.contentResolver != null) {
-                    val cursor: Cursor? = activity.contentResolver.query(selectedImage, null, null, null, null)
+                if (fragment.requireActivity().contentResolver != null) {
+                    val cursor: Cursor? = fragment.requireActivity().contentResolver.query(selectedImage, null, null, null, null)
                     if (cursor != null) {
                         cursor.moveToFirst()
                         val idx: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
                         val path = cursor.getString(idx)
                         cursor.close()
 
-                        val uploadFileIntent = Intent(activity, MediaUploadService::class.java)
+                        val uploadFileIntent = Intent(fragment.requireActivity(), MediaUploadService::class.java)
                         uploadFileIntent.putExtra("media_file", path)
                         uploadFileIntent.putExtra("media_type", MediaTypes.IMAGE)
 
-                        activity.startService(uploadFileIntent)
+                        fragment.requireActivity().startService(uploadFileIntent)
                     }
                 }
             }
@@ -88,12 +88,11 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
             .registerReceiver(bReceiver, IntentFilter("image_result"));
     }
 
-    fun registerFetchFromCamera(activity: ImageFragment) {
-        cameraResultLauncher = activity.registerForActivityResult(
+    fun registerFetchFromCamera(fragment: Fragment) {
+        cameraResultLauncher = fragment.registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result:ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                activity.showLoader()
                 ConcurrencyExecutor.execute {
                     val selectedImage: Bitmap = if(Build.VERSION.SDK_INT < 28) {
                         MediaStore.Images.Media.getBitmap(
@@ -104,7 +103,7 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
                         val source = ImageDecoder.createSource(ContextHolder.appContext!!.contentResolver, ImageURL.url!!)
                         ImageDecoder.decodeBitmap(source)
                     }
-                    val outputDir: File = activity.requireContext().cacheDir
+                    val outputDir: File = fragment.requireContext().cacheDir
                     val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
                     val date = Calendar.getInstance().time
 
@@ -123,9 +122,12 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
                     fos.flush()
                     fos.close()
 
-                    repo.storeImage(outputFile) {
-                        activity.refresh()
-                    }
+                    val uploadFileIntent = Intent(fragment.requireActivity(), MediaUploadService::class.java)
+                    uploadFileIntent.putExtra("media_file", outputFile.absolutePath)
+                    uploadFileIntent.putExtra("media_type", MediaTypes.IMAGE)
+
+                    fragment.requireActivity().startService(uploadFileIntent)
+
                 }
             }
         }
