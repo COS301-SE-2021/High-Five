@@ -4,11 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
 using Org.OpenAPITools.Models;
-using src.AnalysisTools.VideoDecoder;
 
 namespace src.Subsystems.Test
 {
-    [Authorize(Policy = "Admin")]
+    [Authorize]
     public class TestController: TestApiController
     {
         public override IActionResult Echo(EchoRequest echoRequest)

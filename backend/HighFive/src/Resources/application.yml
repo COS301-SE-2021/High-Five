@@ -429,8 +429,34 @@ paths:
   #==========================================================
   #     USER SUBSYSTEM PATHING
   #==========================================================
-  
-  
+
+  /users/getAllUsers:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Get All Users use case
+      operationId: Get All Users
+      responses:
+        "200":
+          description: All users are returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllUsersResponse'
+
+  /users/deleteMedia:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Delete Media use case
+      operationId: Delete Media
+      responses:
+        "200":
+          description: A user's media is purged
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
 
 
   #==========================================================
@@ -699,6 +725,26 @@ components:
         url:
           type: string
 
+    #==========================================================
+    #     USER COMPONENTS
+    #==========================================================
+
+    getAllUsersResponse:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/user'
+    
+    user:
+      type: object
+      properties:
+        displayName:
+          type: string
+        email:
+          type: string
+    
     #==========================================================
     #     GENERIC COMPONENTS
     #==========================================================
