@@ -33,7 +33,7 @@ export class Configuration {
    * @returns the selected content-type or <code>undefined</code> if no selection could be made.
    */
   public selectHeaderContentType(contentTypes: string[]): string | undefined {
-    if (contentTypes.length == 0) {
+    if (contentTypes.length === 0) {
       return undefined;
     }
 
@@ -53,7 +53,7 @@ export class Configuration {
    * @returns the selected content-type or <code>undefined</code> if no selection could be made.
    */
   public selectHeaderAccept(accepts: string[]): string | undefined {
-    if (accepts.length == 0) {
+    if (accepts.length === 0) {
       return undefined;
     }
 
