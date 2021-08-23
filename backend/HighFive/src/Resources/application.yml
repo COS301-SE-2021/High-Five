@@ -9,6 +9,7 @@ tags:
   - name: "MediaStorage"
   - name: "Test"
   - name: "Pipelines"
+  - name: "Analysis"
 
   #==========================================================
   #     PATHS
@@ -164,7 +165,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
-  
+
+  /media/getAnalyzedImages:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Get Analyzed Images use case
+      operationId: GetAnalyzedImages
+      responses:
+        "200":
+          description: All previously analyzed images are returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAnalyzedImagesResponse'
+
+  /media/getAnalyzedVideos:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Get Analyzed Videos use case
+      operationId: GetAnalyzedVideos
+      responses:
+        "200":
+          description: All previously analyzed videos are returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAnalyzedVideosResponse'
   #==========================================================
   #     PIPELINES SUBSYSTEM PATHING
   #==========================================================
@@ -202,7 +230,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getPipelinesResponse'
-                
+
   /pipelines/getPipelineIds:
     post:
       tags:
@@ -314,6 +342,31 @@ paths:
                   type: string
 
   #==========================================================
+  #     ANALYSIS SUBSYSTEM PATHING
+  #==========================================================
+
+  /analysis/analyzeMedia:
+    post:
+      tags:
+        - "Analysis"
+      description: Endpoint for Analyze Media use case
+      operationId: AnalyzeMedia
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/analyzeMediaRequest'
+      responses:
+        "200":
+          description: A url of the analyzed media is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/analyzeMediaResponse'
+
+
+  #==========================================================
   #     SCHEMAS
   #==========================================================
 components:
@@ -345,7 +398,7 @@ components:
         file:
           type: string
           format: binary
-          
+
     storeVideoResponse:
       type: object
       properties:
@@ -414,7 +467,6 @@ components:
           type: string
         thumbnail:
           type: string
-          format: byte
 
     deleteVideoRequest:
       type: object
@@ -429,6 +481,55 @@ components:
         id:
           type: string
           description: unique id assossciated with a certain image stored on the blob storage
+          
+    getAnalyzedImagesResponse:
+      type: object
+      properties:
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/analyzedImageMetaData'
+
+    getAnalyzedVideosResponse:
+      type: object
+      properties:
+        videos:
+          type: array
+          items:
+            $ref: '#/components/schemas/analyzedVideoMetaData'
+
+    analyzedImageMetaData:
+      type: object
+      properties:
+        id:
+          type: string
+        dateAnalyzed:
+          type: string
+          format: date-time
+          description: The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Zring
+        url:
+          type: string
+        imageId:
+          type: string
+        pipelineId:
+          type: string
+
+    analyzedVideoMetaData:
+      type: object
+      properties:
+        id:
+          type: string
+        dateAnalyzed:
+          type: string
+          format: date-time
+          description: The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Zring
+        url:
+          type: string
+        videoId:
+          type: string
+        pipelineId:
+          type: string
+        
 
     #==========================================================
     #     PIPELINES COMPONENTS
@@ -504,7 +605,7 @@ components:
       properties:
         pipelineId:
           type: string
-          
+
     getPipelineIdsResponse:
       type: object
       properties:
@@ -518,6 +619,27 @@ components:
       properties:
         pipelineId:
           type: string
+
+    #==========================================================
+    #     ANALYSIS COMPONENTS
+    #==========================================================
+
+    analyzeMediaRequest:
+      type: object
+      properties:
+        mediaId:
+          type: string
+        pipelineId:
+          type: string
+        mediaType:
+          type: string
+          description: This string can only be "image" or "video"
+
+    analyzeMediaResponse:
+      type: object
+      properties:
+        url:
+          type: string      
 
     #==========================================================
     #     GENERIC COMPONENTS

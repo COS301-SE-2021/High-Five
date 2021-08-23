@@ -1,7 +1,3 @@
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,7 +8,9 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using src.AnalysisTools.VideoDecoder;
 using src.Storage;
+using src.Subsystems.Analysis;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
 
@@ -69,11 +67,15 @@ namespace src
                 options.MultipartBodyLengthLimit = int.MaxValue;
             });
             
-            // Dependency Injections
+            // Singletons
             services.Add(new ServiceDescriptor(typeof(IConfiguration), Configuration));
+            services.Add(new ServiceDescriptor(typeof(IAnalysisModels), new AnalysisModels()));
+            // Dependency Injections
             services.AddScoped<IStorageManager, StorageManager>();
             services.AddScoped<IMediaStorageService, MediaStorageService>();
             services.AddScoped<IPipelineService, PipelineService>();
+            services.AddScoped<IAnalysisService, AnalysisService>();
+            services.AddScoped<IVideoDecoder, VideoDecoder>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

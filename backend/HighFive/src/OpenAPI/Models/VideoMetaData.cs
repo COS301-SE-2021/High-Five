@@ -55,7 +55,7 @@ namespace Org.OpenAPITools.Models
         /// Gets or Sets Thumbnail
         /// </summary>
         [DataMember(Name="thumbnail", EmitDefaultValue=false)]
-        public byte[] Thumbnail { get; set; }
+        public string Thumbnail { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
