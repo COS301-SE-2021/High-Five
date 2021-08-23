@@ -1,10 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Pipeline} from '../../models/pipeline';
 import {LoadingController, Platform, PopoverController, ToastController} from '@ionic/angular';
-import {PipelinesService} from '../../apis/pipelines.service';
-import {DeletePipelineRequest} from '../../models/deletePipelineRequest';
-import {RemoveToolsRequest} from '../../models/removeToolsRequest';
 import {AddItemComponent} from '../add-item/add-item.component';
+import {PipelineService} from '../../services/pipeline/pipeline.service';
 
 @Component({
   selector: 'app-pipeline',
@@ -13,12 +11,9 @@ import {AddItemComponent} from '../add-item/add-item.component';
 })
 export class PipelineComponent implements OnInit {
   @Input() pipeline: Pipeline;
-  @Input() availableTools: string[];
-  @Output() deletePipeline: EventEmitter<string> = new EventEmitter<string>(); // Will send the id of the pipeline
-  @Output() removeTool: EventEmitter<Pipeline> = new EventEmitter<Pipeline>(); // Will send through a new pipeline object
-  constructor(private platform: Platform, private pipelinesService: PipelinesService,
-              private loadingController: LoadingController, private toastController: ToastController,
-              private popoverController: PopoverController) {
+
+  constructor(private platform: Platform, private loadingController: LoadingController, private toastController: ToastController,
+              private popoverController: PopoverController, private pipelineService: PipelineService) {
   }
 
   ngOnInit() {
@@ -31,59 +26,25 @@ export class PipelineComponent implements OnInit {
     });
   }
 
+
+  /**
+   * Will remove a tool from the current pipeline, by sending a request using the injected pieplineService
+   *
+   * @param tool a string representing a tool which should be removed from the pipeline
+   */
   public async onRemoveTool(tool: string) {
-    if (this.pipeline.tools.length === 1) {
-      await this.onDeletePipeline();
-    } else {
-      const removeToolRequest: RemoveToolsRequest = {
-        pipelineId: this.pipeline.id,
-        tools: [tool]
-      };
-      try {
-        this.pipeline.tools = this.pipeline.tools.filter(t => t !== tool); // Optimistic update
-        this.pipelinesService.removeTools(removeToolRequest).subscribe(response => {
-          /**
-           * If the request to the backend fails, re add the tool to the pipeline on frontend, 'undo-ing' the optimistic
-           * update
-           */
-          if (!response.success) {
-            this.pipeline.tools.push(tool);
-            /**
-             * Toast to indicatet that the tool could not successfully be removed
-             */
-            this.toastController.create({
-              message: 'Removal of tool from pipeline failed, request to backend failed ',
-              duration: 2000
-            }).then(t => {
-              t.present();
-            });
-          } else {
-            this.removeTool.emit(this.pipeline);
-          }
-        });
-      } catch (e) {
-        const toast = await this.toastController.create({
-          message: 'Removal of tool from pipeline failed',
-          duration: 2000
-        });
-        await toast.present();
-      }
-    }
+    await this.pipelineService.removeTool(this.pipeline.id, [tool]);
 
   }
 
+  /**
+   * Will send a request to add tools to the pipeline using the injected pipelineService
+   *
+   * @param tools, an array of strings representing the tools which must be added to the pipeline
+   */
   public async onAddTool(tools: string[]) {
-    this.pipeline.tools = this.pipeline.tools.concat(tools);
-    this.pipelinesService.addTools({
-      pipelineId: this.pipeline.id,
-      tools: this.pipeline.tools
-    }).subscribe(
-      () => {
-        this.platform.ready().then(() => {
-          this.updateToolColours();
-        });
-      }
-    );
+    await this.pipelineService.addTool(this.pipeline.id, tools);
+
   }
 
   /**
@@ -91,39 +52,7 @@ export class PipelineComponent implements OnInit {
    * case the analytics page
    */
   public async onDeletePipeline() {
-    /**
-     * Display a loading animation
-     */
-    const loading = await this.loadingController.create({
-      spinner: 'dots',
-      animated: true,
-    });
-    await loading.present();
-
-    const deletePipelineRequest: DeletePipelineRequest = {
-      pipelineId: this.pipeline.id
-    };
-    try {
-      this.pipelinesService.deletePipeline(deletePipelineRequest).subscribe(() => {
-        /**
-         * Resolve the loading animation once a response has been received from the backend
-         */
-        loading.dismiss();
-        /**
-         * Emit the event to indicate that the pipeline should be removed, optimistic updates aren't used here
-         * since a disappearing pipeline that reappears shortly again if the request fails, will provide for an
-         * unwanted user experience
-         */
-        this.deletePipeline.emit(this.pipeline.id);
-      });
-    } catch (e) {
-      const toast = await this.toastController.create({
-        message: 'Deletion of pipeline failed, please contact the developers',
-        duration: 2000
-      });
-      await loading.dismiss();
-      await toast.present();
-    }
+    await this.pipelineService.removePipeline(this.pipeline.id);
   }
 
   public async presentAddToolPopover(ev: any) {
@@ -139,14 +68,27 @@ export class PipelineComponent implements OnInit {
        * frontend (backend validation also exists)
        */
       componentProps: {
-        availableItems: this.availableTools.filter(tool => !this.pipeline.tools.includes(tool)),
-        title: "Add Tool"
+        availableItems: this.pipelineService.tools.filter(tool => !this.pipeline.tools.includes(tool)),
+        title: 'Add Tool'
       }
     });
     await addToolPopover.present();
     await addToolPopover.onDidDismiss().then(
       data => {
-        this.onAddTool(data.data.items);
+        if (data.data !== undefined) {
+          if (data.data.items !== undefined) {
+            this.loadingController.create({
+              spinner: 'dots',
+              animated: true,
+              message: 'Adding tools'
+            }).then((e: HTMLIonLoadingElement) => {
+              e.present();
+              this.onAddTool(data.data.items);
+              e.dismiss();
+            });
+
+          }
+        }
       }
     );
   }
@@ -159,8 +101,9 @@ export class PipelineComponent implements OnInit {
    */
   private updateToolColours() {
     Array.from(document.getElementsByClassName(this.pipeline.id + '-tool-chip') as HTMLCollectionOf<HTMLElement>).forEach(value => {
+      //SonarCloud sees this as a security threat. As it only affects colours, it can ignore this.  
       value.style.borderColor = '#' + ('000000' +
-        Math.floor(0x1000000 * Math.random()).toString(16)).slice(-6);
+        Math.floor(0x1000000 * Math.random()).toString(16)).slice(-6); //NOSONAR
     });
   }
 }
