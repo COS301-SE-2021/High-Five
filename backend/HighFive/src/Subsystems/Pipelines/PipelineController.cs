@@ -1,5 +1,4 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +12,13 @@ namespace src.Subsystems.Pipelines
     {
         private readonly IPipelineService _pipelineService;
         private bool _baseContainerSet;
-        
+
         public PipelineController(IPipelineService pipelineService)
         {
             _pipelineService = pipelineService;
             _baseContainerSet = false;
         }
-        
+
         public override IActionResult AddTools(AddToolsRequest addToolsRequest)
         {
             if (!_baseContainerSet)
@@ -111,19 +110,17 @@ namespace src.Subsystems.Pipelines
             {
                 return StatusCode(200, response);
             }
-            
+
             response.Success = false;
             response.Message = "Removal of tools from pipeline failed";
             return StatusCode(400, response);
         }
-        
+
         private void ConfigureStorageManager()
         {
             var tokenString = HttpContext.GetTokenAsync("access_token").Result;
             if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
             {
-                _pipelineService.SetBaseContainer("demo2"); // This line of code is for contingency's sake, to not break code still working on the old Storage system.
-                //TODO: Remove above code when front-end is compatible with new storage structure.
                 return;
             }
             var handler = new JwtSecurityTokenHandler();

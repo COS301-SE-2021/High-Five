@@ -2,11 +2,14 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {VideostorePage} from './videostore.page';
 import {IonicModule} from '@ionic/angular';
-import {MediaStorageService} from "../../apis/mediaStorage.service";
-import {BehaviorSubject} from "rxjs";
-import {distinctUntilChanged} from "rxjs/operators";
+import {MediaStorageService} from '../../apis/mediaStorage.service';
+import {BehaviorSubject} from 'rxjs';
+import {distinctUntilChanged} from 'rxjs/operators';
+import {AnalysisService} from '../../apis/analysis.service';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
-const mockMediaStorageService = jasmine.createSpyObj('MediaStorageService', ['deleteImage', 'deleteVideo', 'getAllImages', 'getAllVideos', 'storeImageForm', 'storeVideoForm']);
+const mockMediaStorageService = jasmine.createSpyObj('MediaStorageService',
+  ['deleteImage', 'deleteVideo', 'getAllImages', 'getAllVideos', 'storeImageForm', 'storeVideoForm']);
 mockMediaStorageService.getAllVideos.and.callFake(
   (func) => func([{
     name: 'testVideoName',
@@ -40,14 +43,12 @@ describe('VideostorePage', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [VideostorePage],
-        imports: [IonicModule.forRoot()],
-        providers: [{provide: MediaStorageService, useValue: mockMediaStorageService}]
+        imports: [IonicModule.forRoot(), HttpClientTestingModule],
+        providers: [MediaStorageService, AnalysisService]
       }).compileComponents();
 
       fixture = TestBed.createComponent(VideostorePage);
       component = fixture.componentInstance;
-      component.videos = [];
-      component.images = [];
       fixture.detectChanges();
     }));
   };

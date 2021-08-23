@@ -22,10 +22,9 @@
             android:id="@+id/video_id"/>
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/video_thumbnail"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:contentDescription="TODO"
 
             app:srcCompat="@mipmap/logo1_2round" />
 
