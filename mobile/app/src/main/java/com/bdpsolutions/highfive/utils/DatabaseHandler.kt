@@ -11,10 +11,10 @@ object DatabaseHandler {
     private lateinit var database: AppDatabase
     private var isMade = false
 
-    fun getDatabase(ctx: Context): AppDatabase {
+    fun getDatabase(ctx: Context?): AppDatabase {
         if (!isMade) {
             database = Room.databaseBuilder(
-                ctx,
+                ctx!!,
                 AppDatabase::class.java, "app-database"
             ).build()
             isMade = true

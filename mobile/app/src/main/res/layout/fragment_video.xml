@@ -11,6 +11,45 @@
         android:layout_height="match_parent"
         android:layout_margin="16dp">
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_from_vidlibrary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:visibility="invisible"
+            android:clickable="true"
+            app:tint="@color/white"
+            android:src="@drawable/ic_videogallery"
+            app:layout_constraintBottom_toTopOf="@+id/add_from_recorder"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:focusable="true" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_from_recorder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            app:tint="@color/white"
+            android:src="@drawable/ic_videocam"
+            app:layout_constraintBottom_toTopOf="@+id/upload_video"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:focusable="true" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/upload_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_add"
+            app:backgroundTint="@color/purple_500"
+            app:layout_constraintBottom_toBottomOf="@+id/video_holder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/white"
+            tools:ignore="SpeakableTextPresentCheck" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/video_holder"
             android:layout_width="match_parent"
@@ -18,11 +57,13 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/video_progress"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

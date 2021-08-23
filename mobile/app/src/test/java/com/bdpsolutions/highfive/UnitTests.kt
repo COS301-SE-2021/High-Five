@@ -1,7 +1,10 @@
 package com.bdpsolutions.highfive
 
+import com.bdpsolutions.highfive.utils.JWTDecoderTest
 import com.bdpsolutions.highfive.utils.RetrofitDeserializersTest
+import com.bdpsolutions.highfive.utils.factories.AuthConverterFactoryKtTest
 import com.bdpsolutions.highfive.utils.factories.JsonElementConverterFactoryKtTest
+import com.bdpsolutions.highfive.utils.factories.ViewModelProviderFactoryTest
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 
@@ -10,7 +13,9 @@ import org.junit.runners.Suite
 @RunWith(Suite::class)
 @Suite.SuiteClasses(
     RetrofitDeserializersTest::class,
-    JsonElementConverterFactoryKtTest::class
+    JsonElementConverterFactoryKtTest::class,
+    AuthConverterFactoryKtTest::class,
+    ViewModelProviderFactoryTest::class,
+    JWTDecoderTest::class,
 )
-class UnitTests {
-}
+class UnitTests
