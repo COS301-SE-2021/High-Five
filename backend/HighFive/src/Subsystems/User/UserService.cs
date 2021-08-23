@@ -1,4 +1,5 @@
-﻿using src.Storage;
+﻿using System;
+using src.Storage;
 
 namespace src.Subsystems.User
 {
@@ -11,9 +12,5 @@ namespace src.Subsystems.User
             _storageManager = storageManager;
         }
         
-        public bool IsAdmin()
-        {
-            return false;
-        }
     }
 }

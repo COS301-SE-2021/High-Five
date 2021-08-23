@@ -10,6 +10,7 @@ tags:
   - name: "Test"
   - name: "Pipelines"
   - name: "Analysis"
+  - name: "User"
 
   #==========================================================
   #     PATHS
@@ -424,6 +425,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/analyzedVideoMetaData'
+
+  #==========================================================
+  #     USER SUBSYSTEM PATHING
+  #==========================================================
+  
+  
 
 
   #==========================================================

@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using src.AnalysisTools.VideoDecoder;
 using src.Storage;
+using src.Subsystems.Admin;
 using src.Subsystems.Analysis;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
@@ -44,6 +48,7 @@ namespace src
             // Dependency Injections
             services.AddScoped<IStorageManager, StorageManager>();
             services.AddScoped<IVideoDecoder, VideoDecoder>();
+            services.AddScoped<IAdminValidator, AdminValidator>();
             services.AddScoped<IMediaStorageService, MediaStorageService>();
             services.AddScoped<IPipelineService, PipelineService>();
             services.AddScoped<IAnalysisService, AnalysisService>();
@@ -71,11 +76,26 @@ namespace src
                         },
                         OnTokenValidated = async ctx =>
                         {
-                            
+                            var adminValidator = ctx.HttpContext.RequestServices.GetRequiredService<IAdminValidator>();
+                            var userId = ((JwtSecurityToken)ctx.SecurityToken).Subject;
+                            if (adminValidator.IsAdmin(userId))
+                            {
+                                var claims = new List<Claim>
+                                {
+                                    new Claim("Admin", "true")
+                                };
+                                var appIdentity = new ClaimsIdentity(claims);
+                                ctx.Principal.AddIdentity(appIdentity);
+                            }
                         }
                     };
                 });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
+            });
+            
             services.Configure<KestrelServerOptions>(options =>
             {
                 options.Limits.MaxRequestBodySize = int.MaxValue;

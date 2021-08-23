@@ -8,7 +8,7 @@ using src.AnalysisTools.VideoDecoder;
 
 namespace src.Subsystems.Test
 {
-    [Authorize]
+    [Authorize(Policy = "Admin")]
     public class TestController: TestApiController
     {
         public override IActionResult Echo(EchoRequest echoRequest)
