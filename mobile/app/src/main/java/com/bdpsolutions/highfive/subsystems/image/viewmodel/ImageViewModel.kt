@@ -24,12 +24,18 @@ import java.util.*
 import android.graphics.Bitmap.CompressFormat
 import android.graphics.ImageDecoder
 import android.os.Build
+import com.bdpsolutions.highfive.constants.MediaTypes
+import com.bdpsolutions.highfive.services.mediaupload.MediaUploadService
 import com.bdpsolutions.highfive.subsystems.image.ImageFragment
 
 import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
 import com.bdpsolutions.highfive.utils.ContextHolder
 import com.bdpsolutions.highfive.utils.ImageURL
 import java.io.*
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
+import androidx.fragment.app.FragmentActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 
 class ImageViewModel private constructor(private val repo: ImageRepository): ViewModel() {
@@ -37,6 +43,12 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
     val imageResult: LiveData<ImageResult> = _imageResult
 
     private var cacheValidUntil: Int = 0
+
+    private val bReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            //put here whaterver you want your activity to do with the intent received
+        }
+    }
 
     fun fetchImageData() {
         repo.fetchImages(_imageResult)
@@ -46,27 +58,34 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
     private var cameraResultLauncher: ActivityResultLauncher<Intent>? = null
     private var permissionResultLauncher: ActivityResultLauncher<String>? = null
 
-    fun registerFetchFromGallery(activity: ImageFragment) {
+    fun registerFetchFromGallery(activity: FragmentActivity) {
         galleryResultLauncher = activity.registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result:ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                activity.showLoader()
                 val selectedImage: Uri = result.data?.data!!
-                if (activity.requireActivity().contentResolver != null) {
-                    val cursor: Cursor? = activity.requireActivity().contentResolver.query(selectedImage, null, null, null, null)
+                if (activity.contentResolver != null) {
+                    val cursor: Cursor? = activity.contentResolver.query(selectedImage, null, null, null, null)
                     if (cursor != null) {
                         cursor.moveToFirst()
                         val idx: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
                         val path = cursor.getString(idx)
                         cursor.close()
-                        repo.storeImage(File(path)) {
-                            activity.refresh()
-                        }
+
+                        val uploadFileIntent = Intent(activity, MediaUploadService::class.java)
+                        uploadFileIntent.putExtra("media_file", path)
+                        uploadFileIntent.putExtra("media_type", MediaTypes.IMAGE)
+
+                        activity.startService(uploadFileIntent)
                     }
                 }
             }
         }
+    }
+
+    fun registerServiceReceiver(activity: FragmentActivity) {
+        LocalBroadcastManager.getInstance(activity)
+            .registerReceiver(bReceiver, IntentFilter("image_result"));
     }
 
     fun registerFetchFromCamera(activity: ImageFragment) {

@@ -60,7 +60,8 @@ class VideoFragment: Fragment() {
 
         binding?.videoHolder?.adapter = adapter
 
-        videoViewModel.registerFetchVideo(this)
+        videoViewModel.registerFetchVideo(requireActivity())
+        videoViewModel.registerServiceReceiver(requireActivity())
         videoViewModel.registerPermission(this, permissionCallBack)
 
         videoViewModel.videoResult.observe(viewLifecycleOwner, Observer {

@@ -4,6 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.*
 import android.os.Process.THREAD_PRIORITY_BACKGROUND
+import android.util.Log
 import android.widget.Toast
 
 class MediaUploadService : Service() {
@@ -17,6 +18,7 @@ class MediaUploadService : Service() {
             // Normally we would do some work here, like download a file.
             // For our sample, we just sleep for 5 seconds.
             try {
+                Log.d("Service", "Service started3")
                 Thread.sleep(5000)
             } catch (e: InterruptedException) {
                 // Restore interrupt status.
@@ -36,6 +38,7 @@ class MediaUploadService : Service() {
         // background priority so CPU-intensive work will not disrupt our UI.
         HandlerThread("ServiceStartArguments", THREAD_PRIORITY_BACKGROUND).apply {
             start()
+            Log.d("Service", "Service started2")
 
             // Get the HandlerThread's Looper and use it for our Handler
             serviceLooper = looper
@@ -44,6 +47,7 @@ class MediaUploadService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        Log.d("Service", "Service started1")
         Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show()
 
         // For each start request, send a message to start a job and deliver the
