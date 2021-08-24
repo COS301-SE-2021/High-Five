@@ -141,7 +141,7 @@ namespace src.Storage
             return sb.ToString();
         }
 
-        public Task<bool> SetBaseContainer(string container)
+        public async Task<bool> SetBaseContainer(string container)
         {
             /*
              *      Description:
@@ -156,7 +156,7 @@ namespace src.Storage
              */
             _baseContainer = container;
             
-            return new Task<bool>(null);
+            return true;
         }
 
         public bool IsContainerSet()
