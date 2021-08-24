@@ -20,5 +20,6 @@ namespace src.Storage
         public bool IsContainerSet();
         public string GetCurrentContainer();
         public void StoreUserInfo(string id, string displayName, string email);
+        public Task<List<User>> GetAllUsers();
     }
 }

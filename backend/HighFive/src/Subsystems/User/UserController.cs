@@ -36,7 +36,7 @@ namespace src.Subsystems.User
         public override IActionResult GetAllUsers()
         {
             var response = _userService.GetAllUsers();
-            throw new System.NotImplementedException();
+            return StatusCode(200, response);
         }
 
         [Authorize(Policy = "Admin")]

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Org.OpenAPITools.Models;
 
 namespace src.Storage
 {
@@ -235,6 +236,41 @@ namespace src.Storage
                 str += Alphanumeric.ElementAt(a);
             }
             return str;
+        }
+
+        public async Task<List<User>> GetAllUsers()
+        {
+            var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
+            BlobContinuationToken continuationToken = null;
+            var responseList = new List<User>();
+
+            do
+            {
+                var response = await cloudBlobClient.ListContainersSegmentedAsync(continuationToken);
+                continuationToken = response.ContinuationToken;
+                var containers = response.Results;
+                foreach (var container in containers)
+                {
+                    if (container.Name.Equals("$logs") || container.Name.Equals("demo2") ||
+                        container.Name.Contains("container") || container.Name.Equals("public")) continue;
+                    var userInfoBlob = container.GetBlockBlobReference("user_info.txt");
+                    if (!await userInfoBlob.ExistsAsync())
+                    {
+                        continue;
+                    }
+                    var userInfoFile = new BlobFile(userInfoBlob);
+                    var userInfoArray = userInfoFile.ToText().Result.Split("\n");
+                    var user = new User
+                    {
+                        Id = userInfoArray[0],
+                        DisplayName = userInfoArray[1],
+                        Email = userInfoArray[2]
+                    };
+                    responseList.Add(user);
+                }
+            } while (continuationToken != null);
+            
+            return responseList;
         }
 
     }

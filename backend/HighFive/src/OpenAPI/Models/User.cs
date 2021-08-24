@@ -39,6 +39,12 @@ namespace Org.OpenAPITools.Models
         public string Email { get; set; }
 
         /// <summary>
+        /// Gets or Sets Id
+        /// </summary>
+        [DataMember(Name="id", EmitDefaultValue=false)]
+        public string Id { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -48,6 +54,7 @@ namespace Org.OpenAPITools.Models
             sb.Append("class User {\n");
             sb.Append("  DisplayName: ").Append(DisplayName).Append("\n");
             sb.Append("  Email: ").Append(Email).Append("\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -93,6 +100,11 @@ namespace Org.OpenAPITools.Models
                     Email == other.Email ||
                     Email != null &&
                     Email.Equals(other.Email)
+                ) && 
+                (
+                    Id == other.Id ||
+                    Id != null &&
+                    Id.Equals(other.Id)
                 );
         }
 
@@ -110,6 +122,8 @@ namespace Org.OpenAPITools.Models
                     hashCode = hashCode * 59 + DisplayName.GetHashCode();
                     if (Email != null)
                     hashCode = hashCode * 59 + Email.GetHashCode();
+                    if (Id != null)
+                    hashCode = hashCode * 59 + Id.GetHashCode();
                 return hashCode;
             }
         }
