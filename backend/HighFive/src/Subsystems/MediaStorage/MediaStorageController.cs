@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -30,20 +31,13 @@ namespace src.Subsystems.MediaStorage
             {
                 ConfigureStorageManager();
             }
-
-            try
+            
+            var resultList = _mediaStorageService.GetAllImages();
+            var result = new GetAllImagesResponse
             {
-                var resultList = _mediaStorageService.GetAllImages();
-                var result = new GetAllImagesResponse
-                {
-                    Images = resultList
-                };
-                return StatusCode(200, result);
-            }
-            catch (Exception)
-            {
-                return StatusCode(200, new List<ImageMetaData>());
-            }
+                Images = resultList
+            };
+            return StatusCode(200, result);
         }
 
         public override IActionResult GetAllVideos()
@@ -52,20 +46,12 @@ namespace src.Subsystems.MediaStorage
             {
                 ConfigureStorageManager();
             }
-
-            try
+            var resultList = _mediaStorageService.GetAllVideos();
+            var result = new GetAllVideosResponse
             {
-                var resultList = _mediaStorageService.GetAllVideos();
-                var result = new GetAllVideosResponse
-                {
-                    Videos = resultList
-                };
-                return StatusCode(200, result);
-            }
-            catch (Exception)
-            {
-                return StatusCode(200, new List<VideoMetaData>());
-            }
+                Videos = resultList
+            };
+            return StatusCode(200, result);
         }
 
         public override IActionResult GetAnalyzedImages()
@@ -74,20 +60,14 @@ namespace src.Subsystems.MediaStorage
             {
                 ConfigureStorageManager();
             }
+            
+            var resultList = _mediaStorageService.GetAnalyzedImages()?.Images;
+            var result = new GetAnalyzedImagesResponse
+            {
+                Images = resultList
+            };
+            return StatusCode(200, result);
 
-            try
-            {
-                var resultList = _mediaStorageService.GetAnalyzedImages()?.Images;
-                var result = new GetAnalyzedImagesResponse
-                {
-                    Images = resultList
-                };
-                return StatusCode(200, result);
-            }
-            catch (Exception)
-            {
-                return StatusCode(200, new List<AnalyzedImageMetaData>());
-            }
         }
 
         public override IActionResult GetAnalyzedVideos()
@@ -96,20 +76,12 @@ namespace src.Subsystems.MediaStorage
             {
                 ConfigureStorageManager();
             }
-
-            try
+            var resultList = _mediaStorageService.GetAnalyzedVideos().Videos;
+            var result = new GetAnalyzedVideosResponse
             {
-                var resultList = _mediaStorageService.GetAnalyzedVideos().Videos;
-                var result = new GetAnalyzedVideosResponse
-                {
-                    Videos = resultList
-                };
-                return StatusCode(200, result);
-            }
-            catch (Exception)
-            {
-                return StatusCode(200, new List<AnalyzedVideoMetaData>());
-            }
+                Videos = resultList
+            };
+            return StatusCode(200, result);
         }
 
          public override async Task<IActionResult> StoreImage(IFormFile file)
@@ -223,7 +195,14 @@ namespace src.Subsystems.MediaStorage
             }
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
-            _mediaStorageService.SetBaseContainer(jsonToken.Subject);
+            var alreadyExisted = _mediaStorageService.SetBaseContainer(jsonToken.Subject);
+            if (!alreadyExisted)
+            {
+                var id = jsonToken.Subject;
+                var displayName = jsonToken.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
+                var email = jsonToken.Claims.FirstOrDefault(x => x.Type == "emails")?.Value;
+                _mediaStorageService.StoreUserInfo(id,displayName,email);
+            }
             _baseContainerSet = true;
         }
 

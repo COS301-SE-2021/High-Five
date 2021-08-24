@@ -160,7 +160,7 @@ namespace src.Storage
             return sb.ToString();
         }
 
-        public bool SetBaseContainer(string container)
+        public async Task<bool> SetBaseContainer(string container)
         {
             /*
              *      Description:
@@ -189,7 +189,7 @@ namespace src.Storage
             
             /*the following code will create a new container for the user and will be called when a new user first
                 tries to access the cloud storage. */
-            _cloudBlobContainer.CreateAsync(); //TODO: this not being called with Async may cause problems later.
+            await _cloudBlobContainer.CreateAsync();
             return false;
         }
 
@@ -210,6 +210,13 @@ namespace src.Storage
              */
             
             return _baseContainer;
+        }
+
+        public void StoreUserInfo(string id, string displayName, string email)
+        {
+            var userInfoString = id + "\n" + displayName + "\n" + email;
+            var userInfoFile = CreateNewFile("user_info.txt", "").Result;
+            userInfoFile.UploadText(userInfoString);
         }
 
         public string RandomString()

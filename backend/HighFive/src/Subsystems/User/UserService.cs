@@ -52,8 +52,9 @@ namespace src.Subsystems.User
             throw new NotImplementedException();
         }
 
-        public void UpgradeToAdmin(UserRequest request)
+        public bool UpgradeToAdmin(UserRequest request)
         {
+            var response = false;
             var oldContainer = _storageManager.GetCurrentContainer();
             _storageManager.SetBaseContainer("public");
             var adminsFile = _storageManager.GetFile("admins.txt", "").Result;
@@ -71,10 +72,12 @@ namespace src.Subsystems.User
             }
             if (adminsArray.IndexOf(request.Id) == -1)
             {
+                response = true;
                 adminListString += "\n" +request.Id;
             }
 
             adminsFile.UploadText(adminListString);
+            return response;
         }
     }
 }

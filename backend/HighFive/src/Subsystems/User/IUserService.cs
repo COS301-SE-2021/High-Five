@@ -7,6 +7,6 @@ namespace src.Subsystems.User
         public GetAllUsersResponse GetAllUsers();
         public void DeleteMedia(UserRequest request);
         public void DeleteUser(UserRequest request);
-        public void UpgradeToAdmin(UserRequest request);
+        public bool UpgradeToAdmin(UserRequest request);
     }
 }

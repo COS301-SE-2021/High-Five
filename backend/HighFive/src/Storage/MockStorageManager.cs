@@ -140,7 +140,7 @@ namespace src.Storage
             return sb.ToString();
         }
 
-        public bool SetBaseContainer(string container)
+        public Task<bool> SetBaseContainer(string container)
         {
             /*
              *      Description:
@@ -155,7 +155,7 @@ namespace src.Storage
              */
             _baseContainer = container;
             
-            return true;
+            return new Task<bool>(null);
         }
 
         public bool IsContainerSet()
@@ -174,6 +174,11 @@ namespace src.Storage
              * Returns the current baseContainer. Or in the case of this mock, simply an empty string.
              */
             return _baseContainer;
+        }
+
+        public void StoreUserInfo(string id, string displayName, string email)
+        {
+            
         }
 
         public string RandomString()
