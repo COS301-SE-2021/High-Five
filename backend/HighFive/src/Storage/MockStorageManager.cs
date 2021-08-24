@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Org.OpenAPITools.Models;
 
 namespace src.Storage
 {
@@ -140,7 +141,7 @@ namespace src.Storage
             return sb.ToString();
         }
 
-        public bool SetBaseContainer(string container)
+        public async Task<bool> SetBaseContainer(string container)
         {
             /*
              *      Description:
@@ -174,6 +175,21 @@ namespace src.Storage
              * Returns the current baseContainer. Or in the case of this mock, simply an empty string.
              */
             return _baseContainer;
+        }
+
+        public void StoreUserInfo(string id, string displayName, string email)
+        {
+            
+        }
+
+        public Task<List<User>> GetAllUsers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAllFilesInContainer(string container)
+        {
+            return null;
         }
 
         public string RandomString()

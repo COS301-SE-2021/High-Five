@@ -239,7 +239,7 @@ namespace src.Subsystems.MediaStorage
             return true;
         }
 
-        public void SetBaseContainer(string containerName)
+        public bool SetBaseContainer(string containerName)
         {
             /*
              *      Description:
@@ -253,8 +253,10 @@ namespace src.Subsystems.MediaStorage
              */
             if (!_storageManager.IsContainerSet())
             {
-                _storageManager.SetBaseContainer(containerName);
+                return _storageManager.SetBaseContainer(containerName).Result;
             }
+
+            return true;
         }
 
         public IBlobFile GetImage(string imageId)
@@ -379,6 +381,11 @@ namespace src.Subsystems.MediaStorage
             await videoFile.Delete();
             await thumbnail.Delete();
             return true;
+        }
+
+        public void StoreUserInfo(string id, string displayName, string email)
+        {
+            _storageManager.StoreUserInfo(id, displayName, email);
         }
     }
 }
