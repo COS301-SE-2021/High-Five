@@ -108,7 +108,6 @@ export class NavbarPage implements OnInit {
       translucent: true,
       backdropDismiss: true,
       event: ev,
-      cssClass: 'accountComponentPopover',
       showBackdrop: false,
       componentProps: {
         onClick: () => {
@@ -116,6 +115,7 @@ export class NavbarPage implements OnInit {
         }
       }
     });
-    await popoverComponent.present();
+    popoverComponent.style.cssText= `--background: rgba(0,0,0,0.7); --max-width: 10vw;`; // Needed, since ionic custom css class doesnt work
+    return await popoverComponent.present();
   }
 }

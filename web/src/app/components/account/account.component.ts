@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {MsalService} from '@azure/msal-angular';
 import {Router} from '@angular/router';
 
@@ -9,8 +9,11 @@ import {Router} from '@angular/router';
 })
 export class AccountComponent implements OnInit {
 
+
   constructor(private msalService: MsalService, private router: Router) {
   }
+
+  @Input() onClick = () => {};
 
   ngOnInit() {
   }

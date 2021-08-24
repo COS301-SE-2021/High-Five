@@ -27,13 +27,21 @@
   }
 }
 #accountCol{
-  float: right;
-
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-left: 2%;
 }
 
 #accountAvatar{
-  float: right;
   background: rgba(0,0,0,0.2);
-  height: 38%;
-  width: 38%;
+  height: 5vh;
+  width: 5vh;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
+
+
+#accountIcon{}
+

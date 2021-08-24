@@ -22,7 +22,7 @@
         <ion-col size="2">
           <img alt="" src="assets/logos/logo2_2.svg" class="logo ion-text-left">
         </ion-col>
-        <ion-col size="8">
+        <ion-col size="9">
           <div class="ion-text-left desktop-navbar">
             <ion-button (click)="navigateTo('navbar/landing', 'homeNav')" #homeNav fill="clear" [class]="homeLink[0]">
               Home
@@ -38,7 +38,7 @@
         </ion-col>
         <ion-col size="1" id="accountCol">
           <ion-avatar id="accountAvatar" (click)="displayAccountPopover($event)">
-            <lord-icon
+            <lord-icon id="accountIcon"
               src="https://cdn.lordicon.com/dxjqoygy.json"
               trigger="hover"
               colors="primary:#00000,secondary:#259ad0"
