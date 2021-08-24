@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.WebSockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +16,33 @@ namespace src.Websockets
             {
                 using var webSocket = await 
                     HttpContext.WebSockets.AcceptWebSocketAsync();
-                await Echo(HttpContext, webSocket);
+                await SendMessage("Connect", "You have connected to the socket server.", "info", webSocket);
+                while (webSocket.State == WebSocketState.Open)
+                {
+                    if (AnalyzeImage)
+                    {
+                        AnalyzeImage = false;
+                        await SendMessage("Image Analyzed", "Your image has successfully been analyzed.", "success", webSocket);
+                    }
+
+                    if (AnalyzeVideo)
+                    {
+                        AnalyzeVideo = false;
+                        await SendMessage("Video Analyzed", "Your video has successfully been analyzed.", "success", webSocket);
+                    }
+
+                    if (UploadImage)
+                    {
+                        UploadImage = false;
+                        await SendMessage("Image Upload", "Your image has successfully been uploaded.", "success", webSocket);
+                    }
+
+                    if (UploadVideo)
+                    {
+                        UploadVideo = false;
+                        await SendMessage("Video Upload", "Your video has successfully been uploaded.", "success", webSocket);
+                    }
+                }
             }
             else
             {
@@ -23,7 +50,7 @@ namespace src.Websockets
             }
         }
         
-        private async Task Echo(HttpContext context, WebSocket webSocket)
+        /*private async Task Echo(HttpContext context, WebSocket webSocket)
         {
             var buffer = new byte[1024 * 4];
             var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
@@ -34,6 +61,13 @@ namespace src.Websockets
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             }
             await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+        }*/
+
+        private async Task SendMessage(string title, string message, string type, WebSocket webSocket)
+        {
+            var payload = "{\"title\": \"" + title + "\",\"message\": \"" + message + "\",\"type\": \"" + type + "\"}";
+            var buffer = Encoding.Default.GetBytes(payload);
+            await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
         }
         
     }
