@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
 using Org.OpenAPITools.Models;
+using src.Websockets;
 
 namespace src.Subsystems.Analysis
 {
@@ -40,6 +41,7 @@ namespace src.Subsystems.Analysis
             }
             
             var response = _analysisService.AnalyzeImage(analyzeImageRequest).Result;
+            WebsocketControllerAbstract.AnalyzeImage = true;
             if (response == null)
             {
                 return StatusCode(400, null);
@@ -56,6 +58,7 @@ namespace src.Subsystems.Analysis
             }
             
             var response = _analysisService.AnalyzeVideo(analyzeVideoRequest).Result;
+            WebsocketControllerAbstract.AnalyzeVideo = true;
             if (response == null)
             {
                 return StatusCode(400, null);
