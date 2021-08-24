@@ -4,7 +4,7 @@
     margin-bottom: 1vh;
   }
   .logo{
-    max-height: 4vh;
+    max-height: 5vh;
   }
   ion-toolbar{
     --background : rgb(255,255,255);
@@ -25,4 +25,15 @@
     position: fixed;
     bottom: 0;
   }
+}
+#accountCol{
+  float: right;
+
+}
+
+#accountAvatar{
+  float: right;
+  background: rgba(0,0,0,0.2);
+  height: 38%;
+  width: 38%;
 }

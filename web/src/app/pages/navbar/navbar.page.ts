@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {MsalService} from '@azure/msal-angular';
 import {PopoverController} from '@ionic/angular';
 import {NavbarMediaPopoverComponent} from '../../components/navbar-media-popover/navbar-media-popover.component';
+import {AccountComponent} from '../../components/account/account.component';
 
 @Component({
   selector: 'app-navbar',
@@ -99,4 +100,22 @@ export class NavbarPage implements OnInit {
 
   }
 
+
+  async displayAccountPopover(ev: any) {
+    const popoverComponent = await this.popoverController.create({
+      component: AccountComponent,
+      animated: false,
+      translucent: true,
+      backdropDismiss: true,
+      event: ev,
+      cssClass: 'accountComponentPopover',
+      showBackdrop: false,
+      componentProps: {
+        onClick: () => {
+          popoverComponent.dismiss();
+        }
+      }
+    });
+    await popoverComponent.present();
+  }
 }
