@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
 using Org.OpenAPITools.Models;
@@ -16,9 +17,10 @@ namespace src.Subsystems.User
         }
 
         [Authorize(Policy = "Admin")]
-        public override IActionResult DeleteMedia(UserRequest userRequest)
+        public override async Task<IActionResult> DeleteMedia(UserRequest userRequest)
         {
-            throw new System.NotImplementedException();
+            await _userService.DeleteMedia(userRequest);
+            return StatusCode(200, new EmptyObject {Success = true});
         }
 
         public override IActionResult DeleteOwnMedia()

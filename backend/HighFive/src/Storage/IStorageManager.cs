@@ -21,5 +21,6 @@ namespace src.Storage
         public string GetCurrentContainer();
         public void StoreUserInfo(string id, string displayName, string email);
         public Task<List<User>> GetAllUsers();
+        public Task DeleteAllFilesInContainer(string container);
     }
 }

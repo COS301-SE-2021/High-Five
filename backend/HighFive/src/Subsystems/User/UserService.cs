@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Accord.Math;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Org.OpenAPITools.Models;
@@ -24,9 +26,9 @@ namespace src.Subsystems.User
             return new GetAllUsersResponse{Users = list};
         }
 
-        public void DeleteMedia(UserRequest request)
+        public async Task DeleteMedia(UserRequest request)
         {
-            throw new NotImplementedException();
+            await _storageManager.DeleteAllFilesInContainer(request.Id);
         }
 
         public void DeleteUser(UserRequest request)

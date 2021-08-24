@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +25,7 @@ namespace Org.OpenAPITools.Controllers
     /// </summary>
     [ApiController]
     public abstract class UserApiController : ControllerBase
-    { 
+    {
         /// <summary>
         /// 
         /// </summary>
@@ -36,7 +37,7 @@ namespace Org.OpenAPITools.Controllers
         [Consumes("application/json")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
-        public abstract IActionResult DeleteMedia([FromBody]UserRequest userRequest);
+        public abstract Task<IActionResult> DeleteMedia([FromBody] UserRequest userRequest);
 
         /// <summary>
         /// 

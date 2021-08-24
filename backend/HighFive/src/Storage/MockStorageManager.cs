@@ -187,6 +187,11 @@ namespace src.Storage
             throw new NotImplementedException();
         }
 
+        public Task DeleteAllFilesInContainer(string container)
+        {
+            return null;
+        }
+
         public string RandomString()
         {
             /*

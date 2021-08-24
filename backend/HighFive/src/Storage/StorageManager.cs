@@ -273,5 +273,20 @@ namespace src.Storage
             return responseList;
         }
 
+        public async Task DeleteAllFilesInContainer(string container)
+        {
+            var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
+            var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
+            var blobResultSegment = await cloudBlobContainer.ListBlobsSegmentedAsync("", true, BlobListingDetails.All,
+                int.MaxValue, null, null, null);
+            var allFiles = blobResultSegment.Results;
+            foreach (var blob in allFiles)
+            {
+                var blobFile = (CloudBlockBlob) blob;
+                if (blobFile.Name.Equals("user_info.txt")) continue;
+                await blobFile.DeleteIfExistsAsync();
+            }
+        }
+
     }
 }
