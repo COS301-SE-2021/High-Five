@@ -6,7 +6,6 @@ namespace src.Subsystems.User
     {
         public GetAllUsersResponse GetAllUsers();
         public void DeleteMedia(UserRequest request);
-        public void DeleteOwnMedia();
         public void DeleteUser(UserRequest request);
         public void UpgradeToAdmin(UserRequest request);
     }

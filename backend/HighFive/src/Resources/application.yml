@@ -803,6 +803,8 @@ components:
           type: string
         email:
           type: string
+        id:
+          type: string
     
     userRequest:
       type: object
