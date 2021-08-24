@@ -10,6 +10,7 @@ tags:
   - name: "Test"
   - name: "Pipelines"
   - name: "Analysis"
+  - name: "User"
 
   #==========================================================
   #     PATHS
@@ -425,6 +426,97 @@ paths:
               schema:
                 $ref: '#/components/schemas/analyzedVideoMetaData'
 
+  #==========================================================
+  #     USER SUBSYSTEM PATHING
+  #==========================================================
+
+  /users/getAllUsers:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Get All Users use case
+      operationId: Get All Users
+      responses:
+        "200":
+          description: All users are returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllUsersResponse'
+
+  /users/deleteMedia:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Delete Media use case
+      operationId: DeleteMedia
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userRequest'
+      responses:
+        "200":
+          description: Called by an admin to delete all the media of another user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /users/deleteOwnMedia:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Delete Own Media use case
+      operationId: DeleteOwnMedia
+      responses:
+        "200":
+          description: Called by a user to delete all of their own media
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /users/deleteUser:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Delete User use case
+      operationId: DeleteUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userRequest'
+      responses:
+        "200":
+          description: Called by an admin to delete a user and all associated media from High-Five system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /users/upgradeToAdmin:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Upgrade To Admin use case
+      operationId: UpgradeToAdmin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userRequest'
+      responses:
+        "200":
+          description: Called by an admin to upgrade a normal use to an administrator
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
 
   #==========================================================
   #     SCHEMAS
@@ -691,6 +783,35 @@ components:
       properties:
         url:
           type: string
+
+    #==========================================================
+    #     USER COMPONENTS
+    #==========================================================
+
+    getAllUsersResponse:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/user'
+
+    user:
+      type: object
+      properties:
+        displayName:
+          type: string
+        email:
+          type: string
+        id:
+          type: string
+
+    userRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: user id
 
     #==========================================================
     #     GENERIC COMPONENTS

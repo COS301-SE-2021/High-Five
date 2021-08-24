@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Org.OpenAPITools.Models;
 
 namespace src.Storage
 {
@@ -160,7 +161,7 @@ namespace src.Storage
             return sb.ToString();
         }
 
-        public bool SetBaseContainer(string container)
+        public async Task<bool> SetBaseContainer(string container)
         {
             /*
              *      Description:
@@ -189,7 +190,7 @@ namespace src.Storage
             
             /*the following code will create a new container for the user and will be called when a new user first
                 tries to access the cloud storage. */
-            _cloudBlobContainer.CreateAsync(); //TODO: this not being called with Async may cause problems later.
+            await _cloudBlobContainer.CreateAsync();
             return false;
         }
 
@@ -212,6 +213,13 @@ namespace src.Storage
             return _baseContainer;
         }
 
+        public void StoreUserInfo(string id, string displayName, string email)
+        {
+            var userInfoString = id + "\n" + displayName + "\n" + email;
+            var userInfoFile = CreateNewFile("user_info.txt", "").Result;
+            userInfoFile.UploadText(userInfoString);
+        }
+
         public string RandomString()
         {
             /*
@@ -228,6 +236,56 @@ namespace src.Storage
                 str += Alphanumeric.ElementAt(a);
             }
             return str;
+        }
+
+        public async Task<List<User>> GetAllUsers()
+        {
+            var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
+            BlobContinuationToken continuationToken = null;
+            var responseList = new List<User>();
+
+            do
+            {
+                var response = await cloudBlobClient.ListContainersSegmentedAsync(continuationToken);
+                continuationToken = response.ContinuationToken;
+                var containers = response.Results;
+                foreach (var container in containers)
+                {
+                    if (container.Name.Equals("$logs") || container.Name.Equals("demo2") ||
+                        container.Name.Contains("container") || container.Name.Equals("public")) continue;
+                    var userInfoBlob = container.GetBlockBlobReference("user_info.txt");
+                    if (!await userInfoBlob.ExistsAsync())
+                    {
+                        continue;
+                    }
+                    var userInfoFile = new BlobFile(userInfoBlob);
+                    var userInfoArray = userInfoFile.ToText().Result.Split("\n");
+                    var user = new User
+                    {
+                        Id = userInfoArray[0],
+                        DisplayName = userInfoArray[1],
+                        Email = userInfoArray[2]
+                    };
+                    responseList.Add(user);
+                }
+            } while (continuationToken != null);
+            
+            return responseList;
+        }
+
+        public async Task DeleteAllFilesInContainer(string container)
+        {
+            var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
+            var cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
+            var blobResultSegment = await cloudBlobContainer.ListBlobsSegmentedAsync("", true, BlobListingDetails.All,
+                int.MaxValue, null, null, null);
+            var allFiles = blobResultSegment.Results;
+            foreach (var blob in allFiles)
+            {
+                var blobFile = (CloudBlockBlob) blob;
+                if (blobFile.Name.Equals("user_info.txt")) continue;
+                await blobFile.DeleteIfExistsAsync();
+            }
         }
 
     }
