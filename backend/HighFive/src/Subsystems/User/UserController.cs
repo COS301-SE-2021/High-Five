@@ -42,7 +42,8 @@ namespace src.Subsystems.User
         [Authorize(Policy = "Admin")]
         public override IActionResult UpgradeToAdmin(UserRequest userRequest)
         {
-            throw new System.NotImplementedException();
+            _userService.UpgradeToAdmin(userRequest);
+            return StatusCode(200, new EmptyObject() {Success = true});
         }
     }
 }

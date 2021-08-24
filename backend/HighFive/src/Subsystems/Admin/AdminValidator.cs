@@ -19,7 +19,7 @@ namespace src.Subsystems.Admin
             _storageManager.SetBaseContainer("public");
             var adminsFile = _storageManager.GetFile("admins.txt", "").Result;
             _storageManager.SetBaseContainer(oldContainer);
-            var adminsArray = adminsFile.ToText().Result.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+            var adminsArray = adminsFile.ToText().Result.Split("\n", StringSplitOptions.None);
             //the above line splits the text file's contents by newlines into an array
             
             return adminsArray.IndexOf(userId) != -1;
