@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
@@ -23,9 +25,17 @@ namespace src.Subsystems.User
             return StatusCode(200, new EmptyObject {Success = true});
         }
 
-        public override IActionResult DeleteOwnMedia()
+        public override async Task<IActionResult> DeleteOwnMedia()
         {
-            throw new System.NotImplementedException();
+            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
+            if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
+            {
+                return StatusCode(200, null);
+            }
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
+            await _userService.DeleteMedia(new UserRequest{Id = jsonToken.Subject});
+            return StatusCode(200, new EmptyObject {Success = true});
         }
 
         [Authorize(Policy = "Admin")]

@@ -48,7 +48,7 @@ namespace Org.OpenAPITools.Controllers
         [Route("/users/deleteOwnMedia")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
-        public abstract IActionResult DeleteOwnMedia();
+        public abstract Task<IActionResult> DeleteOwnMedia();
 
         /// <summary>
         /// 
