@@ -27,7 +27,6 @@ namespace src.Websockets
             AnalyzeImage = false;
             Close = false;
         }
-
         [HttpGet("/ws")]
         public abstract Task Get();
     }
