@@ -20,7 +20,7 @@ class MediaUploader(private var repositoryFactory: RepositoryFactory) {
         return this
     }
 
-    fun upload(path: String) {
-        uploader?.uploadFile(path)
+    fun upload(path: String, callback: () -> Unit) {
+        uploader?.uploadFile(path, callback)
     }
 }

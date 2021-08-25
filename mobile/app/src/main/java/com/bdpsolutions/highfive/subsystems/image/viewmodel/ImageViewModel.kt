@@ -74,6 +74,7 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
                         val uploadFileIntent = Intent(fragment.requireActivity(), MediaUploadService::class.java)
                         uploadFileIntent.putExtra("media_file", path)
                         uploadFileIntent.putExtra("media_type", MediaTypes.IMAGE)
+                        uploadFileIntent.putExtra("return", "images")
 
                         fragment.requireActivity().startService(uploadFileIntent)
                     }

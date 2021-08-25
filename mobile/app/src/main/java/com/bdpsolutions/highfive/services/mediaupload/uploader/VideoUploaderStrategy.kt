@@ -7,7 +7,8 @@ import java.io.File
 
 class VideoUploaderStrategy(repoFactory: RepositoryFactory) : IUploaderStrategy(repoFactory) {
 
-    override fun uploadFile(path: String) {
-        (repoFactory.createRepository(RepositoryTypes.VIDEO_REPOSITORY) as VideoDataRepository).storeVideo(File(path))
+    override fun uploadFile(path: String, callback: () -> Unit) {
+        (repoFactory.createRepository(RepositoryTypes.VIDEO_REPOSITORY) as VideoDataRepository)
+            .storeVideo(File(path), callback)
     }
 }

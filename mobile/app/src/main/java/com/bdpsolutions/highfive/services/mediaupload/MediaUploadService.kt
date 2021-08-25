@@ -8,6 +8,10 @@ import com.bdpsolutions.highfive.services.mediaupload.uploader.MediaUploader
 import com.bdpsolutions.highfive.utils.factories.RepositoryFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+
+
+
 
 @AndroidEntryPoint
 class MediaUploadService : Service() {
@@ -28,10 +32,17 @@ class MediaUploadService : Service() {
             // Normally we would do some work here, like download a file.
             // For our sample, we just sleep for 5 seconds.
             try {
+                Thread.sleep(5000L)
                 val type = msg.data.getString("media_type")
                 val path = msg.data.getString("media_file")
+                val returnMessage = msg.data.getString("return")
 
-                uploader.setMediaType(type!!).upload(path!!)
+                uploader.setMediaType(type!!).upload(path!!) {
+                    val intent = Intent(returnMessage)
+
+                    intent.putExtra("success", "Media uploaded")
+                    LocalBroadcastManager.getInstance(this@MediaUploadService).sendBroadcast(intent)
+                }
 
             } catch (e: InterruptedException) {
                 // Restore interrupt status.

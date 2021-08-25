@@ -60,6 +60,7 @@ class VideoViewModel private constructor(private val repo: VideoDataRepository) 
                         val uploadFileIntent = Intent(fragment.requireActivity(), MediaUploadService::class.java)
                         uploadFileIntent.putExtra("media_file", path)
                         uploadFileIntent.putExtra("media_type", MediaTypes.VIDEO)
+                        uploadFileIntent.putExtra("return", "videos")
 
                         fragment.requireActivity().startService(uploadFileIntent)
                     }

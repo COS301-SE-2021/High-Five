@@ -12,8 +12,7 @@ class ImageRepositoryImpl(source: ImageDataSource): ImageRepository(source) {
     }
 
     override fun storeImage(image: File, callback: (() -> Unit)?) {
-        Log.d("Image Upload", "Image is uploaded")
-        //source.loadImage(image, callback)
+        source.loadImage(image, callback)
     }
 
     companion object {
