@@ -1,10 +1,24 @@
 package com.bdpsolutions.highfive.services.mediaupload.uploader
 
-abstract class MediaUploader {
+import com.bdpsolutions.highfive.subsystems.image.model.ImageRepository
+import com.bdpsolutions.highfive.subsystems.video.model.repository.VideoDataRepository
+import com.bdpsolutions.highfive.utils.factories.RepositoryFactory
+import javax.inject.Inject
 
+class MediaUploader {
 
-    protected abstract fun getEndpoint()
-    protected abstract fun doUpload()
+    private var mediaType: String? = null
+    private var repository:
 
-    abstract fun upload()
+    @Inject
+    lateinit var repoFactory: RepositoryFactory
+
+    fun setMediaType(type: String) : MediaUploader {
+        mediaType = type
+        return this
+    }
+
+    fun upload() {
+
+    }
 }
