@@ -6,10 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.result.ActivityResult
@@ -23,15 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bdpsolutions.highfive.constants.MediaTypes
 import com.bdpsolutions.highfive.services.mediaupload.MediaUploadService
-import com.bdpsolutions.highfive.subsystems.video.fragment.VideoFragment
-import com.bdpsolutions.highfive.subsystems.video.model.VideoDataRepository
-import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
-import com.bdpsolutions.highfive.utils.ContextHolder
-import com.bdpsolutions.highfive.utils.ImageURL
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.text.SimpleDateFormat
+import com.bdpsolutions.highfive.subsystems.video.model.repository.VideoDataRepository
 import java.util.*
 
 class VideoViewModel private constructor(private val repo: VideoDataRepository) : ViewModel() {

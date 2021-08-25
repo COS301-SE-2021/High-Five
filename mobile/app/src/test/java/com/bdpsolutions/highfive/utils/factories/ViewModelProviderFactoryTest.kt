@@ -6,7 +6,7 @@ import com.bdpsolutions.highfive.subsystems.login.model.source.APILogin
 import com.bdpsolutions.highfive.subsystems.login.model.source.APIRefreshToken
 import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
 import com.bdpsolutions.highfive.subsystems.splash.viewmodel.SplashViewModel
-import com.bdpsolutions.highfive.subsystems.video.model.VideoDataRepository
+import com.bdpsolutions.highfive.subsystems.video.model.repository.VideoDataRepositoryImpl
 import com.bdpsolutions.highfive.subsystems.video.model.source.APIVideoDataSource
 import com.bdpsolutions.highfive.subsystems.video.viewmodel.VideoViewModel
 import com.bdpsolutions.highfive.constants.Exceptions.VIEWMODEL_PROVIDER_FACTORY as vmf
@@ -28,7 +28,7 @@ import org.powermock.modules.junit4.PowerMockRunner
     SplashViewModel.Companion::class,
     AuthenticationRepositoryImpl.Companion::class,
     APIVideoDataSource.Companion::class,
-    VideoDataRepository.Companion::class,
+    VideoDataRepositoryImpl.Companion::class,
     VideoViewModel.Companion::class
 )
 class ViewModelProviderFactoryTest {
@@ -87,8 +87,8 @@ class ViewModelProviderFactoryTest {
 
 
             //create mock VideoDataRepository
-            val repoMock = mock(VideoDataRepository::class.java)
-            val repoCompanionMock = mock(VideoDataRepository.Companion::class.java)
+            val repoMock = mock(VideoDataRepositoryImpl::class.java)
+            val repoCompanionMock = mock(VideoDataRepositoryImpl.Companion::class.java)
             `when`(repoCompanionMock.create(apiCompanionMock.create()))
                 .thenReturn(repoMock)
 
@@ -109,8 +109,8 @@ class ViewModelProviderFactoryTest {
 
 
             //Mock repository
-            PowerMockito.mockStatic(VideoDataRepository.Companion::class.java)
-            PowerMockito.whenNew(VideoDataRepository.Companion::class.java)
+            PowerMockito.mockStatic(VideoDataRepositoryImpl.Companion::class.java)
+            PowerMockito.whenNew(VideoDataRepositoryImpl.Companion::class.java)
                 .withNoArguments()
                 .thenReturn(repoCompanionMock)
 
