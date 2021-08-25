@@ -1,7 +1,14 @@
 package com.bdpsolutions.highfive.services.mediaupload.uploader
 
-class ImageUploaderStrategy : IUploaderStrategy {
+import com.bdpsolutions.highfive.constants.RepositoryTypes
+import com.bdpsolutions.highfive.subsystems.image.model.repository.ImageRepository
+import com.bdpsolutions.highfive.utils.factories.RepositoryFactory
+import java.io.File
+import javax.inject.Inject
+
+class ImageUploaderStrategy constructor(repoFactory: RepositoryFactory) : IUploaderStrategy(repoFactory) {
+
     override fun uploadFile(path: String) {
-        TODO("Not yet implemented")
+        (repoFactory.createRepository(RepositoryTypes.IMAGE_REPOSITORY) as ImageRepository).storeImage(File(path))
     }
 }

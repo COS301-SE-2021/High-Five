@@ -1,15 +1,14 @@
 package com.bdpsolutions.highfive.utils.factories
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.bdpsolutions.highfive.subsystems.image.model.ImageRepository
-import com.bdpsolutions.highfive.subsystems.image.model.source.APIImageDataSource
+import com.bdpsolutions.highfive.constants.RepositoryTypes
+import com.bdpsolutions.highfive.subsystems.image.model.repository.ImageRepository
 import com.bdpsolutions.highfive.subsystems.image.viewmodel.ImageViewModel
 import com.bdpsolutions.highfive.subsystems.login.model.AuthenticationRepositoryImpl
 import com.bdpsolutions.highfive.subsystems.login.model.source.APILogin
 import com.bdpsolutions.highfive.subsystems.login.model.source.APIRefreshToken
-import com.bdpsolutions.highfive.subsystems.video.model.repository.VideoDataRepositoryImpl
-import com.bdpsolutions.highfive.subsystems.video.model.source.APIVideoDataSource
 import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
 import com.bdpsolutions.highfive.subsystems.media.viewmodel.MediaViewModel
 import com.bdpsolutions.highfive.subsystems.splash.viewmodel.SplashViewModel
@@ -39,7 +38,7 @@ class ViewModelProviderFactory @Inject constructor(): ViewModelProvider.Factory 
             }
             modelClass.isAssignableFrom(VideoViewModel::class.java) -> {
                 return VideoViewModel.create(
-                    repoFactory.createRepository(VideoDataRepository::class.java)
+                    repoFactory.createRepository(RepositoryTypes.VIDEO_REPOSITORY) as VideoDataRepository
                 ) as T
             }
             modelClass.isAssignableFrom(SplashViewModel::class.java) -> {
@@ -52,12 +51,11 @@ class ViewModelProviderFactory @Inject constructor(): ViewModelProvider.Factory 
             modelClass.isAssignableFrom(MediaViewModel::class.java) -> {
                 return MediaViewModel.create() as T
             }
-            modelClass.isAssignableFrom(ImageViewModel::class.java) ->
+            modelClass.isAssignableFrom(ImageViewModel::class.java) -> {
                 return ImageViewModel.create(
-                    repo = ImageRepository.create(
-                        source = APIImageDataSource.create()
-                    )
+                    repo = repoFactory.createRepository(RepositoryTypes.IMAGE_REPOSITORY) as ImageRepository
                 ) as T
+            }
             else -> throw IllegalArgumentException(vmf.UNKNOWN_VIEWMODEL)
         }
     }

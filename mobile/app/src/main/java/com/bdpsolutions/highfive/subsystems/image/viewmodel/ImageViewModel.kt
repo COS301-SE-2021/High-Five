@@ -4,7 +4,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bdpsolutions.highfive.subsystems.image.model.ImageRepository
+import com.bdpsolutions.highfive.subsystems.image.model.repository.ImageRepository
 import android.provider.MediaStore
 
 import android.graphics.Bitmap
@@ -26,7 +26,6 @@ import android.graphics.ImageDecoder
 import android.os.Build
 import com.bdpsolutions.highfive.constants.MediaTypes
 import com.bdpsolutions.highfive.services.mediaupload.MediaUploadService
-import com.bdpsolutions.highfive.subsystems.image.ImageFragment
 
 import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
 import com.bdpsolutions.highfive.utils.ContextHolder

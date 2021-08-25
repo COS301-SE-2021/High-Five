@@ -1,5 +1,7 @@
 package com.bdpsolutions.highfive.services.mediaupload.uploader
 
-interface IUploaderStrategy {
-    fun uploadFile(path: String)
+import com.bdpsolutions.highfive.utils.factories.RepositoryFactory
+
+abstract class IUploaderStrategy constructor(protected val repoFactory: RepositoryFactory) {
+    abstract fun uploadFile(path: String)
 }

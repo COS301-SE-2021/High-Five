@@ -1,5 +1,7 @@
 package com.bdpsolutions.highfive.utils.factories
 
+import com.bdpsolutions.highfive.constants.RepositoryTypes
+
 interface RepositoryFactory {
-    fun <T> createRepository(classType: Class<T>) : T
+    fun createRepository(classType: RepositoryTypes) : Any
 }

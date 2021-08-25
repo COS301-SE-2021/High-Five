@@ -4,13 +4,22 @@ import android.app.Service
 import android.content.Intent
 import android.os.*
 import android.os.Process.THREAD_PRIORITY_BACKGROUND
-import android.util.Log
-import android.widget.Toast
-import com.bdpsolutions.highfive.constants.MediaTypes
+import com.bdpsolutions.highfive.services.mediaupload.uploader.MediaUploader
+import com.bdpsolutions.highfive.utils.factories.RepositoryFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MediaUploadService : Service() {
     private var serviceLooper: Looper? = null
     private var serviceHandler: ServiceHandler? = null
+
+    @Inject
+    lateinit var repositoryFactory: RepositoryFactory
+
+    private val uploader: MediaUploader by lazy {
+        MediaUploader(repositoryFactory)
+    }
 
     // Handler that receives messages from the thread
     private inner class ServiceHandler(looper: Looper) : Handler(looper) {
@@ -19,15 +28,10 @@ class MediaUploadService : Service() {
             // Normally we would do some work here, like download a file.
             // For our sample, we just sleep for 5 seconds.
             try {
-                Thread.sleep(5000)
                 val type = msg.data.getString("media_type")
                 val path = msg.data.getString("media_file")
 
-                if (type == MediaTypes.IMAGE) {
-                    Log.d("SERVICE", "You want to upload the following image path: $path")
-                } else if (type == MediaTypes.VIDEO) {
-                    Log.d("SERVICE", "You want to upload the following video path: $path")
-                }
+                uploader.setMediaType(type!!).upload(path!!)
 
             } catch (e: InterruptedException) {
                 // Restore interrupt status.
@@ -45,6 +49,7 @@ class MediaUploadService : Service() {
         // separate thread because the service normally runs in the process's
         // main thread, which we don't want to block.  We also make it
         // background priority so CPU-intensive work will not disrupt our UI.
+        super.onCreate()
         HandlerThread("ServiceStartArguments", THREAD_PRIORITY_BACKGROUND).apply {
             start()
 
@@ -55,9 +60,6 @@ class MediaUploadService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        Log.d("Service", "Service started1")
-        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show()
-
         // For each start request, send a message to start a job and deliver the
         // start ID so we know which request we're stopping when we finish the job
 
@@ -76,8 +78,9 @@ class MediaUploadService : Service() {
         return null
     }
 
+    //TODO: Send result back to main application
     override fun onDestroy() {
-        Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show()
+        super.onDestroy()
     }
 
 }

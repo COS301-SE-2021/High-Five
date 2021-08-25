@@ -1,27 +1,26 @@
 package com.bdpsolutions.highfive.services.mediaupload.uploader
 
+import android.content.Context
 import com.bdpsolutions.highfive.constants.MediaTypes
-import com.bdpsolutions.highfive.subsystems.image.model.ImageRepository
-import com.bdpsolutions.highfive.subsystems.video.model.repository.VideoDataRepository
 import com.bdpsolutions.highfive.utils.factories.RepositoryFactory
+import com.bdpsolutions.highfive.utils.factories.RepositoryFactoryProvider
+import dagger.hilt.EntryPoints
 import java.lang.Exception
-import javax.inject.Inject
 
-class MediaUploader {
+class MediaUploader(private var repositoryFactory: RepositoryFactory) {
 
-    private var mediaType: String? = null
     private var uploader: IUploaderStrategy? = null
 
     fun setMediaType(type: String) : MediaUploader {
         uploader = when(type) {
-            MediaTypes.IMAGE -> ImageUploaderStrategy()
-            MediaTypes.VIDEO -> VideoUploaderStrategy()
+            MediaTypes.IMAGE -> ImageUploaderStrategy(repositoryFactory)
+            MediaTypes.VIDEO -> VideoUploaderStrategy(repositoryFactory)
             else -> throw Exception("Unsupported media type: $type")
         }
         return this
     }
 
-    fun upload() {
-
+    fun upload(path: String) {
+        uploader?.uploadFile(path)
     }
 }
