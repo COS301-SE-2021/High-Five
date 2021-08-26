@@ -129,7 +129,7 @@ class APIImageDataSource private constructor(): ImageDataSource {
             } catch (e: Exception) {
                 resultObserver.onError(e)
             }
-        }, BackpressureStrategy.LATEST)
+        }, BackpressureStrategy.BUFFER)
         emitter.subscribe()
     }
 

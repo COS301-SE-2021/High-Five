@@ -65,9 +65,8 @@ class MediaUploadService : Service() {
 
                 progressObserver.setProgressCallback { progress ->
                     run {
-                        builder.setProgress(100, progress, false)
+                        builder.setProgress(100, progress, progress == 100)
                         notificationManager.notify(1, builder.build())
-                        Log.d("UPLOAD!!!", "$progress %")
                     }
                 }
 

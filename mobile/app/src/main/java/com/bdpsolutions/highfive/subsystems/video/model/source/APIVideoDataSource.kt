@@ -142,7 +142,7 @@ class APIVideoDataSource private constructor(): VideoDataSource {
             } catch (e: Exception) {
                 resultObserver.onError(e)
             }
-        }, BackpressureStrategy.LATEST)
+        }, BackpressureStrategy.BUFFER)
         emitter.subscribe()
     }
 
