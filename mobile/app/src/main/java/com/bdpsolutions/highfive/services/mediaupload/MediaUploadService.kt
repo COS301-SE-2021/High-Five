@@ -1,12 +1,17 @@
 package com.bdpsolutions.highfive.services.mediaupload
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.*
 import android.os.Process.THREAD_PRIORITY_BACKGROUND
-import android.util.Log
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.services.mediaupload.uploader.MediaUploader
 import com.bdpsolutions.highfive.utils.factories.RepositoryFactory
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,11 +25,26 @@ class MediaUploadService : Service() {
     private var serviceLooper: Looper? = null
     private var serviceHandler: ServiceHandler? = null
 
+    private val CHANNEL_ID = "channel1"
+
+    private var hasUploaded = false;
+
     @Inject
     lateinit var repositoryFactory: RepositoryFactory
 
     private val uploader: MediaUploader by lazy {
         MediaUploader(repositoryFactory)
+    }
+
+    private val builder = NotificationCompat.Builder(this@MediaUploadService, CHANNEL_ID).apply {
+        setContentTitle("Media Upload")
+        setContentText("Upload in progress")
+        setSmallIcon(R.mipmap.logo1_2)
+        priority = NotificationCompat.PRIORITY_DEFAULT
+    }
+
+    private val notificationManager: NotificationManagerCompat by lazy {
+        NotificationManagerCompat.from(this@MediaUploadService)
     }
 
     // Handler that receives messages from the thread
@@ -34,14 +54,24 @@ class MediaUploadService : Service() {
             // Normally we would do some work here, like download a file.
             // For our sample, we just sleep for 5 seconds.
             try {
+
                 val type = msg.data.getString("media_type")
                 val path = msg.data.getString("media_file")
                 val returnMessage = msg.data.getString("return")
 
-                val progressObserver = MediaObserver<Double>()
+                createNotificationChannel()
+
+                notificationManager.apply {
+                    builder.setProgress(100, 0, false)
+                    notify(1, builder.build())
+                }
+
+                val progressObserver = MediaObserver<Int>()
 
                 progressObserver.setProgressCallback { progress ->
-                    Log.d("ImageProgress", "${progress}%")
+                    hasUploaded = progress == 100
+                    builder.setProgress(100, progress, false)
+                    notificationManager.notify(1, builder.build())
                 }
 
                 progressObserver.setErrorCallback {
@@ -118,6 +148,30 @@ class MediaUploadService : Service() {
     //TODO: Send result back to main application
     override fun onDestroy() {
         super.onDestroy()
+        val resultText = if (hasUploaded) {
+            "Upload complete"
+        } else {
+            "Upload failed"
+        }
+        builder.setContentText(resultText)
+            .setProgress(0, 0, false)
+        notificationManager.notify(1, builder.build())
     }
 
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "channelName"
+            val descriptionText = "description"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 }

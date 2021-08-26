@@ -7,7 +7,7 @@ import io.reactivex.Observer
 
 abstract class IUploaderStrategy constructor(protected val repoFactory: RepositoryFactory) {
     abstract fun uploadFile(path: String,
-                            progressObserver: Observer<Double>,
+                            progressObserver: Observer<Int>,
                             resultObserver: Observer<Result<String>>
     )
 }

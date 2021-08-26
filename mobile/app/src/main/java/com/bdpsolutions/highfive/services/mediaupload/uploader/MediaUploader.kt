@@ -22,7 +22,7 @@ class MediaUploader(private var repositoryFactory: RepositoryFactory) {
     }
 
     fun upload(path: String,
-               progressObserver: Observer<Double>,
+               progressObserver: Observer<Int>,
                resultObserver: Observer<Result<String>>
     ) {
         uploader?.uploadFile(path, progressObserver, resultObserver)

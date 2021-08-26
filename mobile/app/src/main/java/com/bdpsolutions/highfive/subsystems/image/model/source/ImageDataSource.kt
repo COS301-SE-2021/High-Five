@@ -9,7 +9,7 @@ import java.io.File
 interface ImageDataSource {
     fun fetchAllImages(imageObservable: MutableLiveData<ImageResult>)
     fun loadImage(image: File,
-                  progressObserver: Observer<Double>,
+                  progressObserver: Observer<Int>,
                   resultObserver: Observer<Result<String>>
     )
 }

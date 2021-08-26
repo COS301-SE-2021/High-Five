@@ -13,7 +13,7 @@ abstract class ImageRepository constructor(protected val source : ImageDataSourc
     abstract fun fetchImages(imageObservable: MutableLiveData<ImageResult>)
 
     abstract fun storeImage(image: File,
-                            progressObserver: Observer<Double>,
+                            progressObserver: Observer<Int>,
                             resultObserver: Observer<Result<String>>
     )
 }

@@ -13,7 +13,7 @@ import javax.inject.Inject
 class ImageUploaderStrategy constructor(repoFactory: RepositoryFactory) : IUploaderStrategy(repoFactory) {
 
     override fun uploadFile(path: String,
-                            progressObserver: Observer<Double>,
+                            progressObserver: Observer<Int>,
                             resultObserver: Observer<Result<String>>
     ) {
         (repoFactory.createRepository(RepositoryTypes.IMAGE_REPOSITORY) as ImageRepository)

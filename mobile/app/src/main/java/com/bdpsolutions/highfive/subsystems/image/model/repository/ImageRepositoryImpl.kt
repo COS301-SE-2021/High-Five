@@ -16,7 +16,7 @@ class ImageRepositoryImpl(source: ImageDataSource): ImageRepository(source) {
     }
 
     override fun storeImage(image: File,
-                            progressObserver: Observer<Double>,
+                            progressObserver: Observer<Int>,
                             resultObserver: Observer<Result<String>>
     ) {
         source.loadImage(image, progressObserver, resultObserver)

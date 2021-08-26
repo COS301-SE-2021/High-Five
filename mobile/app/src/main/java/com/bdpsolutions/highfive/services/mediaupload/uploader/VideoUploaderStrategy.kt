@@ -12,7 +12,7 @@ import java.io.File
 class VideoUploaderStrategy(repoFactory: RepositoryFactory) : IUploaderStrategy(repoFactory) {
 
     override fun uploadFile(path: String,
-                            progressObserver: Observer<Double>,
+                            progressObserver: Observer<Int>,
                             resultObserver: Observer<Result<String>>
     ) {
         (repoFactory.createRepository(RepositoryTypes.VIDEO_REPOSITORY) as VideoDataRepository)

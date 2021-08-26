@@ -67,7 +67,7 @@ class APIImageDataSource private constructor(): ImageDataSource {
     }
 
     override fun loadImage(image: File,
-                           progressObserver: Observer<Double>,
+                           progressObserver: Observer<Int>,
                            resultObserver: Observer<Result<String>>
     ) {
         val emitter: Flowable<Double> = Flowable.create({
@@ -77,8 +77,11 @@ class APIImageDataSource private constructor(): ImageDataSource {
                     RequestBody.create(MediaType.parse("image/*"), image),
                     object : CountingRequestBody.Listener {
                         override fun onRequestProgress(bytesWritten: Long, contentLength: Long) {
-                            val progress = 1.0 * bytesWritten / contentLength
-                            progressObserver.onNext(progress)
+                            val progress = (1.0 * bytesWritten / contentLength).toInt()
+
+                            if (progress % 10 == 0) {
+                                progressObserver.onNext(progress)
+                            }
                         }
                     })
 
