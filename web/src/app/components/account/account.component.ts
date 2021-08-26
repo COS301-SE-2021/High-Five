@@ -1,6 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {MsalService} from '@azure/msal-angular';
-import {Router} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-account',
@@ -10,18 +8,11 @@ import {Router} from '@angular/router';
 export class AccountComponent implements OnInit {
 
 
-  constructor(private msalService: MsalService, private router: Router) {
+  constructor() {
   }
-
-  @Input() onClick = () => {};
 
   ngOnInit() {
   }
 
-  logout() {
-    this.msalService.logoutPopup();
-    this.router.navigate(['/welcome']).then(() => {
-      localStorage.clear();
-    });
-  }
+
 }

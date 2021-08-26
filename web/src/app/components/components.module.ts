@@ -24,12 +24,13 @@ import {LottieModule} from 'ngx-lottie';
 import {SwiperModule} from 'swiper/angular';
 import {MediaFilterComponent} from './media-filter/media-filter.component';
 import {AccountComponent} from './account/account.component';
+import {AccountPopoverComponent} from './account-popover/account-popover.component';
 
 @NgModule({
   declarations: [VideostoreCardComponent, VideostreamCardComponent, AboutPage1Component, AboutPage2Component,
     AboutPage3Component, AddItemComponent, AddPipelineComponent, AnalyzedImageCardComponent,
     AnalyzedVideostoreCardComponent, ImageCardComponent, MoreInfoComponent, NavbarMediaPopoverComponent,
-    PipelineComponent, RegisterCardComponent, WelcomeCardComponent, MediaFilterComponent, AccountComponent],
+    PipelineComponent, RegisterCardComponent, WelcomeCardComponent, MediaFilterComponent, AccountComponent, AccountPopoverComponent],
   imports: [
     CommonModule,
     IonicModule,
@@ -43,7 +44,7 @@ import {AccountComponent} from './account/account.component';
   exports: [VideostoreCardComponent, VideostreamCardComponent, AboutPage1Component, AboutPage2Component,
     AboutPage3Component, AddItemComponent, AddPipelineComponent, AnalyzedImageCardComponent,
     AnalyzedVideostoreCardComponent, ImageCardComponent, MoreInfoComponent, NavbarMediaPopoverComponent,
-    PipelineComponent, RegisterCardComponent, WelcomeCardComponent, MediaFilterComponent, AccountComponent]
+    PipelineComponent, RegisterCardComponent, WelcomeCardComponent, MediaFilterComponent, AccountComponent, AccountPopoverComponent]
 })
 export class CustomComponentsModule {
 }
