@@ -3,14 +3,9 @@ package com.bdpsolutions.highfive.utils.retrofit
 import androidx.annotation.NonNull
 import okhttp3.MediaType
 import okhttp3.RequestBody
-import okio.ForwardingSink
+import okio.*
 
-import okio.Okio
-
-import okio.BufferedSink
-import okio.Sink
 import java.io.IOException
-import okio.Buffer
 
 
 /**
@@ -34,8 +29,8 @@ class CountingRequestBody(private val delegate: RequestBody, private val listene
 
     @Throws(IOException::class)
     override fun writeTo(@NonNull sink: BufferedSink) {
-        val countingSink: CountingSink = CountingSink(sink)
-        val bufferedSink = Okio.buffer(countingSink)
+        val countingSink = CountingSink(sink)
+        val bufferedSink = countingSink.buffer()
         delegate.writeTo(bufferedSink)
         bufferedSink.flush()
     }

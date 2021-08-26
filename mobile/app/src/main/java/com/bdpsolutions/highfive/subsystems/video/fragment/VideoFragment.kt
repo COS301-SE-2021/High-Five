@@ -72,7 +72,7 @@ class VideoFragment: Fragment() {
         binding?.videoHolder?.adapter = adapter
 
         videoViewModel.registerFetchVideo(this)
-        videoViewModel.registerServiceReceiver(requireActivity())
+        videoViewModel.registerServiceReceiver(requireActivity(), bReceiver)
         videoViewModel.registerPermission(this, permissionCallBack)
 
         videoViewModel.videoResult.observe(viewLifecycleOwner, Observer {
@@ -150,10 +150,10 @@ class VideoFragment: Fragment() {
 
     private fun vidLibraryUploader(){
         videoViewModel.launchVideoChooser(
-            Intent(
-                Intent.ACTION_PICK,
-                MediaStore.Video.Media.INTERNAL_CONTENT_URI
-            )
+            Intent().apply {
+                action = Intent.ACTION_PICK
+                setDataAndType(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, "video/*")
+            }
         )
     }
 
@@ -180,7 +180,7 @@ class VideoFragment: Fragment() {
 
     override fun onResume() {
         super.onResume()
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(bReceiver, IntentFilter("videos"))
+        videoViewModel.registerServiceReceiver(requireActivity(), bReceiver)
     }
 
     override fun onPause() {

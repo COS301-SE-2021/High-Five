@@ -41,14 +41,6 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
     private val _imageResult = MutableLiveData<ImageResult>()
     val imageResult: LiveData<ImageResult> = _imageResult
 
-    private var cacheValidUntil: Int = 0
-
-    private val bReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            //put here whaterver you want your activity to do with the intent received
-        }
-    }
-
     fun fetchImageData() {
         repo.fetchImages(_imageResult)
     }
@@ -74,7 +66,7 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
                         val uploadFileIntent = Intent(fragment.requireActivity(), MediaUploadService::class.java)
                         uploadFileIntent.putExtra("media_file", path)
                         uploadFileIntent.putExtra("media_type", MediaTypes.IMAGE)
-                        uploadFileIntent.putExtra("return", "images")
+                        uploadFileIntent.putExtra("return", "image_result")
 
                         fragment.requireActivity().startService(uploadFileIntent)
                     }
@@ -83,9 +75,9 @@ class ImageViewModel private constructor(private val repo: ImageRepository): Vie
         }
     }
 
-    fun registerServiceReceiver(activity: FragmentActivity) {
+    fun registerServiceReceiver(activity: FragmentActivity, receiver: BroadcastReceiver) {
         LocalBroadcastManager.getInstance(activity)
-            .registerReceiver(bReceiver, IntentFilter("image_result"));
+            .registerReceiver(receiver, IntentFilter("image_result"));
     }
 
     fun registerFetchFromCamera(fragment: Fragment) {

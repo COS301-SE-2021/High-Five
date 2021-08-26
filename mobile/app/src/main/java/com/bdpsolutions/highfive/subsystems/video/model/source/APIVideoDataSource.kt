@@ -16,13 +16,17 @@ import com.bdpsolutions.highfive.utils.DatabaseHandler
 import com.bdpsolutions.highfive.utils.Result
 import com.bdpsolutions.highfive.utils.RetrofitDeserializers
 import com.bdpsolutions.highfive.utils.retrofit.CountingRequestBody
+import com.bdpsolutions.highfive.utils.retrofit.OkHttpConfiguration
 import com.google.gson.GsonBuilder
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observer
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,6 +34,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.lang.Exception
+import java.util.concurrent.TimeUnit
 
 /**
  * API implementation for the VideoDataSource. This class fetches data from the backend service.
@@ -46,6 +51,7 @@ class APIVideoDataSource private constructor(): VideoDataSource {
         // create Retrofit object and fetch data
         val retrofit = Retrofit.Builder()
             .baseUrl(Endpoints.BASE_URL)
+            .client(OkHttpConfiguration.configuration)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
@@ -87,7 +93,7 @@ class APIVideoDataSource private constructor(): VideoDataSource {
             try {
 
                 val requestFile: RequestBody = CountingRequestBody(
-                    RequestBody.create(MediaType.parse("video/*"), image),
+                    image.asRequestBody("video/*".toMediaTypeOrNull()),
                     object : CountingRequestBody.Listener {
                         override fun onRequestProgress(bytesWritten: Long, contentLength: Long) {
                             val progress = (100.0 * bytesWritten / contentLength).toInt()
@@ -105,6 +111,7 @@ class APIVideoDataSource private constructor(): VideoDataSource {
 
                 // create Retrofit object and fetch data
                 val retrofit = Retrofit.Builder()
+                    .client(OkHttpConfiguration.configuration)
                     .baseUrl(Endpoints.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build()

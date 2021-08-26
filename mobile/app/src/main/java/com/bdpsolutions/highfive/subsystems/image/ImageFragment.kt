@@ -76,7 +76,7 @@ class ImageFragment : Fragment() {
         binding?.recyclerView?.adapter = adapter
 
         viewModel.registerFetchFromGallery(this)
-        viewModel.registerServiceReceiver(requireActivity())
+        viewModel.registerServiceReceiver(requireActivity(), bReceiver)
         viewModel.registerFetchFromCamera(this)
         viewModel.registerPermission(this, permissionCallBack)
 
@@ -155,10 +155,10 @@ class ImageFragment : Fragment() {
 
     private fun galleryUploader(){
         viewModel.launchGalleryChooser(
-            Intent(
-                Intent.ACTION_PICK,
-                MediaStore.Images.Media.INTERNAL_CONTENT_URI
-            )
+            Intent().apply {
+                action = Intent.ACTION_PICK
+                setDataAndType(MediaStore.Images.Media.INTERNAL_CONTENT_URI, "image/*")
+            }
         )
     }
 
@@ -193,7 +193,7 @@ class ImageFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(bReceiver, IntentFilter("images"))
+        viewModel.registerServiceReceiver(requireActivity(), bReceiver)
     }
 
     override fun onPause() {

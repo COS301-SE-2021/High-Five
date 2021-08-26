@@ -16,7 +16,10 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 import com.bdpsolutions.highfive.utils.retrofit.CountingRequestBody
+import com.bdpsolutions.highfive.utils.retrofit.OkHttpConfiguration
 import io.reactivex.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
 
 import java.lang.Exception
 
@@ -33,6 +36,7 @@ class APIImageDataSource private constructor(): ImageDataSource {
         // create Retrofit object and fetch data
         val retrofit = Retrofit.Builder()
             .baseUrl(Endpoints.BASE_URL)
+            .client(OkHttpConfiguration.configuration)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
@@ -74,7 +78,7 @@ class APIImageDataSource private constructor(): ImageDataSource {
             try {
 
                 val requestFile: RequestBody = CountingRequestBody(
-                    RequestBody.create(MediaType.parse("image/*"), image),
+                    image.asRequestBody("image/*".toMediaTypeOrNull()),
                     object : CountingRequestBody.Listener {
                         override fun onRequestProgress(bytesWritten: Long, contentLength: Long) {
                             val progress = (1.0 * bytesWritten / contentLength).toInt()
@@ -93,6 +97,7 @@ class APIImageDataSource private constructor(): ImageDataSource {
                 // create Retrofit object and fetch data
                 val retrofit = Retrofit.Builder()
                     .baseUrl(Endpoints.BASE_URL)
+                    .client(OkHttpConfiguration.configuration)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build()
 
