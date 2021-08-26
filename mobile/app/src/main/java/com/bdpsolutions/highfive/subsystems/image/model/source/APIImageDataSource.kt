@@ -78,10 +78,7 @@ class APIImageDataSource private constructor(): ImageDataSource {
                     object : CountingRequestBody.Listener {
                         override fun onRequestProgress(bytesWritten: Long, contentLength: Long) {
                             val progress = (1.0 * bytesWritten / contentLength).toInt()
-
-                            if (progress % 10 == 0) {
-                                progressObserver.onNext(progress)
-                            }
+                            progressObserver.onNext(progress)
                         }
                     })
 
@@ -120,7 +117,7 @@ class APIImageDataSource private constructor(): ImageDataSource {
                             } else {
                                 Result.Error(Exception(response.message()))
                             }
-
+                            progressObserver.onComplete()
                             resultObserver.onNext(result)
                         }
 

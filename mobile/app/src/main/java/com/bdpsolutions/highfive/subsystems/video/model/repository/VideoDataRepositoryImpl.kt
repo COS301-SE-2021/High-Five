@@ -3,6 +3,8 @@ package com.bdpsolutions.highfive.subsystems.video.model.repository
 import androidx.lifecycle.MutableLiveData
 import com.bdpsolutions.highfive.subsystems.video.model.source.VideoDataSource
 import com.bdpsolutions.highfive.subsystems.video.viewmodel.VideoResult
+import com.bdpsolutions.highfive.utils.Result
+import io.reactivex.Observer
 import java.io.File
 
 /**
@@ -33,8 +35,11 @@ class VideoDataRepositoryImpl private constructor(source: VideoDataSource) : Vid
         source.fetchAllVideos(videoObservable)
     }
 
-    override fun storeVideo(image: File, callback: (() -> Unit)?) {
-        source.loadVideo(image, callback)
+    override fun storeVideo(image: File,
+                            progressObserver: Observer<Int>,
+                            resultObserver: Observer<Result<String>>
+    ) {
+        source.loadVideo(image, progressObserver, resultObserver)
     }
 
     companion object {

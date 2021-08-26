@@ -7,6 +7,7 @@ class MediaObserver <T>: Observer<T> {
 
     private lateinit var _progressCallback: (t: T) -> Unit
     private lateinit var _errorCallback: (e: Throwable) -> Unit
+    private var _completeCallback: (() -> Unit)? = null
 
     override fun onSubscribe(d: Disposable) {
     }
@@ -20,6 +21,7 @@ class MediaObserver <T>: Observer<T> {
     }
 
     override fun onComplete() {
+        _completeCallback?.let { it() }
     }
 
     fun setProgressCallback(callback: (t: T) -> Unit) {
@@ -30,4 +32,7 @@ class MediaObserver <T>: Observer<T> {
         _errorCallback = callback
     }
 
+    fun setCompleteCallback(callback: () -> Unit) {
+        _completeCallback = callback
+    }
 }

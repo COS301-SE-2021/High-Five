@@ -16,6 +16,6 @@ class VideoUploaderStrategy(repoFactory: RepositoryFactory) : IUploaderStrategy(
                             resultObserver: Observer<Result<String>>
     ) {
         (repoFactory.createRepository(RepositoryTypes.VIDEO_REPOSITORY) as VideoDataRepository)
-            .storeVideo(File(path))
+            .storeVideo(File(path), progressObserver, resultObserver)
     }
 }

@@ -1,15 +1,12 @@
 package com.bdpsolutions.highfive.services.mediaupload
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
-import android.content.Context
-import android.content.Intent
+import android.app.*
+import android.content.*
 import android.os.*
 import android.os.Process.THREAD_PRIORITY_BACKGROUND
+import android.util.Log
 import android.widget.Toast
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.services.mediaupload.uploader.MediaUploader
@@ -26,8 +23,6 @@ class MediaUploadService : Service() {
     private var serviceHandler: ServiceHandler? = null
 
     private val CHANNEL_ID = "channel1"
-
-    private var hasUploaded = false;
 
     @Inject
     lateinit var repositoryFactory: RepositoryFactory
@@ -69,12 +64,15 @@ class MediaUploadService : Service() {
                 val progressObserver = MediaObserver<Int>()
 
                 progressObserver.setProgressCallback { progress ->
-                    hasUploaded = progress == 100
-                    builder.setProgress(100, progress, false)
-                    notificationManager.notify(1, builder.build())
+                    run {
+                        builder.setProgress(100, progress, false)
+                        notificationManager.notify(1, builder.build())
+                        Log.d("UPLOAD!!!", "$progress %")
+                    }
                 }
 
                 progressObserver.setErrorCallback {
+                    setFailedNotification()
                     Toast.makeText(this@MediaUploadService, "Failed to upload ${type}: ${it.message}", Toast.LENGTH_LONG).show()
                 }
 
@@ -83,18 +81,23 @@ class MediaUploadService : Service() {
                 resultObserver.setProgressCallback {
                     when(it) {
                         is Result.Success<String> -> {
+                            builder.setContentText("Upload complete")
+                                .setProgress(0, 0, false)
+                            notificationManager.notify(1, builder.build())
                             val intent = Intent(returnMessage)
 
                             intent.putExtra("success", "Media uploaded")
                             LocalBroadcastManager.getInstance(this@MediaUploadService).sendBroadcast(intent)
                         }
                         is Result.Error -> {
+                            setFailedNotification()
                             Toast.makeText(this@MediaUploadService, "Failed to upload ${type}: ${it.exception.message}", Toast.LENGTH_LONG).show()
                         }
                     }
                 }
 
                 resultObserver.setErrorCallback {
+                    setFailedNotification()
                     Toast.makeText(this@MediaUploadService, "Failed to upload ${type}: ${it.message}", Toast.LENGTH_LONG).show()
                 }
 
@@ -145,19 +148,6 @@ class MediaUploadService : Service() {
         return null
     }
 
-    //TODO: Send result back to main application
-    override fun onDestroy() {
-        super.onDestroy()
-        val resultText = if (hasUploaded) {
-            "Upload complete"
-        } else {
-            "Upload failed"
-        }
-        builder.setContentText(resultText)
-            .setProgress(0, 0, false)
-        notificationManager.notify(1, builder.build())
-    }
-
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -173,5 +163,11 @@ class MediaUploadService : Service() {
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    private fun setFailedNotification() {
+        builder.setContentText("Upload failed")
+            .setProgress(0, 0, false)
+        notificationManager.notify(1, builder.build())
     }
 }

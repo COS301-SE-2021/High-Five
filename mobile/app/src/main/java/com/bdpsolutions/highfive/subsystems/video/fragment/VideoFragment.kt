@@ -180,7 +180,7 @@ class VideoFragment: Fragment() {
 
     override fun onResume() {
         super.onResume()
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(bReceiver, IntentFilter("images"))
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(bReceiver, IntentFilter("videos"))
     }
 
     override fun onPause() {
