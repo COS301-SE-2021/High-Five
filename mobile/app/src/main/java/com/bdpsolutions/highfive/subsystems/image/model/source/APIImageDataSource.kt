@@ -1,6 +1,5 @@
 package com.bdpsolutions.highfive.subsystems.image.model.source
 
-import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bdpsolutions.highfive.constants.Endpoints
@@ -16,6 +15,10 @@ import okhttp3.MultipartBody
 
 import okhttp3.RequestBody
 import java.io.File
+import com.bdpsolutions.highfive.utils.retrofit.CountingRequestBody
+import io.reactivex.*
+
+import java.lang.Exception
 
 
 class APIImageDataSource private constructor(): ImageDataSource {
@@ -63,53 +66,71 @@ class APIImageDataSource private constructor(): ImageDataSource {
         }
     }
 
-    override fun loadImage(image: File, callback: (() -> Unit)?) {
-        val requestFile: RequestBody =
-            RequestBody.create(MediaType.parse("multipart/form-data"), image)
+    override fun loadImage(image: File,
+                           progressObserver: Observer<Double>,
+                           resultObserver: Observer<Result<String>>
+    ) {
+        val emitter: Flowable<Double> = Flowable.create({
+            try {
 
-        val body = MultipartBody.Part.createFormData("file", image.name, requestFile)
+                val requestFile: RequestBody = CountingRequestBody(
+                    RequestBody.create(MediaType.parse("image/*"), image),
+                    object : CountingRequestBody.Listener {
+                        override fun onRequestProgress(bytesWritten: Long, contentLength: Long) {
+                            val progress = 1.0 * bytesWritten / contentLength
+                            progressObserver.onNext(progress)
+                        }
+                    })
 
-        val gson = GsonBuilder()
-            .registerTypeHierarchyAdapter(
-                ImageUploadResult::class.java,
-                RetrofitDeserializers.ImageUploadResultDeserializer
-            ).create()
+                val body = MultipartBody.Part.createFormData("file", image.name, requestFile)
 
-        // create Retrofit object and fetch data
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Endpoints.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
+                val gson = GsonBuilder()
+                    .registerTypeHierarchyAdapter(
+                        ImageUploadResult::class.java,
+                        RetrofitDeserializers.ImageUploadResultDeserializer
+                    ).create()
 
-        val imageSource = retrofit.create(ImageInfoEndpoint::class.java)
+                // create Retrofit object and fetch data
+                val retrofit = Retrofit.Builder()
+                    .baseUrl(Endpoints.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build()
 
-        ConcurrencyExecutor.execute {
-            val db = DatabaseHandler.getDatabase(null).userDao()
-            val bearer = db.getUser()?.authToken
-            val call = imageSource.storeImage(
-                authHeader = "Bearer $bearer",
-                file = body
-            )
+                val imageSource = retrofit.create(ImageInfoEndpoint::class.java)
 
-            call.enqueue(object : Callback<ImageUploadResult> {
-                override fun onResponse(
-                    call: Call<ImageUploadResult>,
-                    response: Response<ImageUploadResult>
-                ) {
+                ConcurrencyExecutor.execute {
+                    val db = DatabaseHandler.getDatabase(null).userDao()
+                    val bearer = db.getUser()?.authToken
+                    val call = imageSource.storeImage(
+                        authHeader = "Bearer $bearer",
+                        file = body
+                    )
 
-                    if (response.isSuccessful) {
-                        Log.d("Image upload", "Success")
-                        callback?.let { it() }
-                    } else {
-                        Log.e("Image upload", "Error: ${response.message()}")
-                    }
+                    call.enqueue(object : Callback<ImageUploadResult> {
+                        override fun onResponse(
+                            call: Call<ImageUploadResult>,
+                            response: Response<ImageUploadResult>
+                        ) {
+
+                            val result: Result<String> = if (response.isSuccessful) {
+                                Result.Success("Success")
+                            } else {
+                                Result.Error(Exception(response.message()))
+                            }
+
+                            resultObserver.onNext(result)
+                        }
+
+                        override fun onFailure(call: Call<ImageUploadResult>, t: Throwable) {
+                            resultObserver.onError(t)
+                        }
+                    })
                 }
-
-                override fun onFailure(call: Call<ImageUploadResult>, t: Throwable) {
-                    Log.e("Image upload", "Failed to fetch image data: ${t.message}")
-                }
-            })
-        }
+            } catch (e: Exception) {
+                resultObserver.onError(e)
+            }
+        }, BackpressureStrategy.LATEST)
+        emitter.subscribe()
     }
 
     companion object {

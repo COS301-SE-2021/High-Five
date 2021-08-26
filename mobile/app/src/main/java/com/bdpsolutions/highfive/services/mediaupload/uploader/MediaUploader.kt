@@ -1,10 +1,11 @@
 package com.bdpsolutions.highfive.services.mediaupload.uploader
 
-import android.content.Context
 import com.bdpsolutions.highfive.constants.MediaTypes
+import com.bdpsolutions.highfive.subsystems.image.model.dataclass.ImageUploadResult
+import com.bdpsolutions.highfive.utils.Result
 import com.bdpsolutions.highfive.utils.factories.RepositoryFactory
-import com.bdpsolutions.highfive.utils.factories.RepositoryFactoryProvider
-import dagger.hilt.EntryPoints
+import io.reactivex.FlowableEmitter
+import io.reactivex.Observer
 import java.lang.Exception
 
 class MediaUploader(private var repositoryFactory: RepositoryFactory) {
@@ -20,7 +21,10 @@ class MediaUploader(private var repositoryFactory: RepositoryFactory) {
         return this
     }
 
-    fun upload(path: String, callback: () -> Unit) {
-        uploader?.uploadFile(path, callback)
+    fun upload(path: String,
+               progressObserver: Observer<Double>,
+               resultObserver: Observer<Result<String>>
+    ) {
+        uploader?.uploadFile(path, progressObserver, resultObserver)
     }
 }

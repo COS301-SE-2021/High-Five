@@ -4,13 +4,15 @@ import android.app.Service
 import android.content.Intent
 import android.os.*
 import android.os.Process.THREAD_PRIORITY_BACKGROUND
+import android.util.Log
+import android.widget.Toast
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bdpsolutions.highfive.services.mediaupload.uploader.MediaUploader
 import com.bdpsolutions.highfive.utils.factories.RepositoryFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-
-
+import com.bdpsolutions.highfive.services.mediaupload.observers.MediaObserver
+import com.bdpsolutions.highfive.utils.Result
 
 
 @AndroidEntryPoint
@@ -32,17 +34,41 @@ class MediaUploadService : Service() {
             // Normally we would do some work here, like download a file.
             // For our sample, we just sleep for 5 seconds.
             try {
-                Thread.sleep(5000L)
                 val type = msg.data.getString("media_type")
                 val path = msg.data.getString("media_file")
                 val returnMessage = msg.data.getString("return")
 
-                uploader.setMediaType(type!!).upload(path!!) {
-                    val intent = Intent(returnMessage)
+                val progressObserver = MediaObserver<Double>()
 
-                    intent.putExtra("success", "Media uploaded")
-                    LocalBroadcastManager.getInstance(this@MediaUploadService).sendBroadcast(intent)
+                progressObserver.setProgressCallback { progress ->
+                    Log.d("ImageProgress", "${progress}%")
                 }
+
+                progressObserver.setErrorCallback {
+                    Toast.makeText(this@MediaUploadService, "Failed to upload ${type}: ${it.message}", Toast.LENGTH_LONG).show()
+                }
+
+                val resultObserver = MediaObserver<Result<String>>()
+
+                resultObserver.setProgressCallback {
+                    when(it) {
+                        is Result.Success<String> -> {
+                            val intent = Intent(returnMessage)
+
+                            intent.putExtra("success", "Media uploaded")
+                            LocalBroadcastManager.getInstance(this@MediaUploadService).sendBroadcast(intent)
+                        }
+                        is Result.Error -> {
+                            Toast.makeText(this@MediaUploadService, "Failed to upload ${type}: ${it.exception.message}", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+
+                resultObserver.setErrorCallback {
+                    Toast.makeText(this@MediaUploadService, "Failed to upload ${type}: ${it.message}", Toast.LENGTH_LONG).show()
+                }
+
+                uploader.setMediaType(type!!).upload(path!!, progressObserver, resultObserver)
 
             } catch (e: InterruptedException) {
                 // Restore interrupt status.

@@ -144,6 +144,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit_version"
     implementation "commons-io:commons-io:$commons_io_version"
     implementation "net.openid:appauth:$appauth_version"
+    implementation 'com.google.code.gson:gson:2.8.8'
     implementation "commons-codec:commons-codec:$codec_version"
     implementation "androidx.viewpager2:viewpager2:$viewpager_version"
     implementation "com.squareup.picasso:picasso:$picasso_version"
