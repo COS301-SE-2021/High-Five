@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {IonicModule} from '@ionic/angular';
 import {RouterModule} from '@angular/router';
@@ -25,6 +25,8 @@ import {SwiperModule} from 'swiper/angular';
 import {MediaFilterComponent} from './media-filter/media-filter.component';
 import {AccountComponent} from './account/account.component';
 import {AccountPopoverComponent} from './account-popover/account-popover.component';
+import {defineLordIconElement} from 'lord-icon-element';
+import lottie from 'lottie-web';
 
 @NgModule({
   declarations: [VideostoreCardComponent, VideostreamCardComponent, AboutPage1Component, AboutPage2Component,
@@ -44,7 +46,11 @@ import {AccountPopoverComponent} from './account-popover/account-popover.compone
   exports: [VideostoreCardComponent, VideostreamCardComponent, AboutPage1Component, AboutPage2Component,
     AboutPage3Component, AddItemComponent, AddPipelineComponent, AnalyzedImageCardComponent,
     AnalyzedVideostoreCardComponent, ImageCardComponent, MoreInfoComponent, NavbarMediaPopoverComponent,
-    PipelineComponent, RegisterCardComponent, WelcomeCardComponent, MediaFilterComponent, AccountComponent, AccountPopoverComponent]
+    PipelineComponent, RegisterCardComponent, WelcomeCardComponent, MediaFilterComponent, AccountComponent, AccountPopoverComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CustomComponentsModule {
+  constructor() {
+    defineLordIconElement(lottie.loadAnimation);
+  }
 }

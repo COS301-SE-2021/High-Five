@@ -96,7 +96,8 @@ export class NavbarPage implements OnInit {
         }
       }
     });
-    await popoverComponent.present();
+    popoverComponent.style.cssText = `--max-width: 10vw;`;
+    return await popoverComponent.present();
 
   }
 

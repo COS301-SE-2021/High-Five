@@ -1,8 +1,24 @@
 <ion-grid>
   <ion-row class="ion-align-items-center ion-justify-content-center ion-text-center">
-    <ion-button>Preferences <ion-icon name="settings-outline"></ion-icon></ion-button>
+    <ion-button (click)="displayAccountPreferencesModal()" >Preferences
+      <lord-icon
+        class="account-popover-icons"
+        src="https://cdn.lordicon.com/sbiheqdr.json"
+        trigger="hover"
+        colors="primary:#00000,secondary:#259ad0"
+        aria-label="preferences-animation">
+      </lord-icon>
+    </ion-button>
   </ion-row>
   <ion-row class="ion-align-items-center ion-justify-content-center ion-text-center">
-    <ion-button color="danger" (click)="logout()">Logout<ion-avatar></ion-avatar></ion-button>
+    <ion-button color="danger" (click)="logout()">Logout
+      <lord-icon
+        class="account-popover-icons"
+        src="https://assets7.lottiefiles.com/packages/lf20_s0cpca0v.json"
+        trigger="hover"
+        colors="primary:#00000,secondary:#259ad0"
+        aria-label="logout-animation">
+      </lord-icon>
+    </ion-button>
   </ion-row>
 </ion-grid>
