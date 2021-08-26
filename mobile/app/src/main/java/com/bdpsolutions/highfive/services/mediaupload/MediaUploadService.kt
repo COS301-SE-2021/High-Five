@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import com.bdpsolutions.highfive.services.mediaupload.observers.MediaObserver
 import com.bdpsolutions.highfive.utils.Result
+import java.io.File
 
 
 @AndroidEntryPoint
@@ -64,6 +65,9 @@ class MediaUploadService : Service() {
                 val progressObserver = MediaObserver<Int>()
 
                 progressObserver.setProgressCallback { progress ->
+
+                    //Update the notification to reflect the current progress
+                    //If the progress is at 100%, set to indeterminate mode.
                     run {
                         builder.setProgress(100, progress, progress == 100)
                         notificationManager.notify(1, builder.build())
@@ -80,13 +84,22 @@ class MediaUploadService : Service() {
                 resultObserver.setProgressCallback {
                     when(it) {
                         is Result.Success<String> -> {
+
+                            //Set the notification to 'Complete'
                             builder.setContentText("Upload complete")
                                 .setProgress(0, 0, false)
                             notificationManager.notify(1, builder.build())
-                            val intent = Intent(returnMessage)
 
+                            //Inform the main app that the file was uploaded
+                            val intent = Intent(returnMessage)
                             intent.putExtra("success", "Media uploaded")
                             LocalBroadcastManager.getInstance(this@MediaUploadService).sendBroadcast(intent)
+
+                            //delete cached file
+                            val tmpFile = File(path!!)
+                            if (tmpFile.exists()) {
+                                tmpFile.delete()
+                            }
                         }
                         is Result.Error -> {
                             setFailedNotification()

@@ -66,12 +66,12 @@ class VideoViewModel private constructor(private val repo: VideoDataRepository) 
                         cursor.close()
 
                         //Writing video to cache
-                        val tempVideo = File(fragment.requireActivity().filesDir.absolutePath + "/$name")
+                        val tempVideo = File(fragment.requireActivity().cacheDir.absolutePath + "/$name")
                         val inputStream: InputStream =
                             fragment.requireActivity().contentResolver.openInputStream(selectedVideo)!!
                         val outputStream = FileOutputStream(tempVideo)
                         var read: Int
-                        val bufferSize = 4096
+                        val bufferSize = 8192
                         val buffers = ByteArray(bufferSize)
                         while (inputStream.read(buffers).also { read = it } != -1) {
                             outputStream.write(buffers, 0, read)

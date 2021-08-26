@@ -32,11 +32,10 @@ import com.bdpsolutions.highfive.utils.ImageURL
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
+import android.util.Log
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-
-
-
+import java.text.SimpleDateFormat
 
 
 @AndroidEntryPoint
@@ -75,9 +74,8 @@ class ImageFragment : Fragment() {
 
         binding?.recyclerView?.adapter = adapter
 
-        viewModel.registerFetchFromGallery(this)
+        viewModel.registerFetchImage(this)
         viewModel.registerServiceReceiver(requireActivity(), bReceiver)
-        viewModel.registerFetchFromCamera(this)
         viewModel.registerPermission(this, permissionCallBack)
 
         viewModel.imageResult.observe(viewLifecycleOwner, Observer {
@@ -154,7 +152,7 @@ class ImageFragment : Fragment() {
     }
 
     private fun galleryUploader(){
-        viewModel.launchGalleryChooser(
+        viewModel.launchImageChooser(
             Intent().apply {
                 action = Intent.ACTION_PICK
                 setDataAndType(MediaStore.Images.Media.INTERNAL_CONTENT_URI, "image/*")
@@ -163,9 +161,12 @@ class ImageFragment : Fragment() {
     }
 
     private fun cameraUploader(){
+
+        val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        val formatDate = formatter.format(Calendar.getInstance().time)
         val outputDir: File = requireContext().cacheDir
 
-        val outputFile = File(outputDir, "tmp.jpg")
+        val outputFile = File(outputDir, "IMG_$formatDate.jpg")
         val imageUri = FileProvider.getUriForFile(
             this.requireContext(),
             requireActivity().packageName.toString() + ".provider",
@@ -175,7 +176,7 @@ class ImageFragment : Fragment() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
 
-        viewModel.launchCamera(intent)
+        viewModel.launchImageChooser(intent)
     }
 
     fun showLoader() {
