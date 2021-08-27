@@ -6,13 +6,11 @@ import {IonicModule} from '@ionic/angular';
 
 import {LandingPageRoutingModule} from './landing-routing.module';
 import {LandingPage} from './landing.page';
-import {SwiperModule} from "swiper/angular";
-import {LottieModule} from "ngx-lottie";
+import {SwiperModule} from 'swiper/angular';
+import {LottieModule} from 'ngx-lottie';
 import player from 'lottie-web';
-import {CustomComponentsModule} from "../../components/components.module";
-export function playerFactory() {
-  return player;
-}
+import {CustomComponentsModule} from '../../components/components.module';
+export const playerFactory = () => player;
 
 @NgModule({
   imports: [

@@ -14,33 +14,39 @@ import {InteractionType, PublicClientApplication} from '@azure/msal-browser';
 import {environment} from '../environments/environment';
 import {MediaStorageService} from './apis/mediaStorage.service';
 import {AnalysisService} from './apis/analysis.service';
+import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, MsalModule.forRoot(new PublicClientApplication({
-    auth: {
-      clientId: environment.clientId,
-      authority: environment.b2cPolicies.authorities.signUpSignIn.authority,
-      knownAuthorities: [environment.b2cPolicies.authorityDomain],
-      redirectUri: environment.redirectUri,
-    },
-    cache: {
-      cacheLocation: 'localStorage',
-      storeAuthStateInCookie: false
-    }
-  }), {
-    interactionType: InteractionType.Redirect,
-    authRequest: {
-      scopes:['user.read']
-    },
-    loginFailedRoute: '/welcome'
-  }, null)],
+  imports: [BrowserModule, IonicModule.forRoot(), SnotifyModule, AppRoutingModule, HttpClientModule,
+    MsalModule.forRoot(new PublicClientApplication({
+      auth: {
+        clientId: environment.clientId,
+        authority: environment.b2cPolicies.authorities.signUpSignIn.authority,
+        knownAuthorities: [environment.b2cPolicies.authorityDomain],
+        redirectUri: environment.redirectUri,
+      },
+      cache: {
+        cacheLocation: 'localStorage',
+        storeAuthStateInCookie: false
+      }
+    }), {
+      interactionType: InteractionType.Redirect,
+      authRequest: {
+        scopes: ['user.read']
+      },
+      loginFailedRoute: '/welcome'
+    }, null)],
   providers: [{
     provide: RouteReuseStrategy,
     useClass: IonicRouteStrategy
-  }, VideoPlayer, PipelinesService, MsalGuard, MediaStorageService, AnalysisService],
+  }, VideoPlayer, PipelinesService, MsalGuard, MediaStorageService, AnalysisService, {
+    provide: 'SnotifyToastConfig',
+    useValue: ToastDefaults
+  },
+    SnotifyService],
   bootstrap: [AppComponent],
 })
 export class AppModule {
