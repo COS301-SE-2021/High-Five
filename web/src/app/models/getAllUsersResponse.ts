@@ -9,7 +9,8 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { User } from './user';
 
-export interface GetPipelineRequest {
-    pipelineId?: string;
+export interface GetAllUsersResponse {
+    users?: Array<User>;
 }

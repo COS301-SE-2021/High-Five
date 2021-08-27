@@ -10,6 +10,8 @@
  * Do not edit the class manually.
  */
 
-export interface GetPipelineRequest {
-    pipelineId?: string;
+export interface User {
+    displayName?: string;
+    email?: string;
+    id?: string;
 }

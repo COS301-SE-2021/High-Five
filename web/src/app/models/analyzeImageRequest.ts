@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
-export interface GetPipelineRequest {
+export interface AnalyzeImageRequest {
+    imageId?: string;
     pipelineId?: string;
 }

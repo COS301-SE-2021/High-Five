@@ -24,7 +24,7 @@ import {PingResponse} from '../models/pingResponse';
 
 import {BASE_PATH, COLLECTION_FORMATS} from '../variables';
 import {Configuration} from '../configuration';
-import {environment} from "../../environments/environment";
+import {environment} from '../../environments/environment';
 
 
 @Injectable()
@@ -63,6 +63,7 @@ export class TestService {
   /**
    *
    * Test if the server is online
+   *
    * @param body
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
@@ -79,7 +80,7 @@ export class TestService {
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
+    const httpHeaderAccepts: string[] = [
       'application/json'
     ];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
@@ -98,11 +99,11 @@ export class TestService {
 
     return this.httpClient.request<PingResponse>('post', `${this.basePath}/test/echo`,
       {
-        body: body,
+        body,
         withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
+        headers,
+        observe,
+        reportProgress
       }
     );
   }
@@ -110,6 +111,7 @@ export class TestService {
   /**
    *
    * Test if the server is online
+   *
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
@@ -121,7 +123,7 @@ export class TestService {
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
+    const httpHeaderAccepts: string[] = [
       'application/json'
     ];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
@@ -135,9 +137,9 @@ export class TestService {
     return this.httpClient.request<PingResponse>('post', `${this.basePath}/test/ping`,
       {
         withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
+        headers,
+        observe,
+        reportProgress
       }
     );
   }

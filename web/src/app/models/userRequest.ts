@@ -10,6 +10,9 @@
  * Do not edit the class manually.
  */
 
-export interface GetPipelineRequest {
-    pipelineId?: string;
+export interface UserRequest {
+    /**
+     * user id
+     */
+    id?: string;
 }

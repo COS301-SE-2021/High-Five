@@ -7,6 +7,7 @@ import {AnalysisService} from './apis/analysis.service';
 import {MediaStorageService} from './apis/mediaStorage.service';
 import {PipelinesService} from './apis/pipelines.service';
 import {TestService} from './apis/test.service';
+import {UserService} from './apis/user.service';
 
 @NgModule({
   imports: [],
@@ -16,10 +17,10 @@ import {TestService} from './apis/test.service';
     AnalysisService,
     MediaStorageService,
     PipelinesService,
-    TestService]
+    TestService,
+    UserService]
 })
 export class ApiModule {
-
   constructor(@Optional() @SkipSelf() parentModule: ApiModule,
               @Optional() http: HttpClient) {
     if (parentModule) {
@@ -37,4 +38,6 @@ export class ApiModule {
       providers: [{provide: Configuration, useFactory: configurationFactory}]
     };
   }
+
+
 }
