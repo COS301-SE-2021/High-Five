@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Org.OpenAPITools.Controllers;
 using Org.OpenAPITools.Models;
+using src.Websockets;
 
 namespace src.Subsystems.MediaStorage
 {
@@ -115,6 +117,7 @@ namespace src.Subsystems.MediaStorage
 
                  var response = new ImageMetaData();
                  await _mediaStorageService.StoreImage(file);
+                 WebsocketControllerAbstract.UploadImage = true;
                  return StatusCode(200, response);
              }
              catch (Exception e)
@@ -140,6 +143,7 @@ namespace src.Subsystems.MediaStorage
 
                 var response = new VideoMetaData();
                 await _mediaStorageService.StoreVideo(file);
+                WebsocketControllerAbstract.UploadVideo = true;
                 return StatusCode(200, response);
             }
             catch (Exception e)

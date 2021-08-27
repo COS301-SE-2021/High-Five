@@ -1,10 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
 using Org.OpenAPITools.Models;
+using src.Websockets;
 
 namespace src.Subsystems.Analysis
 {
@@ -40,6 +40,7 @@ namespace src.Subsystems.Analysis
             }
             
             var response = _analysisService.AnalyzeImage(analyzeImageRequest).Result;
+            WebsocketControllerAbstract.AnalyzeImage = true;
             if (response == null)
             {
                 return StatusCode(400, null);
@@ -56,11 +57,25 @@ namespace src.Subsystems.Analysis
             }
             
             var response = _analysisService.AnalyzeVideo(analyzeVideoRequest).Result;
+            WebsocketControllerAbstract.AnalyzeVideo = true;
             if (response == null)
             {
                 return StatusCode(400, null);
             }
             
+            return StatusCode(200, response);
+        }
+
+        public override IActionResult GetLiveAnalysisToken()
+        {
+            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
+            if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
+            {
+                return StatusCode(200, null);
+            }
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
+            var response = _analysisService.GetLiveAnalysisToken(jsonToken.Subject);
             return StatusCode(200, response);
         }
     }

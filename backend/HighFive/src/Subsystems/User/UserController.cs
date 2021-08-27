@@ -39,15 +39,22 @@ namespace src.Subsystems.User
         }
 
         [Authorize(Policy = "Admin")]
-        public override IActionResult DeleteUser(UserRequest userRequest)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        [Authorize(Policy = "Admin")]
         public override IActionResult GetAllUsers()
         {
             var response = _userService.GetAllUsers();
+            return StatusCode(200, response);
+        }
+
+        public override IActionResult IsAdmin()
+        {
+            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
+            if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
+            {
+                return StatusCode(200, null);
+            }
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
+            var response = new IsAdminResposne {IsAdmin = _userService.IsAdmin(jsonToken.Subject)};
             return StatusCode(200, response);
         }
 
