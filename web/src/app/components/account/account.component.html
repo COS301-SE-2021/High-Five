@@ -1,6 +1,7 @@
 <ion-card class="ion-justify-content-center ion-align-items-center ion-text-center">
   <ion-card-header>
     <ion-card-title>Account Preferences</ion-card-title>
+    <ion-button slot="end"></ion-button>
   </ion-card-header>
   <ion-card-content style="height: 90%;">
     <ion-segment [(ngModel)]="option">
@@ -20,7 +21,7 @@
         </ion-label>
       </ion-segment-button>
     </ion-segment>
-    <div [ngSwitch]="option" style="height: 100%;">
+    <div [ngSwitch]="option" style="height: 80%;">
       <div *ngSwitchCase="'preferences'" style="height: 100%;">
         asd1
       </div>
@@ -42,6 +43,142 @@
                 <ion-icon name="trash-outline"></ion-icon>
               </ion-button>
             </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+
 
           </ion-list>
         </ion-content>
@@ -52,7 +189,28 @@
         </ion-fab>
       </div>
       <div *ngSwitchCase="'admin'" style="height: 100%;">
-        asd3
+        <ion-content>
+          <ion-list>
+            <ion-list-header>
+              <ion-label color="dark">
+                First is the user's name, then the button for purging all media of the user (including pipelines), then the toggle to promote the user to admin,
+                lastly is the button to request to delete the user's account.
+              </ion-label>
+            </ion-list-header>
+            <ion-item>
+              <ion-label>
+                User #1
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="warning">
+                <ion-icon name="trash-bin-outline"></ion-icon>
+              </ion-button>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-list>
+        </ion-content>
       </div>
     </div>
   </ion-card-content>
