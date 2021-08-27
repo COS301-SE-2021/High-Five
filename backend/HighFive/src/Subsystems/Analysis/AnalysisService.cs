@@ -6,6 +6,7 @@ using System.IO;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Org.OpenAPITools.Models;
 using src.AnalysisTools;
@@ -36,15 +37,17 @@ namespace src.Subsystems.Analysis
         private readonly IPipelineService _pipelineService;
         private readonly IAnalysisModels _analysisModels;
         private readonly IVideoDecoder _videoDecoder;
+        private readonly IConfiguration _configuration;
 
         public AnalysisService(IStorageManager storageManager, IMediaStorageService mediaStorageService,
-            IPipelineService pipelineService, IAnalysisModels analysisModels, IVideoDecoder videoDecoder)
+            IPipelineService pipelineService, IAnalysisModels analysisModels, IVideoDecoder videoDecoder, IConfiguration configuration)
         {
             _storageManager = storageManager;
             _mediaStorageService = mediaStorageService;
             _pipelineService = pipelineService;
             _analysisModels = analysisModels;
             _videoDecoder = videoDecoder;
+            _configuration = configuration;
         }
 
         public async Task<AnalyzedImageMetaData> AnalyzeImage(AnalyzeImageRequest request)
@@ -226,7 +229,7 @@ namespace src.Subsystems.Analysis
 
         public GetLiveAnalysisTokenResponse GetLiveAnalysisToken(string userId)
         {
-            const string key = "second order linear homogenous recurrence relation with constant coefficients";
+            var key = _configuration["JWTSecret"];
             const string issuer = "localhost:5001";//TODO: change this to analysis engine server ip
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));    
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -235,8 +238,6 @@ namespace src.Subsystems.Analysis
             {
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), new Claim("userId", userId)
             };
-
-
 
             var token = new JwtSecurityToken(issuer, //Issure    
                 issuer,  //Audience    
