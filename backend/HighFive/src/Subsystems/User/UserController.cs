@@ -53,7 +53,15 @@ namespace src.Subsystems.User
 
         public override IActionResult IsAdmin()
         {
-            throw new System.NotImplementedException();
+            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
+            if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
+            {
+                return StatusCode(200, null);
+            }
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
+            var response = new IsAdminResposne {IsAdmin = _userService.IsAdmin(jsonToken.Subject)};
+            return StatusCode(200, response);
         }
 
         [Authorize(Policy = "Admin")]
