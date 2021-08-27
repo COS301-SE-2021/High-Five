@@ -13,7 +13,7 @@ import {MsalGuard, MsalModule} from '@azure/msal-angular';
 import {InteractionType, PublicClientApplication} from '@azure/msal-browser';
 import {environment} from '../environments/environment';
 import {MediaStorageService} from './apis/mediaStorage.service';
-import {AnalysisService} from "./apis/analysis.service";
+import {AnalysisService} from './apis/analysis.service';
 
 
 @NgModule({

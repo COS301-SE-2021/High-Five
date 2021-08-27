@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {MsalService} from '@azure/msal-angular';
 import {PopoverController} from '@ionic/angular';
 import {NavbarMediaPopoverComponent} from '../../components/navbar-media-popover/navbar-media-popover.component';
+import {AccountPopoverComponent} from '../../components/account-popover/account-popover.component';
 
 @Component({
   selector: 'app-navbar',
@@ -95,8 +96,28 @@ export class NavbarPage implements OnInit {
         }
       }
     });
-    await popoverComponent.present();
+    popoverComponent.style.cssText = `--max-width: 10vw;`;
+    return await popoverComponent.present();
 
   }
 
+
+  async displayAccountPopover(ev: any) {
+    const popoverComponent = await this.popoverController.create({
+      component: AccountPopoverComponent,
+      animated: true,
+      translucent: true,
+      backdropDismiss: true,
+      event: ev,
+      showBackdrop: false,
+      componentProps: {
+        onClick: () => {
+          popoverComponent.dismiss();
+        }
+      }
+    });
+    // Needed, since ionic custom css class doesnt work
+    popoverComponent.style.cssText = `--background: rgba(255,255,255,0.6); --max-width: 13vw;`;
+    return await popoverComponent.present();
+  }
 }
