@@ -14,6 +14,7 @@ import {AnalyzedImagesService} from '../../services/analyzed-images/analyzed-ima
 import {AnalyzedVideosService} from '../../services/analyzed-videos/analyzed-videos.service';
 import {NotificationsService} from '../../services/notifications/notifications.service';
 import {defineLordIconElement} from 'lord-icon-element';
+import {UsersService} from '../../services/users/users.service';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import {defineLordIconElement} from 'lord-icon-element';
 export class NavbarPageModule {
   constructor(private imagesService: ImagesService, private videosService: VideosService,
               private pipelineService: PipelineService, private analyzedImagesService: AnalyzedImagesService,
-              private analyzedVideosService: AnalyzedVideosService, private notificationsService: NotificationsService) {
+              private analyzedVideosService: AnalyzedVideosService, private notificationsService: NotificationsService,
+              private usersService: UsersService) {
     defineLordIconElement(lottie.loadAnimation);
 
   }

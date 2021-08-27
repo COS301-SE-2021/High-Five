@@ -28,7 +28,7 @@
           Uploaded Tools
         </ion-label>
       </ion-segment-button>
-      <ion-segment-button *ngIf="usersService.isAdmin" value="admin">
+      <ion-segment-button *ngIf="usersService.getIsAdmin()" value="admin">
         <ion-label>
           Admin
         </ion-label>
@@ -271,15 +271,15 @@
                 lastly is the button to request to delete the user's account.
               </ion-label>
             </ion-list-header>
-            <ion-item>
+            <ion-item *ngFor="let user of usersService.users$ | async; trackBy : usersTrackFn ">
               <ion-label>
-                User #1
+                {{user.displayName}}
               </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="warning">
+              <ion-toggle slot="end" [(ngModel)]="user.isAdmin" (ionChange)="changeUserAdminStatus($event, user)"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="warning" (click)="purgeUserMedia(user)">
                 <ion-icon name="trash-bin-outline"></ion-icon>
               </ion-button>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
+              <ion-button slot="end" fill="clear" expand="block" color="danger" (click)="requestToRemoveUser(user);">
                 <ion-icon name="trash-outline"></ion-icon>
               </ion-button>
             </ion-item>

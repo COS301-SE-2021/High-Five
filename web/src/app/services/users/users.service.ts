@@ -12,12 +12,12 @@ export class UsersService {
   private readonly _users = new BehaviorSubject<User[]>([]);
   // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly users$ = this._users.asObservable();
-  private idAdmin = false;
+  private isAdmin = false;
 
   constructor(private userService: UserService) {
-    this.fetchAllUsers();
-    this.userService.isAdmin().subscribe(value => this.idAdmin = value.isAdmin);
+    this.queryIsAdmin();
   }
+
 
   get users(): User[] {
     // eslint-disable-next-line no-underscore-dangle
@@ -29,8 +29,20 @@ export class UsersService {
     this._users.next(val);
   }
 
-  get isAdmin(): boolean {
-    return this.idAdmin;
+  getIsAdmin(): boolean {
+    return this.isAdmin;
+  }
+
+  public async purgeMedia(id: string) {
+    if (this.isAdmin) {
+      this.userService.deleteMedia({id});
+    }
+  }
+
+  public async upgradeToAdmin(id: string) {
+    if (this.isAdmin) {
+      this.userService.upgradeToAdmin({id});
+    }
   }
 
 
@@ -115,10 +127,24 @@ export class UsersService {
   //       };
   //     }
   //   }
-  // }
+  // }\
+  private async queryIsAdmin() {
+    this.userService.isAdmin().subscribe((value) => {
+      this.isAdmin = value.isAdmin;
+      console.log(this.isAdmin);
+      if (this.isAdmin) {
+        this.fetchAllUsers();
+      } else {
+        this.users = null;
+      }
+    });
+  }
 
-  public async fetchAllUsers() {
-    this.userService.getAllUsers().subscribe(value => this.users = value.users);
+  private async fetchAllUsers() {
+    this.userService.getAllUsers().subscribe((value) => {
+      this.users = value.users.concat([{id: 'Temp', displayName: 'XD', isAdmin: true, email: 'test@gmail.com'}]);
+      console.log('Finished users');
+    });
   }
 
 

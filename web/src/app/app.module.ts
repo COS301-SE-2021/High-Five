@@ -15,6 +15,7 @@ import {environment} from '../environments/environment';
 import {MediaStorageService} from './apis/mediaStorage.service';
 import {AnalysisService} from './apis/analysis.service';
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
+import {UserService} from './apis/user.service';
 
 
 @NgModule({
@@ -46,7 +47,7 @@ import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
     provide: 'SnotifyToastConfig',
     useValue: ToastDefaults
   },
-    SnotifyService],
+    SnotifyService, UserService],
   bootstrap: [AppComponent],
 })
 export class AppModule {
