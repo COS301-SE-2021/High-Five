@@ -82,7 +82,6 @@ namespace src.Websockets
                                     responseBody = JsonConvert.SerializeObject(analyzedVideo);
                                     responseType = "success";
                                 }
-
                                 break;
                             case "Exit":
                                 await SendMessage("Socket Closed", "Connection to the socket was closed.", "info",

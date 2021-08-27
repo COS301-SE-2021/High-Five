@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
-using System.Threading;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
-using Accord.IO;
+using Microsoft.IdentityModel.Tokens;
 using Org.OpenAPITools.Models;
 using src.AnalysisTools;
-using src.AnalysisTools.AnalysisThread;
 using src.AnalysisTools.VideoDecoder;
 using src.Storage;
 using src.Subsystems.MediaStorage;
@@ -227,10 +226,27 @@ namespace src.Subsystems.Analysis
 
         public GetLiveAnalysisTokenResponse GetLiveAnalysisToken(string userId)
         {
-            var salt = _storageManager.RandomString(10);
-            var token = _storageManager.HashMd5(userId + salt);
+            const string key = "second order linear homogenous recurrence relation with constant coefficients";
+            const string issuer = "localhost:5001";//TODO: change this to analysis engine server ip
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));    
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var permClaims = new List<Claim>
+            {
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), new Claim("userId", userId)
+            };
+
+
+
+            var token = new JwtSecurityToken(issuer, //Issure    
+                issuer,  //Audience    
+                permClaims,    
+                expires: DateTime.Now.AddDays(1),    
+                signingCredentials: credentials);    
+            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token); 
+            
             //TODO: Send token over socket to analysis engine
-            return new GetLiveAnalysisTokenResponse {Token = token};
+            return new GetLiveAnalysisTokenResponse {Token = jwtToken};
         }
     }
 }
