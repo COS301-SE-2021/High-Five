@@ -91,6 +91,7 @@ namespace src
                     };
                 });
 
+            services.AddSignalR();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));

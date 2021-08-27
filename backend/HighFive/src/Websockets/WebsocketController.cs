@@ -7,13 +7,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using AzureFunctionsToolkit.Portable.Extensions;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using Org.OpenAPITools.Models;
 using src.Subsystems.Analysis;
 
 namespace src.Websockets
 {
+    [Authorize]
     public class WebsocketController: WebsocketControllerAbstract
     {
         private readonly IAnalysisService _analysisService;
@@ -52,17 +53,36 @@ namespace src.Websockets
                                 var imageAnalysisRequest =
                                     JsonConvert.DeserializeObject<AnalyzeImageRequest>(request.Body.Serialise());
                                 var analyzedImage = _analysisService.AnalyzeImage(imageAnalysisRequest).Result;
-                                responseTitle = "Image Analyzed";
-                                responseBody = JsonConvert.SerializeObject(analyzedImage);
-                                responseType = "success";
+                                if (analyzedImage == null)
+                                {
+                                    responseTitle = "Image Analysis Error";
+                                    responseBody = "Invalid pipeline- or media id provided.";
+                                    responseType = "error";
+                                }
+                                else
+                                {
+                                    responseTitle = "Image Analyzed";
+                                    responseBody = JsonConvert.SerializeObject(analyzedImage);
+                                    responseType = "success";
+                                }
                                 break;
                             case "AnalyzeVideo":
                                 var videoAnalysisRequest =
                                     JsonConvert.DeserializeObject<AnalyzeVideoRequest>(request.Body.Serialise());
                                 var analyzedVideo = _analysisService.AnalyzeVideo(videoAnalysisRequest).Result;
-                                responseTitle = "Video Analyzed";
-                                responseBody = JsonConvert.SerializeObject(analyzedVideo);
-                                responseType = "success";
+                                if (analyzedVideo == null)
+                                {
+                                    responseTitle = "Video Analysis Error";
+                                    responseBody = "Invalid pipeline- or media id provided.";
+                                    responseType = "error";
+                                }
+                                else
+                                {
+                                    responseTitle = "Video Analyzed";
+                                    responseBody = JsonConvert.SerializeObject(analyzedVideo);
+                                    responseType = "success";
+                                }
+
                                 break;
                             case "Exit":
                                 await SendMessage("Socket Closed", "Connection to the socket was closed.", "info",
