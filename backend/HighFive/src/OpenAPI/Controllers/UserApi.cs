@@ -53,19 +53,6 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <remarks>Endpoint for Delete User use case</remarks>
-        /// <param name="userRequest"></param>
-        /// <response code="200">Called by an admin to delete a user and all associated media from High-Five system</response>
-        [HttpPost]
-        [Route("/users/deleteUser")]
-        [Consumes("application/json")]
-        [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
-        public abstract IActionResult DeleteUser([FromBody]UserRequest userRequest);
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <remarks>Endpoint for Get All Users use case</remarks>
         /// <response code="200">All users are returned</response>
         [HttpPost]

@@ -39,12 +39,6 @@ namespace src.Subsystems.User
         }
 
         [Authorize(Policy = "Admin")]
-        public override IActionResult DeleteUser(UserRequest userRequest)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        [Authorize(Policy = "Admin")]
         public override IActionResult GetAllUsers()
         {
             var response = _userService.GetAllUsers();

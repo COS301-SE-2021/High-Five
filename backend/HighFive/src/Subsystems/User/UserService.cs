@@ -34,11 +34,6 @@ namespace src.Subsystems.User
             await _storageManager.DeleteAllFilesInContainer(request.Id);
         }
 
-        public void DeleteUser(UserRequest request)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool UpgradeToAdmin(UserRequest request)
         {
             var response = false;

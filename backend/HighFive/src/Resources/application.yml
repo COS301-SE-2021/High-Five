@@ -491,26 +491,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
-
-  /users/deleteUser:
-    post:
-      tags:
-        - "User"
-      description: Endpoint for Delete User use case
-      operationId: DeleteUser
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/userRequest'
-      responses:
-        "200":
-          description: Called by an admin to delete a user and all associated media from High-Five system
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
     
   /users/upgradeToAdmin:
     post:
