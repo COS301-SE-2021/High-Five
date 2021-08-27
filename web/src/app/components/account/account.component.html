@@ -92,7 +92,7 @@
               <ion-button fill="clear" color="primary">Edit Account</ion-button>
             </ion-col>
             <ion-col size="4">
-              <ion-button fill="clear" color="warning">Purge All Media</ion-button>
+              <ion-button fill="clear" color="warning" (click)="purgeOwnMedia();">Purge All Media</ion-button>
             </ion-col>
             <ion-col size="4">
               <ion-button fill="clear" color="danger">Delete Account</ion-button>
@@ -275,7 +275,8 @@
               <ion-label>
                 {{user.displayName}}
               </ion-label>
-              <ion-toggle slot="end" [(ngModel)]="user.isAdmin" (ionChange)="changeUserAdminStatus($event, user)"></ion-toggle>
+              <ion-toggle slot="end" [(ngModel)]="user.isAdmin"
+                          (ionChange)="changeUserAdminStatus($event, user)"></ion-toggle>
               <ion-button slot="end" fill="clear" expand="block" color="warning" (click)="purgeUserMedia(user)">
                 <ion-icon name="trash-bin-outline"></ion-icon>
               </ion-button>

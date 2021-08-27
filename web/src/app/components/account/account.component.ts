@@ -47,7 +47,7 @@ export class AccountComponent implements OnInit {
     if (checked) {
       console.log('making admin');
       this.usersService.upgradeToAdmin(user.id).then(() => {
-        this.snotifyService.success(user.displayName + ' has been upgraded to admin','Upgrade Successful');
+        this.snotifyService.success(user.displayName + ' has been upgraded to admin', 'Upgrade Successful');
       });
     } else {
       console.log('unmaking admin');
@@ -55,5 +55,10 @@ export class AccountComponent implements OnInit {
     }
   }
 
-
+  public async purgeOwnMedia() {
+    this.snotifyService.info('Starting to purge all saved data...', 'Purge Start');
+    this.usersService.purgeOwnMedia().then(() => {
+      this.snotifyService.success('Successfully removed all saved data', 'Purge Successful');
+    });
+  }
 }

@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {MediaStorageService} from '../../apis/mediaStorage.service';
 import {ImageMetaData} from '../../models/imageMetaData';
+import {SnotifyService} from 'ng-snotify';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class ImagesService {
   // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly images$ = this._images.asObservable();
 
-  constructor(private mediaStorageService: MediaStorageService) {
+  constructor(private mediaStorageService: MediaStorageService, private snotifyService: SnotifyService) {
     this.fetchAll();
   }
 
@@ -31,9 +32,15 @@ export class ImagesService {
    *
    * @param image the raw data of the video which must be uploaded
    */
-  async addImage(image: any) {
+  public async addImage(image: any) {
     try {
-      await this.mediaStorageService.storeImageForm(image).toPromise();
+      await this.mediaStorageService.storeImageForm(image, 'response').subscribe((val) => {
+        if (val.ok) {
+          this.snotifyService.success('Successfully uploaded image', 'Image upload');
+        } else {
+          this.snotifyService.error('Image upload has failed, please try again or contact an admin');
+        }
+      });
       await this.fetchAll();
     } catch (e) {
       console.log(e);

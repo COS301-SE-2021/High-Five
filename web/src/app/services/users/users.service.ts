@@ -35,99 +35,21 @@ export class UsersService {
 
   public async purgeMedia(id: string) {
     if (this.isAdmin) {
-      this.userService.deleteMedia({id});
+      await this.userService.deleteMedia({id}).toPromise();
     }
   }
 
   public async upgradeToAdmin(id: string) {
     if (this.isAdmin) {
-      this.userService.upgradeToAdmin({id});
+      await this.userService.upgradeToAdmin({id}).toPromise();
     }
   }
 
+  public async purgeOwnMedia() {
+    await this.userService.deleteOwnMedia().toPromise();
+  }
 
-  // /**
-  //  * Function adds a pipeline by sending a request using the OpenAPI generate PipelinesService
-  //  *
-  //  * @param name a string representing the name of the pipeline
-  //  * @param tools an array of string representing the tools of the pipeline
-  //  */
-  // async addPipeline(name: string, tools: string[]) {
-  //   try {
-  //     await this.pipelinesService.createPipeline({pipeline: {name, tools}}).toPromise();
-  //     await this.fetchAllPipelines();
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
-  //
-  // /**
-  //  *
-  //  * @param pipelineId the id of the pipeline which to remove (string)
-  //  * @param serverRemove boolean, if true  will send a request to the backend to remove the pipeline, otherwise
-  //  * the pipeline will only be removed locally, by default this parameter is set to true
-  //  */
-  // public async removePipeline(pipelineId: string, serverRemove: boolean = true) {
-  //   const pipeline = this.pipelines.find(p => p.id === pipelineId);
-  //   this.pipelines = this.pipelines.filter(p => p.id !== pipelineId);
-  //   if (serverRemove) {
-  //     try {
-  //       await this.pipelinesService.deletePipeline({pipelineId}).toPromise();
-  //     } catch (e) {
-  //       console.error(e);
-  //       this.pipelines = [...this.pipelines, pipeline];
-  //     }
-  //   }
-  // }
-  //
-  // public async addTool(id: string, tools: string[]) {
-  //   const pipeline = this.pipelines.find(p => p.id === id);
-  //   console.log('Old ');
-  //   if (pipeline) {
-  //     const index = this.pipelines.indexOf(pipeline);
-  //
-  //     this.pipelines[index] = {
-  //       ...pipeline,
-  //       tools: pipeline.tools.concat(tools)
-  //     };
-  //
-  //     this.pipelines = [...this.pipelines];
-  //
-  //     try {
-  //       await this.pipelinesService.addTools({pipelineId: id, tools}).toPromise();
-  //     } catch (e) {
-  //       console.error(e);
-  //       this.pipelines[index] = {
-  //         ...pipeline,
-  //         tools: pipeline.tools
-  //       };
-  //     }
-  //   }
-  // }
-  //
-  // public async removeTool(id: string, tools: string[]) {
-  //   const pipeline = this.pipelines.find(p => p.id === id);
-  //   if (pipeline) {
-  //     const index = this.pipelines.indexOf(pipeline);
-  //
-  //     this.pipelines[index] = {
-  //       ...pipeline,
-  //       tools: pipeline.tools.filter((e) => tools.some((f) => e !== f))
-  //     };
-  //
-  //     this.pipelines = [...this.pipelines];
-  //
-  //     try {
-  //       await this.pipelinesService.removeTools({pipelineId: id, tools}).toPromise();
-  //     } catch (e) {
-  //       console.error(e);
-  //       this.pipelines[index] = {
-  //         ...pipeline,
-  //         tools: pipeline.tools
-  //       };
-  //     }
-  //   }
-  // }\
+
   private async queryIsAdmin() {
     this.userService.isAdmin().subscribe((value) => {
       this.isAdmin = value.isAdmin;
@@ -140,10 +62,10 @@ export class UsersService {
     });
   }
 
+
   private async fetchAllUsers() {
     this.userService.getAllUsers().subscribe((value) => {
       this.users = value.users.concat([{id: 'Temp', displayName: 'XD', isAdmin: true, email: 'test@gmail.com'}]);
-      console.log('Finished users');
     });
   }
 
