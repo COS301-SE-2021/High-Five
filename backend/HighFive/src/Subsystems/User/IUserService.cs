@@ -7,7 +7,7 @@ namespace src.Subsystems.User
     {
         public GetAllUsersResponse GetAllUsers();
         public Task DeleteMedia(UserRequest request);
-        public void DeleteUser(UserRequest request);
         public bool UpgradeToAdmin(UserRequest request);
+        public bool IsAdmin(string userId);
     }
 }

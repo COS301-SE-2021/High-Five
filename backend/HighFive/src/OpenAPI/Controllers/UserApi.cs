@@ -25,7 +25,7 @@ namespace Org.OpenAPITools.Controllers
     /// </summary>
     [ApiController]
     public abstract class UserApiController : ControllerBase
-    {
+    { 
         /// <summary>
         /// 
         /// </summary>
@@ -37,7 +37,7 @@ namespace Org.OpenAPITools.Controllers
         [Consumes("application/json")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
-        public abstract Task<IActionResult> DeleteMedia([FromBody] UserRequest userRequest);
+        public abstract Task<IActionResult> DeleteMedia([FromBody]UserRequest userRequest);
 
         /// <summary>
         /// 
@@ -53,19 +53,6 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <remarks>Endpoint for Delete User use case</remarks>
-        /// <param name="userRequest"></param>
-        /// <response code="200">Called by an admin to delete a user and all associated media from High-Five system</response>
-        [HttpPost]
-        [Route("/users/deleteUser")]
-        [Consumes("application/json")]
-        [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
-        public abstract IActionResult DeleteUser([FromBody]UserRequest userRequest);
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <remarks>Endpoint for Get All Users use case</remarks>
         /// <response code="200">All users are returned</response>
         [HttpPost]
@@ -73,6 +60,17 @@ namespace Org.OpenAPITools.Controllers
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetAllUsersResponse))]
         public abstract IActionResult GetAllUsers();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Is Admin use case</remarks>
+        /// <response code="200">Used to verify whether the currently logged in user is an admin or not</response>
+        [HttpPost]
+        [Route("/users/isAdmin")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(IsAdminResposne))]
+        public abstract IActionResult IsAdmin();
 
         /// <summary>
         /// 

@@ -8,16 +8,19 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Org.OpenAPITools.Models;
 using src.Storage;
+using src.Subsystems.Admin;
 
 namespace src.Subsystems.User
 {
     public class UserService: IUserService
     {
         private readonly IStorageManager _storageManager;
+        private readonly IAdminValidator _adminValidator;
 
-        public UserService(IStorageManager storageManager)
+        public UserService(IStorageManager storageManager, IAdminValidator adminValidator)
         {
             _storageManager = storageManager;
+            _adminValidator = adminValidator;
         }
 
         public GetAllUsersResponse GetAllUsers()
@@ -29,11 +32,6 @@ namespace src.Subsystems.User
         public async Task DeleteMedia(UserRequest request)
         {
             await _storageManager.DeleteAllFilesInContainer(request.Id);
-        }
-
-        public void DeleteUser(UserRequest request)
-        {
-            throw new NotImplementedException();
         }
 
         public bool UpgradeToAdmin(UserRequest request)
@@ -62,6 +60,11 @@ namespace src.Subsystems.User
 
             adminsFile.UploadText(adminListString);
             return response;
+        }
+
+        public bool IsAdmin(string userId)
+        {
+            return _adminValidator.IsAdmin(userId);
         }
     }
 }
