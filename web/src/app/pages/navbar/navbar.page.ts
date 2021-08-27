@@ -84,11 +84,11 @@ export class NavbarPage implements OnInit {
   async displayMediaPopover(ev: any) {
     const popoverComponent = await this.popoverController.create({
       component: NavbarMediaPopoverComponent,
+      cssClass: 'navBarMediaPopover',
       animated: true,
       translucent: true,
       backdropDismiss: true,
       event: ev,
-      cssClass: 'navBarMediaPopover',
       showBackdrop: false,
       componentProps: {
         onClick: () => {
@@ -96,7 +96,6 @@ export class NavbarPage implements OnInit {
         }
       }
     });
-    popoverComponent.style.cssText = `--max-width: 10vw;`;
     return await popoverComponent.present();
 
   }
@@ -105,6 +104,7 @@ export class NavbarPage implements OnInit {
   async displayAccountPopover(ev: any) {
     const popoverComponent = await this.popoverController.create({
       component: AccountPopoverComponent,
+      cssClass:'accountOptionsPopover',
       animated: true,
       translucent: true,
       backdropDismiss: true,
@@ -116,8 +116,6 @@ export class NavbarPage implements OnInit {
         }
       }
     });
-    // Needed, since ionic custom css class doesnt work
-    popoverComponent.style.cssText = `--background: rgba(255,255,255,0.6); --max-width: 13vw;`;
     return await popoverComponent.present();
   }
 }

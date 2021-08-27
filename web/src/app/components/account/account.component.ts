@@ -3,7 +3,6 @@ import {ModalController} from '@ionic/angular';
 import {MsalService} from '@azure/msal-angular';
 import {UsersService} from '../../services/users/users.service';
 import {User} from '../../models/user';
-import {SnotifyService} from 'ng-snotify';
 
 @Component({
   selector: 'app-account',
@@ -14,8 +13,7 @@ export class AccountComponent implements OnInit {
   public option: string;
 
 
-  constructor(private modalController: ModalController, public msalService: MsalService, public usersService: UsersService,
-              private snotifyService: SnotifyService) {
+  constructor(private modalController: ModalController, public msalService: MsalService, public usersService: UsersService) {
     this.option = 'details';
   }
 
@@ -35,7 +33,6 @@ export class AccountComponent implements OnInit {
 
   public async purgeUserMedia(user: User) {
     this.usersService.purgeMedia(user.id).then(() => {
-        this.snotifyService.success(user.displayName + ' media purged ', 'Media Purged');
       }
     );
   }
@@ -46,9 +43,7 @@ export class AccountComponent implements OnInit {
     /* eslint-enable */
     if (checked) {
       console.log('making admin');
-      this.usersService.upgradeToAdmin(user.id).then(() => {
-        this.snotifyService.success(user.displayName + ' has been upgraded to admin', 'Upgrade Successful');
-      });
+      await this.usersService.upgradeToAdmin(user.id);
     } else {
       console.log('unmaking admin');
 
@@ -56,9 +51,6 @@ export class AccountComponent implements OnInit {
   }
 
   public async purgeOwnMedia() {
-    this.snotifyService.info('Starting to purge all saved data...', 'Purge Start');
-    this.usersService.purgeOwnMedia().then(() => {
-      this.snotifyService.success('Successfully removed all saved data', 'Purge Successful');
-    });
+    await this.usersService.purgeOwnMedia();
   }
 }

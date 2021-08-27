@@ -3,7 +3,6 @@ import {BehaviorSubject} from 'rxjs';
 import {Pipeline} from '../../models/pipeline';
 import {PipelinesService} from '../../apis/pipelines.service';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -49,9 +48,16 @@ export class PipelineService {
    */
   async addPipeline(name: string, tools: string[]) {
     try {
-      await this.pipelinesService.createPipeline({pipeline: {name, tools}}).toPromise();
-      await this.fetchAllPipelines();
+      await this.pipelinesService.createPipeline({pipeline: {name, tools}}, 'response').subscribe((res) => {
+        if (res.ok) {
+          // TODO : Notification here
+          this.fetchAllPipelines();
+        } else {
+          // TODO : Notification here
+        }
+      });
     } catch (e) {
+      // TODO : Notification here
       console.log(e);
     }
   }
@@ -67,8 +73,16 @@ export class PipelineService {
     this.pipelines = this.pipelines.filter(p => p.id !== pipelineId);
     if (serverRemove) {
       try {
-        await this.pipelinesService.deletePipeline({pipelineId}).toPromise();
+        await this.pipelinesService.deletePipeline({pipelineId}, 'response').subscribe((res) => {
+          if (res.ok) {
+            // TODO : Notification here
+          } else {
+            // TODO : Notification here
+            this.pipelines = [...this.pipelines, pipeline];
+          }
+        });
       } catch (e) {
+        // TODO : Notification here
         console.error(e);
         this.pipelines = [...this.pipelines, pipeline];
       }
@@ -77,10 +91,8 @@ export class PipelineService {
 
   public async addTool(id: string, tools: string[]) {
     const pipeline = this.pipelines.find(p => p.id === id);
-    console.log('Old ');
     if (pipeline) {
       const index = this.pipelines.indexOf(pipeline);
-
       this.pipelines[index] = {
         ...pipeline,
         tools: pipeline.tools.concat(tools)
@@ -89,8 +101,19 @@ export class PipelineService {
       this.pipelines = [...this.pipelines];
 
       try {
-        await this.pipelinesService.addTools({pipelineId: id, tools}).toPromise();
+        await this.pipelinesService.addTools({pipelineId: id, tools}, 'response').subscribe((res) => {
+          if (res.ok) {
+            // TODO : Notification here
+          } else {
+            // TODO : Notification here
+            this.pipelines[index] = {
+              ...pipeline,
+              tools: pipeline.tools
+            };
+          }
+        });
       } catch (e) {
+        // TODO : Notification here
         console.error(e);
         this.pipelines[index] = {
           ...pipeline,
@@ -109,12 +132,21 @@ export class PipelineService {
         ...pipeline,
         tools: pipeline.tools.filter((e) => tools.some((f) => e !== f))
       };
-
       this.pipelines = [...this.pipelines];
-
       try {
-        await this.pipelinesService.removeTools({pipelineId: id, tools}).toPromise();
+        await this.pipelinesService.removeTools({pipelineId: id, tools}, 'response').subscribe((res) => {
+          if (res.ok) {
+            // TODO : Notification here
+          } else {
+            // TODO : Notification here
+            this.pipelines[index] = {
+              ...pipeline,
+              tools: pipeline.tools
+            };
+          }
+        });
       } catch (e) {
+        // TODO : Notification here
         console.error(e);
         this.pipelines[index] = {
           ...pipeline,

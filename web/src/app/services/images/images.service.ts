@@ -2,18 +2,18 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {MediaStorageService} from '../../apis/mediaStorage.service';
 import {ImageMetaData} from '../../models/imageMetaData';
-import {SnotifyService} from 'ng-snotify';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImagesService {
 
+
   private readonly _images = new BehaviorSubject<ImageMetaData[]>([]);
   // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly images$ = this._images.asObservable();
 
-  constructor(private mediaStorageService: MediaStorageService, private snotifyService: SnotifyService) {
+  constructor(private mediaStorageService: MediaStorageService,) {
     this.fetchAll();
   }
 
@@ -34,15 +34,16 @@ export class ImagesService {
    */
   public async addImage(image: any) {
     try {
-      await this.mediaStorageService.storeImageForm(image, 'response').subscribe((val) => {
-        if (val.ok) {
-          this.snotifyService.success('Successfully uploaded image', 'Image upload');
+      this.mediaStorageService.storeImageForm(image, 'response').subscribe((res) => {
+        if (res.ok) {
+          // TODO : Notification here
+          this.images = this.images.concat(res.body);
         } else {
-          this.snotifyService.error('Image upload has failed, please try again or contact an admin');
+          // TODO : Notification here
         }
       });
-      await this.fetchAll();
     } catch (e) {
+      // TODO : Notification here
       console.log(e);
     }
   }
@@ -61,8 +62,16 @@ export class ImagesService {
 
     if (serverRemove) {
       try {
-        await this.mediaStorageService.deleteImage({id: imageId}).toPromise();
+        await this.mediaStorageService.deleteImage({id: imageId}, 'response').subscribe((res) => {
+          if (res.ok) {
+            // TODO : Notification here
+          } else {
+            // TODO : Notification here
+            this.images = [...this.images, image];
+          }
+        });
       } catch (e) {
+        // TODO : Notification here
         console.error(e);
         this.images = [...this.images, image];
       }

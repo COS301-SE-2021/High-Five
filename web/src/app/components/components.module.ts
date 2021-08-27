@@ -33,7 +33,8 @@ import lottie from 'lottie-web';
     AboutPage3Component, AddItemComponent, AddPipelineComponent, AnalyzedImageCardComponent,
     AnalyzedVideostoreCardComponent, ImageCardComponent, MoreInfoComponent, NavbarMediaPopoverComponent,
     PipelineComponent, RegisterCardComponent, WelcomeCardComponent, MediaFilterComponent, AccountComponent,
-    AccountPopoverComponent],
+    AccountPopoverComponent,
+  ],
   imports: [
     CommonModule,
     IonicModule,

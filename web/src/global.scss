@@ -25,23 +25,46 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 @import '~swiper/swiper-bundle';
-@import "~ng-snotify/styles/dark";
 
 //.modal-wrapper {
 //  background: transparent !important;
 //}
 
 
-.accountPreferencesModal{
-  .modal-wrapper{
-
-    background: rgba(0, 0, 0, 0.5);
+.accountPreferencesModal {
+  app-account{
+    width: 99%;
+  }
+  .modal-wrapper {
+    background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(20px);
     justify-items: center;
     justify-content: center;
     text-align: center;
     align-content: center;
     align-items: center;
+  }
+}
+
+.accountOptionsPopover {
+  app-account-popover{
+    width: 100%;
+  }
+  .popover-content {
+    background:rgba(255,255,255);
+    --max-width: 8vw;
+  }
+}
+
+.navBarMediaPopover {
+  app-navbar-media-popover {
+    width: 100%;
+  }
+  .popover-content {
+    background:rgba(255,255,255);
+    --max-width: 10vw;
+
+
   }
 }
 

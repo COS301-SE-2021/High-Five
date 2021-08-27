@@ -33,9 +33,16 @@ export class VideosService {
    */
   public async addVideo(video: any) {
     try {
-      await this.mediaStorageService.storeVideoForm(video).toPromise();
-      this.fetchAll();
+      await this.mediaStorageService.storeVideoForm(video,'response').subscribe((res)=>{
+        if(res.ok){
+          // TODO : Notification here
+          this.videos = this.videos.concat(res.body);
+        }else{
+          // TODO : Notification here
+        }
+      });
     } catch (e) {
+      // TODO : Notification here
       console.log(e);
     }
   }
@@ -52,8 +59,16 @@ export class VideosService {
 
     if (serverRemove) {
       try {
-        await this.mediaStorageService.deleteVideo({id: videoId}).toPromise();
+        await this.mediaStorageService.deleteVideo({id: videoId}, 'response').subscribe((res)=>{
+          if(res.ok){
+            // TODO : Notification here
+          }else{
+            // TODO : Notification here
+          }
+        });
       } catch (e) {
+        // TODO : Notification here
+
         console.error(e);
         this.videos = [...this.videos, video];
       }

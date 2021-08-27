@@ -1,12 +1,11 @@
-<ion-list>
-  <ion-item button (click)="navigateAll()">
-    <ion-label>All</ion-label>
-  </ion-item>
-  <ion-item button (click)="navigateImages()">
-    <ion-label>Images</ion-label>
-  </ion-item>
-  <ion-item button (click)="navigateVideos()">
-    <ion-label>Videos</ion-label>
-  </ion-item>
-</ion-list>
-
+  <ion-list>
+    <ion-item button (click)="navigateAll()">
+      <ion-label color="light">All</ion-label>
+    </ion-item>
+    <ion-item button (click)="navigateImages()">
+      <ion-label color="light">Images</ion-label>
+    </ion-item>
+    <ion-item button (click)="navigateVideos()" lines="none">
+      <ion-label color="light">Videos</ion-label>
+    </ion-item>
+  </ion-list>

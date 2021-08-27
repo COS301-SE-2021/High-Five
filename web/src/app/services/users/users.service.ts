@@ -53,7 +53,6 @@ export class UsersService {
   private async queryIsAdmin() {
     this.userService.isAdmin().subscribe((value) => {
       this.isAdmin = value.isAdmin;
-      console.log(this.isAdmin);
       if (this.isAdmin) {
         this.fetchAllUsers();
       } else {
@@ -65,7 +64,7 @@ export class UsersService {
 
   private async fetchAllUsers() {
     this.userService.getAllUsers().subscribe((value) => {
-      this.users = value.users.concat([{id: 'Temp', displayName: 'XD', isAdmin: true, email: 'test@gmail.com'}]);
+      this.users = value.users;
     });
   }
 

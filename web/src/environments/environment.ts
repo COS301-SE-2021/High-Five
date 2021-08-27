@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   apiEndpoint: '',
+  websocketEndpoint: '',
   clientId: 'undefined',
   authorityId: 'undefined',
   redirectUri: '',
