@@ -2,7 +2,59 @@
   <ion-card-header>
     <ion-card-title>Account Preferences</ion-card-title>
   </ion-card-header>
-  <ion-card-content>
+  <ion-card-content style="height: 90%;">
+    <ion-segment [(ngModel)]="option">
+      <ion-segment-button value="preferences">
+        <ion-label>
+          Preferences
+        </ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="tools">
+        <ion-label>
+          Uploaded Tools
+        </ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="admin">
+        <ion-label>
+          Admin
+        </ion-label>
+      </ion-segment-button>
+    </ion-segment>
+    <div [ngSwitch]="option" style="height: 100%;">
+      <div *ngSwitchCase="'preferences'" style="height: 100%;">
+        asd1
+      </div>
+      <div *ngSwitchCase="'tools'" style="height: 100%;">
+        <ion-content>
+          <ion-list>
+            <ion-list-header>
+              <ion-label color="dark">
+                First is the tool name, then the toggle for allowing other users to use this tool, lastly is the button
+                to delete the tool
+              </ion-label>
+            </ion-list-header>
+            <ion-item>
+              <ion-label>
+                asd
+              </ion-label>
+              <ion-toggle slot="end"></ion-toggle>
+              <ion-button slot="end" fill="clear" expand="block" color="danger">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
 
+          </ion-list>
+        </ion-content>
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+          <ion-fab-button>
+            <ion-icon name="add"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </div>
+      <div *ngSwitchCase="'admin'" style="height: 100%;">
+        asd3
+      </div>
+    </div>
   </ion-card-content>
 </ion-card>
+

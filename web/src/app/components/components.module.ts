@@ -32,7 +32,8 @@ import lottie from 'lottie-web';
   declarations: [VideostoreCardComponent, VideostreamCardComponent, AboutPage1Component, AboutPage2Component,
     AboutPage3Component, AddItemComponent, AddPipelineComponent, AnalyzedImageCardComponent,
     AnalyzedVideostoreCardComponent, ImageCardComponent, MoreInfoComponent, NavbarMediaPopoverComponent,
-    PipelineComponent, RegisterCardComponent, WelcomeCardComponent, MediaFilterComponent, AccountComponent, AccountPopoverComponent],
+    PipelineComponent, RegisterCardComponent, WelcomeCardComponent, MediaFilterComponent, AccountComponent,
+    AccountPopoverComponent],
   imports: [
     CommonModule,
     IonicModule,
@@ -46,7 +47,8 @@ import lottie from 'lottie-web';
   exports: [VideostoreCardComponent, VideostreamCardComponent, AboutPage1Component, AboutPage2Component,
     AboutPage3Component, AddItemComponent, AddPipelineComponent, AnalyzedImageCardComponent,
     AnalyzedVideostoreCardComponent, ImageCardComponent, MoreInfoComponent, NavbarMediaPopoverComponent,
-    PipelineComponent, RegisterCardComponent, WelcomeCardComponent, MediaFilterComponent, AccountComponent, AccountPopoverComponent],
+    PipelineComponent, RegisterCardComponent, WelcomeCardComponent, MediaFilterComponent, AccountComponent,
+    AccountPopoverComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CustomComponentsModule {

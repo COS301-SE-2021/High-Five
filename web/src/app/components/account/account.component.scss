@@ -1,6 +1,21 @@
 ion-card{
   height: 100%;
-  width: 100%;
+  width: 98%;
+  //background: rgba(255,255,255,0.5) ;
+  //backdrop-filter: blur(10px) ;
   background: transparent;
 }
+*{
+  background: transparent;
 
+}
+
+ion-item{
+  --background: transparent;
+}
+ion-list{
+  --background: transparent;
+}
+ion-content{
+  --background: transparent;
+}

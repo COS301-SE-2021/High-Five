@@ -32,9 +32,10 @@ export class AccountPopoverComponent implements OnInit {
    * Function opens a modal containing the add pipeline component, which will allow the user to create a pipeline
    */
   public async displayAccountPreferencesModal() {
+    this.onClick();
     const modal = await this.modalController.create({
       component: AccountComponent,
-      cssClass: 'account-preferences-modal',
+      cssClass: 'accountPreferencesModal',
       showBackdrop: false,
       animated: true,
       backdropDismiss: true,

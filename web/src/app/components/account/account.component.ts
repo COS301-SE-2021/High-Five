@@ -6,9 +6,11 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit {
+  public option: string;
 
 
   constructor() {
+    this.option='preferences';
   }
 
   ngOnInit() {
