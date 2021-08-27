@@ -24,14 +24,16 @@
         </ion-col>
         <ion-col size="9">
           <div class="ion-text-left desktop-navbar">
-            <ion-button (click)="navigateTo('navbar/landing', 'homeNav')" #homeNav fill="clear" [class]="homeLink[0]">
+            <ion-button fill="clear" routerLink="/navbar/landing" routerDirection="root" class="link"
+                        routerLinkActive="active-link">
               Home
             </ion-button>
-            <ion-button (click)="navigateTo('navbar/analytics', 'analyticsNav')" #analyticsNav fill="clear"
-                        [class]="analyticsLink[0]">Analytics
+            <ion-button fill="clear" routerLink="/navbar/analytics" routerDirection="root" class="link"
+                        routerLinkActive="active-link">Analytics
             </ion-button>
-            <ion-button (click)="displayMediaPopover($event)" fill="clear" [class]="mediaLink[0]">Media</ion-button>
-            <ion-button (click)="navigateTo('navbar/live', 'liveNav')" #analyticsNav fill="clear" [class]="liveLink[0]">
+            <ion-button (click)="displayMediaPopover($event)" class="link" routerLinkActive="active-link" fill="clear">Media</ion-button>
+            <ion-button fill="clear" routerLink="/navbar/live" routerDirection="root" class="link"
+                        routerLinkActive="active-link">
               Live
             </ion-button>
           </div>
@@ -39,11 +41,11 @@
         <ion-col size="1" id="accountCol">
           <ion-avatar id="accountAvatar" (click)="displayAccountPopover($event)">
             <lord-icon id="accountIcon"
-              src="https://cdn.lordicon.com/dxjqoygy.json"
-              trigger="hover"
-              colors="primary:#00000,secondary:#259ad0"
-              style="width:auto;height:100%;"
-              aria-label="account-menu">
+                       src="https://cdn.lordicon.com/dxjqoygy.json"
+                       trigger="hover"
+                       colors="primary:#00000,secondary:#259ad0"
+                       style="width:auto;height:100%;"
+                       aria-label="account-menu">
             </lord-icon>
           </ion-avatar>
         </ion-col>
