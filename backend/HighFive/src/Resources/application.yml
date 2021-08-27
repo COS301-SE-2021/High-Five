@@ -426,6 +426,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/analyzedVideoMetaData'
 
+  /analysis/getLiveAnalysisToken:
+    post:
+      tags:
+        - "Analysis"
+      description: Endpoint for Get Live Analysis Token use case
+      operationId: GetLiveAnalysisToken
+      responses:
+        "200":
+          description: Returns a token that can be used to connect a client to the analysis engine for live streaming/analysis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getLiveAnalysisTokenResponse'
+
   #==========================================================
   #     USER SUBSYSTEM PATHING
   #==========================================================
@@ -477,26 +491,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
-
-  /users/deleteUser:
-    post:
-      tags:
-        - "User"
-      description: Endpoint for Delete User use case
-      operationId: DeleteUser
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/userRequest'
-      responses:
-        "200":
-          description: Called by an admin to delete a user and all associated media from High-Five system
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
     
   /users/upgradeToAdmin:
     post:
@@ -517,6 +511,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
+                
+  /users/isAdmin:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Is Admin use case
+      operationId: IsAdmin
+      responses:
+        "200":
+          description: Used to verify whether the currently logged in user is an admin or not
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/isAdminResposne'
 
   #==========================================================
   #     SCHEMAS
@@ -783,6 +791,12 @@ components:
       properties:
         url:
           type: string
+    
+    getLiveAnalysisTokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
 
     #==========================================================
     #     USER COMPONENTS
@@ -812,6 +826,12 @@ components:
         id:
           type: string
           description: user id
+    
+    isAdminResposne:
+      type: object
+      properties:
+        isAdmin:
+          type: boolean
     
     #==========================================================
     #     GENERIC COMPONENTS
