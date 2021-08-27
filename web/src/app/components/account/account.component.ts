@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {ModalController} from '@ionic/angular';
 
 @Component({
   selector: 'app-account',
@@ -9,12 +10,15 @@ export class AccountComponent implements OnInit {
   public option: string;
 
 
-  constructor() {
-    this.option='preferences';
+  constructor(private modalController: ModalController) {
+    this.option = 'details';
   }
 
   ngOnInit() {
   }
 
 
+  public async close() {
+    await this.modalController.dismiss();
+  }
 }

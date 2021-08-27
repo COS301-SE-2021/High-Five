@@ -1,13 +1,26 @@
 <ion-card class="ion-justify-content-center ion-align-items-center ion-text-center">
   <ion-card-header>
-    <ion-card-title>Account Preferences</ion-card-title>
-    <ion-button slot="end"></ion-button>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="1"></ion-col>
+        <ion-col size="10">
+          <ion-card-title style="padding-top: 3%">Account Preferences</ion-card-title>
+        </ion-col>
+        <ion-col size="1">
+          <ion-button fill="clear" (click)="close()">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-buttons slot="end">
+    </ion-buttons>
   </ion-card-header>
-  <ion-card-content style="height: 90%;">
+  <ion-card-content style="height: 80%;">
     <ion-segment [(ngModel)]="option">
-      <ion-segment-button value="preferences">
+      <ion-segment-button value="details">
         <ion-label>
-          Preferences
+          Details
         </ion-label>
       </ion-segment-button>
       <ion-segment-button value="tools">
@@ -22,7 +35,7 @@
       </ion-segment-button>
     </ion-segment>
     <div [ngSwitch]="option" style="height: 80%;">
-      <div *ngSwitchCase="'preferences'" style="height: 100%;">
+      <div *ngSwitchCase="'details'" style="height: 100%;">
         asd1
       </div>
       <div *ngSwitchCase="'tools'" style="height: 100%;">
@@ -178,8 +191,6 @@
                 <ion-icon name="trash-outline"></ion-icon>
               </ion-button>
             </ion-item>
-
-
           </ion-list>
         </ion-content>
         <ion-fab vertical="bottom" horizontal="end" slot="fixed">
@@ -193,7 +204,8 @@
           <ion-list>
             <ion-list-header>
               <ion-label color="dark">
-                First is the user's name, then the button for purging all media of the user (including pipelines), then the toggle to promote the user to admin,
+                First is the user's name, then the button for purging all media of the user (including pipelines), then
+                the toggle to promote the user to admin,
                 lastly is the button to request to delete the user's account.
               </ion-label>
             </ion-list-header>
