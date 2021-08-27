@@ -66,5 +66,10 @@ namespace src.Subsystems.Analysis
             
             return StatusCode(200, response);
         }
+
+        public override IActionResult GetLiveAnalysisToken()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

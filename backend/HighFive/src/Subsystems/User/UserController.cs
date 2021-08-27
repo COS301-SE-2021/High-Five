@@ -51,6 +51,11 @@ namespace src.Subsystems.User
             return StatusCode(200, response);
         }
 
+        public override IActionResult IsAdmin()
+        {
+            throw new System.NotImplementedException();
+        }
+
         [Authorize(Policy = "Admin")]
         public override IActionResult UpgradeToAdmin(UserRequest userRequest)
         {
