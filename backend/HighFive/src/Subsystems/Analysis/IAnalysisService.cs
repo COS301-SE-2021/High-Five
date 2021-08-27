@@ -8,5 +8,6 @@ namespace src.Subsystems.Analysis
         public Task<AnalyzedImageMetaData> AnalyzeImage(AnalyzeImageRequest request);
         public Task<AnalyzedVideoMetaData> AnalyzeVideo(AnalyzeVideoRequest request);
         public void SetBaseContainer(string containerName);
+        public GetLiveAnalysisTokenResponse GetLiveAnalysisToken(string userId);
     }
 }
