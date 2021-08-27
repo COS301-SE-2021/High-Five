@@ -220,7 +220,7 @@ namespace src.Storage
             userInfoFile.UploadText(userInfoString);
         }
 
-        public string RandomString()
+        public string RandomString(int length=5)
         {
             /*
              *      Description:
@@ -230,7 +230,7 @@ namespace src.Storage
              */
 
             var str = "";
-            for(var i =0; i<5; i++)
+            for(var i =0; i<length; i++)
             {
                 var a = _random.Next(Alphanumeric.Length);
                 str += Alphanumeric.ElementAt(a);

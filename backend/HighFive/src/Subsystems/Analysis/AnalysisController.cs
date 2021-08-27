@@ -69,7 +69,15 @@ namespace src.Subsystems.Analysis
 
         public override IActionResult GetLiveAnalysisToken()
         {
-            throw new System.NotImplementedException();
+            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
+            if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
+            {
+                return StatusCode(200, null);
+            }
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
+            var response = _analysisService.GetLiveAnalysisToken(jsonToken.Subject);
+            return StatusCode(200, response);
         }
     }
 }

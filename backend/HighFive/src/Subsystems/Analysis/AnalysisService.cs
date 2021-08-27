@@ -224,5 +224,13 @@ namespace src.Subsystems.Analysis
             _pipelineService.SetBaseContainer(containerName);
             _mediaStorageService.SetBaseContainer(containerName);
         }
+
+        public GetLiveAnalysisTokenResponse GetLiveAnalysisToken(string userId)
+        {
+            var salt = _storageManager.RandomString(10);
+            var token = _storageManager.HashMd5(userId + salt);
+            //TODO: Send token over socket to analysis engine
+            return new GetLiveAnalysisTokenResponse {Token = token};
+        }
     }
 }
