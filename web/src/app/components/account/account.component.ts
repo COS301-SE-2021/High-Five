@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ModalController} from '@ionic/angular';
 import {MsalService} from '@azure/msal-angular';
+import {UsersService} from '../../services/users/users.service';
 
 @Component({
   selector: 'app-account',
@@ -11,7 +12,7 @@ export class AccountComponent implements OnInit {
   public option: string;
 
 
-  constructor(private modalController: ModalController, public msalService: MsalService) {
+  constructor(private modalController: ModalController, public msalService: MsalService, public usersService: UsersService) {
     this.option = 'details';
   }
 

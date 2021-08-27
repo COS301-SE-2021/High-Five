@@ -28,7 +28,7 @@
           Uploaded Tools
         </ion-label>
       </ion-segment-button>
-      <ion-segment-button value="admin">
+      <ion-segment-button *ngIf="usersService.isAdmin" value="admin">
         <ion-label>
           Admin
         </ion-label>
