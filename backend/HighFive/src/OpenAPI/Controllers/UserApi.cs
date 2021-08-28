@@ -82,7 +82,7 @@ namespace Org.OpenAPITools.Controllers
         [Route("/users/revokeAdmin")]
         [Consumes("application/json")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        [ProducesResponseType(statusCode: 200, type: typeof(IsAdminResposne))]
         public abstract IActionResult RevokeAdmin([FromBody]UserRequest userRequest);
 
         /// <summary>

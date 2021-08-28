@@ -710,8 +710,8 @@ components:
     createPipelineResponse:
       type: object
       properties:
-        pipelineId:
-          type: string
+        pipeline:
+          $ref: '#/components/schemas/pipeline'
 
     getPipelinesResponse:
       type: object
