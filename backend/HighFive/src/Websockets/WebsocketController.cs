@@ -116,8 +116,8 @@ namespace src.Websockets
             }
         }
         
-        
         private static async Task SendMessage(string title, string message, string type, WebSocket webSocket)
+
         {
             var payload = "{\"title\": \"" + title + "\",\"message\": \"" + message + "\",\"type\": \"" + type + "\"}";
             var buffer = Encoding.Default.GetBytes(payload);
