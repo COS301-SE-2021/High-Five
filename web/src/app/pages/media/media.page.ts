@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {MediaFilterComponent} from '../../components/media-filter/media-filter.component';
 import {PopoverController} from '@ionic/angular';
+import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
+import {VideosService} from '../../services/videos/videos.service';
+import {ImagesService} from '../../services/images/images.service';
 
 @Component({
   selector: 'app-media',
@@ -13,7 +16,9 @@ export class MediaPage implements OnInit {
   public mediaType: string;
   public filter: string;
 
-  constructor(private router: Router, private popoverController: PopoverController) {
+  constructor(private router: Router, private popoverController: PopoverController,
+              private userPreferencesService: UserPreferencesService, private videosService: VideosService,
+              private imagesService: ImagesService) {
     this.mediaType = 'all';
     this.filter = 'all';
   }
@@ -48,10 +53,30 @@ export class MediaPage implements OnInit {
          */
         if (data.data !== undefined) {
           if (data.data.segment !== undefined) {
-            this.filter = data.data.segment;
+            this.userPreferencesService.mediaFilter = data.data.segment;
+            this.filter= this.userPreferencesService.mediaFilter;
           }
         }
       }
     );
+  }
+
+  /**
+   * Sends an uploaded video to the backend using the videosService.
+   *
+   * @param video, the data of the video that is going to be uploaded
+   */
+  public async uploadVideo(video: any) {
+    await this.videosService.addVideo(video.target.files[0]);
+  }
+
+
+  /**
+   * Sends an uploaded image to the backend to be saved using the imagesService
+   *
+   * @param image, the data of the image that is going to be uploaded
+   */
+  public async uploadImage(image: any) {
+    await this.imagesService.addImage(image.target.files[0]);
   }
 }
