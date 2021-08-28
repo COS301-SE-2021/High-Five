@@ -33,7 +33,7 @@ namespace src.Subsystems.MediaStorage
             _videoDecoder = videoDecoder;
         }
 
-        public async Task StoreVideo(IFormFile video)
+        public async Task<VideoMetaData> StoreVideo(IFormFile video)
         {
             /*
              *      Description:
@@ -46,7 +46,7 @@ namespace src.Subsystems.MediaStorage
 
             if (video == null)
             {
-                return;
+                return null;
             }
             //create storage name for file
             var generatedName = _storageManager.HashMd5(video.FileName);
@@ -85,6 +85,16 @@ namespace src.Subsystems.MediaStorage
 
             //upload to Azure Blob Storage
             await videoBlob.UploadFile(video);
+            var response = new VideoMetaData
+            {
+                Id = generatedName,
+                Name = video.FileName,
+                Thumbnail = thumbnailBlob.GetUrl(),
+                Url = videoBlob.GetUrl()
+            };
+            if (videoBlob.Properties is {LastModified: { }})
+                response.DateStored = videoBlob.Properties.LastModified.Value.DateTime;
+            return response;
         }
 
         public List<VideoMetaData> GetAllVideos()
@@ -147,7 +157,7 @@ namespace src.Subsystems.MediaStorage
             return true;
         }
 
-        public async Task StoreImage(IFormFile image)
+        public async Task<ImageMetaData> StoreImage(IFormFile image)
         {
              /*
              *      Description:
@@ -160,7 +170,7 @@ namespace src.Subsystems.MediaStorage
 
             if (image == null)
             {
-                return;
+                return null;
             }
             //create storage name for file
             var generatedName = _storageManager.HashMd5(image.FileName);
@@ -191,6 +201,15 @@ namespace src.Subsystems.MediaStorage
 
             //upload to Azure Blob Storage
             await imageBlob.UploadFile(image);
+            var response = new ImageMetaData
+            {
+                Id = generatedName,
+                Name = image.FileName,
+                Url = imageBlob.GetUrl()
+            };
+            if (imageBlob.Properties is {LastModified: { }})
+                response.DateStored = imageBlob.Properties.LastModified.Value.DateTime;
+            return response;
         }
 
         public List<ImageMetaData> GetAllImages()

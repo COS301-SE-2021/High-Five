@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Accord.Math;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using Org.OpenAPITools.Models;
 using src.Storage;
 using src.Subsystems.Admin;
@@ -65,6 +60,11 @@ namespace src.Subsystems.User
         public bool IsAdmin(string userId)
         {
             return _adminValidator.IsAdmin(userId);
+        }
+
+        public bool RevokeAdmin(UserRequest request)
+        {
+            return _adminValidator.RevokeAdmin(request.Id);
         }
     }
 }

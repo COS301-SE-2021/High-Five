@@ -40,7 +40,6 @@ namespace src.Subsystems.Analysis
             }
             
             var response = _analysisService.AnalyzeImage(analyzeImageRequest).Result;
-            WebsocketControllerAbstract.AnalyzeImage = true;
             if (response == null)
             {
                 return StatusCode(400, null);
@@ -57,7 +56,6 @@ namespace src.Subsystems.Analysis
             }
             
             var response = _analysisService.AnalyzeVideo(analyzeVideoRequest).Result;
-            WebsocketControllerAbstract.AnalyzeVideo = true;
             if (response == null)
             {
                 return StatusCode(400, null);
