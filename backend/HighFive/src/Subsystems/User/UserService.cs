@@ -66,5 +66,10 @@ namespace src.Subsystems.User
         {
             return _adminValidator.IsAdmin(userId);
         }
+
+        public bool RevokeAdmin(UserRequest request)
+        {
+            return _adminValidator.RevokeAdmin(request.Id);
+        }
     }
 }

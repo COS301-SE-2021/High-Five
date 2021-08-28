@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Org.OpenAPITools.Models;
+using src.Subsystems.Admin;
 
 namespace src.Storage
 {
@@ -260,11 +261,13 @@ namespace src.Storage
                     }
                     var userInfoFile = new BlobFile(userInfoBlob);
                     var userInfoArray = userInfoFile.ToText().Result.Split("\n");
+                    var adminValidator = new AdminValidator(this);
                     var user = new User
                     {
                         Id = userInfoArray[0],
                         DisplayName = userInfoArray[1],
-                        Email = userInfoArray[2]
+                        Email = userInfoArray[2],
+                        IsAdmin = adminValidator.IsAdmin(userInfoArray[0])
                     };
                     responseList.Add(user);
                 }
