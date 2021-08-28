@@ -36,7 +36,19 @@
     width: 99%;
   }
   .modal-wrapper {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+    justify-items: center;
+    justify-content: center;
+    text-align: center;
+    align-content: center;
+    align-items: center;
+  }
+}
+
+.moreInfoModal{
+  .modal-wrapper{
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(20px);
     justify-items: center;
     justify-content: center;
@@ -63,8 +75,5 @@
   .popover-content {
     background:rgba(255,255,255);
     --max-width: 10vw;
-
-
   }
 }
-
