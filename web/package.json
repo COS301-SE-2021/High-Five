@@ -7,6 +7,7 @@
     "ng": "ng",
     "serve": "ionic serve",
     "build": "ionic build",
+    "build:prod": "ionic build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",

@@ -42,10 +42,10 @@ export class AccountComponent implements OnInit {
     const checked: boolean = event['detail']['checked'];
     /* eslint-enable */
     if (checked) {
-      console.log('making admin');
+      //console.log('making admin');
       await this.usersService.upgradeToAdmin(user.id);
     } else {
-      console.log('unmaking admin');
+      //console.log('unmaking admin');
 
     }
   }
