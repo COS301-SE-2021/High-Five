@@ -57,6 +57,12 @@
     align-items: center;
   }
 }
+.add-pipeline-modal{
+  .modal-wrapper{
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+  }
+}
 
 .accountOptionsPopover {
   app-account-popover{
