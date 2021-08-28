@@ -9,5 +9,6 @@ namespace src.Subsystems.User
         public Task DeleteMedia(UserRequest request);
         public bool UpgradeToAdmin(UserRequest request);
         public bool IsAdmin(string userId);
+        public bool RevokeAdmin(UserRequest request);
     }
 }

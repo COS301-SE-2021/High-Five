@@ -210,7 +210,7 @@ namespace tests.IntegrationTests
             var response = await _client.PostAsync("/pipelines/createPipeline", ObjectToBytes(request));
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var responseObject = JsonConvert.DeserializeObject<CreatePipelineResponse>(responseBody);
-            return responseObject.PipelineId;
+            return responseObject.Pipeline.Id;
         }
     }
 }
