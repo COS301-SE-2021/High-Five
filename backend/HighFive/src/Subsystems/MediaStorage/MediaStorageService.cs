@@ -90,9 +90,10 @@ namespace src.Subsystems.MediaStorage
                 Id = generatedName,
                 Name = video.FileName,
                 Thumbnail = thumbnailBlob.GetUrl(),
-                Url = videoBlob.GetUrl(),
-                DateStored = videoBlob.Properties.LastModified.Value.DateTime
+                Url = videoBlob.GetUrl()
             };
+            if (videoBlob.Properties is {LastModified: { }})
+                response.DateStored = videoBlob.Properties.LastModified.Value.DateTime;
             return response;
         }
 
@@ -204,9 +205,10 @@ namespace src.Subsystems.MediaStorage
             {
                 Id = generatedName,
                 Name = image.FileName,
-                DateStored = imageBlob.Properties.LastModified.Value.DateTime,
                 Url = imageBlob.GetUrl()
             };
+            if (imageBlob.Properties is {LastModified: { }})
+                response.DateStored = imageBlob.Properties.LastModified.Value.DateTime;
             return response;
         }
 
