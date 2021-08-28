@@ -8,10 +8,10 @@ namespace src.Subsystems.MediaStorage
 {
     public interface IMediaStorageService
     {
-        public Task StoreVideo(IFormFile video);
+        public Task<VideoMetaData> StoreVideo(IFormFile video);
         public List<VideoMetaData> GetAllVideos();
         public Task<bool> DeleteVideo(DeleteVideoRequest request);
-        public Task StoreImage(IFormFile image);
+        public Task<ImageMetaData> StoreImage(IFormFile image);
         public List<ImageMetaData> GetAllImages();
         public Task<bool> DeleteImage(DeleteImageRequest request);
         public bool SetBaseContainer(string containerName);

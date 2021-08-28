@@ -31,8 +31,18 @@ namespace src.AnalysisTools.VideoDecoder
                 _ffmpegLoaded = true;
             }
         }
+        
+        public async Task GetThumbnailFromVideo(string videoPath, string thumbnailPath)
+        {
+            var info = await Xabe.FFmpeg.FFmpeg.GetMediaInfo(videoPath).ConfigureAwait(false);
+            var videoStream = info.VideoStreams.First()?.SetCodec(VideoCodec.png);
 
-        [SuppressMessage("ReSharper.DPA", "DPA0003: Excessive memory allocations in LOH", MessageId = "type: System.Byte[]")]
+            var conversionResult = await Xabe.FFmpeg.FFmpeg.Conversions.New()
+                .AddStream(videoStream)
+                .ExtractNthFrame(1, s => thumbnailPath)
+                .Start();
+        }
+        
         public List<Stream> GetFramesFromVideo(Stream videoStream)
         {
             var frameList = new List<Stream>();
@@ -46,17 +56,6 @@ namespace src.AnalysisTools.VideoDecoder
                 frameList.Add(ms);
             }
             return frameList;
-        }
-
-        public async Task GetThumbnailFromVideo(string videoPath, string thumbnailPath)
-        {
-            var info = await Xabe.FFmpeg.FFmpeg.GetMediaInfo(videoPath).ConfigureAwait(false);
-            var videoStream = info.VideoStreams.First()?.SetCodec(VideoCodec.png);
-
-            var conversionResult = await Xabe.FFmpeg.FFmpeg.Conversions.New()
-                .AddStream(videoStream)
-                .ExtractNthFrame(1, s => thumbnailPath)
-                .Start();
         }
 
         public byte[] EncodeVideoFromFrames(List<byte[]> frameList, Stream originalVideoStream)

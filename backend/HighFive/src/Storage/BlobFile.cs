@@ -75,7 +75,7 @@ namespace src.Storage
             //TODO: verify that if meta-data does not exist, empty string is returned
         }
 
-        public async Task UploadFile(IFormFile newFile)
+        public async Task UploadFile(IFormFile newFile, string contentType="")
         {
             /*
              *      Description:
