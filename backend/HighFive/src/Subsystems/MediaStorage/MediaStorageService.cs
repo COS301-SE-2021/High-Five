@@ -111,7 +111,7 @@ namespace src.Subsystems.MediaStorage
             }
             var resultList = new List<VideoMetaData>();
             var currentVideo = new VideoMetaData();
-            foreach(var listBlobItem in allFiles)//NOTE: Assuming here that a thumbnail will be immediately followed by its corresponding mp4 file
+            foreach(var listBlobItem in allFiles)
             {
                 if (listBlobItem.Name.Contains("thumbnail"))
                 {
@@ -180,6 +180,7 @@ namespace src.Subsystems.MediaStorage
                 throw new InvalidDataException("No file extension provided.");
             }
             var extension = "." + splitName[1];
+            extension = extension.ToLower();
             if(!(extension.Equals(".jpg") || extension.Equals(".jpeg") || extension.Equals(".png")))
             {
                 throw new InvalidDataException("Invalid extension provided.");
