@@ -95,7 +95,7 @@ namespace src.Subsystems.Pipelines
 
             var response = new CreatePipelineResponse()
             {
-                PipelineId = generatedName
+                Pipeline = newPipeline
             };
             return response;
         }

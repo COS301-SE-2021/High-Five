@@ -100,9 +100,7 @@ namespace src.Subsystems.MediaStorage
                      return StatusCode(400, response400);
                  }
 
-                 var response = new ImageMetaData();
-                 await _mediaStorageService.StoreImage(file);
-                 WebsocketControllerAbstract.UploadImage = true;
+                 var response = await _mediaStorageService.StoreImage(file);
                  return StatusCode(200, response);
              }
              catch (Exception e)
@@ -125,10 +123,8 @@ namespace src.Subsystems.MediaStorage
                     var response400 = new EmptyObject() {Success = false, Message = "The uploaded file is null."};
                     return StatusCode(400, response400);
                 }
-
-                var response = new VideoMetaData();
-                await _mediaStorageService.StoreVideo(file);
-                WebsocketControllerAbstract.UploadVideo = true;
+                
+                var response = await _mediaStorageService.StoreVideo(file);
                 return StatusCode(200, response);
             }
             catch (Exception e)

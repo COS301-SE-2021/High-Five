@@ -12,6 +12,7 @@ namespace src.Subsystems.User
     public class UserController: UserApiController
     {
         private readonly IUserService _userService;
+        private string _userId = string.Empty;
         
         public UserController(IUserService userService)
         {
@@ -27,14 +28,11 @@ namespace src.Subsystems.User
 
         public override async Task<IActionResult> DeleteOwnMedia()
         {
-            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
-            if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
+            if (_userId.Equals(string.Empty))
             {
-                return StatusCode(200, null);
+                SetUserId();
             }
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
-            await _userService.DeleteMedia(new UserRequest{Id = jsonToken.Subject});
+            await _userService.DeleteMedia(new UserRequest{Id = _userId});
             return StatusCode(200, new EmptyObject {Success = true});
         }
 
@@ -47,14 +45,21 @@ namespace src.Subsystems.User
 
         public override IActionResult IsAdmin()
         {
-            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
-            if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
+            if (_userId.Equals(string.Empty))
             {
-                return StatusCode(200, null);
+                SetUserId();
             }
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
-            var response = new IsAdminResposne {IsAdmin = _userService.IsAdmin(jsonToken.Subject)};
+            var response = new IsAdminResposne {IsAdmin = _userService.IsAdmin(_userId)};
+            return StatusCode(200, response);
+        }
+
+        [Authorize(Policy = "Admin")]
+        public override IActionResult RevokeAdmin(UserRequest userRequest)
+        {
+            var response = new EmptyObject
+            {
+                Success = _userService.RevokeAdmin(userRequest)
+            };
             return StatusCode(200, response);
         }
 
@@ -63,6 +68,18 @@ namespace src.Subsystems.User
         {
             _userService.UpgradeToAdmin(userRequest);
             return StatusCode(200, new EmptyObject() {Success = true});
+        }
+
+        private void SetUserId()
+        {
+            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
+            if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
+            {
+                return;
+            }
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
+            _userId = jsonToken.Subject;
         }
     }
 }

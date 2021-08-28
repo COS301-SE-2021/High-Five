@@ -75,6 +75,19 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Revoke Admin use case</remarks>
+        /// <param name="userRequest"></param>
+        /// <response code="200">Used to remove admin rights from an existing admin</response>
+        [HttpPost]
+        [Route("/users/revokeAdmin")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(IsAdminResposne))]
+        public abstract IActionResult RevokeAdmin([FromBody]UserRequest userRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Upgrade To Admin use case</remarks>
         /// <param name="userRequest"></param>
         /// <response code="200">Called by an admin to upgrade a normal use to an administrator</response>
