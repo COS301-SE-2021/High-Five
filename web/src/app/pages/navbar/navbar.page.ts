@@ -13,8 +13,6 @@ import {AccountPopoverComponent} from '../../components/account-popover/account-
 })
 export class NavbarPage implements OnInit {
   isDesktop: boolean;
-
-
   constructor(private screenSizeService: ScreenSizeServiceService, private router: Router,
               private msalService: MsalService, private popoverController: PopoverController) {
     this.screenSizeService.isDesktopView().subscribe(isDesktop => {
