@@ -4,27 +4,29 @@
 
 export const environment = {
   production: false,
-  apiEndpoint: '',
   websocketEndpoint: '',
-  clientId: 'undefined',
-  authorityId: 'undefined',
+  clientId: '',
+  apiEndpoint: '',
+  authorityId: '',
   redirectUri: '',
+  postLogoutRedirectUri: '',
   b2cPolicies: {
     names: {
-      signUpSignIn: 'undefined',
-      editProfile: 'undefined'
+      signUpSignIn: '',
+      editProfile: ''
     },
     authorities: {
       signUpSignIn: {
-        authority: 'undefined',
+        authority: '',
       },
       editProfile: {
-        authority: 'undefined'
+        authority: ''
       }
     },
-    authorityDomain: 'undefined'
+    authorityDomain: ''
   }
 };
+
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

@@ -23,17 +23,13 @@ export class NavbarPage implements OnInit {
 
   ngOnInit() {
     //Nothing added here yet
-
   }
 
   /**
-   * Function that calls the MSAL service's logout popup method to logout and then clears the localstorage
+   * Function that calls the MSAL service's logout method to logout and then clears the localstorage
    */
   logout() {
-    this.msalService.logoutPopup();
-    this.router.navigate(['/welcome']).then(() => {
-      localStorage.clear();
-    });
+    this.msalService.logout();
   }
 
 

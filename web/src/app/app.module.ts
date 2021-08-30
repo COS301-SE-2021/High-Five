@@ -26,6 +26,7 @@ import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
         authority: environment.b2cPolicies.authorities.signUpSignIn.authority,
         knownAuthorities: [environment.b2cPolicies.authorityDomain],
         redirectUri: environment.redirectUri,
+        postLogoutRedirectUri: environment.postLogoutRedirectUri
       },
       cache: {
         cacheLocation: 'localStorage',
