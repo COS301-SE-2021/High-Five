@@ -43,6 +43,7 @@ export class ImagesService {
             break;
           case HttpEventType.Response:
             this.snotifyService.success('Successfully uploaded image', 'Image upload');
+            this.images = this.images.concat(ev.body);
             break;
         }
 

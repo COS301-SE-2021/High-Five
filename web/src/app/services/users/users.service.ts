@@ -65,6 +65,21 @@ export class UsersService {
     }
   }
 
+  public async revokeAdmin(id: string) {
+    if (this.isAdmin) {
+      this.userService.revokeAdmin({id}, 'response').subscribe((res) => {
+        if (res.ok) {
+          this.snotifyService.success('Successfully Revoked : ' + this.users.find(
+            value => value.id === id).displayName + ' admin privileges', 'Admin Revocation');
+        } else {
+          this.snotifyService.error(`Error occurred while revoking user admin privileges, please contact an admin`, 'Admin Revocation');
+        }
+      });
+    } else {
+      this.snotifyService.error(`Error occurred while revoking user admin privileges, please contact an admin`, 'Admin Revocation');
+    }
+  }
+
   public async purgeOwnMedia() {
     this.userService.deleteOwnMedia('response').subscribe((res) => {
       if (res.ok) {

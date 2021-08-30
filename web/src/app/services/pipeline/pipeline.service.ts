@@ -51,7 +51,7 @@ export class PipelineService {
       this.pipelinesService.createPipeline({pipeline: {name, tools}}, 'response').subscribe((res) => {
         if (res.ok) {
           this.snotifyService.success('Successfully created pipeline', 'Pipeline Creation');
-          this.fetchAllPipelines();
+          this.pipelines = this.pipelines.concat(res.body.pipeline);
         } else {
           this.snotifyService.error('Error occurred while creating pipeline, contact an admin', 'Pipeline Creation');
         }

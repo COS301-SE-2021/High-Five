@@ -42,6 +42,7 @@ export class VideosService {
             break;
           case HttpEventType.Response:
             this.snotifyService.success('Video upload', 'Successfully uploaded video');
+            this.videos= this.videos.concat(ev.body);
             break;
         }
       });
