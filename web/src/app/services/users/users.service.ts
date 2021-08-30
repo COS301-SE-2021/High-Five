@@ -3,6 +3,11 @@ import {BehaviorSubject} from 'rxjs';
 import {User} from '../../models/user';
 import {UserService} from '../../apis/user.service';
 import {SnotifyService} from 'ng-snotify';
+import {PipelineService} from '../pipeline/pipeline.service';
+import {VideosService} from '../videos/videos.service';
+import {ImagesService} from '../images/images.service';
+import {AnalyzedImagesService} from '../analyzed-images/analyzed-images.service';
+import {AnalyzedVideosService} from '../analyzed-videos/analyzed-videos.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +20,10 @@ export class UsersService {
   readonly users$ = this._users.asObservable();
   private isAdmin = false;
 
-  constructor(private userService: UserService, private snotifyService: SnotifyService) {
+  constructor(private userService: UserService, private snotifyService: SnotifyService,
+              private pipelineService: PipelineService, private videosService: VideosService,
+              private imagesService: ImagesService, private analyzedImagesService: AnalyzedImagesService,
+              private analyzedVideosService: AnalyzedVideosService) {
     this.queryIsAdmin();
   }
 
@@ -108,6 +116,7 @@ export class UsersService {
   public async purgeOwnMedia() {
     this.userService.deleteOwnMedia('response').subscribe((res) => {
       if (res.ok) {
+        this.removeAllMedia();
         this.snotifyService.success(`Successfully purged own media`, 'Own Media Purge');
       } else {
         this.snotifyService.error(`Error occurred while purging own media, please contact an admin`, 'Own Media Purge');
@@ -132,6 +141,15 @@ export class UsersService {
     this.userService.getAllUsers().subscribe((value) => {
       this.users = value.users;
     });
+  }
+
+  private async removeAllMedia() {
+    this.pipelineService.pipelines = [];
+    this.pipelineService.tools = [];
+    this.videosService.videos = [];
+    this.imagesService.images = [];
+    this.analyzedImagesService.analyzedImages = [];
+    this.analyzedVideosService.analyzeVideos = [];
   }
 
 
