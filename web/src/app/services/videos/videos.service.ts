@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {MediaStorageService} from '../../apis/mediaStorage.service';
 import {VideoMetaData} from '../../models/videoMetaData';
+import {HttpEventType} from '@angular/common/http';
+import {SnotifyService} from 'ng-snotify';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,7 @@ export class VideosService {
   // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly videos$ = this._videos.asObservable();
 
-  constructor(private mediaStorageService: MediaStorageService) {
+  constructor(private mediaStorageService: MediaStorageService, private snotifyService: SnotifyService) {
     this.fetchAll();
   }
 
@@ -33,16 +35,18 @@ export class VideosService {
    */
   public async addVideo(video: any) {
     try {
-      await this.mediaStorageService.storeVideoForm(video,'response').subscribe((res)=>{
-        if(res.ok){
-          // TODO : Notification here
-          this.videos = this.videos.concat(res.body);
-        }else{
-          // TODO : Notification here
+      this.mediaStorageService.storeVideoForm(video, 'events', true).subscribe((ev) => {
+        switch (ev.type) {
+          case HttpEventType.UploadProgress:
+            console.log(Math.round(ev.loaded / ev.total * 100));
+            break;
+          case HttpEventType.Response:
+            this.snotifyService.success('Video upload', 'Successfully uploaded video');
+            break;
         }
       });
     } catch (e) {
-      // TODO : Notification here
+      this.snotifyService.error('Error occurred while uploading video, please contact an admin', 'Video upload');
       console.log(e);
     }
   }
@@ -59,16 +63,16 @@ export class VideosService {
 
     if (serverRemove) {
       try {
-        await this.mediaStorageService.deleteVideo({id: videoId}, 'response').subscribe((res)=>{
-          if(res.ok){
-            // TODO : Notification here
-          }else{
-            // TODO : Notification here
+        this.mediaStorageService.deleteVideo({id: videoId}, 'response').subscribe((res) => {
+          if (res.ok) {
+            this.snotifyService.success('Successfully removed video', 'Video Removal');
+          } else {
+            this.snotifyService.error('Error occurred while removing video, please contact an admin', 'Video Removal');
+
           }
         });
       } catch (e) {
-        // TODO : Notification here
-
+        this.snotifyService.error('Error occurred while removing video, please contact an admin', 'Video Removal');
         console.error(e);
         this.videos = [...this.videos, video];
       }
@@ -79,7 +83,7 @@ export class VideosService {
    * Makes a request to retrieve all videos
    */
   public async fetchAll() {
-    await this.mediaStorageService.getAllVideos().subscribe((res) => {
+    this.mediaStorageService.getAllVideos().subscribe((res) => {
       this.videos = res.videos;
     });
   }

@@ -2,12 +2,12 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {Pipeline} from '../../models/pipeline';
 import {PipelinesService} from '../../apis/pipelines.service';
+import {SnotifyService} from 'ng-snotify';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PipelineService {
-
   private readonly _pipelines = new BehaviorSubject<Pipeline[]>([]);
   // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly pipelines$ = this._pipelines.asObservable();
@@ -15,7 +15,7 @@ export class PipelineService {
   // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly tools$ = this._tools.asObservable();
 
-  constructor(private pipelinesService: PipelinesService) {
+  constructor(private pipelinesService: PipelinesService, private snotifyService: SnotifyService) {
     this.fetchAllPipelines();
     this.fetchAllTools();
   }
@@ -48,16 +48,16 @@ export class PipelineService {
    */
   async addPipeline(name: string, tools: string[]) {
     try {
-      await this.pipelinesService.createPipeline({pipeline: {name, tools}}, 'response').subscribe((res) => {
+      this.pipelinesService.createPipeline({pipeline: {name, tools}}, 'response').subscribe((res) => {
         if (res.ok) {
-          // TODO : Notification here
+          this.snotifyService.success('Successfully created pipeline', 'Pipeline Creation');
           this.fetchAllPipelines();
         } else {
-          // TODO : Notification here
+          this.snotifyService.error('Error occurred while creating pipeline, contact an admin', 'Pipeline Creation');
         }
       });
     } catch (e) {
-      // TODO : Notification here
+      this.snotifyService.error('Error occurred while creating pipeline, contact an admin', 'Pipeline Creation');
       console.log(e);
     }
   }
@@ -73,16 +73,16 @@ export class PipelineService {
     this.pipelines = this.pipelines.filter(p => p.id !== pipelineId);
     if (serverRemove) {
       try {
-        await this.pipelinesService.deletePipeline({pipelineId}, 'response').subscribe((res) => {
+        this.pipelinesService.deletePipeline({pipelineId}, 'response').subscribe((res) => {
           if (res.ok) {
-            // TODO : Notification here
+            this.snotifyService.success('Successfully deleted pipeline : ' + pipeline.name, 'Pipeline Deletion');
           } else {
-            // TODO : Notification here
+            this.snotifyService.error('Could not delete pipeline : ' + pipeline.name + ' please contact and admin', 'Pipeline Deletion');
             this.pipelines = [...this.pipelines, pipeline];
           }
         });
       } catch (e) {
-        // TODO : Notification here
+        this.snotifyService.error('Could not delete pipeline : ' + pipeline.name + ' please contact and admin', 'Pipeline Deletion');
         console.error(e);
         this.pipelines = [...this.pipelines, pipeline];
       }
@@ -101,11 +101,11 @@ export class PipelineService {
       this.pipelines = [...this.pipelines];
 
       try {
-        await this.pipelinesService.addTools({pipelineId: id, tools}, 'response').subscribe((res) => {
+        this.pipelinesService.addTools({pipelineId: id, tools}, 'response').subscribe((res) => {
           if (res.ok) {
-            // TODO : Notification here
+            this.snotifyService.success('Successfully added tools : ' + tools, 'Tool Addition');
           } else {
-            // TODO : Notification here
+            this.snotifyService.error('Could not add tools : ' + tools + ' please contact and admin', 'Tool Addition');
             this.pipelines[index] = {
               ...pipeline,
               tools: pipeline.tools
@@ -113,7 +113,7 @@ export class PipelineService {
           }
         });
       } catch (e) {
-        // TODO : Notification here
+        this.snotifyService.error('Could not add tools : ' + tools + ' please contact and admin', 'Tool Addition');
         console.error(e);
         this.pipelines[index] = {
           ...pipeline,
@@ -136,9 +136,9 @@ export class PipelineService {
       try {
         await this.pipelinesService.removeTools({pipelineId: id, tools}, 'response').subscribe((res) => {
           if (res.ok) {
-            // TODO : Notification here
+            this.snotifyService.success('Successfully removed tools : ' + tools, 'Tool Removal');
           } else {
-            // TODO : Notification here
+            this.snotifyService.error('Could not remove tools : ' + tools + ' please contact and admin', 'Tool Removal');
             this.pipelines[index] = {
               ...pipeline,
               tools: pipeline.tools
@@ -146,7 +146,7 @@ export class PipelineService {
           }
         });
       } catch (e) {
-        // TODO : Notification here
+        this.snotifyService.error('Could not remove tools : ' + tools + ' please contact and admin', 'Tool Removal');
         console.error(e);
         this.pipelines[index] = {
           ...pipeline,

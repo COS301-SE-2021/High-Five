@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {MediaStorageService} from '../../apis/mediaStorage.service';
 import {ImageMetaData} from '../../models/imageMetaData';
+import {SnotifyService} from 'ng-snotify';
+import {HttpEvent, HttpEventType} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,7 @@ export class ImagesService {
   // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly images$ = this._images.asObservable();
 
-  constructor(private mediaStorageService: MediaStorageService,) {
+  constructor(private mediaStorageService: MediaStorageService, private snotifyService: SnotifyService) {
     this.fetchAll();
   }
 
@@ -34,16 +36,19 @@ export class ImagesService {
    */
   public async addImage(image: any) {
     try {
-      this.mediaStorageService.storeImageForm(image, 'response').subscribe((res) => {
-        if (res.ok) {
-          // TODO : Notification here
-          this.images = this.images.concat(res.body);
-        } else {
-          // TODO : Notification here
+      this.mediaStorageService.storeImageForm(image, 'events', true).subscribe((ev: HttpEvent<any>) => {
+        switch (ev.type) {
+          case HttpEventType.UploadProgress:
+            console.log(Math.round(ev.loaded / ev.total * 100));
+            break;
+          case HttpEventType.Response:
+            this.snotifyService.success('Successfully uploaded image', 'Image upload');
+            break;
         }
+
       });
     } catch (e) {
-      // TODO : Notification here
+      this.snotifyService.error('Image upload failed, please contact an admin', 'Image Upload');
       console.log(e);
     }
   }
@@ -64,14 +69,14 @@ export class ImagesService {
       try {
         await this.mediaStorageService.deleteImage({id: imageId}, 'response').subscribe((res) => {
           if (res.ok) {
-            // TODO : Notification here
+            this.snotifyService.success('Successfully removed image', 'Image Removal');
           } else {
-            // TODO : Notification here
+            this.snotifyService.error('Error occurred while removing image, please contact an admin', 'Image Removal');
             this.images = [...this.images, image];
           }
         });
       } catch (e) {
-        // TODO : Notification here
+        this.snotifyService.error('Error occurred while removing image, please contact an admin', 'Image Removal');
         console.error(e);
         this.images = [...this.images, image];
       }

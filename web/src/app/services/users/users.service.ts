@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {User} from '../../models/user';
 import {UserService} from '../../apis/user.service';
+import {SnotifyService} from 'ng-snotify';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class UsersService {
   readonly users$ = this._users.asObservable();
   private isAdmin = false;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private snotifyService: SnotifyService) {
     this.queryIsAdmin();
   }
 
@@ -35,18 +36,43 @@ export class UsersService {
 
   public async purgeMedia(id: string) {
     if (this.isAdmin) {
-      await this.userService.deleteMedia({id}).toPromise();
+      this.userService.deleteMedia({id}, 'response').subscribe((res) => {
+        if (res.ok) {
+          this.snotifyService.success('Successfully purged media of : ' + this.users.find(
+            value => value.id === id).displayName, 'Media Purge');
+        } else {
+          this.snotifyService.error(`Error occurred while purging media, please contact an admin`, 'Media Purge');
+        }
+      });
+
+    } else {
+      this.snotifyService.error(`Error occurred while purging media, please contact an admin`, 'Media Purge');
     }
   }
 
   public async upgradeToAdmin(id: string) {
     if (this.isAdmin) {
-      await this.userService.upgradeToAdmin({id}).toPromise();
+      this.userService.upgradeToAdmin({id}, 'response').subscribe((res) => {
+        if (res.ok) {
+          this.snotifyService.success('Successfully upgraded : ' + this.users.find(
+            value => value.id === id).displayName + ' to admin', 'User Upgrade');
+        } else {
+          this.snotifyService.error(`Error occurred while upgrading user to admin, please contact an admin`, 'User Upgrade');
+        }
+      });
+    } else {
+      this.snotifyService.error(`Error occurred while upgrading user to admin, please contact an admin`, 'User Upgrade');
     }
   }
 
   public async purgeOwnMedia() {
-    await this.userService.deleteOwnMedia().toPromise();
+    this.userService.deleteOwnMedia('response').subscribe((res) => {
+      if (res.ok) {
+        this.snotifyService.success(`Successfully purged own media`, 'Own Media Purge');
+      } else {
+        this.snotifyService.error(`Error occurred while purging own media, please contact an admin`, 'Own Media Purge');
+      }
+    });
   }
 
 

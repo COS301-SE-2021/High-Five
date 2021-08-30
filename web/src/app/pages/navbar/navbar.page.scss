@@ -4,7 +4,7 @@
     margin-bottom: 1vh;
   }
   .logo{
-    max-height: 5vh;
+   height: 50px;
   }
   ion-toolbar{
     --background : rgb(255,255,255);
@@ -35,8 +35,8 @@
 
 #accountAvatar{
   background: rgba(0,0,0,0.2);
-  height: 5vh;
-  width: 5vh;
+  height: 50px;
+  width: 50px;
   justify-content: center;
   align-items: center;
   text-align: center;
