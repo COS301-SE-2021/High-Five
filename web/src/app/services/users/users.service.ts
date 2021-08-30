@@ -51,32 +51,57 @@ export class UsersService {
   }
 
   public async upgradeToAdmin(id: string) {
-    if (this.isAdmin) {
-      this.userService.upgradeToAdmin({id}, 'response').subscribe((res) => {
-        if (res.ok) {
-          this.snotifyService.success('Successfully upgraded : ' + this.users.find(
-            value => value.id === id).displayName + ' to admin', 'User Upgrade');
-        } else {
-          this.snotifyService.error(`Error occurred while upgrading user to admin, please contact an admin`, 'User Upgrade');
-        }
-      });
+    const user = this.users.find(value => value.id === id);
+    if (user) {
+      const index = this.users.indexOf(user);
+      this.users[index] = {
+        ...user,
+        isAdmin: true
+      };
+      this.users = [...this.users];
+      if (this.isAdmin) {
+        this.userService.upgradeToAdmin({id}, 'response').subscribe((res) => {
+          if (res.ok) {
+            this.snotifyService.success('Successfully upgraded : ' + user.displayName + ' to admin', 'User Upgrade');
+          } else {
+            this.snotifyService.error(`Error occurred while upgrading user to admin, please contact an admin`, 'User Upgrade');
+            this.users[index] = {
+              ...user,
+              isAdmin: user.isAdmin
+            };
+          }
+        });
+      } else {
+        this.snotifyService.error(`Error occurred while upgrading user to admin, please contact an admin`, 'User Upgrade');
+      }
     } else {
-      this.snotifyService.error(`Error occurred while upgrading user to admin, please contact an admin`, 'User Upgrade');
+      this.snotifyService.error(`User doesn't exist anymore, please contact an admin id this is a mistake`, 'User Upgrade');
     }
   }
 
   public async revokeAdmin(id: string) {
-    if (this.isAdmin) {
-      this.userService.revokeAdmin({id}, 'response').subscribe((res) => {
-        if (res.ok) {
-          this.snotifyService.success('Successfully Revoked : ' + this.users.find(
-            value => value.id === id).displayName + ' admin privileges', 'Admin Revocation');
-        } else {
-          this.snotifyService.error(`Error occurred while revoking user admin privileges, please contact an admin`, 'Admin Revocation');
-        }
-      });
-    } else {
-      this.snotifyService.error(`Error occurred while revoking user admin privileges, please contact an admin`, 'Admin Revocation');
+    const user = this.users.find(value => value.id === id);
+    if (user) {
+      const index = this.users.indexOf(user);
+      this.users[index] = {
+        ...user,
+        isAdmin: false
+      };
+      if (this.isAdmin) {
+        this.userService.revokeAdmin({id}, 'response').subscribe((res) => {
+          if (res.ok) {
+            this.snotifyService.success('Successfully revoked : ' + user.displayName + `'s admin privileges`, 'Admin Revocation');
+          } else {
+            this.users[index] = {
+              ...user,
+              isAdmin: user.isAdmin
+            };
+            this.snotifyService.error(`Error occurred while revoking user admin privileges, please contact an admin`, 'Admin Revocation');
+          }
+        });
+      } else {
+        this.snotifyService.error(`Error occurred while revoking user admin privileges, please contact an admin`, 'Admin Revocation');
+      }
     }
   }
 

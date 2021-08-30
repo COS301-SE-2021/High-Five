@@ -19,8 +19,7 @@ export class AccountComponent implements OnInit {
 
   public usersTrackFn = (u, user) => user.id;
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
 
   public async close() {
@@ -42,11 +41,9 @@ export class AccountComponent implements OnInit {
     const checked: boolean = event['detail']['checked'];
     /* eslint-enable */
     if (checked) {
-      //console.log('making admin');
       await this.usersService.upgradeToAdmin(user.id);
     } else {
-      //console.log('unmaking admin');
-
+      await this.usersService.revokeAdmin(user.id);
     }
   }
 

@@ -271,9 +271,9 @@
             </ion-list-header>
             <ion-item *ngFor="let user of usersService.users$ | async; trackBy : usersTrackFn ">
               <ion-label>
-                {{user.displayName}}
+                {{user.displayName}} ({{user.email}})
               </ion-label>
-              <ion-toggle slot="end" [(ngModel)]="user.isAdmin"
+              <ion-toggle slot="end" [ngModel]="user.isAdmin"
                           (ionChange)="changeUserAdminStatus($event, user)"></ion-toggle>
               <ion-button slot="end" fill="clear" expand="block" color="warning" (click)="purgeUserMedia(user)">
                 <ion-icon name="trash-bin-outline"></ion-icon>
