@@ -1,0 +1,11 @@
+﻿{
+  "profiles": {
+    "analysis_engine": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
