@@ -18,7 +18,9 @@ namespace analysis_engine.Util
 
         public Data pop()
         {
-            throw new System.NotImplementedException();
+            Data item;
+            var isSuccessful = dataQueue.TryDequeue(out item);
+            return isSuccessful ? item : null;
         }
     }
 }
