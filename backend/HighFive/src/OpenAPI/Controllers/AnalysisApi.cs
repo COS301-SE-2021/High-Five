@@ -56,7 +56,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get Live Analysis Token use case</remarks>
         /// <response code="200">Returns a token that can be used to connect a client to the analysis engine for live streaming/analysis</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/analysis/getLiveAnalysisToken")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetLiveAnalysisTokenResponse))]
