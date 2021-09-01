@@ -80,7 +80,7 @@ paths:
                 $ref: '#/components/schemas/videoMetaData'
 
   /media/getAllVideos:
-    post:
+    get:
       tags:
         - "MediaStorage"
       description: Endpoint for Get All Videos use case
@@ -134,7 +134,7 @@ paths:
                 $ref: '#/components/schemas/imageMetaData'
 
   /media/getAllImages:
-    post:
+    get:
       tags:
         - "MediaStorage"
       description: Endpoint for Get All Images use case
@@ -168,7 +168,7 @@ paths:
                 $ref: '#/components/schemas/emptyObject'
 
   /media/getAnalyzedImages:
-    post:
+    get:
       tags:
         - "MediaStorage"
       description: Endpoint for Get Analyzed Images use case
@@ -182,7 +182,7 @@ paths:
                 $ref: '#/components/schemas/getAnalyzedImagesResponse'
 
   /media/getAnalyzedVideos:
-    post:
+    get:
       tags:
         - "MediaStorage"
       description: Endpoint for Get Analyzed Videos use case
@@ -259,7 +259,7 @@ paths:
                 $ref: '#/components/schemas/createPipelineResponse'
 
   /pipelines/getPipelines:
-    post:
+    get:
       tags:
         - "Pipelines"
       description: Endpoint for Get Pipelines use case
@@ -273,7 +273,7 @@ paths:
                 $ref: '#/components/schemas/getPipelinesResponse'
 
   /pipelines/getPipelineIds:
-    post:
+    get:
       tags:
         - "Pipelines"
       description: Endpoint for Get Pipeline Ids use case
@@ -367,7 +367,7 @@ paths:
                 $ref: '#/components/schemas/emptyObject'
 
   /pipelines/getAllTools:
-    post:
+    get:
       tags:
         - "Pipelines"
       description: Endpoint for Get All Tools use case
@@ -427,7 +427,7 @@ paths:
                 $ref: '#/components/schemas/analyzedVideoMetaData'
 
   /analysis/getLiveAnalysisToken:
-    post:
+    get:
       tags:
         - "Analysis"
       description: Endpoint for Get Live Analysis Token use case
@@ -445,7 +445,7 @@ paths:
   #==========================================================
 
   /users/getAllUsers:
-    post:
+    get:
       tags:
         - "User"
       description: Endpoint for Get All Users use case
@@ -491,7 +491,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
-    
+
   /users/upgradeToAdmin:
     post:
       tags:
@@ -511,9 +511,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
-                
+
   /users/isAdmin:
-    post:
+    get:
       tags:
         - "User"
       description: Endpoint for Is Admin use case
@@ -811,7 +811,7 @@ components:
       properties:
         url:
           type: string
-    
+
     getLiveAnalysisTokenResponse:
       type: object
       properties:
@@ -829,7 +829,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/user'
-    
+
     user:
       type: object
       properties:
@@ -841,20 +841,20 @@ components:
           type: string
         isAdmin:
           type: boolean
-    
+
     userRequest:
       type: object
       properties:
         id:
           type: string
           description: user id
-    
+
     isAdminResposne:
       type: object
       properties:
         isAdmin:
           type: boolean
-    
+
     #==========================================================
     #     GENERIC COMPONENTS
     #==========================================================
