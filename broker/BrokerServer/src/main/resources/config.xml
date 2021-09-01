@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <kafka>
+        <host>localhost</host>
+        <port>9092</port>
+        <location>/home/kyle-pc/Downloads/kafka_2.13-2.8.0/</location>
+        <topics>
+            <command basedir="bin">kafka-topics.sh</command>
+            <list>--list</list>
+        </topics>
+    </kafka>
+</configuration>

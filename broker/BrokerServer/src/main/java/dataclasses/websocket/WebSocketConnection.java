@@ -6,7 +6,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
 @ServerEndpoint(
-        value="/broker",
+        value="/broker/{clientType}",
         decoders = MessageDecoder.class,
         encoders = MessageEncoder.class )
 public class WebSocketConnection {
