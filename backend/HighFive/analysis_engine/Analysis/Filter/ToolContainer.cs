@@ -9,14 +9,14 @@ namespace analysis_engine.Filter
         private Tool _tool;
         private Pipe _input;
         private Pipe _output;
-        public FilterManager Manager { get; set; }
+        private FilterManager _manager;
         
-        
-        public ToolContainer(Tool tool, Pipe input, Pipe output)
+        public ToolContainer(Tool tool, Pipe input, Pipe output, FilterManager manager)
         {
+            _tool = tool;
             _input = input;
             _output = output;
-            _tool = tool;
+            _manager = manager;
             tool.Init();
         }
     }
