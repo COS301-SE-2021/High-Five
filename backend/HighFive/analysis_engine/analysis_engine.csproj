@@ -10,9 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Filter" />
       <Folder Include="Network" />
       <Folder Include="Streaming" />
-      <Folder Include="Tool" />
     </ItemGroup>
 </Project>
