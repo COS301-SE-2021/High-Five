@@ -31,8 +31,7 @@ import {environment} from '../../environments/environment';
 export class TestService {
 
   protected basePath = environment.apiEndpoint;
-  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(localStorage.getItem(localStorage.key(0))).secret);
-
+  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(sessionStorage.getItem(sessionStorage.key(0))).secret);
   public configuration = new Configuration();
 
   constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {

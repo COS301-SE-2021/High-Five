@@ -29,7 +29,7 @@ import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
         postLogoutRedirectUri: environment.postLogoutRedirectUri
       },
       cache: {
-        cacheLocation: 'localStorage',
+        cacheLocation: 'sessionStorage',
         storeAuthStateInCookie: false
       }
     }), {
@@ -37,7 +37,7 @@ import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
       authRequest: {
         scopes: ['user.read']
       },
-      loginFailedRoute: '/welcome'
+      loginFailedRoute: ''
     }, null)],
   providers: [{
     provide: RouteReuseStrategy,
