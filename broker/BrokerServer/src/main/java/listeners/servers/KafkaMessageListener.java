@@ -28,27 +28,32 @@ public class KafkaMessageListener extends ConnectionListener {
      * the notifier is called, with the name of the topic passed.
      */
     @Override
-    public void listen() throws IOException, ParserConfigurationException, SAXException {
-        Runtime rt = Runtime.getRuntime();
-        Process proc = rt.exec(System.getenv("KAFKA_LIST_TOPICS"));
+    public void listen() throws IOException, InterruptedException {
 
-        String line = null;
+        while (true) {
+            Runtime rt = Runtime.getRuntime();
+            Process proc = rt.exec(System.getenv("KAFKA_LIST_TOPICS"));
 
-        BufferedReader inputStreamReader =
-                new BufferedReader(new InputStreamReader(proc.getInputStream()));
-        while ((line = inputStreamReader.readLine()) != null) {
-            if (!topics.contains(line)) {
-                Message msg = new Message();
-                msg.setContent(line);
-                notify(msg);
-                topics.add(line);
+
+            String line = null;
+
+            BufferedReader inputStreamReader =
+                    new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            while ((line = inputStreamReader.readLine()) != null) {
+                if (!topics.contains(line)) {
+                    Message msg = new Message();
+                    msg.setContent(line);
+                    notify(msg);
+                    topics.add(line);
+                }
             }
-        }
 
-        BufferedReader errorStreamReader =
-                new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-        while ((line = errorStreamReader.readLine()) != null) {
-            System.out.println(line);
+            BufferedReader errorStreamReader =
+                    new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+            while ((line = errorStreamReader.readLine()) != null) {
+                System.out.println(line);
+            }
+            Thread.sleep(1000L);
         }
     }
 }
