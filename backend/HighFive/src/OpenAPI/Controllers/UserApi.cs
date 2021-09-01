@@ -55,7 +55,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get All Users use case</remarks>
         /// <response code="200">All users are returned</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/users/getAllUsers")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetAllUsersResponse))]
@@ -66,7 +66,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Is Admin use case</remarks>
         /// <response code="200">Used to verify whether the currently logged in user is an admin or not</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/users/isAdmin")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(IsAdminResposne))]

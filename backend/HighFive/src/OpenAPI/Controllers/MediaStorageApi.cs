@@ -83,7 +83,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get All Images use case</remarks>
         /// <response code="200">Returns a list of images in the blob storage</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/media/getAllImages")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetAllImagesResponse))]
@@ -94,7 +94,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get All Videos use case</remarks>
         /// <response code="200">Returns a list of metadata objects of all the videos in the blob storage</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/media/getAllVideos")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetAllVideosResponse))]
@@ -105,7 +105,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get Analyzed Images use case</remarks>
         /// <response code="200">All previously analyzed images are returned</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/media/getAnalyzedImages")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetAnalyzedImagesResponse))]
@@ -116,7 +116,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get Analyzed Videos use case</remarks>
         /// <response code="200">All previously analyzed videos are returned</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/media/getAnalyzedVideos")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetAnalyzedVideosResponse))]
