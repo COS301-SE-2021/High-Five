@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-public class KafkaMessageListener extends ConnectionListener {
+public class KafkaMessageListener extends ConnectionListener<String> {
 
     private final List<String> topics;
 

@@ -6,17 +6,17 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
-public abstract class ConnectionListener extends Thread {
-    private final Observer<String> notifier;
+public abstract class ConnectionListener<T> extends Thread {
+    private final Observer<T> notifier;
 
-    public ConnectionListener(Observer<String> notifier) {
+    public ConnectionListener(Observer<T> notifier) {
         this.notifier = notifier;
     }
 
     protected abstract void listen() throws IOException, ParserConfigurationException, SAXException, InterruptedException;
 
-    protected void notify(String message) {
-        notifier.onNext(message);
+    protected void notify(T item) {
+        notifier.onNext(item);
     }
 
     @Override

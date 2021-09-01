@@ -11,6 +11,7 @@ import java.io.IOException;
         decoders = RequestDecoder.class,
         encoders = RequestEncoder.class )
 public class WebSocketConnection {
+
     private Session session;
 
     @OnOpen
@@ -36,5 +37,13 @@ public class WebSocketConnection {
 
     public void sendServerInformation(ServerInformation information) throws IOException {
         session.getBasicRemote().sendText(information.toString());
+    }
+
+    public void doOnOpen(AddConnection addConnection) {
+        addConnection.operation(this);
+    }
+
+    public interface AddConnection {
+        void operation(WebSocketConnection connection);
     }
 }
