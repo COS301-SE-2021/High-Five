@@ -69,7 +69,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get All Tools use case</remarks>
         /// <response code="200">All existing tools have been returned</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/pipelines/getAllTools")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(List<string>))]
@@ -93,7 +93,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get Pipeline Ids use case</remarks>
         /// <response code="200">All pipeline Id&#39;s have been returned</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/pipelines/getPipelineIds")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetPipelineIdsResponse))]
@@ -104,7 +104,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get Pipelines use case</remarks>
         /// <response code="200">All pipelines have been returned</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/pipelines/getPipelines")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetPipelinesResponse))]
