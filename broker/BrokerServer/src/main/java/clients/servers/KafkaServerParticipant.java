@@ -1,6 +1,5 @@
 package clients.servers;
 
-import dataclasses.websocket.Message;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 
@@ -16,7 +15,7 @@ public class KafkaServerParticipant extends ServerParticipant {
 
     private final List<String> topics;
 
-    public KafkaServerParticipant(Observer<Message> observable, ArrayList<String> topics) {
+    public KafkaServerParticipant(Observer<String> observable, ArrayList<String> topics) {
         super(observable);
         this.topics = topics;
     }
@@ -44,8 +43,8 @@ public class KafkaServerParticipant extends ServerParticipant {
                     return;
                 }
 
-                String line = null;
-                Message msg = new Message();
+                String line;
+                String msg = null;
 
                 //Read all the messages from the topic, but only use the latest message.
                 BufferedReader inputStreamReader =
@@ -57,12 +56,16 @@ public class KafkaServerParticipant extends ServerParticipant {
                         beat = false;
                         return;
                     }
-                    msg.setContent(line);
+                    msg = line;
+                }
+
+                if (msg == null) {
+                    return;
                 }
 
                 //delete topic if the last message sent is older than 45 seconds. This means the server is
                 //offline.
-                if (((int) System.currentTimeMillis()/1000L) - getMessageTime(msg.getContent()) > 45 ) {
+                if (((int) System.currentTimeMillis()/1000L) - getMessageTime(msg) > 45 ) {
                     deleteTopic(topic);
                 } else {
                     notify(msg);

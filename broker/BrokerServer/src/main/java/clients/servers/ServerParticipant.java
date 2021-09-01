@@ -1,19 +1,17 @@
 package clients.servers;
 
 import clients.ClientBase;
-import dataclasses.websocket.Message;
-import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 
 public abstract class ServerParticipant extends Thread implements ClientBase {
-    private final Observer<Message> serverInfoObservable;
+    private final Observer<String> serverInfoObservable;
     protected boolean beat = true;
 
-    public ServerParticipant(Observer<Message> observable) {
+    public ServerParticipant(Observer<String> observable) {
         serverInfoObservable = observable;
     }
 
-    public void notify(Message message) {
+    public void notify(String message) {
         serverInfoObservable.onNext(message);
     }
 

@@ -1,18 +1,18 @@
 package dataclasses.websocket.codecs;
 
 import com.google.gson.Gson;
-import dataclasses.websocket.Message;
+import dataclasses.websocket.ClientRequest;
 
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
 
-public class MessageEncoder implements Encoder.Text<Message> {
+public class RequestEncoder implements Encoder.Text<ClientRequest> {
 
     private static final Gson gson = new Gson();
 
     @Override
-    public String encode(Message message) throws EncodeException {
+    public String encode(ClientRequest message) throws EncodeException {
         return gson.toJson(message);
     }
 

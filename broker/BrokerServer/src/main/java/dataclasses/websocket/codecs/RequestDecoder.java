@@ -1,17 +1,17 @@
 package dataclasses.websocket.codecs;
 
 import com.google.gson.Gson;
-import dataclasses.websocket.Message;
+import dataclasses.websocket.ClientRequest;
 
 import javax.websocket.*;
 
-public class MessageDecoder implements Decoder.Text<Message> {
+public class RequestDecoder implements Decoder.Text<ClientRequest> {
 
     private static Gson gson = new Gson();
 
     @Override
-    public Message decode(String s) throws DecodeException {
-        return gson.fromJson(s, Message.class);
+    public ClientRequest decode(String s) throws DecodeException {
+        return gson.fromJson(s, ClientRequest.class);
     }
 
     @Override

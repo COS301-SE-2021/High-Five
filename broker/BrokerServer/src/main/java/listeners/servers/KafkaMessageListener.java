@@ -1,26 +1,17 @@
 package listeners.servers;
 
-import dataclasses.websocket.Message;
 import io.reactivex.rxjava3.core.Observer;
 import listeners.ConnectionListener;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
 public class KafkaMessageListener extends ConnectionListener {
 
     private final List<String> topics;
 
-    public KafkaMessageListener(Observer<Message> notifier, List<String> topics) {
+    public KafkaMessageListener(Observer<String> notifier, List<String> topics) {
         super(notifier);
         this.topics = topics;
     }
@@ -43,9 +34,7 @@ public class KafkaMessageListener extends ConnectionListener {
                     new BufferedReader(new InputStreamReader(proc.getInputStream()));
             while ((line = inputStreamReader.readLine()) != null) {
                 if (!topics.contains(line)) {
-                    Message msg = new Message();
-                    msg.setContent(line);
-                    notify(msg);
+                    notify(line);
                 }
             }
 
