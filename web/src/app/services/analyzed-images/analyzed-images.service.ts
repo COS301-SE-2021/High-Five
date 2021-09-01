@@ -43,8 +43,8 @@ export class AnalyzedImagesService {
    * @param mediaType the media type, video or image
    */
   public async analyzeImage(mediaId: string, pipelineId: string, mediaType: string = 'image') {
-    await this.analysisService.analyzeMedia({mediaId, pipelineId, mediaType}).toPromise();
-    await this.fetchAll();
+    // await this.analysisService.analyzeMedia({mediaId, pipelineId, mediaType}).toPromise();
+    // await this.fetchAll();
   }
 
   /**

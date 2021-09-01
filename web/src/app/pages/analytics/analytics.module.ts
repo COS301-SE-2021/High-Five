@@ -9,7 +9,7 @@ import {AnalyticsPageRoutingModule} from './analytics-routing.module';
 import {AnalyticsPage} from './analytics.page';
 import {SwiperModule} from 'swiper/angular';
 import {AddPipelineComponent} from '../../components/add-pipeline/add-pipeline.component';
-import {CustomComponentsModule} from "../../components/components.module";
+import {CustomComponentsModule} from '../../components/components.module';
 
 @NgModule({
   imports: [
