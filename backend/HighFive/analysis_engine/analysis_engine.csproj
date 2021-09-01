@@ -14,6 +14,5 @@
       <Folder Include="Network" />
       <Folder Include="Streaming" />
       <Folder Include="Tool" />
-      <Folder Include="Util" />
     </ItemGroup>
 </Project>
