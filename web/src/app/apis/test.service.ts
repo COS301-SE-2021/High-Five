@@ -24,15 +24,14 @@ import {PingResponse} from '../models/pingResponse';
 
 import {BASE_PATH, COLLECTION_FORMATS} from '../variables';
 import {Configuration} from '../configuration';
-import {environment} from "../../environments/environment";
+import {environment} from '../../environments/environment';
 
 
 @Injectable()
 export class TestService {
 
   protected basePath = environment.apiEndpoint;
-  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('jwt'));
-
+  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(sessionStorage.getItem(sessionStorage.key(0))).secret);
   public configuration = new Configuration();
 
   constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
@@ -63,6 +62,7 @@ export class TestService {
   /**
    *
    * Test if the server is online
+   *
    * @param body
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
@@ -79,7 +79,7 @@ export class TestService {
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
+    const httpHeaderAccepts: string[] = [
       'application/json'
     ];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
@@ -98,11 +98,11 @@ export class TestService {
 
     return this.httpClient.request<PingResponse>('post', `${this.basePath}/test/echo`,
       {
-        body: body,
+        body,
         withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
+        headers,
+        observe,
+        reportProgress
       }
     );
   }
@@ -110,6 +110,7 @@ export class TestService {
   /**
    *
    * Test if the server is online
+   *
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
@@ -121,7 +122,7 @@ export class TestService {
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
+    const httpHeaderAccepts: string[] = [
       'application/json'
     ];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
@@ -135,9 +136,9 @@ export class TestService {
     return this.httpClient.request<PingResponse>('post', `${this.basePath}/test/ping`,
       {
         withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
+        headers,
+        observe,
+        reportProgress
       }
     );
   }
