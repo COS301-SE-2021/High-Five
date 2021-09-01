@@ -1,3 +1,4 @@
+import clients.servers.ServerParticipant;
 import dataclasses.websocket.Message;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
@@ -7,9 +8,13 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import listeners.ConnectionListener;
 import listeners.servers.KafkaMessageListener;
 
+import java.util.ArrayList;
+import java.util.concurrent.ThreadPoolExecutor;
+
 public class Broker {
-    private ConnectionListener serverListener;
+    private final ConnectionListener serverListener;
     private ConnectionListener clientListener;
+    private ServerParticipant serverParticipant;
     private Observer<Message> serverObservable;
 
     public Broker() {

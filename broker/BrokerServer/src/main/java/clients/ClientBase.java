@@ -1,4 +1,6 @@
 package clients;
 
-public abstract class ClientBase {
+public interface ClientBase {
+    boolean heartbeat();
+    void listen() throws InterruptedException;
 }
