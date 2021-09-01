@@ -14,13 +14,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 public class KafkaMessageListener extends ConnectionListener {
 
-    private final ArrayList<String> topics = new ArrayList<>();
+    private final List<String> topics;
 
-    public KafkaMessageListener(Observer<Message> notifier) {
+    public KafkaMessageListener(Observer<Message> notifier, List<String> topics) {
         super(notifier);
+        this.topics = topics;
     }
 
     /**
@@ -44,7 +46,6 @@ public class KafkaMessageListener extends ConnectionListener {
                     Message msg = new Message();
                     msg.setContent(line);
                     notify(msg);
-                    topics.add(line);
                 }
             }
 

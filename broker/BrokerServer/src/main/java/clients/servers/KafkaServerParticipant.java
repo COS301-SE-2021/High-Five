@@ -8,10 +8,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class KafkaServerParticipant extends ServerParticipant {
 
-    private final ArrayList<String> topics;
+    private final List<String> topics;
 
     public KafkaServerParticipant(Observer<Message> observable, ArrayList<String> topics) {
         super(observable);
@@ -23,6 +26,10 @@ public class KafkaServerParticipant extends ServerParticipant {
         return beat;
     }
 
+    /**
+     * Iterate through the list of given topics and read the messages from each topic.
+     * Only the last message sent will be used to notify the given observer.
+     */
     @Override
     public void listen() throws InterruptedException {
         while (true) {
@@ -38,7 +45,9 @@ public class KafkaServerParticipant extends ServerParticipant {
                 }
 
                 String line = null;
+                Message msg = new Message();
 
+                //Read all the messages from the topic, but only use the latest message.
                 BufferedReader inputStreamReader =
                         new BufferedReader(new InputStreamReader(proc.getInputStream()));
                 while (true) {
@@ -48,13 +57,46 @@ public class KafkaServerParticipant extends ServerParticipant {
                         beat = false;
                         return;
                     }
-                    Message msg = new Message();
                     msg.setContent(line);
+                }
+
+                //delete topic if the last message sent is older than 45 seconds. This means the server is
+                //offline.
+                if (((int) System.currentTimeMillis()/1000L) - getMessageTime(msg.getContent()) > 45 ) {
+                    deleteTopic(topic);
+                } else {
                     notify(msg);
-                    topics.add(line);
+                    proc.destroy();
                 }
             }
             Thread.sleep(1000L);
         }
+    }
+
+    /**
+     * Delete a topic.
+     * @param topic Name of topic to be deleted.
+     */
+    private void deleteTopic(String topic) {
+        Runtime rt = Runtime.getRuntime();
+        String exec = System.getenv("KAFKA_DELETE_TOPIC").replace("{topic}", topic);
+        try {
+            rt.exec(exec);
+        } catch (IOException ignored) {
+
+        }
+    }
+
+    /**
+     * Retrieve the time the message was sent.
+     * @param message The message to fetch the time from.
+     * @return UNIX timestamp of time message was sent.
+     */
+    private long getMessageTime(String message) {
+        Matcher timePattern = Pattern.compile("timestamp: *(\\d+).*[,}]").matcher(message);
+        if (!timePattern.find()) {
+            return 0;
+        }
+        return Long.parseLong(timePattern.group(1));
     }
 }

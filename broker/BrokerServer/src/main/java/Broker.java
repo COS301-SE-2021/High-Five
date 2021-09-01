@@ -9,13 +9,19 @@ import listeners.ConnectionListener;
 import listeners.servers.KafkaMessageListener;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class Broker {
     private final ConnectionListener serverListener;
     private ConnectionListener clientListener;
     private ServerParticipant serverParticipant;
-    private Observer<Message> serverObservable;
+    private Object infoLock = new Object();
+    private final LinkedList<Message> serverPerformanceInfo = new LinkedList<>();
+    private final Object topicLock = new Object();
+    private final ArrayList<String> topics = new ArrayList<>();
+    private final Observer<Message> serverObservable;
+    private final Observer<Message> serverParticipantObserver;
 
     public Broker() {
         serverObservable = new Observer<Message>() {
@@ -26,7 +32,9 @@ public class Broker {
 
             @Override
             public void onNext(@NonNull Message message) {
-                System.out.println(message.getContent());
+                synchronized (topicLock) {
+                    topics.add(message.getContent());
+                }
             }
 
             @Override
@@ -39,7 +47,32 @@ public class Broker {
 
             }
         };
-        serverListener = new KafkaMessageListener(serverObservable);
+
+        serverParticipantObserver = new Observer<Message>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull Message message) {
+
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+
+        serverListener = new KafkaMessageListener(serverObservable, topics);
         serverListener.start();
+
+
     }
 }
