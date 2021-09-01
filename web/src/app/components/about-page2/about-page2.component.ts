@@ -68,6 +68,7 @@ export class AboutPage2Component implements OnInit {
     const modal = await this.modalController.create({
       component: MoreInfoComponent,
       showBackdrop: true,
+      cssClass : 'moreInfoModal',
       animated: true,
       backdropDismiss: true,
       componentProps: {

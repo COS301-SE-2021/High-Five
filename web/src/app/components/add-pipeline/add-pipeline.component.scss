@@ -1,4 +1,10 @@
-
-ion-toolbar {
-  --background: rgba(0,0,0,1) !important;
+*{
+  background: transparent;
+  --background: transparent;
+}
+#tools-grid{
+  border-color: white;
+  border-width: .01em;
+  border-style: solid;
+  margin-bottom: -1px;
 }
