@@ -37,7 +37,7 @@ import {environment} from '../../environments/environment';
 @Injectable()
 export class MediaStorageService {
   protected basePath = environment.apiEndpoint;
-  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(localStorage.getItem(localStorage.key(0)))['secret']);
+  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(localStorage.getItem(localStorage.key(0))).secret);
   public configuration = new Configuration();
 
   constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
@@ -283,7 +283,7 @@ export class MediaStorageService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<GetAllImagesResponse>('post', `${this.basePath}/media/getAllImages`,
+    return this.httpClient.request<GetAllImagesResponse>('get', `${this.basePath}/media/getAllImages`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
@@ -319,7 +319,7 @@ export class MediaStorageService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<GetAllVideosResponse>('post', `${this.basePath}/media/getAllVideos`,
+    return this.httpClient.request<GetAllVideosResponse>('get', `${this.basePath}/media/getAllVideos`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
@@ -355,7 +355,7 @@ export class MediaStorageService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<GetAnalyzedImagesResponse>('post', `${this.basePath}/media/getAnalyzedImages`,
+    return this.httpClient.request<GetAnalyzedImagesResponse>('get', `${this.basePath}/media/getAnalyzedImages`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
@@ -391,7 +391,7 @@ export class MediaStorageService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<GetAnalyzedVideosResponse>('post', `${this.basePath}/media/getAnalyzedVideos`,
+    return this.httpClient.request<GetAnalyzedVideosResponse>('get', `${this.basePath}/media/getAnalyzedVideos`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,

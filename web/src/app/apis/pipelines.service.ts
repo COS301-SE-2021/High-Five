@@ -39,7 +39,7 @@ import {environment} from '../../environments/environment';
 export class PipelinesService {
 
   protected basePath = environment.apiEndpoint;
-  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(localStorage.getItem(localStorage.key(0)))['secret']);
+  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(localStorage.getItem(localStorage.key(0))).secret);
   public configuration = new Configuration();
 
   constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
@@ -237,7 +237,7 @@ export class PipelinesService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<Array<string>>('post', `${this.basePath}/pipelines/getAllTools`,
+    return this.httpClient.request<Array<string>>('get', `${this.basePath}/pipelines/getAllTools`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
@@ -321,7 +321,7 @@ export class PipelinesService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<GetPipelineIdsResponse>('post', `${this.basePath}/pipelines/getPipelineIds`,
+    return this.httpClient.request<GetPipelineIdsResponse>('get', `${this.basePath}/pipelines/getPipelineIds`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
@@ -357,7 +357,7 @@ export class PipelinesService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<GetPipelinesResponse>('post', `${this.basePath}/pipelines/getPipelines`,
+    return this.httpClient.request<GetPipelinesResponse>('get', `${this.basePath}/pipelines/getPipelines`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,

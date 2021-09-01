@@ -34,7 +34,7 @@ import {environment} from '../../environments/environment';
 export class AnalysisService {
 
   protected basePath = environment.apiEndpoint;
-  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(localStorage.getItem(localStorage.key(0)))['secret']);
+  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(localStorage.getItem(localStorage.key(0))).secret);
   public configuration = new Configuration();
 
   constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
@@ -184,7 +184,7 @@ export class AnalysisService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<GetLiveAnalysisTokenResponse>('post', `${this.basePath}/analysis/getLiveAnalysisToken`,
+    return this.httpClient.request<GetLiveAnalysisTokenResponse>('get', `${this.basePath}/analysis/getLiveAnalysisToken`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,

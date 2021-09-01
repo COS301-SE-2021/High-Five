@@ -33,7 +33,7 @@ import {environment} from '../../environments/environment';
 export class UserService {
 
   protected basePath = environment.apiEndpoint;
-  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(localStorage.getItem(localStorage.key(0)))['secret']);
+  public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(localStorage.getItem(localStorage.key(0))).secret);
   public configuration = new Configuration();
 
   constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
@@ -171,7 +171,7 @@ export class UserService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<GetAllUsersResponse>('post', `${this.basePath}/users/getAllUsers`,
+    return this.httpClient.request<GetAllUsersResponse>('get', `${this.basePath}/users/getAllUsers`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
@@ -207,7 +207,7 @@ export class UserService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<IsAdminResposne>('post', `${this.basePath}/users/isAdmin`,
+    return this.httpClient.request<IsAdminResposne>('get', `${this.basePath}/users/isAdmin`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,

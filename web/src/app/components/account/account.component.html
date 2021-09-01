@@ -83,6 +83,19 @@
               </ion-row>
             </ion-grid>
           </ion-item>
+          <ion-item>
+            <ion-grid>
+              <ion-row>
+                <ion-col class="ion-text-end ion-align-items-end ion-justify-content-end" size="6">
+                  <ion-text>Admin :</ion-text>
+                </ion-col>
+                <ion-col class="ion-text-start ion-align-items-start ion-align-items-start" size="6">
+                  <ion-text>{{usersService.getIsAdmin()}}</ion-text>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+          </ion-item>
         </ion-list>
         <ion-grid>
           <ion-row>
