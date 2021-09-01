@@ -5,7 +5,7 @@ namespace analysis_engine.Filter.ToolContainerBuilder
 {
     public abstract class ToolContainerBuilder
     {
-        private ToolContainer _toolContainer;
+        protected ToolContainer _toolContainer;
         public abstract void buildContainer();
         public abstract void addInput(Pipe input);
         public abstract void addOutput(Pipe output);
