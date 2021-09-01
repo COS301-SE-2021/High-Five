@@ -1,13 +1,13 @@
 package dataclasses.telemetry.builder;
 
-public enum TelemetryPriority {
+public enum TelemetryCollector {
     ALL,
     CPU_PRIORITY,
-    CPU_ONLY,
+    CPU,
     GPU_PRIORITY,
-    GPU_ONLY,
+    GPU,
     DISK_PRIORITY,
-    DISK_ONLY,
+    DISK,
     NETWORK_PRIORITY,
-    NETWORK_ONLY
+    NETWORK
 }
