@@ -24,13 +24,13 @@ public class WebClientListener extends ConnectionListener<WebSocketConnection> {
 
     @Override
     protected void listen() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
-        while (true) {
-            WebSocketConnection connection = new WebSocketConnection();
-            connection.doOnOpen(this::notify);
-            while (!isConnected) {
-                Thread.sleep(1000L);
-            }
-            isConnected = false;
-        }
+//        while (true) {
+//            WebSocketConnection connection = new WebSocketConnection();
+//            connection.doOnOpen(this::notify);
+//            while (!isConnected) {
+//                Thread.sleep(1000L);
+//            }
+//            isConnected = false;
+//        }
     }
 }

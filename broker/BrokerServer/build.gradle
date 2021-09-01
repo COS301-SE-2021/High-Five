@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id "org.gretty" version "3.0.5"
 }
 
 group 'com.bdpsolutions.highfive'
@@ -27,11 +28,9 @@ application {
     mainClass = "Main"
 }
 
-task setenv(type: Exec) {
-    environment "SOME_TEST", "AAA"
-    commandLine "echo", ""
-}
 
-task make {
-    dependsOn(setenv, build, run)
+gretty {
+    servletContainer = 'tomcat9'
+    contextPath = '/'
+    httpPort 9000
 }

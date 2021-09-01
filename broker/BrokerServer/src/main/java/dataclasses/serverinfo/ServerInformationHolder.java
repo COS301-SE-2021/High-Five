@@ -25,9 +25,13 @@ public class ServerInformationHolder {
     public ServerInformation get() {
         lock.lock();
         try {
-            ServerInformation information = serverPerformanceInfo.getFirst();
-            serverPerformanceInfo.offer(serverPerformanceInfo.poll());
-            return information;
+            if (serverPerformanceInfo.size() > 0) {
+                ServerInformation information = serverPerformanceInfo.getFirst();
+                serverPerformanceInfo.offer(serverPerformanceInfo.poll());
+                return information;
+            } else {
+                return null;
+            }
         } finally {
             lock.unlock();
         }
