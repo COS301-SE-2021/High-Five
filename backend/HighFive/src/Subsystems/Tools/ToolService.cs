@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Accord.Math;
+using IronPython.Runtime.Operations;
 using Microsoft.AspNetCore.Http;
 using Org.OpenAPITools.Models;
 using src.Storage;
@@ -62,9 +64,34 @@ namespace src.Subsystems.Tools
             throw new System.NotImplementedException();
         }
 
-        public void GetAllTools()
+        public List<Tool> GetAllTools()
         {
-            throw new System.NotImplementedException();
+            var toolsList = new List<Tool>();
+            var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
+            var toolsArray = toolsFile.ToText().Result.Split("\n");
+            foreach (var tool in toolsArray)
+            {
+                var toolNameArr = tool.Split("/");
+                var toolId = toolNameArr[^1];
+                var newTool = new Tool
+                {
+                    ToolId = toolId,
+                    ToolType = toolNameArr[0]
+                };
+                var toolFiles = _storageManager.GetAllFilesInContainer(ContainerName + "/" + tool).Result;
+                foreach (var toolFile in toolFiles)
+                {
+                    var toolName = toolFile.GetMetaData("toolName");
+                    if (toolName != null)
+                    {
+                        newTool.ToolName = toolName;
+                        break;
+                    }
+                }
+                toolsList.Add(newTool);
+            }
+
+            return toolsList;
         }
 
         public void StoreUserInfo(string id, string displayName, string email)
@@ -97,7 +124,7 @@ namespace src.Subsystems.Tools
         {
             var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
             var toolsArray = toolsFile.ToText().Result.Split("\n");
-            return toolsArray.IndexOf(toolName + "-analysis") != -1 || toolsArray.IndexOf(toolName + "-drawing") != -1;
+            return toolsArray.IndexOf("analysis/" + toolName) != -1 || toolsArray.IndexOf("drawing/" + toolName) != -1;
         }
 
         private void AddToToolsFile(string toolName, string type)
@@ -108,7 +135,7 @@ namespace src.Subsystems.Tools
             {
                 toolsText += "\n";
             }
-            toolsText += toolName + "-" + type;
+            toolsText += type + "/" + toolName;
 
             toolsFile.UploadText(toolsText);
         }

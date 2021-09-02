@@ -39,6 +39,13 @@ namespace Org.OpenAPITools.Models
         public string ToolName { get; set; }
 
         /// <summary>
+        /// Analysis or drawing
+        /// </summary>
+        /// <value>Analysis or drawing</value>
+        [DataMember(Name="toolType", EmitDefaultValue=false)]
+        public string ToolType { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -48,6 +55,7 @@ namespace Org.OpenAPITools.Models
             sb.Append("class Tool {\n");
             sb.Append("  ToolId: ").Append(ToolId).Append("\n");
             sb.Append("  ToolName: ").Append(ToolName).Append("\n");
+            sb.Append("  ToolType: ").Append(ToolType).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -93,6 +101,11 @@ namespace Org.OpenAPITools.Models
                     ToolName == other.ToolName ||
                     ToolName != null &&
                     ToolName.Equals(other.ToolName)
+                ) && 
+                (
+                    ToolType == other.ToolType ||
+                    ToolType != null &&
+                    ToolType.Equals(other.ToolType)
                 );
         }
 
@@ -110,6 +123,8 @@ namespace Org.OpenAPITools.Models
                     hashCode = hashCode * 59 + ToolId.GetHashCode();
                     if (ToolName != null)
                     hashCode = hashCode * 59 + ToolName.GetHashCode();
+                    if (ToolType != null)
+                    hashCode = hashCode * 59 + ToolType.GetHashCode();
                 return hashCode;
             }
         }

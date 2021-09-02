@@ -985,6 +985,9 @@ components:
           type: string
         toolName:
           type: string
+        toolType:
+          type: string
+          description: Analysis or drawing
 
     #==========================================================
     #     GENERIC COMPONENTS
