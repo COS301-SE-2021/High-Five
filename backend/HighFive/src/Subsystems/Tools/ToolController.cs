@@ -25,7 +25,15 @@ namespace src.Subsystems.Tools
             {
                 ConfigureStorageManager();
             }
-            throw new System.NotImplementedException();
+
+            var status = _toolService.DeleteTool(deleteToolRequest).Result;
+            var response = new EmptyObject {Success = status};
+            if (!status)
+            {
+                response.Message = "That tool does not exist.";
+            }
+
+            return StatusCode(200, response);
         }
 
         public override IActionResult GetTools()

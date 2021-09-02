@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Accord.Math;
 using IronPython.Runtime.Operations;
 using Microsoft.AspNetCore.Http;
+using Microsoft.VisualBasic;
 using Org.OpenAPITools.Models;
 using src.Storage;
 
@@ -59,9 +60,20 @@ namespace src.Subsystems.Tools
             return true;
         }
 
-        public void DeleteTool(DeleteToolRequest request)
+        public async Task<bool> DeleteTool(DeleteToolRequest request)
         {
-            throw new System.NotImplementedException();
+            if (!RemoveFromToolsFile(request.ToolId, request.ToolType))
+            {
+                return false;
+            }
+
+            var toolFiles = _storageManager
+                .GetAllFilesInContainer(ContainerName + "/" + request.ToolType + "/" + request.ToolId).Result;
+            foreach (var file in toolFiles)
+            {
+                await file.Delete();
+            }
+            return true;
         }
 
         public List<Tool> GetAllTools()
@@ -69,6 +81,10 @@ namespace src.Subsystems.Tools
             var toolsList = new List<Tool>();
             var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
             var toolsArray = toolsFile.ToText().Result.Split("\n");
+            if (toolsArray[0].Equals(string.Empty))
+            {
+                return toolsList;
+            }
             foreach (var tool in toolsArray)
             {
                 var toolNameArr = tool.Split("/");
@@ -140,15 +156,20 @@ namespace src.Subsystems.Tools
             toolsFile.UploadText(toolsText);
         }
 
-        private void RemoveFromToolsFile(string toolName)
+        private bool RemoveFromToolsFile(string toolName, string type)
         {
             var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
-            var toolsList = toolsFile.ToText().Result.Split("\n").ToList();
+            var toolsList = toolsFile.ToText().Result.Split("\n");
             //the above line splits the text file's contents by newlines into an array
-            var response = toolsList.Remove(toolName);
             var updatedToolsList = string.Empty;
+            var removed = false;
             foreach (var tool in toolsList)
             {
+                if (tool.Equals(type + "/" +toolName))
+                {
+                    removed = true;
+                    continue;
+                }
                 updatedToolsList += tool;
                 if (tool != toolsList[^1])
                 {
@@ -157,6 +178,7 @@ namespace src.Subsystems.Tools
             }
 
             toolsFile.UploadText(updatedToolsList);
+            return removed;
         }
     }
 }

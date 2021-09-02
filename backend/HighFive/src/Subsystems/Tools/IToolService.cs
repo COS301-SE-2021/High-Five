@@ -9,7 +9,7 @@ namespace src.Subsystems.Tools
     {
         public Task<bool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string toolName);
         public Task<bool> UploadDrawingTool(IFormFile sourceCode, string toolName);
-        public void DeleteTool(DeleteToolRequest request);
+        public Task<bool> DeleteTool(DeleteToolRequest request);
         public List<Tool> GetAllTools();
         public void StoreUserInfo(string id, string displayName, string email);
         public bool SetBaseContainer(string containerName);
