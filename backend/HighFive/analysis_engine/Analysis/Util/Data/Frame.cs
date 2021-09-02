@@ -1,22 +1,25 @@
-﻿namespace analysis_engine.Util
+﻿using Emgu.CV;
+using Emgu.CV.Structure;
+
+namespace analysis_engine.Util
 {
     public class Frame
     {
-        public byte[] Bitmap {get; set; }
+        public Image<Rgb, byte> Image {get; set; }
         public int FrameID {get; set; }
         
-        public Frame(byte[] bitmap, int frameId)
+        public Frame(Image<Rgb, byte> image, int frameId)
         {
-            RefreshFrame(bitmap, frameId);
+            RefreshFrame(image, frameId);
         }
 
         public Frame()
         {
         }
 
-        public void RefreshFrame(byte[] bitmap, int frameId)
+        public void RefreshFrame(Image<Rgb, byte> image, int frameId)
         {
-            this.Bitmap = bitmap;
+            this.Image = image;
             FrameID = frameId;
         }
 

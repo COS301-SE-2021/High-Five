@@ -12,8 +12,9 @@ namespace analysis_engine.Analysis.Tools.DrawingTools.ConcreteDrawingTool
 {
     public class BoxDrawingTool : DrawingTool
     {
-        public Image<Rgb, byte> Draw(Image<Rgb, byte> image, Data data)
+        public Data Draw(Data data)
         {
+            var image = data.Frame.Image;
             var count = 1;
             var outputs = data.Meta;
             foreach (var output in outputs.Cast<BoxCoordinateData>())
@@ -34,7 +35,9 @@ namespace analysis_engine.Analysis.Tools.DrawingTools.ConcreteDrawingTool
                 CvInvoke.PutText(image, "Vehicle Count: "+output.Classes.Count, textPoint, FontFace.HersheyTriplex, 2.0, new Bgr(Color.Red).MCvScalar, 5);
                 count++;
             }
-            return image;
+
+            data.Frame.Image = image;
+            return data;
         }
     }
 }
