@@ -59,5 +59,31 @@ namespace src.Subsystems.Tools
             var toolsArray = toolsFile.ToText().Result.Split("\n");
             return toolsArray.IndexOf(toolName) != -1;
         }
+        
+        public void StoreUserInfo(string id, string displayName, string email)
+        {
+            _storageManager.StoreUserInfo(id, displayName, email);
+        }
+        
+        public bool SetBaseContainer(string containerName)
+        {
+            /*
+             *      Description:
+             * This function tests if a baseContainer has been set yet, it will be called before any of the
+             * other StorageManager method code executes. If a base container has already been set, this code
+             * will do nothing, else it will set the base container to the user's Azure AD B2C unique object
+             * id - hence pointing towards the user's own container within the storage.
+             *
+             *      Parameters:
+             * -> containerName: the user's id that will be used as the container name.
+             */
+            
+            if (!_storageManager.IsContainerSet())
+            {
+                return _storageManager.SetBaseContainer(containerName).Result;
+            }
+
+            return true;
+        }
     }
 }

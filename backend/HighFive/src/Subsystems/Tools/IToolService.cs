@@ -10,5 +10,7 @@ namespace src.Subsystems.Tools
         public void UploadDrawingTool(IFormFile sourceCode, string toolName);
         public void DeleteTool(DeleteToolRequest request);
         public void GetAllTools();
+        public void StoreUserInfo(string id, string displayName, string email);
+        public bool SetBaseContainer(string containerName);
     }
 }
