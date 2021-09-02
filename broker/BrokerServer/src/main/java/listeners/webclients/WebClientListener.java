@@ -1,36 +1,30 @@
 package listeners.webclients;
 
-import dataclasses.websocket.WebSocketConnection;
+import dataclasses.sockets.WebSocketConnection;
 import io.reactivex.rxjava3.core.Observer;
 import listeners.ConnectionListener;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
-public class WebClientListener extends ConnectionListener<WebSocketConnection> {
+public class WebClientListener extends ConnectionListener<Socket> {
 
     private boolean isConnected = false;
+    private ServerSocket socketServer;
 
-    public WebClientListener(Observer<WebSocketConnection> notifier) {
+    public WebClientListener(Observer<Socket> notifier) throws IOException {
         super(notifier);
-    }
-
-    @Override
-    protected void notify(WebSocketConnection item) {
-        super.notify(item);
-        isConnected = true;
+        socketServer = new ServerSocket(6666);
     }
 
     @Override
     protected void listen() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
-//        while (true) {
-//            WebSocketConnection connection = new WebSocketConnection();
-//            connection.doOnOpen(this::notify);
-//            while (!isConnected) {
-//                Thread.sleep(1000L);
-//            }
-//            isConnected = false;
-//        }
+        while (true) {
+            Socket connection = socketServer.accept();
+            notify(connection);
+        }
     }
 }

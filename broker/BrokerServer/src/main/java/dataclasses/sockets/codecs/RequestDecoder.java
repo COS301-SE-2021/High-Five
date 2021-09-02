@@ -1,7 +1,7 @@
-package dataclasses.websocket.codecs;
+package dataclasses.sockets.codecs;
 
 import com.google.gson.Gson;
-import dataclasses.websocket.ClientRequest;
+import dataclasses.sockets.ClientRequest;
 
 import javax.websocket.*;
 

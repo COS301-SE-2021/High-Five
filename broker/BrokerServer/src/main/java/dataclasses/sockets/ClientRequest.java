@@ -1,4 +1,4 @@
-package dataclasses.websocket;
+package dataclasses.sockets;
 
 public class ClientRequest {
     private String clientToken;

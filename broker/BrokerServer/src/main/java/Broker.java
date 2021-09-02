@@ -6,7 +6,7 @@ import dataclasses.serverinfo.ServerInformationHolder;
 import dataclasses.telemetry.Telemetry;
 import dataclasses.telemetry.builder.TelemetryBuilder;
 import dataclasses.telemetry.builder.TelemetryCollector;
-import dataclasses.websocket.WebSocketConnection;
+import dataclasses.sockets.WebSocketConnection;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -14,13 +14,15 @@ import listeners.ConnectionListener;
 import listeners.servers.KafkaMessageListener;
 import listeners.webclients.WebClientListener;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class Broker {
     private final ConnectionListener<String> serverListener;
-    private ConnectionListener<WebSocketConnection> clientListener;
+    private ConnectionListener<Socket> clientListener;
     private final ServerParticipant serverParticipant;
     private final Object infoLock = new Object();
     private final Object topicLock = new Object();
@@ -85,14 +87,14 @@ public class Broker {
             }
         };
 
-        Observer<WebSocketConnection> clientListenerObserver = new Observer<WebSocketConnection>() {
+        Observer<Socket> clientListenerObserver = new Observer<Socket>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
 
             }
 
             @Override
-            public void onNext(@NonNull WebSocketConnection connection) {
+            public void onNext(@NonNull Socket connection) {
                 clientConnections.execute(new ClientParticipant(serverInformationHolder));
             }
 
@@ -113,7 +115,12 @@ public class Broker {
         serverParticipant = new KafkaServerParticipant(serverParticipantObserver, topics);
         serverParticipant.start();
 
-        clientListener = new WebClientListener(clientListenerObserver);
-        clientListener.start();
+        try {
+            clientListener = new WebClientListener(clientListenerObserver);
+            clientListener.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
     }
 }

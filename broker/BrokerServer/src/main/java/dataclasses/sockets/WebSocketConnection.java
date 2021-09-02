@@ -1,10 +1,11 @@
-package dataclasses.websocket;
+package dataclasses.sockets;
 import dataclasses.serverinfo.ServerInformation;
-import dataclasses.websocket.codecs.*;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
+import org.apache.commons.io.IOUtil;
 
 @ServerEndpoint(
         value="/socket"
@@ -12,18 +13,30 @@ import java.io.IOException;
 public class WebSocketConnection {
 
     private Session session;
+    private Socket brokerConnection;
 
     @OnOpen
     public void onOpen(Session session) throws IOException {
         this.session = session;
+        brokerConnection = new Socket("localhost",6666);
         System.out.println("Connection opened");
         // Get session and WebSocket connection
     }
 
     @OnMessage
     public void onMessage(Session session, String message) throws IOException {
-        System.out.println(message);
-        // Handle new messages
+        Writer serverInfoRequest = new BufferedWriter(new OutputStreamWriter(
+                brokerConnection.getOutputStream()));
+
+        serverInfoRequest.append(message).flush();
+
+        StringWriter infoDataWriter = new StringWriter();
+        IOUtil.copy(brokerConnection.getInputStream(), infoDataWriter, "UTF-8");
+        String infoData = infoDataWriter.toString();
+        brokerConnection.close();
+
+        session.getBasicRemote().sendText(infoData);
+
     }
 
     @OnClose
@@ -39,13 +52,5 @@ public class WebSocketConnection {
 
     public void sendServerInformation(ServerInformation information) throws IOException {
         session.getBasicRemote().sendText(information.toString());
-    }
-
-    public void doOnOpen(AddConnection addConnection) {
-        addConnection.operation(this);
-    }
-
-    public interface AddConnection {
-        void operation(WebSocketConnection connection);
     }
 }

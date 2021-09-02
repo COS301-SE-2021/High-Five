@@ -2,14 +2,13 @@ package clients.webclients;
 
 import dataclasses.serverinfo.ServerInformation;
 import dataclasses.serverinfo.ServerInformationHolder;
-import dataclasses.websocket.WebSocketConnection;
 
-import java.io.IOException;
-import java.util.LinkedList;
+import java.io.*;
+import java.net.Socket;
 
 public class ClientParticipant extends WebClient{
 
-    private WebSocketConnection connection;
+    private Socket connection;
     private final ServerInformationHolder informationHolder;
 
     public ClientParticipant(ServerInformationHolder informationHolder) {
@@ -25,7 +24,11 @@ public class ClientParticipant extends WebClient{
     public void listen() throws InterruptedException {
         ServerInformation info = informationHolder.get();
         try {
-            connection.sendServerInformation(info);
+            Writer out = new BufferedWriter(new OutputStreamWriter(
+                    connection.getOutputStream()));
+
+            out.append(info.toString()).flush();
+            connection.close();
         } catch (IOException ignored) {}
     }
 }
