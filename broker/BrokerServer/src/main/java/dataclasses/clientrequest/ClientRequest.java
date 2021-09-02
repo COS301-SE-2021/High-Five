@@ -1,4 +1,4 @@
-package dataclasses.sockets;
+package dataclasses.clientrequest;
 
 public class ClientRequest {
     private String clientToken;

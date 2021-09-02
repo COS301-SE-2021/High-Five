@@ -1,9 +1,11 @@
 package clients.webclients.strategy;
 
 import dataclasses.serverinfo.ServerInformation;
+import dataclasses.clientrequest.ClientRequest;
 
-import java.net.Socket;
+import java.io.IOException;
+import java.io.Writer;
 
 public interface AnalysisStrategy {
-    void processRequest(Socket connection, ServerInformation information);
+    void processRequest(ClientRequest request, ServerInformation information, Writer writer) throws IOException;
 }
