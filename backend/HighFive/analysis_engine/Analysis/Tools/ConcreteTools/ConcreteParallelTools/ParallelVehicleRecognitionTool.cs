@@ -13,9 +13,12 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools.ConcreteParallelTools
 {
     public class ParallelVehicleRecognitionTool
     {
+        private const string ModelPath = @"../../Models/ssd-10.onnx";
         private readonly InferenceSession _model;
         private readonly string _modelInputLayerName;
         private const double MinScore=0.5;
+        private const long MinClass = 2;
+        private const long MaxClass = 9;
         
         private readonly string[] _classes ={
             "__background", "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat",
@@ -32,7 +35,7 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools.ConcreteParallelTools
         public ParallelVehicleRecognitionTool()
         {
             _model = new InferenceSession(
-                @"../../Models/ssd-10.onnx",
+                ModelPath,
                 SessionOptions.MakeSessionOptionWithCudaProvider());
             _modelInputLayerName = _model.InputMetadata.Keys.Single();
         }
@@ -82,7 +85,7 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools.ConcreteParallelTools
             var height = image.Height;
             for (int i = 0; i < labels.Count; i++)
             {
-                if (scores[i] > MinScore)
+                if (scores[i] > MinScore && labels[i]>=MinClass && labels[i]<=MaxClass)
                 {
                     output.Classes.Add(_classes[labels[i]]);
                     output.Boxes.Add(boxes[i * 4] * width);
@@ -95,7 +98,7 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools.ConcreteParallelTools
             return output;
         }
         
-        public static NDArray Resize(Mat image)
+        private static NDArray Resize(Mat image)
         {
             //resize image
             var resized = new Mat();
