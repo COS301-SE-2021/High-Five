@@ -49,7 +49,7 @@ namespace src.Subsystems.User
             {
                 SetUserId();
             }
-            var response = new IsAdminResposne {IsAdmin = _userService.IsAdmin(_userId)};
+            var response = new IsAdminResponse {IsAdmin = _userService.IsAdmin(_userId)};
             return StatusCode(200, response);
         }
 

@@ -11,6 +11,7 @@ tags:
   - name: "Pipelines"
   - name: "Analysis"
   - name: "User"
+  - name: "Tools"
 
   #==========================================================
   #     PATHS
@@ -524,7 +525,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/isAdminResposne'
+                $ref: '#/components/schemas/isAdminResponse'
 
   /users/revokeAdmin:
     post:
@@ -544,7 +545,87 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/isAdminResposne'
+                $ref: '#/components/schemas/isAdminResponse'
+
+  #==========================================================
+  #     USER SUBSYSTEM PATHING
+  #==========================================================
+
+  /tools/uploadAnalysisTool:
+    post:
+      tags:
+        - "Tools"
+      description: Endpoint for Upload Analysis Tool use case
+      operationId: UploadAnalysisTool
+      requestBody:
+        required: true
+        description: Receives .cs source code and model for analysis tool.
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/storeAnalysisToolRequest'
+      responses:
+        "200":
+          description: The Analysis Tool has been uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /tools/uploadDrawingTool:
+    post:
+      tags:
+        - "Tools"
+      description: Endpoint for Upload Drawing Tool use case
+      operationId: UploadDrawingTool
+      requestBody:
+        required: true
+        description: Receives .cs source code for drawing.
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/storeDrawingToolRequest'
+      responses:
+        "200":
+          description: The Drawing Tool has been uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /tools/deleteTool:
+    post:
+      tags:
+        - "Tools"
+      description: Endpoint for Delete Tool use case
+      operationId: DeleteTool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteToolRequest'
+      responses:
+        "200":
+          description: The Tool has been deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /tools/getAllTools:
+    get:
+      tags:
+        - "Tools"
+      description: Endpoint for Delete Tool use case
+      operationId: GetTools
+      responses:
+        "200":
+          description: The Tool has been deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllToolsResponse'
 
   #==========================================================
   #     SCHEMAS
@@ -849,11 +930,61 @@ components:
           type: string
           description: user id
 
-    isAdminResposne:
+    isAdminResponse:
       type: object
       properties:
         isAdmin:
           type: boolean
+
+    #==========================================================
+    #     TOOLS COMPONENTS
+    #==========================================================
+
+    storeAnalysisToolRequest:
+      type: object
+      properties:
+        sourceCode:
+          type: string
+          format: binary
+        model:
+          type: string
+          format: binary
+        toolName:
+          type: string
+
+    storeDrawingToolRequest:
+      type: object
+      properties:
+        sourceCode:
+          type: string
+          format: binary
+        toolName:
+          type: string
+
+    deleteToolRequest:
+      type: object
+      properties:
+        toolType:
+          type: string
+          description: Analysis or Drawing
+        toolId:
+          type: string
+
+    getAllToolsResponse:
+      type: object
+      properties:
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/tool'
+
+    tool:
+      type: object
+      properties:
+        toolId:
+          type: string
+        toolName:
+          type: string
 
     #==========================================================
     #     GENERIC COMPONENTS
