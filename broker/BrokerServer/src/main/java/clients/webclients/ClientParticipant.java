@@ -11,8 +11,9 @@ public class ClientParticipant extends WebClient{
     private Socket connection;
     private final ServerInformationHolder informationHolder;
 
-    public ClientParticipant(ServerInformationHolder informationHolder) {
+    public ClientParticipant(Socket connection, ServerInformationHolder informationHolder) {
         this.informationHolder = informationHolder;
+        this.connection = connection;
     }
 
     @Override
@@ -23,11 +24,17 @@ public class ClientParticipant extends WebClient{
     @Override
     public void listen() throws InterruptedException {
         ServerInformation info = informationHolder.get();
+        String infoString;
+        if (info == null) {
+            infoString = "No servers are available";
+        } else {
+            infoString = info.toString();
+        }
         try {
             Writer out = new BufferedWriter(new OutputStreamWriter(
                     connection.getOutputStream()));
 
-            out.append(info.toString()).flush();
+            out.append(infoString).flush();
             connection.close();
         } catch (IOException ignored) {}
     }

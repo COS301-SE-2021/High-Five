@@ -1,6 +1,3 @@
-package dataclasses.sockets;
-import dataclasses.serverinfo.ServerInformation;
-
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.*;
@@ -9,22 +6,21 @@ import org.apache.commons.io.IOUtil;
 
 @ServerEndpoint(
         value="/socket"
-         )
+)
 public class WebSocketConnection {
 
     private Session session;
-    private Socket brokerConnection;
 
     @OnOpen
     public void onOpen(Session session) throws IOException {
         this.session = session;
-        brokerConnection = new Socket("localhost",6666);
         System.out.println("Connection opened");
         // Get session and WebSocket connection
     }
 
     @OnMessage
     public void onMessage(Session session, String message) throws IOException {
+        Socket brokerConnection = new Socket("localhost", 6666);
         Writer serverInfoRequest = new BufferedWriter(new OutputStreamWriter(
                 brokerConnection.getOutputStream()));
 
@@ -50,7 +46,4 @@ public class WebSocketConnection {
         // Do error handling here
     }
 
-    public void sendServerInformation(ServerInformation information) throws IOException {
-        session.getBasicRemote().sendText(information.toString());
-    }
 }

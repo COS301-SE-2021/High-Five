@@ -6,7 +6,6 @@ import dataclasses.serverinfo.ServerInformationHolder;
 import dataclasses.telemetry.Telemetry;
 import dataclasses.telemetry.builder.TelemetryBuilder;
 import dataclasses.telemetry.builder.TelemetryCollector;
-import dataclasses.sockets.WebSocketConnection;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -95,7 +94,7 @@ public class Broker {
 
             @Override
             public void onNext(@NonNull Socket connection) {
-                clientConnections.execute(new ClientParticipant(serverInformationHolder));
+                clientConnections.execute(new ClientParticipant(connection, serverInformationHolder));
             }
 
             @Override

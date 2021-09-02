@@ -1,11 +1,8 @@
 package listeners.webclients;
 
-import dataclasses.sockets.WebSocketConnection;
 import io.reactivex.rxjava3.core.Observer;
 import listeners.ConnectionListener;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -21,7 +18,7 @@ public class WebClientListener extends ConnectionListener<Socket> {
     }
 
     @Override
-    protected void listen() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
+    protected void listen() throws IOException {
         while (true) {
             Socket connection = socketServer.accept();
             notify(connection);

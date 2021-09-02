@@ -1,10 +1,10 @@
 plugins {
     id 'application'
-    id "org.gretty" version "3.0.5"
 }
 
 group 'com.bdpsolutions.highfive'
 version '1.0-SNAPSHOT'
+apply plugin: 'application'
 
 repositories {
     mavenCentral()
@@ -16,6 +16,12 @@ dependencies {
     implementation 'javax.websocket:javax.websocket-api:1.1'
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'commons-io:commons-io:20030203.000550'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:8.0.28'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-logging-juli:8.0.28'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:8.0.28'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-websocket:8.0.28'
+    implementation 'org.apache.tomcat:tomcat-jasper-el:8.0.28'
+    implementation 'org.apache.tomcat:tomcat-jsp-api:8.0.28'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
@@ -27,11 +33,4 @@ test {
 
 application {
     mainClass = "Main"
-}
-
-
-gretty {
-    servletContainer = 'tomcat9'
-    contextPath = '/'
-    httpPort 9000
 }

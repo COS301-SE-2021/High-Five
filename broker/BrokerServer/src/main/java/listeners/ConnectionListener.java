@@ -13,7 +13,7 @@ public abstract class ConnectionListener<T> extends Thread {
         this.notifier = notifier;
     }
 
-    protected abstract void listen() throws IOException, ParserConfigurationException, SAXException, InterruptedException;
+    protected abstract void listen() throws IOException, InterruptedException;
 
     protected void notify(T item) {
         notifier.onNext(item);
