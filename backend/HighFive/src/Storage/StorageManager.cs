@@ -219,6 +219,9 @@ namespace src.Storage
             var userInfoString = id + "\n" + displayName + "\n" + email;
             var userInfoFile = CreateNewFile("user_info.txt", "").Result;
             userInfoFile.UploadText(userInfoString);
+
+            var toolsFile = CreateNewFile("tools.txt", "").Result;
+            toolsFile.UploadText("");
         }
 
         public string RandomString(int length=5)

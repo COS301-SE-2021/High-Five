@@ -69,7 +69,7 @@ namespace Org.OpenAPITools.Controllers
         [HttpGet]
         [Route("/users/isAdmin")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(IsAdminResposne))]
+        [ProducesResponseType(statusCode: 200, type: typeof(IsAdminResponse))]
         public abstract IActionResult IsAdmin();
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Org.OpenAPITools.Controllers
         [Route("/users/revokeAdmin")]
         [Consumes("application/json")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(IsAdminResposne))]
+        [ProducesResponseType(statusCode: 200, type: typeof(IsAdminResponse))]
         public abstract IActionResult RevokeAdmin([FromBody]UserRequest userRequest);
 
         /// <summary>
