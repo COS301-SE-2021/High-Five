@@ -20,6 +20,7 @@ using src.Subsystems.Admin;
 using src.Subsystems.Analysis;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
+using src.Subsystems.Tools;
 using src.Subsystems.User;
 
 namespace src
@@ -54,6 +55,7 @@ namespace src
             services.AddScoped<IPipelineService, PipelineService>();
             services.AddScoped<IAnalysisService, AnalysisService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IToolService, ToolService>();
 
 
             // Configuring of Azure AD B2C Authentication

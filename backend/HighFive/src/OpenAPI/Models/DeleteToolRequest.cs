@@ -24,13 +24,20 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class IsAdminResposne : IEquatable<IsAdminResposne>
+    public class DeleteToolRequest : IEquatable<DeleteToolRequest>
     {
         /// <summary>
-        /// Gets or Sets IsAdmin
+        /// Analysis or Drawing
         /// </summary>
-        [DataMember(Name="isAdmin", EmitDefaultValue=false)]
-        public bool IsAdmin { get; set; }
+        /// <value>Analysis or Drawing</value>
+        [DataMember(Name="toolType", EmitDefaultValue=false)]
+        public string ToolType { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ToolId
+        /// </summary>
+        [DataMember(Name="toolId", EmitDefaultValue=false)]
+        public string ToolId { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -39,8 +46,9 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class IsAdminResposne {\n");
-            sb.Append("  IsAdmin: ").Append(IsAdmin).Append("\n");
+            sb.Append("class DeleteToolRequest {\n");
+            sb.Append("  ToolType: ").Append(ToolType).Append("\n");
+            sb.Append("  ToolId: ").Append(ToolId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -63,24 +71,29 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((IsAdminResposne)obj);
+            return obj.GetType() == GetType() && Equals((DeleteToolRequest)obj);
         }
 
         /// <summary>
-        /// Returns true if IsAdminResposne instances are equal
+        /// Returns true if DeleteToolRequest instances are equal
         /// </summary>
-        /// <param name="other">Instance of IsAdminResposne to be compared</param>
+        /// <param name="other">Instance of DeleteToolRequest to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(IsAdminResposne other)
+        public bool Equals(DeleteToolRequest other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    IsAdmin == other.IsAdmin ||
-                    
-                    IsAdmin.Equals(other.IsAdmin)
+                    ToolType == other.ToolType ||
+                    ToolType != null &&
+                    ToolType.Equals(other.ToolType)
+                ) && 
+                (
+                    ToolId == other.ToolId ||
+                    ToolId != null &&
+                    ToolId.Equals(other.ToolId)
                 );
         }
 
@@ -94,8 +107,10 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    
-                    hashCode = hashCode * 59 + IsAdmin.GetHashCode();
+                    if (ToolType != null)
+                    hashCode = hashCode * 59 + ToolType.GetHashCode();
+                    if (ToolId != null)
+                    hashCode = hashCode * 59 + ToolId.GetHashCode();
                 return hashCode;
             }
         }
@@ -103,12 +118,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(IsAdminResposne left, IsAdminResposne right)
+        public static bool operator ==(DeleteToolRequest left, DeleteToolRequest right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(IsAdminResposne left, IsAdminResposne right)
+        public static bool operator !=(DeleteToolRequest left, DeleteToolRequest right)
         {
             return !Equals(left, right);
         }
