@@ -80,6 +80,7 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools.ConcreteParallelTools
             var output= new BoxCoordinateData();
             output.Classes = new List<string>();
             output.Boxes = new List<float>();
+            output.Purpose = "Person";
             var width = image.Width;
             var height = image.Height;
             for (int i = 0; i < labels.Count; i++)
