@@ -34,7 +34,10 @@ namespace src.Subsystems.Tools
             {
                 ConfigureStorageManager();
             }
-            throw new System.NotImplementedException();
+
+            var toolsList = _toolService.GetAllTools();
+            var response = new GetAllToolsResponse {Tools = toolsList};
+            return StatusCode(200, response);
         }
 
         public override IActionResult UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string toolName)
