@@ -1,4 +1,6 @@
-﻿namespace analysis_engine.Util
+﻿using analysis_engine.Analysis.Util.Data;
+
+namespace analysis_engine.Util
 {
     public class InputSplitter : Pipe
     {

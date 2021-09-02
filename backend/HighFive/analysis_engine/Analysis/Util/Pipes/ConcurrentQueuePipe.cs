@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using analysis_engine.Analysis.Util.Data;
 
 namespace analysis_engine.Util
 {

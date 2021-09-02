@@ -1,5 +1,6 @@
 ﻿
 
+using analysis_engine.Analysis.Util.Data;
 using analysis_engine.Util;
 
 namespace analysis_engine.Tools
