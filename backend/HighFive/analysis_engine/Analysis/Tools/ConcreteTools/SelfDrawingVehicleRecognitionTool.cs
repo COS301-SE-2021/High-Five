@@ -14,14 +14,14 @@ using NumSharp;
 
 namespace analysis_engine.Analysis.Tools.ConcreteTools
 {
-    public class LinearAnimalRecognitionTool : Tool
+    public class SelfDrawingVehicleRecognitionTool : Tool
     {
         private const string ModelPath = @"../Models/ssd-10.onnx";
         private InferenceSession _model;
         private string _modelInputLayerName;
         private const double MinScore=0.5;
-        private const long MinClass = 15;
-        private const long MaxClass = 24;
+        private const long MinClass = 2;
+        private const long MaxClass = 9;
         
         private readonly string[] _classes ={
             "__background", "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat",

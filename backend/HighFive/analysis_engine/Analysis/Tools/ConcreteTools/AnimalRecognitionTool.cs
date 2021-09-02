@@ -12,14 +12,14 @@ using NumSharp;
 
 namespace analysis_engine.Analysis.Tools.ConcreteTools
 {
-    public class ParallelPersonRecognitionTool : Tool
+    public class AnimalRecognitionTool : Tool
     {
         private const string ModelPath = @"../Models/ssd-10.onnx";
         private InferenceSession _model;
         private string _modelInputLayerName;
         private const double MinScore=0.5;
-        private const long MinClass = 1;
-        private const long MaxClass = 1;
+        private const long MinClass = 15;
+        private const long MaxClass = 24;
         
         private readonly string[] _classes ={
             "__background", "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat",
@@ -82,7 +82,7 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools
             var output= new BoxCoordinateData();
             output.Classes = new List<string>();
             output.Boxes = new List<float>();
-            output.Purpose = "Person";
+            output.Purpose = "Animal";
             var width = data.Frame.Image.Width;
             var height = data.Frame.Image.Height;
             for (int i = 0; i < labels.Count; i++)
