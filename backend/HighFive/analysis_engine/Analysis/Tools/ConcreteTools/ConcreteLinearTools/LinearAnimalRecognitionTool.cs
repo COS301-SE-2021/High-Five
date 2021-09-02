@@ -124,6 +124,9 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools.ConcreteLinearTools
                 CvInvoke.Rectangle(image, box, new Bgr(Color.Red).MCvScalar, 5, LineType.Filled);
                 CvInvoke.PutText(image, output.Classes[i].ToUpper(), point, FontFace.HersheyTriplex, 2.0, new Bgr(Color.Red).MCvScalar, 5);
             }
+            var textPoint = new Point(image.Width / 445, 6*image.Height / 229);
+            CvInvoke.PutText(image, "Vehicle Count: "+output.Classes.Count, textPoint, FontFace.HersheyTriplex, 2.0, new Bgr(Color.Red).MCvScalar, 5);
+
             return image;
         }
     }
