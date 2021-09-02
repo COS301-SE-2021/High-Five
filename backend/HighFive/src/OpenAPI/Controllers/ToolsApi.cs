@@ -41,8 +41,19 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Get Tool Types use case</remarks>
+        /// <response code="200">All tool types have been returned</response>
+        [HttpGet]
+        [Route("/tools/getToolTypes")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetToolTypesResponse))]
+        public abstract IActionResult GetToolTypes();
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Delete Tool use case</remarks>
-        /// <response code="200">The Tool has been deleted</response>
+        /// <response code="200">All tools have been returned</response>
         [HttpGet]
         [Route("/tools/getAllTools")]
         [ValidateModelState]

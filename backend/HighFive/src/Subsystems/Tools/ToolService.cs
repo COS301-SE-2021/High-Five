@@ -135,7 +135,13 @@ namespace src.Subsystems.Tools
 
             return true;
         }
-        
+
+        public List<string> GetToolTypes()
+        {
+            var responseList = new List<string> {"analysis", "drawing"};
+            return responseList;
+        }
+
         private bool ToolExists(string toolName)
         {
             var toolsFile = _storageManager.GetFile("tools.txt", "").Result;

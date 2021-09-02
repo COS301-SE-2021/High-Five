@@ -36,6 +36,15 @@ namespace src.Subsystems.Tools
             return StatusCode(200, response);
         }
 
+        public override IActionResult GetToolTypes()
+        {
+            var response = new GetToolTypesResponse
+            {
+                ToolTypes = _toolService.GetToolTypes()
+            };
+            return StatusCode(200, response);
+        }
+
         public override IActionResult GetTools()
         {
             if (!_baseContainerSet)

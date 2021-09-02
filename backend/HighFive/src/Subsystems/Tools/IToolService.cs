@@ -13,5 +13,6 @@ namespace src.Subsystems.Tools
         public List<Tool> GetAllTools();
         public void StoreUserInfo(string id, string displayName, string email);
         public bool SetBaseContainer(string containerName);
+        public List<string> GetToolTypes();
     }
 }
