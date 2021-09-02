@@ -1,18 +1,18 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using analysis_engine.Analysis.Util.Data;
 using analysis_engine.Analysis.Util.Data.ConcreteData;
+using analysis_engine.Tools;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 
-namespace analysis_engine.Analysis.Tools.DrawingTools.ConcreteDrawingTool
+namespace analysis_engine.Analysis.Tools.ConcreteTools
 {
-    public class BoxDrawingTool : DrawingTool
+    public class BoxDrawingTool : Tool
     {
-        public Data Draw(Data data)
+        public Data Process(Data data)
         {
             var image = data.Frame.Image;
             var count = 1;
@@ -38,6 +38,11 @@ namespace analysis_engine.Analysis.Tools.DrawingTools.ConcreteDrawingTool
 
             data.Frame.Image = image;
             return data;
+        }
+
+        public void Init()
+        {
+            
         }
     }
 }

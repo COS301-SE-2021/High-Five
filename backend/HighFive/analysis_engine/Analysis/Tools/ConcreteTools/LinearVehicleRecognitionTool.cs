@@ -1,23 +1,27 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using analysis_engine.Analysis.Util.Data;
 using analysis_engine.Analysis.Util.Data.ConcreteData;
+using analysis_engine.Tools;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using NumSharp;
 
-namespace analysis_engine.Analysis.Tools.ConcreteTools.ConcreteParallelTools
+namespace analysis_engine.Analysis.Tools.ConcreteTools
 {
-    public class ParallelAnimalRecognitionTool
+    public class LinearVehicleRecognitionTool : Tool
     {
-        private const string ModelPath = @"../../Models/ssd-10.onnx";
-        private readonly InferenceSession _model;
-        private readonly string _modelInputLayerName;
+        private const string ModelPath = @"../Models/ssd-10.onnx";
+        private InferenceSession _model;
+        private string _modelInputLayerName;
         private const double MinScore=0.5;
-        private const long MinClass = 15;
-        private const long MaxClass = 24;
+        private const long MinClass = 2;
+        private const long MaxClass = 9;
         
         private readonly string[] _classes ={
             "__background", "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat",
@@ -31,16 +35,16 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools.ConcreteParallelTools
             "teddy bear", "hair drier", "toothbrush",
         };
 
-        public ParallelAnimalRecognitionTool()
+        public void Init()
         {
             _model = new InferenceSession(
                 ModelPath,
                 SessionOptions.MakeSessionOptionWithCudaProvider());
             _modelInputLayerName = _model.InputMetadata.Keys.Single();
         }
-        public BoxCoordinateData AnalyseFrame(Mat originalImage)
+        public Data Process(Data data)
         {
-            var image = Resize(originalImage);
+            var image = Resize(new Matrix<byte>(data.Frame.Image.Bytes).Mat);
             
             image = np.transpose(image, new[] { 2, 0, 1 });
             (image[0], image[2]) = (image[2], image[0]);
@@ -71,18 +75,17 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools.ConcreteParallelTools
             var labels=((DenseTensor<long>) predictions.ElementAtOrDefault(1).Value).ToArray();
             var scores=((DenseTensor<float>) predictions.ElementAtOrDefault(2).Value).ToArray();
             
-            return PostProcessFrame(originalImage, boxes, labels, scores);
+            return PostProcessFrame(data, boxes, labels, scores);
 
         }
 
-        private BoxCoordinateData PostProcessFrame(Mat image, IReadOnlyList<float> boxes, IReadOnlyList<long> labels, IReadOnlyList<float> scores)
+        private Data PostProcessFrame(Data data, IReadOnlyList<float> boxes, IReadOnlyList<long> labels, IReadOnlyList<float> scores)
         {
             var output= new BoxCoordinateData();
             output.Classes = new List<string>();
             output.Boxes = new List<float>();
-            output.Purpose = "Animal";
-            var width = image.Width;
-            var height = image.Height;
+            var width = data.Frame.Image.Width;
+            var height = data.Frame.Image.Height;
             for (int i = 0; i < labels.Count; i++)
             {
                 if (scores[i] > MinScore && labels[i]>=MinClass && labels[i]<=MaxClass)
@@ -95,7 +98,7 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools.ConcreteParallelTools
                 }
             }
             
-            return output;
+            return DrawBoxes(data, output);
         }
         
         private static NDArray Resize(Mat image)
@@ -107,6 +110,27 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools.ConcreteParallelTools
             var result = np.array(resized.GetData(false)).reshape(resized.Height, resized.Width, 3);
         
             return result;
+        }
+        
+        private Data DrawBoxes(Data data, BoxCoordinateData output)
+        {
+            var image = data.Frame.Image;
+            for (var i = 0; i < output.Classes.Count; i++)
+            {
+                var box = new Rectangle(Convert.ToInt32(output.Boxes[i * 4]),
+                    Convert.ToInt32(output.Boxes[i * 4 + 1]), 
+                    Convert.ToInt32(output.Boxes[i * 4 + 2]),
+                    Convert.ToInt32(output.Boxes[i * 4 + 3]));
+                var point = new Point(Convert.ToInt32(output.Boxes[i * 4]),
+                    Convert.ToInt32(output.Boxes[i * 4 + 1] - 10.0 * image.Height / 2286.0));
+                CvInvoke.Rectangle(image, box, new Bgr(Color.Red).MCvScalar, 5, LineType.Filled);
+                CvInvoke.PutText(image, output.Classes[i].ToUpper(), point, FontFace.HersheyTriplex, 2.0, new Bgr(Color.Red).MCvScalar, 5);
+            }
+            var textPoint = new Point(image.Width / 445, 6*image.Height / 229);
+            CvInvoke.PutText(image, "Vehicle Count: "+output.Classes.Count, textPoint, FontFace.HersheyTriplex, 2.0, new Bgr(Color.Red).MCvScalar, 5);
+
+            data.Frame.Image = image;
+            return data;
         }
     }
 }
