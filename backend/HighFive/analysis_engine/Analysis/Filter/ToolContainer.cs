@@ -4,12 +4,12 @@ using analysis_engine.Util;
 
 namespace analysis_engine.Filter
 {
-    public class ToolContainer
+    public abstract class ToolContainer
     {
-        private Tool _tool;
-        private Pipe _input;
-        private Pipe _output;
-        private FilterManager _manager;
+        protected Tool _tool;
+        protected Pipe _input;
+        protected Pipe _output;
+        protected FilterManager _manager;
         
         public ToolContainer(Tool tool, Pipe input, Pipe output, FilterManager manager)
         {
@@ -18,6 +18,10 @@ namespace analysis_engine.Filter
             _output = output;
             _manager = manager;
             tool.Init();
+        }
+
+        protected ToolContainer()
+        {
         }
     }
 }
