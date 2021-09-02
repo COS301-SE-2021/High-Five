@@ -6,7 +6,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Emgu.CV" Version="4.5.3.4721" />
+        <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.8.1" />
+        <PackageReference Include="NumSharp" Version="0.30.0" />
     </ItemGroup>
 
     <ItemGroup>
