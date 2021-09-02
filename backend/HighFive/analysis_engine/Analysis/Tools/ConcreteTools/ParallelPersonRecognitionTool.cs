@@ -3,15 +3,16 @@ using System.Drawing;
 using System.Linq;
 using analysis_engine.Analysis.Util.Data;
 using analysis_engine.Analysis.Util.Data.ConcreteData;
+using analysis_engine.Tools;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using NumSharp;
 
-namespace analysis_engine.Analysis.Tools.ConcreteTools.ConcreteParallelTools
+namespace analysis_engine.Analysis.Tools.ConcreteTools
 {
-    public class ParallelPersonRecognitionTool
+    public class ParallelPersonRecognitionTool : Tool
     {
         private const string ModelPath = @"../Models/ssd-10.onnx";
         private InferenceSession _model;

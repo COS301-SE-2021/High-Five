@@ -8,12 +8,11 @@ using analysis_engine.Tools;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
-using Emgu.CV.Util;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using NumSharp;
 
-namespace analysis_engine.Analysis.Tools.ConcreteTools.ConcreteLinearTools
+namespace analysis_engine.Analysis.Tools.ConcreteTools
 {
     public class LinearAnimalRecognitionTool : Tool
     {
