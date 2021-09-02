@@ -16,8 +16,8 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools.ConcreteParallelTools
         private readonly InferenceSession _model;
         private readonly string _modelInputLayerName;
         private const double MinScore=0.5;
-        private const long MinClass = 2;
-        private const long MaxClass = 9;
+        private const long MinClass = 1;
+        private const long MaxClass = 1;
         
         private readonly string[] _classes ={
             "__background", "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat",
