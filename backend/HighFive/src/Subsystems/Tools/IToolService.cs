@@ -7,7 +7,7 @@ namespace src.Subsystems.Tools
     public interface IToolService
     {
         public Task<bool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string toolName);
-        public void UploadDrawingTool(IFormFile sourceCode, string toolName);
+        public Task<bool> UploadDrawingTool(IFormFile sourceCode, string toolName);
         public void DeleteTool(DeleteToolRequest request);
         public void GetAllTools();
         public void StoreUserInfo(string id, string displayName, string email);

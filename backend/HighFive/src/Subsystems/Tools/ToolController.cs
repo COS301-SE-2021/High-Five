@@ -44,7 +44,12 @@ namespace src.Subsystems.Tools
                 ConfigureStorageManager();
             }
             var status =_toolService.UploadAnalysisTool(sourceCode, model, toolName).Result;
-            return StatusCode(200, new EmptyObject {Success = status});
+            var response = new EmptyObject {Success = status};
+            if (!status)
+            {
+                response.Message = "A tool with that name already exists.";
+            }
+            return StatusCode(200, response);
         }
 
         public override IActionResult UploadDrawingTool(IFormFile sourceCode, string toolName)
@@ -53,7 +58,13 @@ namespace src.Subsystems.Tools
             {
                 ConfigureStorageManager();
             }
-            throw new System.NotImplementedException();
+            var status =_toolService.UploadDrawingTool(sourceCode, toolName).Result;
+            var response = new EmptyObject {Success = status};
+            if (!status)
+            {
+                response.Message = "A tool with that name already exists.";
+            }
+            return StatusCode(200, response);
         }
         
         private void ConfigureStorageManager()

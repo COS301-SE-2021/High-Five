@@ -24,7 +24,7 @@ namespace src.Subsystems.Tools
             {
                 return false;
             }
-
+            
             var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
             var sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".cs", ContainerName+ "/analysis/" + generatedToolName).Result;
             sourceCodeFile.AddMetadata("toolName",toolName);
@@ -36,12 +36,25 @@ namespace src.Subsystems.Tools
                 .CreateNewFile(modelName + "." + modelNameArr[^1], ContainerName + "/analysis/" + generatedToolName).Result;
             await modelFile.UploadFile(model);
 
+            AddToToolsFile(generatedToolName, "analysis");
             return true;
         }
 
-        public void UploadDrawingTool(IFormFile sourceCode, string toolName)
+        public async Task<bool> UploadDrawingTool(IFormFile sourceCode, string toolName)
         {
-            throw new System.NotImplementedException();
+            var generatedToolName = _storageManager.HashMd5(toolName);
+            if (ToolExists(generatedToolName))
+            {
+                return false;
+            }
+            
+            var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
+            var sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".cs", ContainerName+ "/drawing/" + generatedToolName).Result;
+            sourceCodeFile.AddMetadata("toolName",toolName);
+            await sourceCodeFile.UploadFile(sourceCode);
+
+            AddToToolsFile(generatedToolName, "drawing");
+            return true;
         }
 
         public void DeleteTool(DeleteToolRequest request)
@@ -84,25 +97,20 @@ namespace src.Subsystems.Tools
         {
             var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
             var toolsArray = toolsFile.ToText().Result.Split("\n");
-            return toolsArray.IndexOf(toolName) != -1;
+            return toolsArray.IndexOf(toolName + "-analysis") != -1 || toolsArray.IndexOf(toolName + "-drawing") != -1;
         }
 
-        private void AddToToolsFile(string toolName)
+        private void AddToToolsFile(string toolName, string type)
         {
             var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
-            var toolsArray = toolsFile.ToText().Result.Split("\n");
-            //the above line splits the text file's contents by newlines into an array
-            var toolListString = string.Empty;
-            foreach (var tool in toolsArray)
+            var toolsText = toolsFile.ToText().Result;
+            if (toolsText != string.Empty)
             {
-                toolListString += tool;
-                if (!toolsArray[^1].Equals(tool))
-                {
-                    toolListString += "\n";
-                }
+                toolsText += "\n";
             }
+            toolsText += toolName + "-" + type;
 
-            toolsFile.UploadText(toolListString);
+            toolsFile.UploadText(toolsText);
         }
 
         private void RemoveFromToolsFile(string toolName)
