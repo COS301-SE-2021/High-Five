@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Accord.Math;
 using Microsoft.AspNetCore.Http;
 using Org.OpenAPITools.Models;
@@ -53,13 +54,6 @@ namespace src.Subsystems.Tools
             throw new System.NotImplementedException();
         }
 
-        private bool ToolExists(string toolName)
-        {
-            var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
-            var toolsArray = toolsFile.ToText().Result.Split("\n");
-            return toolsArray.IndexOf(toolName) != -1;
-        }
-        
         public void StoreUserInfo(string id, string displayName, string email)
         {
             _storageManager.StoreUserInfo(id, displayName, email);
@@ -84,6 +78,50 @@ namespace src.Subsystems.Tools
             }
 
             return true;
+        }
+        
+        private bool ToolExists(string toolName)
+        {
+            var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
+            var toolsArray = toolsFile.ToText().Result.Split("\n");
+            return toolsArray.IndexOf(toolName) != -1;
+        }
+
+        private void AddToToolsFile(string toolName)
+        {
+            var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
+            var toolsArray = toolsFile.ToText().Result.Split("\n");
+            //the above line splits the text file's contents by newlines into an array
+            var toolListString = string.Empty;
+            foreach (var tool in toolsArray)
+            {
+                toolListString += tool;
+                if (!toolsArray[^1].Equals(tool))
+                {
+                    toolListString += "\n";
+                }
+            }
+
+            toolsFile.UploadText(toolListString);
+        }
+
+        private void RemoveFromToolsFile(string toolName)
+        {
+            var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
+            var toolsList = toolsFile.ToText().Result.Split("\n").ToList();
+            //the above line splits the text file's contents by newlines into an array
+            var response = toolsList.Remove(toolName);
+            var updatedToolsList = string.Empty;
+            foreach (var tool in toolsList)
+            {
+                updatedToolsList += tool;
+                if (tool != toolsList[^1])
+                {
+                    updatedToolsList += "\n";
+                }
+            }
+
+            toolsFile.UploadText(updatedToolsList);
         }
     }
 }
