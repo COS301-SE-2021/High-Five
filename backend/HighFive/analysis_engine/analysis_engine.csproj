@@ -14,7 +14,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Analysis\Tools\ConcreteTools" />
       <Folder Include="Analysis\Tools\DroneTools" />
       <Folder Include="Analysis\Tools\Models" />
       <Folder Include="Network" />

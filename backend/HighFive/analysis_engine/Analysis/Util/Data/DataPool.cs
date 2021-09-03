@@ -6,11 +6,13 @@ namespace analysis_engine.Analysis.Util.Data
     public class DataPool
     {
         private int _capacity;
+        private int _checkedOut;
         private DataFactory _factory;
         public ConcurrentQueue<Data> IdleQueue;
         public DataPool(int capacity, DataFactory factory)
         {
             _capacity = capacity;
+            _checkedOut = 0;
             _factory = factory;
             IdleQueue = new ConcurrentQueue<Data>();
             for (var i = 0; i < capacity; i++)
