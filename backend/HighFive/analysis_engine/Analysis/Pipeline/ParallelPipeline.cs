@@ -1,7 +1,10 @@
 ﻿namespace analysis_engine.Analysis.Pipeline
 {
-    public class ParallelPipeline
+    public class ParallelPipeline : Pipeline
     {
-        
+        public override void Init()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
