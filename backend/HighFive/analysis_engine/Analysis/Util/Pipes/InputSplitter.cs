@@ -1,20 +1,25 @@
-﻿using analysis_engine.Analysis.Util.Data;
+﻿using System.Collections.Generic;
+using analysis_engine.Analysis.Util.Data;
 
 namespace analysis_engine.Util
 {
     public class InputSplitter : Pipe
     {
-        private Pipe[] inputs;
+        private List<Pipe> _inputs;
         
-        public InputSplitter(Pipe[] inputs)
+        public InputSplitter()
         {
-            this.inputs = inputs;
+            _inputs = new List<Pipe>();
         }
-        
+
+        public void addInput(Pipe inputPipe)
+        {
+            _inputs.Add(inputPipe);
+        }
 
         public void push(Data data)
         {
-            foreach (var input in inputs)
+            foreach (var input in _inputs)
             {
                 input.push(data);
             }
