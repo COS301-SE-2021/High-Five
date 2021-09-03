@@ -6,6 +6,8 @@ namespace analysis_engine.Analysis.Util.Data
 {
     public class Data
     {
+        public static int Count { get; set; } = 0;
+        public int Id { get; set; }
         public Frame Frame { get; set; }
         public bool HasFrame { get; set; }
         
@@ -14,6 +16,7 @@ namespace analysis_engine.Analysis.Util.Data
         {
             Frame = new Frame();
             Meta = null;
+            Id = Count++;
         }
 
         public Data(Frame frame, bool hasFrame)

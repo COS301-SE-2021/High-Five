@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections;
+using System.Collections.Generic;
 using analysis_engine.Analysis.Util.Data;
+
+
 
 namespace analysis_engine.Util
 {
@@ -7,19 +11,56 @@ namespace analysis_engine.Util
     {
         private int _capacity;
         private DataFactory _factory;
-        public Queue<Data> ActivePool;
-        public Queue<Data> IdlePool;
-        
+        public Queue<Data> IdleQueue;
         public DataPool(int capacity, DataFactory factory)
         {
             _capacity = capacity;
             _factory = factory;
-            IdlePool = new Queue<Data>();
+            IdleQueue = new Queue<Data>();
             for (var i = 0; i < capacity; i++)
             {
-                IdlePool.Enqueue(_factory.makeData());
+                IdleQueue.Enqueue(_factory.makeData());
             }
         }
-        
+
+        private void Resize(bool increase)
+        {
+            if (increase)
+            {
+                for (var i = 0; i < _capacity; i++)
+                {
+                    IdleQueue.Enqueue(_factory.makeData());
+                }
+                _capacity *= 2;
+            }
+            else
+            {
+                //TODO implement some way of reducing the size of the queue by half
+            }
+        }
+
+
+        public void ReturnData(Data data)
+        {
+            IdleQueue.Enqueue(data);
+        }
+
+        public Data GetData()
+        {
+            Data result;
+            bool success = IdleQueue.TryDequeue(out result);
+            if (success)
+            {
+                return result;
+            }
+            else
+            {
+                Resize(true);
+                return IdleQueue.Dequeue();
+            }
+        }
+
     }
+
+   
 }
