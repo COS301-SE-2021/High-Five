@@ -12,6 +12,8 @@ namespace analysis_engine.Analysis.Util.Data
         public List<MetaData> Meta { get; set; }
         public Data()
         {
+            Frame = new Frame();
+            Meta = null;
         }
 
         public Data(Frame frame, bool hasFrame)
