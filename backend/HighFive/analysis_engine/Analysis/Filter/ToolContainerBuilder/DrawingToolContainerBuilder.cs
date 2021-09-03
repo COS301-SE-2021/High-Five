@@ -1,9 +1,10 @@
 ﻿using analysis_engine.Analysis.Tools.Builders;
+using analysis_engine.Filter;
 using analysis_engine.Util;
 
-namespace analysis_engine.Filter.ToolContainerBuilder
+namespace analysis_engine.Analysis.Filter.ToolContainerBuilder
 {
-    public class DrawingToolContainerBuilder : ToolContainerBuilder
+    public class DrawingToolContainerBuilder : analysis_engine.Filter.ToolContainerBuilder.ToolContainerBuilder
     {
         public override void buildContainer()
         {
