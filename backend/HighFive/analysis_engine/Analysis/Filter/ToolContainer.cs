@@ -22,6 +22,11 @@ namespace analysis_engine.Filter
             tool.Init();
         }
 
+        public void start()
+        {
+            //TODO start a task which will run in a loop to feed the tool
+        }
+
         protected ToolContainer()
         {
         }

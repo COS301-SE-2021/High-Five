@@ -19,6 +19,14 @@ namespace analysis_engine.Filter
             Tools.Add(tool);
         }
 
+        public void start()
+        {
+            foreach (var toolContainer in Tools)
+            {
+                toolContainer.start();
+            }
+        }
+
         public void Update(int frameTime)
         {
         }

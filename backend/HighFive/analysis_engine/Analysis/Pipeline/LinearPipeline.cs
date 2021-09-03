@@ -4,7 +4,10 @@
     {
         public override void Init()
         {
-            throw new System.NotImplementedException();
+            foreach (var filter in Filters)
+            {
+                filter.start();
+            }
         }
     }
 }
