@@ -1,10 +1,11 @@
 ﻿using System;
-using analysis_engine.Tools;
+using analysis_engine.Analysis.Tools.Builders;
+using analysis_engine.Filter;
 using analysis_engine.Util;
 
-namespace analysis_engine.Filter.ToolContainerBuilder
+namespace analysis_engine.Analysis.Filter.ToolContainerBuilder
 {
-    public class AnalysisToolContainerBuilder : ToolContainerBuilder
+    public class AnalysisToolContainerBuilder : analysis_engine.Filter.ToolContainerBuilder.ToolContainerBuilder
     {
         public override void buildContainer()
         {
@@ -23,10 +24,12 @@ namespace analysis_engine.Filter.ToolContainerBuilder
 
         public override void addTool(String toolName)
         {
-            
+            var toolBuilder = new AnalysisToolBuilder();
+            toolBuilder.BuildTool(toolName);
+            _toolContainer.Tool = toolBuilder.GetTool();
         }
 
-        public override ToolContainer getContainer(Pipe input)
+        public override ToolContainer getContainer()
         {
             return _toolContainer;
         }

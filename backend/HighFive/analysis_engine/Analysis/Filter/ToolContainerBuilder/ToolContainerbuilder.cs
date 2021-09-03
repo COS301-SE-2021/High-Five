@@ -11,6 +11,6 @@ namespace analysis_engine.Filter.ToolContainerBuilder
         public abstract void addInput(Pipe input);
         public abstract void addOutput(Pipe output);
         public abstract void addTool(String toolName);
-        public abstract ToolContainer getContainer(Pipe input);
+        public abstract ToolContainer getContainer();
     }
 }
