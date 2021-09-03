@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace analysis_engine.Analysis.Util.Data.ConcreteData
 {

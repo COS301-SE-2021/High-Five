@@ -1,4 +1,5 @@
-﻿using analysis_engine.Tools;
+﻿using analysis_engine.Analysis.Tools;
+using analysis_engine.Tools;
 using analysis_engine.Util;
 
 namespace analysis_engine.Filter.ToolContainerBuilder
