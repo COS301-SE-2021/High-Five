@@ -11,12 +11,22 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
 
         public override void AddSource(Pipe source)
         {
-            throw new System.NotImplementedException();
+            Pipeline.Source = source;
         }
 
         public override void AddDrain(Pipe drain)
         {
-            throw new System.NotImplementedException();
+            Pipeline.Drain = drain;
+        }
+
+        public override void AddFilter(analysis_engine.Filter.Filter filter)
+        {
+            Pipeline.Filters.Add(filter);
+        }
+
+        public override Pipeline GetPipeline()
+        {
+            return Pipeline;
         }
     }
 }

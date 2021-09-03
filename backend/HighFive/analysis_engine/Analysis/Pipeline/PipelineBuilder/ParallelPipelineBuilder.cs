@@ -18,5 +18,15 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
         {
             throw new System.NotImplementedException();
         }
+
+        public override void AddFilter(analysis_engine.Filter.Filter filter)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Pipeline GetPipeline()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
