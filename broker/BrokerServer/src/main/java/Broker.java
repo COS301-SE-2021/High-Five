@@ -1,6 +1,5 @@
-import clients.servers.KafkaServerParticipant;
-import clients.servers.ServerParticipant;
 import clients.webclients.ClientParticipant;
+import clients.webclients.connection.SocketConnection;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import dataclasses.serverinfo.ServerInformation;
@@ -12,13 +11,12 @@ import dataclasses.telemetry.builder.TelemetryCollector;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
-import listeners.ConnectionListener;
-import listeners.servers.KafkaTopicListener;
-import listeners.webclients.WebClientListener;
+import servicelocator.ServiceLocator;
 
-import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -28,9 +26,9 @@ import java.util.concurrent.Executors;
  * that pass messages between the components of the Broker system.
  */
 public class Broker {
-    private final ConnectionListener<String> serverListener;
-    private ConnectionListener<Socket> clientListener;
-    private final ServerParticipant serverParticipant;
+    private Thread serverListener;
+    private Thread clientListener;
+    private Thread serverParticipant;
     private final Object infoLock = new Object();
     private final Object topicLock = new Object();
     private final ArrayList<String> topics = new ArrayList<>();
@@ -132,7 +130,7 @@ public class Broker {
              */
             @Override
             public void onNext(@NonNull Socket connection) {
-                clientConnections.execute(new ClientParticipant(connection, serverInformationHolder));
+                clientConnections.execute(new ClientParticipant(new SocketConnection(connection), serverInformationHolder));
             }
 
             @Override
@@ -146,18 +144,23 @@ public class Broker {
             }
         };
 
-        serverListener = new KafkaTopicListener(serverObservable, topics);
-        serverListener.start();
-
-        serverParticipant = new KafkaServerParticipant(serverParticipantObserver, topics);
-        serverParticipant.start();
-
         try {
-            clientListener = new WebClientListener(clientListenerObserver);
+            serverListener = ServiceLocator
+                    .getInstance().<Thread>createClass("ServerListener", Observer.class, List.class)
+                    .newInstance(serverObservable, topics);
+            serverListener.start();
+
+            serverParticipant = ServiceLocator.getInstance()
+                    .<Thread>createClass("ServerParticipantListener", Observer.class, List.class)
+                    .newInstance(serverParticipantObserver, topics);
+            serverParticipant.start();
+
+            clientListener = ServiceLocator
+                    .getInstance().<Thread>createClass("ClientListener", Observer.class)
+                    .newInstance(clientListenerObserver);
             clientListener.start();
-        } catch (IOException e) {
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
-            System.exit(-1);
         }
     }
 }

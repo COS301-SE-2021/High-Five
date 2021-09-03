@@ -1,4 +1,5 @@
 import org.apache.catalina.startup.Tomcat;
+import servicelocator.ServiceLocator;
 
 import java.io.*;
 
@@ -8,8 +9,9 @@ import java.io.*;
  */
 public class Main {
     public static void main(String[] args) throws Exception {
+        ServiceLocator locator = ServiceLocator.getInstance();
         Broker b = new Broker();
-        System.out.println("HELLO WORLD");
+
 
         Tomcat tomcat = new Tomcat();
         String port = "8080"; // Also change in index.html

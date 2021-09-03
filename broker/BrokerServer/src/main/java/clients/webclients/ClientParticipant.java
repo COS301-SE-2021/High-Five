@@ -1,5 +1,6 @@
 package clients.webclients;
 
+import clients.webclients.connection.Connection;
 import clients.webclients.strategy.LiveAnalysisStrategy;
 import clients.webclients.strategy.VideoAnalysisStrategy;
 import com.google.gson.Gson;
@@ -17,10 +18,10 @@ import java.net.Socket;
 
 public class ClientParticipant extends WebClient{
 
-    private Socket connection;
+    private Connection connection;
     private final ServerInformationHolder informationHolder;
 
-    public ClientParticipant(Socket connection, ServerInformationHolder informationHolder) {
+    public ClientParticipant(Connection connection, ServerInformationHolder informationHolder) {
         this.informationHolder = informationHolder;
         this.connection = connection;
     }
@@ -38,15 +39,13 @@ public class ClientParticipant extends WebClient{
         ServerInformation info = informationHolder.get();
 
         try {
-
             //Fetch the request from the client
             StringWriter requestDataWriter = new StringWriter();
-            IOUtil.copy(connection.getInputStream(), requestDataWriter, "UTF-8");
+            connection.setInputWriter(requestDataWriter);
             String requestData = requestDataWriter.toString();
 
             //Response object for sending a response to the client
-            Writer out = new BufferedWriter(new OutputStreamWriter(
-                    connection.getOutputStream()));
+            Writer out = connection.getOutputWriter();
 
             try {
                 //Decodes the JSON message

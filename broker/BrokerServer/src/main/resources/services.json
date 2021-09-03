@@ -1,0 +1,14 @@
+[
+  {
+    "name": "ClientListener",
+    "path": "listeners.webclients.WebClientListener"
+  },
+  {
+    "name": "ServerListener",
+    "path": "listeners.servers.KafkaTopicListener"
+  },
+  {
+    "name": "ServerParticipantListener",
+    "path": "clients.servers.KafkaServerParticipant"
+  }
+]
