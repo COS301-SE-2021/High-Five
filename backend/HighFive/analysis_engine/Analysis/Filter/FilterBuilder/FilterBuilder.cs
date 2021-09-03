@@ -13,18 +13,22 @@ namespace analysis_engine.Filter.FilterBuilder
 
         public void AddToolContainer(ToolContainer toolContainer)
         {
+            _filter.AddTool(toolContainer);
         }
 
         public void AddInput(Pipe input)
         {
+            _filter.Input = input;
         }
 
         public void AddOutput(Pipe output)
         {
+            _filter.Output = output;
         }
 
         public void BuildFilter()
         {
+            _filter = new Filter();
         }
     }
 }

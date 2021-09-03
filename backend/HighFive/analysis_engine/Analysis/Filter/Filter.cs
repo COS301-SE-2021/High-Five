@@ -6,10 +6,20 @@ namespace analysis_engine.Filter
     public class Filter
     {
         public List<ToolContainer> Tools { get; set; }
-        public Pipe input;
-        public Pipe output;
+        public Pipe Input { get; set; }
+        public Pipe Output { get; set; }
 
-        public void update(int frameTime)
+        public Filter()
+        {
+            Tools = new List<ToolContainer>();
+        }
+
+        public void AddTool(ToolContainer tool)
+        {
+            Tools.Add(tool);
+        }
+
+        public void Update(int frameTime)
         {
         }
 
