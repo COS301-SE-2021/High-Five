@@ -1,21 +1,44 @@
-﻿using analysis_engine.Analysis.Util.Data;
+﻿using System.Collections.Concurrent;
+using System.Linq;
+using analysis_engine.Util;
 
-namespace analysis_engine.Util
+namespace analysis_engine.Analysis.Util.Pipes
 {
     public class InputMerger : Pipe
     {
-        private Pipe output;
-        public InputMerger(Pipe output)
+        private readonly Pipe _output;
+        private ConcurrentDictionary<int, Data.Data> _finalData;
+        private int _numPipelines;
+        private ConcurrentDictionary<int, int> _piplineCountdowns;
+        public InputMerger(Pipe output, int numPipelines)
         {
-            this.output = output;
+            this._output = output;
+            this._numPipelines = numPipelines;
+            _finalData = new ConcurrentDictionary<int, Data.Data>();
+            _piplineCountdowns = new ConcurrentDictionary<int, int>();
         }
 
-        public void push(Data data)
+        public void push(Data.Data data)
         {
-            throw new System.NotImplementedException();
+            if (_finalData.TryAdd(data.Frame.FrameID, data))
+            {
+                _piplineCountdowns.TryAdd(data.Frame.FrameID, _numPipelines-1);
+            }
+            else
+            {
+                _finalData[data.Frame.FrameID].Meta = _finalData[data.Frame.FrameID].Meta.Concat(data.Meta).ToList();
+                _piplineCountdowns[data.Frame.FrameID]--;
+            }
+
+            if (_piplineCountdowns[data.Frame.FrameID] == 0)
+            {
+                Data.Data output;
+                _finalData.TryRemove(data.Frame.FrameID, out output);
+                _output.push(output);
+            }
         }
 
-        public Data pop()
+        public Data.Data pop()
         {
             throw new System.NotImplementedException();
         }

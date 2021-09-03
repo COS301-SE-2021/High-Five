@@ -12,7 +12,7 @@ using NumSharp;
 
 namespace analysis_engine.Analysis.Tools.ConcreteTools
 {
-    public class VehicleRecognitionTool : Tool
+    public class VehicleRecognitionTool : AnalysisTool
     {
         private const string ModelPath = @"../Models/ssd-10.onnx";
         private InferenceSession _model;
@@ -33,14 +33,14 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools
             "teddy bear", "hair drier", "toothbrush",
         };
 
-        public void Init()
+        public override void Init()
         {
             _model = new InferenceSession(
                 ModelPath,
                 SessionOptions.MakeSessionOptionWithCudaProvider());
             _modelInputLayerName = _model.InputMetadata.Keys.Single();
         }
-        public Data Process(Data data)
+        public override Data Process(Data data)
         {
             var image = Resize(new Matrix<byte>(data.Frame.Image.Bytes).Mat);
             

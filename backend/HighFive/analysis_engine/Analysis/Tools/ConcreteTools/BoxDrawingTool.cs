@@ -10,9 +10,9 @@ using Emgu.CV.Structure;
 
 namespace analysis_engine.Analysis.Tools.ConcreteTools
 {
-    public class BoxDrawingTool : Tool
+    public class BoxDrawingTool : DrawingTool
     {
-        public Data Process(Data data)
+        public override Data Process(Data data)
         {
             var image = data.Frame.Image;
             var count = 1;
@@ -40,7 +40,7 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools
             return data;
         }
 
-        public void Init()
+        public override void Init()
         {
             
         }
