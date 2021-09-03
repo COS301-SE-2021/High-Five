@@ -4,17 +4,17 @@ using analysis_engine.Util;
 
 namespace analysis_engine.Analysis.Util.Data
 {
-    public abstract class Data
+    public class Data
     {
         public Frame Frame { get; set; }
         public bool HasFrame { get; set; }
         
         public List<MetaData> Meta { get; set; }
-        protected Data()
+        public Data()
         {
         }
 
-        protected Data(Frame frame, bool hasFrame)
+        public Data(Frame frame, bool hasFrame)
         {
             Frame = frame;
             HasFrame = hasFrame;
