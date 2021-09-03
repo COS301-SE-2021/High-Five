@@ -24,6 +24,11 @@ import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+/**
+ * This class is essentially the glue that holds the entire Broker system together.
+ * Instantiates listeners for new servers and clients, as well as creating observers
+ * that pass messages between the components of the Broker system.
+ */
 public class Broker {
     private final ConnectionListener<String> serverListener;
     private ConnectionListener<Socket> clientListener;
@@ -35,6 +40,12 @@ public class Broker {
     private final ServerInformationHolder serverInformationHolder = new ServerInformationHolder();
 
     public Broker() {
+
+        /*
+        Observer class to handle new analysis servers. When a new analysis
+        server is created, a new topic is made, so this class adds new topics
+        when the listener discovers them.
+         */
         Observer<String> serverObservable = new Observer<String>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
@@ -58,6 +69,12 @@ public class Broker {
 
             }
         };
+
+        /*
+        This observer receives server information (such as IP address, usage, etc), deserializes it
+        and adds it to a list of server information. A listener will poll for updated information
+        and use this class to add the information to the list.
+         */
         Observer<String> serverParticipantObserver = new Observer<String>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
