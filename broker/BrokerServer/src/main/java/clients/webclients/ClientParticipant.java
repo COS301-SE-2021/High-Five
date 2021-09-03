@@ -30,15 +30,21 @@ public class ClientParticipant extends WebClient{
         return false;
     }
 
+    /**
+     * Reads a request from the client and processes the request.
+     */
     @Override
     public void listen() throws InterruptedException {
         ServerInformation info = informationHolder.get();
 
         try {
+
+            //Fetch the request from the client
             StringWriter requestDataWriter = new StringWriter();
             IOUtil.copy(connection.getInputStream(), requestDataWriter, "UTF-8");
             String requestData = requestDataWriter.toString();
 
+            //Response object for sending a response to the client
             Writer out = new BufferedWriter(new OutputStreamWriter(
                     connection.getOutputStream()));
 
@@ -48,6 +54,7 @@ public class ClientParticipant extends WebClient{
                 JsonElement element = new Gson().fromJson(requestData, JsonElement.class);
                 request = new RequestDecoder().deserialize(element, null,null);
 
+                //Process request based on analysis type
                 if (request.getAnalysisType().equals("live")) {
                     new LiveAnalysisStrategy().processRequest(request, info, out);
                 } else {
