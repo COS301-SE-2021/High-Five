@@ -10,5 +10,13 @@
   {
     "name": "ServerParticipantListener",
     "path": "clients.servers.KafkaServerParticipant"
+  },
+  {
+    "name": "ClientParticipant",
+    "path": "clients.webclients.ClientParticipant"
+  },
+  {
+    "name": "ClientConnection",
+    "path": "clients.webclients.connection.SocketConnection"
   }
 ]

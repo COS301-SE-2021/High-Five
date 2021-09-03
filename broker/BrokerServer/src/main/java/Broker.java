@@ -1,5 +1,5 @@
-import clients.webclients.ClientParticipant;
-import clients.webclients.connection.SocketConnection;
+import clients.webclients.WebClient;
+import clients.webclients.connection.Connection;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import dataclasses.serverinfo.ServerInformation;
@@ -130,7 +130,18 @@ public class Broker {
              */
             @Override
             public void onNext(@NonNull Socket connection) {
-                clientConnections.execute(new ClientParticipant(new SocketConnection(connection), serverInformationHolder));
+
+                try {
+                    Connection webConnection = ServiceLocator.getInstance()
+                            .<Connection>createClass("ClientConnection", Socket.class)
+                            .newInstance(connection);
+                    WebClient client = ServiceLocator.getInstance()
+                            .<WebClient>createClass("ClientParticipant", Connection.class, ServerInformationHolder.class)
+                            .newInstance(webConnection, serverInformationHolder);
+                    clientConnections.execute(client);
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
