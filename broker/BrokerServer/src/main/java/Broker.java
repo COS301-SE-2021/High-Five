@@ -1,24 +1,18 @@
 import clients.webclients.WebClient;
 import clients.webclients.connection.Connection;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import dataclasses.serverinfo.ServerInformation;
-import dataclasses.serverinfo.ServerInformationHolder;
-import dataclasses.serverinfo.codecs.ServerInformationDecoder;
+import com.google.gson.*;
+import dataclasses.serverinfo.*;
 import dataclasses.telemetry.Telemetry;
-import dataclasses.telemetry.builder.TelemetryBuilder;
-import dataclasses.telemetry.builder.TelemetryCollector;
+import dataclasses.telemetry.builder.*;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import servicelocator.ServiceLocator;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * This class is essentially the glue that holds the entire Broker system together.
@@ -90,7 +84,10 @@ public class Broker {
                     ServerInformation information;
                     try {
                         JsonElement element = new Gson().fromJson(message, JsonElement.class);
-                        information = new ServerInformationDecoder().deserialize(element, null,null);
+                        information = ServiceLocator
+                                .getInstance()
+                                .<ServerInformation>createClass("ServerInfoDecoder", JsonElement.class, Type.class, JsonDeserializationContext.class)
+                                .newInstance(element, null, null);
                     } catch (Exception e) {
                         e.printStackTrace();
                         return;

@@ -18,5 +18,9 @@
   {
     "name": "ClientConnection",
     "path": "clients.webclients.connection.SocketConnection"
+  },
+  {
+    "name": "ServerInfoDecoder",
+    "path": "dataclasses.serverinfo.codecs.ServerInformationDecoder"
   }
 ]
