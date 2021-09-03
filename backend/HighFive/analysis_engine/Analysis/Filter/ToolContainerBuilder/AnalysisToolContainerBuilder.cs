@@ -1,4 +1,5 @@
-﻿using analysis_engine.Tools;
+﻿using System;
+using analysis_engine.Tools;
 using analysis_engine.Util;
 
 namespace analysis_engine.Filter.ToolContainerBuilder
@@ -7,27 +8,27 @@ namespace analysis_engine.Filter.ToolContainerBuilder
     {
         public override void buildContainer()
         {
-
             this._toolContainer = new AnalysisToolContainer();
         }
 
         public override void addInput(Pipe input)
         {
+            _toolContainer.Input = input;
         }
 
         public override void addOutput(Pipe output)
         {
-            throw new System.NotImplementedException();
+            _toolContainer.Output = output;
         }
 
-        public override void addTool(Tool tool)
+        public override void addTool(String toolName)
         {
-            throw new System.NotImplementedException();
+            
         }
 
         public override ToolContainer getContainer(Pipe input)
         {
-            throw new System.NotImplementedException();
+            return _toolContainer;
         }
     }
 }
