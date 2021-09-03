@@ -1,13 +1,15 @@
-﻿namespace analysis_engine.Tools.Builders
+﻿using analysis_engine.Tools;
+
+namespace analysis_engine.Analysis.Tools.Builders
 {
     public class AnalysisToolBuilder : ToolBuilder
     {
-        public override void buildTool(string name)
+        public override void BuildTool(string name)
         {
             throw new System.NotImplementedException();
         }
 
-        public override Tool getTool()
+        public override Tool GetTool()
         {
             throw new System.NotImplementedException();
         }
