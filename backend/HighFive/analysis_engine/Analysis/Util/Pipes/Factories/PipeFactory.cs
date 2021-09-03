@@ -1,7 +1,7 @@
 ﻿namespace analysis_engine.Util.Factories
 {
-    public class PipeFactory
+    public abstract class PipeFactory
     {
-        
+        public abstract Pipe getPipe();
     }
 }
