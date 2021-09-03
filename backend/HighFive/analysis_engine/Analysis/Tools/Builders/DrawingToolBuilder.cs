@@ -1,4 +1,5 @@
-﻿using analysis_engine.Tools;
+﻿using analysis_engine.Analysis.Tools.ConcreteTools;
+using analysis_engine.Tools;
 
 namespace analysis_engine.Analysis.Tools.Builders
 {
@@ -6,12 +7,17 @@ namespace analysis_engine.Analysis.Tools.Builders
     {
         public override void BuildTool(string name)
         {
-            throw new System.NotImplementedException();
+            switch (name)
+            {
+                case "box-0":
+                    Tool = new BoxDrawingTool();
+                    break;
+            }
         }
 
         public override Tool GetTool()
         {
-            throw new System.NotImplementedException();
+            return Tool;
         }
     }
 }
