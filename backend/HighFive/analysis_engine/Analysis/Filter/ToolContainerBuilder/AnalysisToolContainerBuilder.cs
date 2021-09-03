@@ -13,7 +13,6 @@ namespace analysis_engine.Filter.ToolContainerBuilder
 
         public override void addInput(Pipe input)
         {
-            throw new System.NotImplementedException();
         }
 
         public override void addOutput(Pipe output)
