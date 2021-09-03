@@ -2,6 +2,10 @@ import org.apache.catalina.startup.Tomcat;
 
 import java.io.*;
 
+/**
+ * Entrypoint for the broker system. Runs the broker class and starts an embedded
+ * Tomcat server to accept WebSocket connections.
+ */
 public class Main {
     public static void main(String[] args) throws Exception {
         Broker b = new Broker();

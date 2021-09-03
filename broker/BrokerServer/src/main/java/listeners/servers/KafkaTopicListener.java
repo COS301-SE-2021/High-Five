@@ -7,11 +7,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-public class KafkaMessageListener extends ConnectionListener<String> {
+/**
+ * Listens for new topics in Kafka (which corresponds to a new analysis server joining the network).
+ * When a new topic is discovered, it notifies the observer passed to this class by sending it the
+ * new topic.
+ */
+public class KafkaTopicListener extends ConnectionListener<String> {
 
     private final List<String> topics;
 
-    public KafkaMessageListener(Observer<String> notifier, List<String> topics) {
+    public KafkaTopicListener(Observer<String> notifier, List<String> topics) {
         super(notifier);
         this.topics = topics;
     }
@@ -33,6 +38,8 @@ public class KafkaMessageListener extends ConnectionListener<String> {
             BufferedReader inputStreamReader =
                     new BufferedReader(new InputStreamReader(proc.getInputStream()));
             while ((line = inputStreamReader.readLine()) != null) {
+
+                //Ensures that the topic does not already exist
                 if (!topics.contains(line)) {
                     notify(line);
                 }

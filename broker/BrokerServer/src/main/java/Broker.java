@@ -3,7 +3,6 @@ import clients.servers.ServerParticipant;
 import clients.webclients.ClientParticipant;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import dataclasses.serverinfo.ServerInformation;
 import dataclasses.serverinfo.ServerInformationHolder;
 import dataclasses.serverinfo.codecs.ServerInformationDecoder;
@@ -14,10 +13,9 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import listeners.ConnectionListener;
-import listeners.servers.KafkaMessageListener;
+import listeners.servers.KafkaTopicListener;
 import listeners.webclients.WebClientListener;
 
-import javax.websocket.DecodeException;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -148,7 +146,7 @@ public class Broker {
             }
         };
 
-        serverListener = new KafkaMessageListener(serverObservable, topics);
+        serverListener = new KafkaTopicListener(serverObservable, topics);
         serverListener.start();
 
         serverParticipant = new KafkaServerParticipant(serverParticipantObserver, topics);
