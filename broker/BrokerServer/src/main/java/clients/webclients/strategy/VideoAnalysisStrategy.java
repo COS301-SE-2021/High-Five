@@ -1,7 +1,7 @@
 package clients.webclients.strategy;
 
 import dataclasses.serverinfo.ServerInformation;
-import dataclasses.clientrequest.ClientRequest;
+import dataclasses.clientrequest.AnalysisRequest;
 
 import java.io.Writer;
 
@@ -13,7 +13,7 @@ public class VideoAnalysisStrategy implements AnalysisStrategy{
      * @param information
      */
     @Override
-    public void processRequest(ClientRequest request, ServerInformation information, Writer writer) {
+    public void processRequest(AnalysisRequest request, ServerInformation information, Writer writer) {
 
     }
 }

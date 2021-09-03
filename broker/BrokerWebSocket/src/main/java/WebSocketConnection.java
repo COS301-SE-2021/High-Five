@@ -25,8 +25,10 @@ public class WebSocketConnection {
     @OnMessage
     public void onMessage(Session session, String message) throws IOException {
 
+        int port = Integer.parseInt(System.getenv("BROKER_CLIENT_PORT"));
+
         //Send request to broker
-        Socket brokerConnection = new Socket("localhost", 6666);
+        Socket brokerConnection = new Socket("localhost", port);
         Writer serverInfoRequest = new BufferedWriter(new OutputStreamWriter(
                 brokerConnection.getOutputStream()));
 

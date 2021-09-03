@@ -14,7 +14,10 @@ public class WebClientListener extends ConnectionListener<Socket> {
 
     public WebClientListener(Observer<Socket> notifier) throws IOException {
         super(notifier);
-        socketServer = new ServerSocket(6666);
+
+        int port = Integer.parseInt(System.getenv("BROKER_CLIENT_PORT"));
+
+        socketServer = new ServerSocket(port);
     }
 
     @Override

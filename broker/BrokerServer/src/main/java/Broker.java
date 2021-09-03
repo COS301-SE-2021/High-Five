@@ -1,8 +1,12 @@
 import clients.servers.KafkaServerParticipant;
 import clients.servers.ServerParticipant;
 import clients.webclients.ClientParticipant;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import dataclasses.serverinfo.ServerInformation;
 import dataclasses.serverinfo.ServerInformationHolder;
+import dataclasses.serverinfo.codecs.ServerInformationDecoder;
 import dataclasses.telemetry.Telemetry;
 import dataclasses.telemetry.builder.TelemetryBuilder;
 import dataclasses.telemetry.builder.TelemetryCollector;
@@ -13,6 +17,7 @@ import listeners.ConnectionListener;
 import listeners.servers.KafkaMessageListener;
 import listeners.webclients.WebClientListener;
 
+import javax.websocket.DecodeException;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -59,19 +64,33 @@ public class Broker {
 
             }
 
+            /**
+             * Decodes a JSON string into a ServerInformation object, and adds that object
+             * to a list of server information objects.
+             * @param message JSON string containing server information.
+             */
             @Override
             public void onNext(@NonNull String message) {
                 synchronized (infoLock) {
-                    String address = "stub"; //get address from message
-                    String port = "stub"; //get port from message
-                    String id = "stub"; //get id from message
-                    String credentials = "stub"; //get credentials from message
+
+                    //Decodes the JSON message
+                    ServerInformation information;
+                    try {
+                        JsonElement element = new Gson().fromJson(message, JsonElement.class);
+                        information = new ServerInformationDecoder().deserialize(element, null,null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return;
+                    }
+
+                    //Extracts usage information from the message and calculates the usage of the server
                     Telemetry usageTelemetry = new TelemetryBuilder()
                             .setData(message)
                             .setCollector(TelemetryCollector.ALL)
                             .build();
                     long usage = usageTelemetry.getTelemetry();
-                    serverInformationHolder.add(new ServerInformation(id, address, port, credentials, usage));
+                    information.setUsage(usage);
+                    serverInformationHolder.add(information);
                 }
             }
 
@@ -92,6 +111,10 @@ public class Broker {
 
             }
 
+            /**
+             * Creates a new client connection.
+             * @param connection Socket connection to the client.
+             */
             @Override
             public void onNext(@NonNull Socket connection) {
                 clientConnections.execute(new ClientParticipant(connection, serverInformationHolder));

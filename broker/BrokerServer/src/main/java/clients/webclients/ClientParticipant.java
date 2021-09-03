@@ -2,10 +2,13 @@ package clients.webclients;
 
 import clients.webclients.strategy.LiveAnalysisStrategy;
 import clients.webclients.strategy.VideoAnalysisStrategy;
-import dataclasses.clientrequest.ClientRequest;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import dataclasses.clientrequest.AnalysisRequest;
 import dataclasses.clientrequest.codecs.RequestDecoder;
 import dataclasses.serverinfo.ServerInformation;
 import dataclasses.serverinfo.ServerInformationHolder;
+import dataclasses.serverinfo.codecs.ServerInformationDecoder;
 import org.apache.commons.io.IOUtil;
 
 import javax.websocket.DecodeException;
@@ -40,14 +43,17 @@ public class ClientParticipant extends WebClient{
                     connection.getOutputStream()));
 
             try {
-                ClientRequest request = new RequestDecoder().decode(requestData);
+                //Decodes the JSON message
+                AnalysisRequest request;
+                JsonElement element = new Gson().fromJson(requestData, JsonElement.class);
+                request = new RequestDecoder().deserialize(element, null,null);
 
-                if (request.getResourceType().equals("live")) {
+                if (request.getAnalysisType().equals("live")) {
                     new LiveAnalysisStrategy().processRequest(request, info, out);
                 } else {
                     new VideoAnalysisStrategy().processRequest(request, info, out);
                 }
-            } catch (DecodeException e) {
+            } catch (Exception e) {
                 out.append(e.getMessage()).flush();
             }
 

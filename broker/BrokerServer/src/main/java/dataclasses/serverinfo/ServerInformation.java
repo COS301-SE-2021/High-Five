@@ -1,18 +1,18 @@
 package dataclasses.serverinfo;
 
 public class ServerInformation {
+
     private String address;
     private String serverId;
     private String port;
     private String credentials;
     private long usage;
 
-    public ServerInformation(String id, String address, String port, String credentials, long usage) {
-        this.serverId = id;
+    public ServerInformation(String address, String serverId, String port, String credentials) {
         this.address = address;
+        this.serverId = serverId;
         this.port = port;
         this.credentials = credentials;
-        this.usage = usage;
     }
 
     public String getAddress() {

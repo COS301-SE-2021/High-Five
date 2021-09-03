@@ -1,31 +1,18 @@
 package dataclasses.clientrequest.codecs;
 
-import com.google.gson.Gson;
-import dataclasses.clientrequest.ClientRequest;
+import com.google.gson.*;
+import dataclasses.clientrequest.AnalysisRequest;
 
-import javax.websocket.*;
+import java.lang.reflect.Type;
 
-public class RequestDecoder implements Decoder.Text<ClientRequest> {
+public class RequestDecoder implements JsonDeserializer<AnalysisRequest> {
 
-    private static Gson gson = new Gson();
-
-    @Override
-    public ClientRequest decode(String s) throws DecodeException {
-        return gson.fromJson(s, ClientRequest.class);
-    }
 
     @Override
-    public boolean willDecode(String s) {
-        return (s != null);
-    }
+    public AnalysisRequest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        String type = json.getAsJsonObject().get("analysis_type").getAsString();
+        String auth = json.getAsJsonObject().get("auth_challenge").getAsString();
 
-    @Override
-    public void init(EndpointConfig endpointConfig) {
-        // Custom initialization logic
-    }
-
-    @Override
-    public void destroy() {
-        // Close resources
+        return new AnalysisRequest(type, auth);
     }
 }
