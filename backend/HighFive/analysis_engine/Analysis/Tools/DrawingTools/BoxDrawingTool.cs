@@ -8,7 +8,7 @@ using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 
-namespace analysis_engine.Analysis.Tools.ConcreteTools
+namespace analysis_engine.Analysis.Tools.DrawingTools
 {
     public class BoxDrawingTool : DrawingTool
     {

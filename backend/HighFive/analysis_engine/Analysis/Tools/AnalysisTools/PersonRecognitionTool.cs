@@ -10,7 +10,7 @@ using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using NumSharp;
 
-namespace analysis_engine.Analysis.Tools.ConcreteTools
+namespace analysis_engine.Analysis.Tools.AnalysisTools
 {
     public class PersonRecognitionTool : AnalysisTool
     {

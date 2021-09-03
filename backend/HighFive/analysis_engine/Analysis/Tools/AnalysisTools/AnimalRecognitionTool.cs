@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -7,21 +6,20 @@ using analysis_engine.Analysis.Util.Data.ConcreteData;
 using analysis_engine.Tools;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
-using Emgu.CV.Structure;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using NumSharp;
 
-namespace analysis_engine.Analysis.Tools.ConcreteTools
+namespace analysis_engine.Analysis.Tools.AnalysisTools
 {
-    public class SelfDrawingVehicleRecognitionTool : AnalysisTool
+    public class AnimalRecognitionTool : AnalysisTool
     {
         private const string ModelPath = @"../Models/ssd-10.onnx";
         private InferenceSession _model;
         private string _modelInputLayerName;
         private const double MinScore=0.5;
-        private const long MinClass = 2;
-        private const long MaxClass = 9;
+        private const long MinClass = 15;
+        private const long MaxClass = 24;
         
         private readonly string[] _classes ={
             "__background", "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat",
@@ -84,6 +82,7 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools
             var output= new BoxCoordinateData();
             output.Classes = new List<string>();
             output.Boxes = new List<float>();
+            output.Purpose = "Animal";
             var width = data.Frame.Image.Width;
             var height = data.Frame.Image.Height;
             for (int i = 0; i < labels.Count; i++)
@@ -98,7 +97,9 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools
                 }
             }
             
-            return DrawBoxes(data, output);
+            data.Meta.Add(output);
+            
+            return data;
         }
         
         private static NDArray Resize(Mat image)
@@ -110,27 +111,6 @@ namespace analysis_engine.Analysis.Tools.ConcreteTools
             var result = np.array(resized.GetData(false)).reshape(resized.Height, resized.Width, 3);
         
             return result;
-        }
-        
-        private Data DrawBoxes(Data data, BoxCoordinateData output)
-        {
-            var image = data.Frame.Image;
-            for (var i = 0; i < output.Classes.Count; i++)
-            {
-                var box = new Rectangle(Convert.ToInt32(output.Boxes[i * 4]),
-                    Convert.ToInt32(output.Boxes[i * 4 + 1]), 
-                    Convert.ToInt32(output.Boxes[i * 4 + 2]),
-                    Convert.ToInt32(output.Boxes[i * 4 + 3]));
-                var point = new Point(Convert.ToInt32(output.Boxes[i * 4]),
-                    Convert.ToInt32(output.Boxes[i * 4 + 1] - 10.0 * image.Height / 2286.0));
-                CvInvoke.Rectangle(image, box, new Bgr(Color.Red).MCvScalar, 5, LineType.Filled);
-                CvInvoke.PutText(image, output.Classes[i].ToUpper(), point, FontFace.HersheyTriplex, 2.0, new Bgr(Color.Red).MCvScalar, 5);
-            }
-            var textPoint = new Point(image.Width / 445, 6*image.Height / 229);
-            CvInvoke.PutText(image, "Vehicle Count: "+output.Classes.Count, textPoint, FontFace.HersheyTriplex, 2.0, new Bgr(Color.Red).MCvScalar, 5);
-
-            data.Frame.Image = image;
-            return data;
         }
     }
 }
