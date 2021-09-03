@@ -6,7 +6,7 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
     {
         public override void BuildPipeline()
         {
-            throw new System.NotImplementedException();
+            Pipeline = new LinearPipeline();
         }
 
         public override void AddSource(Pipe source)

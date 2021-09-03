@@ -4,7 +4,7 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
 {
     public abstract class PipelineBuilder
     {
-        private Pipeline _pipeline;
+        public Pipeline Pipeline { get; set; }
 
         public PipelineBuilder()
         {
