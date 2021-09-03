@@ -4,7 +4,8 @@ namespace analysis_engine.Analysis.Util.Data
 {
     public class DataFactory
     {
-        public Data makeData()
+        
+        public Data MakeData()
         {
             return new Data();
         }

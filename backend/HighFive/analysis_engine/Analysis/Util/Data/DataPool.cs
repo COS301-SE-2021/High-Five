@@ -1,25 +1,21 @@
-﻿
-using System.Collections;
-using System.Collections.Generic;
-using analysis_engine.Analysis.Util.Data;
+﻿using System.Collections.Concurrent;
+using System.Reflection.Metadata.Ecma335;
 
-
-
-namespace analysis_engine.Util
+namespace analysis_engine.Analysis.Util.Data
 {
     public class DataPool
     {
         private int _capacity;
         private DataFactory _factory;
-        public Queue<Data> IdleQueue;
+        public ConcurrentQueue<Data> IdleQueue;
         public DataPool(int capacity, DataFactory factory)
         {
             _capacity = capacity;
             _factory = factory;
-            IdleQueue = new Queue<Data>();
+            IdleQueue = new ConcurrentQueue<Data>();
             for (var i = 0; i < capacity; i++)
             {
-                IdleQueue.Enqueue(_factory.makeData());
+                IdleQueue.Enqueue(_factory.MakeData());
             }
         }
 
@@ -29,7 +25,7 @@ namespace analysis_engine.Util
             {
                 for (var i = 0; i < _capacity; i++)
                 {
-                    IdleQueue.Enqueue(_factory.makeData());
+                    IdleQueue.Enqueue(_factory.MakeData());
                 }
                 _capacity *= 2;
             }
@@ -40,7 +36,7 @@ namespace analysis_engine.Util
         }
 
 
-        public void ReturnData(Data data)
+        public void ReleaseData(Data data)
         {
             IdleQueue.Enqueue(data);
         }
@@ -56,7 +52,8 @@ namespace analysis_engine.Util
             else
             {
                 Resize(true);
-                return IdleQueue.Dequeue();
+                IdleQueue.TryDequeue(out result);
+                return result;
             }
         }
 
