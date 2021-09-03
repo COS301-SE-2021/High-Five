@@ -4,7 +4,7 @@
     {
         public override Pipe getPipe()
         {
-            throw new System.NotImplementedException();
+            return new ConcurrentQueuePipe();
         }
     }
 }

@@ -6,16 +6,20 @@ namespace analysis_engine.Analysis.Util.Pipes
 {
     public class InputMerger : Pipe
     {
-        private readonly Pipe _output;
+        private Pipe _output;
         private ConcurrentDictionary<int, Data.Data> _finalData;
         private int _numPipelines;
         private ConcurrentDictionary<int, int> _piplineCountdowns;
-        public InputMerger(Pipe output, int numPipelines)
+        public InputMerger(int numPipelines)
         {
-            this._output = output;
             this._numPipelines = numPipelines;
             _finalData = new ConcurrentDictionary<int, Data.Data>();
             _piplineCountdowns = new ConcurrentDictionary<int, int>();
+        }
+
+        public void SetOutput(Pipe output)
+        {
+            _output = output;
         }
 
         public void push(Data.Data data)
