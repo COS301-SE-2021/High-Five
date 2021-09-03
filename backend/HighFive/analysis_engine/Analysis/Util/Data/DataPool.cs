@@ -38,7 +38,14 @@ namespace analysis_engine.Analysis.Util.Data
 
         public void ReleaseData(Data data)
         {
-            IdleQueue.Enqueue(data);
+            if (IdleQueue.Count >= _capacity * 0.75)
+            {
+                Resize(false);
+            }
+            else
+            {
+                IdleQueue.Enqueue(data);
+            }
         }
 
         public Data GetData()
