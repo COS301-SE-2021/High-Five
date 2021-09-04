@@ -12,7 +12,7 @@ namespace analysis_engine.Util
             _inputs = new List<Pipe>();
         }
 
-        public void addInput(Pipe inputPipe)
+        public void AddInput(Pipe inputPipe)
         {
             _inputs.Add(inputPipe);
         }
