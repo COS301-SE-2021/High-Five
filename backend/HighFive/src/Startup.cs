@@ -22,6 +22,7 @@ using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
 using src.Subsystems.Tools;
 using src.Subsystems.User;
+using src.Websockets;
 
 namespace src
 {
@@ -47,6 +48,7 @@ namespace src
             // Singletons
             services.Add(new ServiceDescriptor(typeof(IConfiguration), Configuration));
             services.Add(new ServiceDescriptor(typeof(IAnalysisModels), new AnalysisModels()));
+            services.Add(new ServiceDescriptor(typeof(IWebSocketClient), new WebSocketClient()));
             // Dependency Injections
             services.AddScoped<IStorageManager, StorageManager>();
             services.AddScoped<IVideoDecoder, VideoDecoder>();

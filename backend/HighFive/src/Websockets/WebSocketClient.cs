@@ -8,13 +8,16 @@ using Microsoft.Extensions.Hosting;
 
 namespace src.Websockets
 {
-    public class WebSocketClient
+    public class WebSocketClient: IWebSocketClient
     {
-        private ClientWebSocket _socket;
+        private ClientWebSocket _socket = null;
 
         public async Task Connect(string uri)
         {
-            await _socket.ConnectAsync(new Uri(uri), CancellationToken.None); ;
+            if (_socket == null)
+            {
+                await _socket.ConnectAsync(new Uri(uri), CancellationToken.None);
+            }
         }
 
         public async Task Send(string data)
@@ -46,5 +49,6 @@ namespace src.Websockets
 
             return received;
         }
+        
     }
 }
