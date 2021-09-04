@@ -49,9 +49,7 @@ namespace src.Websockets
                         switch (request.Request)
                         {
                             case "AnalyzeImage":
-                                var imageAnalysisRequest =
-                                    JsonConvert.DeserializeObject<AnalyzeImageRequest>(request.Body.Serialise());
-                                var analyzedImage = _analysisService.AnalyzeImage(imageAnalysisRequest).Result;
+                                var analyzedImage = _analysisService.AnalyzeImage(request).Result;
                                 if (analyzedImage == null)
                                 {
                                     responseTitle = "Image Analysis Error";
@@ -66,9 +64,7 @@ namespace src.Websockets
                                 }
                                 break;
                             case "AnalyzeVideo":
-                                var videoAnalysisRequest =
-                                    JsonConvert.DeserializeObject<AnalyzeVideoRequest>(request.Body.Serialise());
-                                var analyzedVideo = _analysisService.AnalyzeVideo(videoAnalysisRequest).Result;
+                                var analyzedVideo = _analysisService.AnalyzeVideo(request).Result;
                                 if (analyzedVideo == null)
                                 {
                                     responseTitle = "Video Analysis Error";

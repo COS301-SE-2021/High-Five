@@ -1,15 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Org.OpenAPITools.Models;
+using src.Websockets;
 
 namespace src.Subsystems.Analysis
 {
     public interface IAnalysisService
     {
-        public Task<AnalyzedImageMetaData> AnalyzeImage(AnalyzeImageRequest request);
-        public Task<AnalyzedVideoMetaData> AnalyzeVideo(AnalyzeVideoRequest request);
+        public Task<AnalyzedImageMetaData> AnalyzeImage(SocketRequest fullRequest);
+        public Task<AnalyzedVideoMetaData> AnalyzeVideo(SocketRequest fullRequest);
         public void SetBaseContainer(string containerName);
         public GetLiveAnalysisTokenResponse GetLiveAnalysisToken(string userId);
-        public AnalysisResponse IsAnalyzeImageRequestValid(AnalyzeImageRequest request);
-        public bool IsAnalyzeVideoRequestValid(AnalyzeVideoRequest request);
     }
 }

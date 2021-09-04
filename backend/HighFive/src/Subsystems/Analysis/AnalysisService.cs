@@ -6,8 +6,10 @@ using System.IO;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AzureFunctionsToolkit.Portable.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Org.OpenAPITools.Models;
 using src.AnalysisTools;
 using src.AnalysisTools.VideoDecoder;
@@ -51,8 +53,9 @@ namespace src.Subsystems.Analysis
             _analysisSocket.Connect(BrokerServerUri);
         }
 
-        public async Task<AnalyzedImageMetaData> AnalyzeImage(AnalyzeImageRequest request)
+        public async Task<AnalyzedImageMetaData> AnalyzeImage(SocketRequest fullRequest)
         {
+            var request = JsonConvert.DeserializeObject<AnalyzeImageRequest>(fullRequest.Body.Serialise());
             var pipelineSearchRequest = new GetPipelineRequest {PipelineId = request.PipelineId};
             var analysisPipeline = _pipelineService.GetPipeline(pipelineSearchRequest).Result;
             if (analysisPipeline == null)
@@ -102,8 +105,9 @@ namespace src.Subsystems.Analysis
             return response;
         }
 
-        public async Task<AnalyzedVideoMetaData> AnalyzeVideo(AnalyzeVideoRequest request)
+        public async Task<AnalyzedVideoMetaData> AnalyzeVideo(SocketRequest fullRequest)
         {
+            var request = JsonConvert.DeserializeObject<AnalyzeVideoRequest>(fullRequest.Body.Serialise());
             var pipelineSearchRequest = new GetPipelineRequest {PipelineId = request.PipelineId};
             var analysisPipeline = _pipelineService.GetPipeline(pipelineSearchRequest).Result;
             if (analysisPipeline == null)
@@ -214,37 +218,6 @@ namespace src.Subsystems.Analysis
             return new GetLiveAnalysisTokenResponse {Token = jwtToken};
         }
 
-        public AnalysisResponse IsAnalyzeImageRequestValid(AnalyzeImageRequest request)
-        {
-            var pipelineSearchRequest = new GetPipelineRequest {PipelineId = request.PipelineId};
-            var analysisPipeline = _pipelineService.GetPipeline(pipelineSearchRequest).Result;
-            if (analysisPipeline == null)
-            {
-                return AnalysisResponse.InvalidPipelineId; //invalid pipelineId provided
-            }
-
-            /* First, check if the Media and Pipeline combination has already been analyzed and stored before.
-             * If this is the case, no analysis needs to be done. Simply return the already analyzed
-             * media
-             */
-            
-            analysisPipeline.Tools.Sort();
-            const string storageContainer = "analyzed/image";
-            const string fileExtension = ".img";
-            var analyzedMediaName = _storageManager.HashMd5(request.ImageId + "|" + string.Join(",",analysisPipeline.Tools)) + fileExtension;
-            var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
-            if (testFile != null) //This means the media has already been analyzed with this pipeline combination
-            {
-                return AnalysisResponse.AlreadyAnalyzed;
-            }
-
-            return AnalysisResponse.Unanalyzed;
-        }
-
-        public bool IsAnalyzeVideoRequestValid(AnalyzeVideoRequest request)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
 
