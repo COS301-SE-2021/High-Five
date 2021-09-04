@@ -11,9 +11,9 @@ namespace analysis_engine.Filter.FilterBuilder
             return _filter;
         }
 
-        public void AddToolContainer(ToolContainer toolContainer)
+        public void BuildToolContainer(string toolContainer)
         {
-            _filter.AddTool(toolContainer);
+            
         }
 
         public void AddInput(Pipe input)

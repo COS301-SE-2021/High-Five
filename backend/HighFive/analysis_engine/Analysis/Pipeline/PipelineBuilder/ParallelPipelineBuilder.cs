@@ -37,9 +37,9 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
             _channelsOutput = _pipeFactories[2].getPipe();
         }
 
-        public override void AddFilter(analysis_engine.Filter.Filter filter)
+        public override void BuildFilters(string filterString)
         {
-            Pipeline.Filters.Add(filter);
+            
         }
 
         public override Pipeline GetPipeline()

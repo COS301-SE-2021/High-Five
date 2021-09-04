@@ -25,9 +25,35 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
             Pipeline.Drain = _pipeFactories[0].getPipe();
         }
 
-        public override void AddFilter(analysis_engine.Filter.Filter filter)
+        public override void BuildFilters(string filterString)
         {
-            Pipeline.Filters.Add(filter);
+            string[] filterStrings = filterString.Split(",");
+            analysis_engine.Filter.Filter[] temp = new analysis_engine.Filter.Filter[filterStrings.Length];
+            int count = 0;
+            foreach (var s in filterStrings)
+            {
+                _filterBuilder.BuildFilter();
+                _filterBuilder.BuildToolContainer(s);
+                //If this is the first filter in the pipeline
+                if (count == 0)
+                {
+                    _filterBuilder.AddInput(Pipeline.Source);
+                    _filterBuilder.AddOutput(_pipeFactories[0].getPipe());
+                    //else if this is the last filter in the pipeline
+                }else if (count == filterStrings.Length - 1)
+                {
+                    _filterBuilder.AddInput(temp[count-1].Output);
+                    _filterBuilder.AddOutput(Pipeline.Drain);
+                    //else this is just an internal filter
+                }
+                else
+                {
+                    _filterBuilder.AddInput(temp[count-1].Output);
+                    _filterBuilder.AddOutput(_pipeFactories[0].getPipe());
+                }
+                temp[count] = _filterBuilder.GetFilter();
+                count++;
+            }
         }
 
         public override Pipeline GetPipeline()

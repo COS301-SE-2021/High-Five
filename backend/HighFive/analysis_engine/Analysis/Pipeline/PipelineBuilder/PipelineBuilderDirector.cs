@@ -23,6 +23,9 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
         private Pipeline makeDemoPipeline()
         {
             _pipelineBuilder.BuildPipeline();
+            _pipelineBuilder.BuildDrain();
+            _pipelineBuilder.BuildSource();
+            _pipelineBuilder.BuildFilters("analysis:people,analysis:vehicles,drawing:boxes");
             return _pipelineBuilder.GetPipeline();
         }
     }
