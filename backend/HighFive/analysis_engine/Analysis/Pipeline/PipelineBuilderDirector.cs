@@ -16,6 +16,12 @@ namespace analysis_engine.Analysis.Pipeline
 
         public PipelineBuilderDirector(PipelineBuilder.PipelineBuilder pipelineBuilder)
         {
+            _pipelineBuilder = pipelineBuilder;
+            _pipeFactories = new PipeFactory[5];
+            _toolBuilders = new ToolBuilder[3];
+            _toolContainerBuilders = new ToolContainerBuilder[3];
+            _filterBuilder = new FilterBuilder();
+            _pipelineBuilder = pipelineBuilder;
         }
 
         public void Construct(String pipeline)
