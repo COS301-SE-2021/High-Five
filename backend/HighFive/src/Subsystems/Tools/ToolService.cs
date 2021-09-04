@@ -262,14 +262,15 @@ namespace src.Subsystems.Tools
             }
             else
             {
+                //TODO: This is where constructors/functions of compiled code is called
                 ms.Seek(0, SeekOrigin.Begin);
                 var assembly = Assembly.Load(ms.ToArray());
-                //TODO: parameter for assembly.GetType should be namespace.class
+                //parameter for assembly.GetType should be namespace.class
                 var type = assembly.GetType("CustomTool.TestTool");
-                //TODO: constructors can be called by passing parameters to Activator.CreateInstance
+                //constructors can be called by passing parameters to Activator.CreateInstance
                 var obj = Activator.CreateInstance(type);
                 
-                //TODO: First parameter in type.InvokeMember is function to be called. Last parameter is object of parameters
+                //First parameter in type.InvokeMember is function to be called. Last parameter is object of parameters
                 var answer = type.InvokeMember("DoSomething",
                     BindingFlags.Default | BindingFlags.InvokeMethod,
                     null,
