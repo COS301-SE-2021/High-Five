@@ -39,13 +39,7 @@ namespace src.Subsystems.Analysis
                 ConfigureStorageManager();
             }
             
-            var response = _analysisService.AnalyzeImage(analyzeImageRequest).Result;
-            if (response == null)
-            {
-                return StatusCode(400, null);
-            }
-            
-            return StatusCode(200, response);
+            return StatusCode(200, null);
         }
 
         public override IActionResult AnalyzeVideo(AnalyzeVideoRequest analyzeVideoRequest)
@@ -54,14 +48,8 @@ namespace src.Subsystems.Analysis
             {
                 ConfigureStorageManager();
             }
-            
-            var response = _analysisService.AnalyzeVideo(analyzeVideoRequest).Result;
-            if (response == null)
-            {
-                return StatusCode(400, null);
-            }
-            
-            return StatusCode(200, response);
+
+            return StatusCode(200, null);
         }
 
         public override IActionResult GetLiveAnalysisToken()

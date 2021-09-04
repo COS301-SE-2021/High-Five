@@ -88,8 +88,8 @@ namespace src.Subsystems.Analysis
             }
 
             //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
-            var analysisRequest = new SocketRequest();
-            analysisRequest.Request = "";
+            await _analysisSocket.Send(JsonConvert.SerializeObject(request));
+            var responseString = _analysisSocket.Receive().Result;
             //---------------------------------------------------------------------------------------
 
             /*var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
@@ -141,7 +141,8 @@ namespace src.Subsystems.Analysis
             }
 
             //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
-
+            await _analysisSocket.Send(JsonConvert.SerializeObject(request));
+            var responseString = _analysisSocket.Receive().Result;
             //---------------------------------------------------------------------------------------
 
             /*rawVideoStream.Seek(0, SeekOrigin.Begin);
