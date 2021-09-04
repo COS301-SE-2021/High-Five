@@ -12,11 +12,9 @@ namespace src.Subsystems.Analysis
     public class AnalysisController: AnalysisApiController
     {
         private readonly IAnalysisService _analysisService;
-        private bool _baseContainerSet;
         public AnalysisController(IAnalysisService analysisService)
         {
             _analysisService = analysisService;
-            _baseContainerSet = false;
         }
 
         private void ConfigureStorageManager()
@@ -29,25 +27,16 @@ namespace src.Subsystems.Analysis
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
             _analysisService.SetBaseContainer(jsonToken.Subject);
-            _baseContainerSet = true;
         }
 
         public override IActionResult AnalyzeImage(AnalyzeImageRequest analyzeImageRequest)
         {
-            if (!_baseContainerSet)
-            {
-                ConfigureStorageManager();
-            }
-            
+
             return StatusCode(200, null);
         }
 
         public override IActionResult AnalyzeVideo(AnalyzeVideoRequest analyzeVideoRequest)
         {
-            if (!_baseContainerSet)
-            {
-                ConfigureStorageManager();
-            }
 
             return StatusCode(200, null);
         }
