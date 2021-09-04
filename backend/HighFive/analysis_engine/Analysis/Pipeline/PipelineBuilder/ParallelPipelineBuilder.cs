@@ -21,7 +21,7 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
             Pipeline = new ParallelPipeline();
         }
 
-        public override void BuildSource(Pipe source)
+        public override void BuildSource()
         {
             Pipeline.Source = _pipeFactories[1].getPipe();
             InputSplitter temp = (InputSplitter)Pipeline.Source;
@@ -31,7 +31,7 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
             }
         }
 
-        public override void BuildDrain(Pipe drain)
+        public override void BuildDrain()
         {
             Pipeline.Drain = _pipeFactories[0].getPipe();
             _channelsOutput = _pipeFactories[2].getPipe();

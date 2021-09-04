@@ -1,4 +1,4 @@
-﻿using analysis_engine.Util;
+﻿using analysis_engine.Util.Factories;
 
 namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
 {
@@ -6,7 +6,8 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
     {
         public LinearPipelineBuilder()
         {
-            
+            _pipeFactories = new PipeFactory[1];
+            _pipeFactories[0] = new ConcurrentQueuePipeFactory();
         }
 
         public override void BuildPipeline()
@@ -14,14 +15,14 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
             Pipeline = new LinearPipeline();
         }
 
-        public override void BuildSource(Pipe source)
+        public override void BuildSource()
         {
-            Pipeline.Source = source;
+            Pipeline.Source = _pipeFactories[0].getPipe();
         }
 
-        public override void BuildDrain(Pipe drain)
+        public override void BuildDrain()
         {
-            Pipeline.Drain = drain;
+            Pipeline.Drain = _pipeFactories[0].getPipe();
         }
 
         public override void AddFilter(analysis_engine.Filter.Filter filter)
