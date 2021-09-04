@@ -12,7 +12,7 @@ namespace analysis_engine.Util
          *      Parameters:
          * -> data: The Data to be added to the Pipe.
          */
-        public abstract void push(Data data);
+        public abstract void Push(Data data);
         
         /*
          *      Description:
@@ -20,6 +20,6 @@ namespace analysis_engine.Util
          *      Parameters:
          * -> data: The Data to be added to the Pipe.
          */
-        public abstract Data pop();
+        public abstract Data Pop();
     }
 }

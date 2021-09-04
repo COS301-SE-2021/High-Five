@@ -12,12 +12,12 @@ namespace analysis_engine.Util
             dataQueue = new ConcurrentQueue<Data>();
         }
 
-        public void push(Data data)
+        public void Push(Data data)
         {
             dataQueue.Enqueue(data);
         }
 
-        public Data pop()
+        public Data Pop()
         {
             Data item;
             var isSuccessful = dataQueue.TryDequeue(out item);

@@ -22,7 +22,7 @@ namespace analysis_engine.Analysis.Util.Pipes
             _output = output;
         }
 
-        public void push(Data.Data data)
+        public void Push(Data.Data data)
         {
             if (_finalData.TryAdd(data.Frame.FrameID, data))
             {
@@ -38,11 +38,11 @@ namespace analysis_engine.Analysis.Util.Pipes
             {
                 Data.Data output;
                 _finalData.TryRemove(data.Frame.FrameID, out output);
-                _output.push(output);
+                _output.Push(output);
             }
         }
 
-        public Data.Data pop()
+        public Data.Data Pop()
         {
             throw new System.NotImplementedException();
         }

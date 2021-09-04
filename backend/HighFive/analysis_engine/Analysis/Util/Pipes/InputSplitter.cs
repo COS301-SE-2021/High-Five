@@ -17,15 +17,16 @@ namespace analysis_engine.Util
             _inputs.Add(inputPipe);
         }
 
-        public void push(Data data)
+        public void Push(Data data)
         {
             foreach (var input in _inputs)
             {
-                input.push(data);
+                input.Push(data.Clone());
             }
+            data.Pool.ReleaseData(data);
         }
 
-        public Data pop()
+        public Data Pop()
         {
             throw new System.NotImplementedException();
         }

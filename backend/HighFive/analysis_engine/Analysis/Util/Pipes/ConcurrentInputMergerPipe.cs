@@ -4,12 +4,12 @@ namespace analysis_engine.Analysis.Util.Pipes
 {
     public class ConcurrentInputMergerPipe : Pipe
     {
-        public void push(Data.Data data)
+        public void Push(Data.Data data)
         {
             throw new System.NotImplementedException();
         }
 
-        public Data.Data pop()
+        public Data.Data Pop()
         {
             throw new System.NotImplementedException();
         }

@@ -16,9 +16,8 @@ namespace analysis_engine.Analysis.Util.Data
         public Frame Frame { get; set; }
 
         public List<MetaData> Meta { get; set; }
-
         
-        public Data clone()
+        public Data Clone()
         {
             Data temp = Pool.GetData();
             temp.Frame.Image = Frame.Image;
