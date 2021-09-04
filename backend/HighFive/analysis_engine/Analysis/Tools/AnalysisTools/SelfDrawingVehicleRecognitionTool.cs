@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using analysis_engine.Analysis.Util.Data;
-using analysis_engine.Analysis.Util.Data.ConcreteData;
 using analysis_engine.Tools;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
