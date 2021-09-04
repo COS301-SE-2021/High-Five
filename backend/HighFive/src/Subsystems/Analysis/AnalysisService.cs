@@ -141,7 +141,7 @@ namespace src.Subsystems.Analysis
             
             await _analysisSocket.Send(JsonConvert.SerializeObject(request));
             var responseString = _analysisSocket.Receive().Result;
-            //TODO: construct AnalyzedVideoMetadata from this response
+            var analysisResponse = JsonConvert.DeserializeObject<SocketResponse>(responseString);
             
             /*rawVideoStream.Seek(0, SeekOrigin.Begin);
             watch.Reset();
