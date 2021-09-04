@@ -1,20 +1,29 @@
 ﻿using analysis_engine.Util;
+using analysis_engine.Util.Factories;
 
 namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
 {
     public class ParallelPipelineBuilder : PipelineBuilder
     {
+        public ParallelPipelineBuilder(int channels)
+        {
+            _pipeFactories = new PipeFactory[3];
+            _pipeFactories[0] = new ConcurrentQueuePipeFactory();
+            _pipeFactories[1] = new InputSplitterPipeFactory();
+            _pipeFactories[2] = new InputMergerPipeFactory(3);
+        }
+
         public override void BuildPipeline()
         {
             Pipeline = new ParallelPipeline();
         }
 
-        public override void AddSource(Pipe source)
+        public override void BuildSource(Pipe source)
         {
             Pipeline.Source = source;
         }
 
-        public override void AddDrain(Pipe drain)
+        public override void BuildDrain(Pipe drain)
         {
             Pipeline.Drain = drain;
         }

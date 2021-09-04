@@ -4,17 +4,22 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
 {
     public class LinearPipelineBuilder : PipelineBuilder
     {
+        public LinearPipelineBuilder()
+        {
+            
+        }
+
         public override void BuildPipeline()
         {
             Pipeline = new LinearPipeline();
         }
 
-        public override void AddSource(Pipe source)
+        public override void BuildSource(Pipe source)
         {
             Pipeline.Source = source;
         }
 
-        public override void AddDrain(Pipe drain)
+        public override void BuildDrain(Pipe drain)
         {
             Pipeline.Drain = drain;
         }
