@@ -5,7 +5,7 @@ namespace analysis_engine.Filter.FilterBuilder
     public class FilterBuilder
     {
         private Filter _filter;
-
+        private FilterManager _filterManager;
         public Filter GetFilter()
         {
             return _filter;
@@ -14,6 +14,16 @@ namespace analysis_engine.Filter.FilterBuilder
         public void BuildToolContainer(string toolContainer)
         {
             
+        }
+
+        public void BuildFilterManager(string filterManager)
+        {
+            switch (filterManager)
+            {
+                case "concurrency":
+                    _filterManager = new ConcurrencyManager();
+                    break;
+            }
         }
 
         public void AddInput(Pipe input)

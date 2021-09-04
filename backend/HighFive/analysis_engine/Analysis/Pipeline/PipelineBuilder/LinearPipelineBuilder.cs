@@ -33,24 +33,26 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
             foreach (var s in filterStrings)
             {
                 _filterBuilder.BuildFilter();
+                
+                _filterBuilder.BuildFilterManager("concurrency");
+                
                 _filterBuilder.BuildToolContainer(s);
-                //If this is the first filter in the pipeline
-                if (count == 0)
+                
+                if (count == 0)//If this is the first filter in the pipeline
                 {
                     _filterBuilder.AddInput(Pipeline.Source);
                     _filterBuilder.AddOutput(_pipeFactories[0].getPipe());
-                    //else if this is the last filter in the pipeline
-                }else if (count == filterStrings.Length - 1)
+                }else if (count == filterStrings.Length - 1)//else if this is the last filter in the pipeline
                 {
                     _filterBuilder.AddInput(temp[count-1].Output);
                     _filterBuilder.AddOutput(Pipeline.Drain);
-                    //else this is just an internal filter
                 }
-                else
+                else//else this is just an internal filter
                 {
                     _filterBuilder.AddInput(temp[count-1].Output);
                     _filterBuilder.AddOutput(_pipeFactories[0].getPipe());
                 }
+                
                 temp[count] = _filterBuilder.GetFilter();
                 count++;
             }
