@@ -87,11 +87,10 @@ namespace src.Subsystems.Analysis
                 return response;
             }
 
-            //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
             await _analysisSocket.Send(JsonConvert.SerializeObject(request));
             var responseString = _analysisSocket.Receive().Result;
-            //---------------------------------------------------------------------------------------
-
+            //TODO: construct AnalyzedVideoMetadata from responseString
+            
             /*var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
             analyzedFile.AddMetadata("imageId", request.ImageId);
             analyzedFile.AddMetadata("pipelineId", request.PipelineId);
@@ -139,12 +138,11 @@ namespace src.Subsystems.Analysis
                 response.Thumbnail = thumbnailFile.GetUrl();
                 return response;
             }
-
-            //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
+            
             await _analysisSocket.Send(JsonConvert.SerializeObject(request));
             var responseString = _analysisSocket.Receive().Result;
-            //---------------------------------------------------------------------------------------
-
+            //TODO: construct AnalyzedVideoMetadata from this response
+            
             /*rawVideoStream.Seek(0, SeekOrigin.Begin);
             watch.Reset();
             watch.Start();
