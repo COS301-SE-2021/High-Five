@@ -49,7 +49,6 @@ namespace src.Websockets
                         switch (request.Request)
                         {
                             case "AnalyzeImage":
-                                var test = request.Body.Serialise();
                                 var imageAnalysisRequest =
                                     JsonConvert.DeserializeObject<AnalyzeImageRequest>(request.Body.Serialise());
                                 var analyzedImage = _analysisService.AnalyzeImage(imageAnalysisRequest).Result;
@@ -117,7 +116,6 @@ namespace src.Websockets
         }
         
         private static async Task SendMessage(string title, string message, string type, WebSocket webSocket)
-
         {
             var payload = "{\"title\": \"" + title + "\",\"message\": \"" + message + "\",\"type\": \"" + type + "\"}";
             var buffer = Encoding.Default.GetBytes(payload);
