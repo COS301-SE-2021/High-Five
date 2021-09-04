@@ -13,12 +13,14 @@ namespace analysis_engine.Analysis.Util.Data
 
         public override void Push(Data data)
         {
-            throw new System.NotImplementedException();
+            long index = data.Frame.FrameID % _size;
+            _ring[index] = data;
         }
-
+//TODO Does it make sense for this buffer to have a Pop() method?
         public override Data Pop()
         {
-            throw new System.NotImplementedException();
+            Head = Head % _size;
+            return _ring[Head++];
         }
     }
 }
