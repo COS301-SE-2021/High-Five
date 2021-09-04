@@ -9,6 +9,7 @@ namespace analysis_engine.Filter
         public Pipe Input { get; set; }
         public Pipe Output { get; set; }
 
+        public Pipe ConcurrentInputMerger { get; set; }
         public Filter()
         {
             Tools = new List<ToolContainer>();

@@ -35,9 +35,7 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
                 _filterBuilder.BuildFilter();
                 
                 _filterBuilder.BuildFilterManager("concurrency");
-                
-                _filterBuilder.BuildToolContainer(s);
-                
+
                 if (count == 0)//If this is the first filter in the pipeline
                 {
                     _filterBuilder.AddInput(Pipeline.Source);
@@ -53,6 +51,7 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
                     _filterBuilder.AddOutput(_pipeFactories[0].getPipe());
                 }
                 
+                _filterBuilder.BuildToolContainer(s);
                 temp[count] = _filterBuilder.GetFilter();
                 count++;
             }
