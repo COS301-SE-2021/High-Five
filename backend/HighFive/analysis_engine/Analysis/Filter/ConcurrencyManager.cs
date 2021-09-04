@@ -6,5 +6,9 @@
         {
             throw new System.NotImplementedException();
         }
+
+        public ConcurrencyManager(Filter filter) : base(filter)
+        {
+        }
     }
 }

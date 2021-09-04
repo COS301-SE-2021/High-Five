@@ -21,7 +21,7 @@ namespace analysis_engine.Filter.FilterBuilder
             switch (filterManager)
             {
                 case "concurrency":
-                    _filterManager = new ConcurrencyManager();
+                    _filterManager = new ConcurrencyManager(_filter);
                     break;
             }
         }
