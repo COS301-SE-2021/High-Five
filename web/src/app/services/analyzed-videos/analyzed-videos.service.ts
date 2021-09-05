@@ -3,6 +3,7 @@ import {BehaviorSubject} from 'rxjs';
 import {MediaStorageService} from '../../apis/mediaStorage.service';
 import {AnalyzedVideoMetaData} from '../../models/analyzedVideoMetaData';
 import {AnalysisService} from '../../apis/analysis.service';
+import {WebsocketService} from '../websocket/websocket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class AnalyzedVideosService {
   // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly analyzedVideos$ = this._analyzeVideos.asObservable();
 
-  constructor(private mediaStorageService: MediaStorageService, private analysisService: AnalysisService) {
+  constructor(private mediaStorageService: MediaStorageService, private analysisService: AnalysisService,
+              private websocketService: WebsocketService) {
     this.fetchAll();
   }
 
@@ -37,11 +39,15 @@ export class AnalyzedVideosService {
    * @param mediaType the media type, video or image
    */
   public async analyzeVideo(mediaId: string, pipelineId: string, mediaType: string = 'video') {
-    // await this.analysisService.analyzeMedia({
-    //   mediaId,
-    //   pipelineId,
-    //   mediaType
-    // }).toPromise();
+    this.websocketService.sendMessage({
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      Request: 'AnalyzeVideo',
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      Body: {
+        imageId: mediaId,
+        piplineId: pipelineId,
+      },
+    });
     await this.fetchAll();
   }
 

@@ -9,6 +9,8 @@ import {NavbarPageRoutingModule} from './navbar-routing.module';
 import {NavbarPage} from './navbar.page';
 import {defineLordIconElement} from 'lord-icon-element';
 import {UsersService} from '../../services/users/users.service';
+import {WebsocketService} from '../../services/websocket/websocket.service';
+
 
 @NgModule({
   imports: [
@@ -17,6 +19,7 @@ import {UsersService} from '../../services/users/users.service';
     IonicModule,
     NavbarPageRoutingModule
   ],
+  providers: [WebsocketService],
   declarations: [NavbarPage],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
