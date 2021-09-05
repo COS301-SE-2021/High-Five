@@ -37,7 +37,7 @@ import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
       authRequest: {
         scopes: ['user.read']
       },
-      loginFailedRoute: ''
+      loginFailedRoute: environment.postLogoutRedirectUri
     }, null)],
   providers: [{
     provide: RouteReuseStrategy,
