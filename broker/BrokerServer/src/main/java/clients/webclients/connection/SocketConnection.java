@@ -5,6 +5,11 @@ import org.apache.commons.io.IOUtil;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * Implementation class for the Connection interface. Uses a Java Socket for communication.
+ *
+ * @see Connection
+ */
 public class SocketConnection implements Connection{
 
     private final Socket connection;

@@ -2,6 +2,7 @@ package listeners.webclients;
 
 import io.reactivex.rxjava3.core.Observer;
 import listeners.ConnectionListener;
+import logger.EventLogger;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -23,6 +24,7 @@ public class WebClientListener extends ConnectionListener<Socket> {
      */
     public WebClientListener(Observer<Socket> notifier) throws IOException {
         super(notifier);
+        EventLogger.getLogger().info("Starting WebClientListener");
 
         int port = Integer.parseInt(System.getenv("BROKER_CLIENT_PORT"));
 
@@ -35,8 +37,10 @@ public class WebClientListener extends ConnectionListener<Socket> {
      */
     @Override
     protected void listen() throws IOException {
+        EventLogger.getLogger().info("Listening for new clients");
         while (true) {
             Socket connection = socketServer.accept();
+            EventLogger.getLogger().info("New client connected");
             notify(connection);
         }
     }
