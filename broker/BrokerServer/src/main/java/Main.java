@@ -1,4 +1,7 @@
+import logger.EventLogger;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import servicelocator.ServiceLocator;
 
 import java.io.*;
@@ -8,10 +11,12 @@ import java.io.*;
  * Tomcat server to accept WebSocket connections.
  */
 public class Main {
+
     public static void main(String[] args) throws Exception {
-        ServiceLocator locator = ServiceLocator.getInstance();
         Broker b = new Broker();
 
+        EventLogger.getLogger().info("Starting Broker");
+        EventLogger.getLogger().error("Starting Broker");
 
         Tomcat tomcat = new Tomcat();
         String port = "8080"; // Also change in index.html
