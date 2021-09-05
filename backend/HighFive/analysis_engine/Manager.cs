@@ -22,7 +22,7 @@ namespace analysis_engine
                 //TODO parallel builder implementation
             }
             _dataPool = new DataPool(5000, new DataFactory());
-            _pipeline = _builderDirector.Construct(pipelineString);
+            _pipeline = _builderDirector.Construct("analysis:vehicles,drawing:box");
         }
 
         private Data GetNextFrame()
