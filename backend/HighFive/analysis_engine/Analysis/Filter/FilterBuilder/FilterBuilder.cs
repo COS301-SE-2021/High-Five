@@ -34,7 +34,7 @@ namespace analysis_engine.Filter.FilterBuilder
                     _toolContainerBuilder = new AnalysisToolContainerBuilder();
                     break;
             }
-            //Create the input merger and make point
+            //Create the input merger 
             _filter.ConcurrentInputMerger = mergerPipeFactory.getPipe();
             ConcurrentInputMergerPipe temp = (ConcurrentInputMergerPipe) _filter.ConcurrentInputMerger;
             temp.SetOutput(_filter.Output);

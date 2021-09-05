@@ -9,7 +9,7 @@ namespace analysis_engine.Analysis.Tools.Builders
         {
             switch (name)
             {
-                case "box-0":
+                case "boxes":
                     Tool = new BoxDrawingTool();
                     break;
             }

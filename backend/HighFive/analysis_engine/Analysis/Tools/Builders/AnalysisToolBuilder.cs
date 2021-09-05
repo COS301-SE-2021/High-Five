@@ -9,19 +9,19 @@ namespace analysis_engine.Analysis.Tools.Builders
         {
             switch (name)
             {
-                case "people-0":
+                case "people":
                     Tool = new PersonRecognitionTool();
                     break;
                 case "people-1":
                     Tool = new SelfDrawingPersonRecognitionTool();
                     break;
-                case "animals-0":
+                case "animal":
                     Tool = new AnimalRecognitionTool();
                     break;
                 case "animals-1":
                     Tool = new SelfDrawingAnimalRecognitionTool();
                     break;
-                case "vehicles-0":
+                case "vehicle":
                     Tool = new VehicleRecognitionTool();
                     break;
                 case "vehicles-1":
