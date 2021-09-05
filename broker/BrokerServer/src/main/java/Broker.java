@@ -8,9 +8,7 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import servicelocator.ServiceLocator;
-import servicelocator.wrappers.ClientConnectionWrapper;
-import servicelocator.wrappers.ServerInformationWrapper;
-import servicelocator.wrappers.WebClientWrapper;
+import servicelocator.wrappers.*;
 
 import java.lang.reflect.*;
 import java.net.Socket;
@@ -39,7 +37,7 @@ public class Broker {
         server is created, a new topic is made, so this class adds new topics
         when the listener discovers them.
          */
-        Observer<String> serverObservable = new Observer<String>() {
+        Observer<String> serverObservable = new Observer<>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
 
@@ -68,7 +66,7 @@ public class Broker {
         and adds it to a list of server information. A listener will poll for updated information
         and use this class to add the information to the list.
          */
-        Observer<String> serverParticipantObserver = new Observer<String>() {
+        Observer<String> serverParticipantObserver = new Observer<>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
 
@@ -115,7 +113,7 @@ public class Broker {
             }
         };
 
-        Observer<Socket> clientListenerObserver = new Observer<Socket>() {
+        Observer<Socket> clientListenerObserver = new Observer<>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
 
@@ -149,19 +147,13 @@ public class Broker {
         };
 
         try {
-            serverListener = ServiceLocator
-                    .getInstance().<Thread>createClass("ServerListener", Observer.class, List.class)
-                    .newInstance(serverObservable, topics);
+            serverListener = ServerListenerWrapper.get(serverObservable, topics);
             serverListener.start();
 
-            serverParticipant = ServiceLocator.getInstance()
-                    .<Thread>createClass("ServerParticipantListener", Observer.class, List.class)
-                    .newInstance(serverParticipantObserver, topics);
+            serverParticipant = ServerParticipantWrapper.get(serverParticipantObserver, topics);
             serverParticipant.start();
 
-            clientListener = ServiceLocator
-                    .getInstance().<Thread>createClass("ClientListener", Observer.class)
-                    .newInstance(clientListenerObserver);
+            clientListener = ClientListenerWrapper.get(clientListenerObserver);
             clientListener.start();
         } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
