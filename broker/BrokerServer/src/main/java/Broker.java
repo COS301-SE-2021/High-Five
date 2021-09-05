@@ -8,6 +8,9 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import servicelocator.ServiceLocator;
+import servicelocator.wrappers.ClientConnectionWrapper;
+import servicelocator.wrappers.ServerInformationWrapper;
+import servicelocator.wrappers.WebClientWrapper;
 
 import java.lang.reflect.*;
 import java.net.Socket;
@@ -84,10 +87,7 @@ public class Broker {
                     ServerInformation information;
                     try {
                         JsonElement element = new Gson().fromJson(message, JsonElement.class);
-                        information = ServiceLocator
-                                .getInstance()
-                                .<ServerInformation>createClass("ServerInfoDecoder", JsonElement.class, Type.class, JsonDeserializationContext.class)
-                                .newInstance(element, null, null);
+                        information = ServerInformationWrapper.get().deserialize(element, null, null);
                     } catch (Exception e) {
                         e.printStackTrace();
                         return;
@@ -129,12 +129,8 @@ public class Broker {
             public void onNext(@NonNull Socket connection) {
 
                 try {
-                    Connection webConnection = ServiceLocator.getInstance()
-                            .<Connection>createClass("ClientConnection", Socket.class)
-                            .newInstance(connection);
-                    WebClient client = ServiceLocator.getInstance()
-                            .<WebClient>createClass("ClientParticipant", Connection.class, ServerInformationHolder.class)
-                            .newInstance(webConnection, serverInformationHolder);
+                    Connection webConnection = ClientConnectionWrapper.get(connection);
+                    WebClient client = WebClientWrapper.get(webConnection, serverInformationHolder);
                     clientConnections.execute(client);
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
