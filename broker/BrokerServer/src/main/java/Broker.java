@@ -7,6 +7,8 @@ import dataclasses.telemetry.builder.*;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
+import logger.EventLogger;
+import org.apache.juli.logging.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import servicelocator.wrappers.*;
@@ -32,6 +34,8 @@ public class Broker {
     private final ServerInformationHolder serverInformationHolder = new ServerInformationHolder();
 
     public Broker() {
+
+        EventLogger.getLogger().info("Creating listener classes");
 
         /*
         Observer class to handle new analysis servers. When a new analysis
@@ -85,10 +89,12 @@ public class Broker {
                     //Decodes the JSON message
                     ServerInformation information;
                     try {
+                        EventLogger.getLogger().info("Decoding server information from JSON message");
                         JsonElement element = new Gson().fromJson(message, JsonElement.class);
                         information = ServerInformationWrapper.get().deserialize(element, null, null);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        EventLogger.getLogger().error(e.getMessage());
                         return;
                     }
 
@@ -105,7 +111,7 @@ public class Broker {
 
             @Override
             public void onError(@NonNull Throwable e) {
-
+                EventLogger.getLogger().error(e.getMessage());
             }
 
             @Override
@@ -128,17 +134,19 @@ public class Broker {
             public void onNext(@NonNull Socket connection) {
 
                 try {
+                    EventLogger.getLogger().info("Creating new client connection");
                     Connection webConnection = ClientConnectionWrapper.get(connection);
                     WebClient client = WebClientWrapper.get(webConnection, serverInformationHolder);
                     clientConnections.execute(client);
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    EventLogger.getLogger().error(e.getMessage());
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(@NonNull Throwable e) {
-
+                EventLogger.getLogger().error(e.getMessage());
             }
 
             @Override
@@ -148,16 +156,20 @@ public class Broker {
         };
 
         try {
+            EventLogger.getLogger().info("Staring server listener");
             serverListener = ServerListenerWrapper.get(serverObservable, topics);
             serverListener.start();
 
+            EventLogger.getLogger().info("Starting server participant listener");
             serverParticipant = ServerParticipantWrapper.get(serverParticipantObserver, topics);
             serverParticipant.start();
 
+            EventLogger.getLogger().info("Starting client listener");
             clientListener = ClientListenerWrapper.get(clientListenerObserver);
             clientListener.start();
         } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
+            EventLogger.getLogger().error(e.getMessage());
         }
     }
 }

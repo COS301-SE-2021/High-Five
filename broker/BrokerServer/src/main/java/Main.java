@@ -13,11 +13,10 @@ import java.io.*;
 public class Main {
 
     public static void main(String[] args) throws Exception {
+        EventLogger.getLogger().info("Starting Broker");
         Broker b = new Broker();
 
-        EventLogger.getLogger().info("Starting Broker");
-        EventLogger.getLogger().error("Starting Broker");
-
+        EventLogger.getLogger().info("Starting Embedded Tomcat server");
         Tomcat tomcat = new Tomcat();
         String port = "8080"; // Also change in index.html
         tomcat.setPort(Integer.parseInt(port));

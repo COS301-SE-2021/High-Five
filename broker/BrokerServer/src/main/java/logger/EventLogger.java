@@ -18,10 +18,12 @@ public class EventLogger {
     }
 
     public void info(String message) {
-        logger.info(message);
+        String callerClass = new Exception().getStackTrace()[1].getClassName();
+        logger.info(callerClass + ": " + message);
     }
 
     public void error(String message) {
-        logger.error(message);
+        String callerClass = new Exception().getStackTrace()[1].getClassName();
+        logger.error(callerClass + ": " + message);
     }
 }
