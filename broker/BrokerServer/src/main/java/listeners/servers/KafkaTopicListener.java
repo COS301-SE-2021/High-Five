@@ -2,6 +2,8 @@ package listeners.servers;
 
 import io.reactivex.rxjava3.core.Observer;
 import listeners.ConnectionListener;
+import logger.EventLogger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,6 +20,7 @@ public class KafkaTopicListener extends ConnectionListener<String> {
 
     public KafkaTopicListener(Observer<String> notifier, List<String> topics) {
         super(notifier);
+        EventLogger.getLogger().info("Starting KafkaTopicListener");
         this.topics = topics;
     }
 
@@ -27,6 +30,8 @@ public class KafkaTopicListener extends ConnectionListener<String> {
      */
     @Override
     public void listen() throws IOException, InterruptedException {
+
+        EventLogger.getLogger().info("Listening for new servers");
 
         while (true) {
             Runtime rt = Runtime.getRuntime();
@@ -41,6 +46,7 @@ public class KafkaTopicListener extends ConnectionListener<String> {
 
                 //Ensures that the topic does not already exist
                 if (!topics.contains(line)) {
+                    EventLogger.getLogger().info("New topic found: " + line);
                     notify(line);
                 }
             }
@@ -48,7 +54,7 @@ public class KafkaTopicListener extends ConnectionListener<String> {
             BufferedReader errorStreamReader =
                     new BufferedReader(new InputStreamReader(proc.getErrorStream()));
             while ((line = errorStreamReader.readLine()) != null) {
-                System.out.println(line);
+                EventLogger.getLogger().warn(line);
             }
             Thread.sleep(1000L);
         }

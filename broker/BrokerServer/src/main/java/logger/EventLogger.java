@@ -26,4 +26,9 @@ public class EventLogger {
         String callerClass = new Exception().getStackTrace()[1].getClassName();
         logger.error(callerClass + ": " + message);
     }
+
+    public void warn(String message) {
+        String callerClass = new Exception().getStackTrace()[1].getClassName();
+        logger.warn(callerClass + ": " + message);
+    }
 }
