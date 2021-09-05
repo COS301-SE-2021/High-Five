@@ -8,7 +8,6 @@ namespace analysis_engine.Filter
         public List<ToolContainer> Tools { get; set; }
         public Pipe Input { get; set; }
         public Pipe Output { get; set; }
-
         public Pipe ConcurrentInputMerger { get; set; }
         public Filter()
         {
@@ -24,7 +23,7 @@ namespace analysis_engine.Filter
         {
             foreach (var toolContainer in Tools)
             {
-                toolContainer.start();
+                toolContainer.Start();
             }
         }
 

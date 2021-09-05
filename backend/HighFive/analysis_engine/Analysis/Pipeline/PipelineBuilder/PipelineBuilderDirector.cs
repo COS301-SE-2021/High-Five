@@ -16,16 +16,10 @@ namespace analysis_engine.Analysis.Pipeline.PipelineBuilder
 
         public Pipeline Construct(String pipeline)
         {
-            //TODO dynamic construction function implementation
-            return makeDemoPipeline();
-        }
-
-        private Pipeline makeDemoPipeline()
-        {
             _pipelineBuilder.BuildPipeline();
             _pipelineBuilder.BuildDrain();
             _pipelineBuilder.BuildSource();
-            _pipelineBuilder.BuildFilters("analysis:vehicles,drawing:boxes");
+            _pipelineBuilder.BuildFilters(pipeline);
             return _pipelineBuilder.GetPipeline();
         }
     }

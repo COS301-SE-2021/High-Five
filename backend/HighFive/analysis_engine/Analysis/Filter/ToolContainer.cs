@@ -26,8 +26,9 @@ namespace analysis_engine.Filter
             tool.Init();
         }
 
-        public void start()
+        public void Start()
         {
+            Tool.Init();
             _running = true;
             Task.Factory.StartNew(() =>
             {
