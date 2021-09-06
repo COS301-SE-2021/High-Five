@@ -19,12 +19,12 @@ public class SocketConnection implements Connection{
     }
 
     @Override
-    public void setInputWriter(Writer inputWriter) throws IOException {
-        IOUtil.copy(connection.getInputStream(), inputWriter, "UTF-8");
+    public BufferedReader getReader() throws IOException {
+        return new BufferedReader(new InputStreamReader(connection.getInputStream()));
     }
 
     @Override
-    public Writer getOutputWriter() throws IOException {
+    public Writer getWriter() throws IOException {
         return new BufferedWriter(new OutputStreamWriter(
                 connection.getOutputStream()));
     }
@@ -32,5 +32,10 @@ public class SocketConnection implements Connection{
     @Override
     public void close() throws IOException {
         connection.close();
+    }
+
+    @Override
+    public boolean isConnected() {
+        return connection.isConnected();
     }
 }

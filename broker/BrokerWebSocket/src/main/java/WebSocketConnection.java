@@ -11,9 +11,13 @@ import org.apache.commons.io.IOUtil;
 @ServerEndpoint(value="/broker")
 public class WebSocketConnection {
 
+    private Socket connection;
 
     @OnOpen
-    public void onOpen(Session session) throws IOException {}
+    public void onOpen(Session session) throws IOException {
+        int port = Integer.parseInt(System.getenv("BROKER_CLIENT_PORT"));
+        connection = new Socket("localhost", port);
+    }
 
     /**
      * Fetches a request from the client and passes the request to the Broker.
@@ -25,27 +29,25 @@ public class WebSocketConnection {
     @OnMessage
     public void onMessage(Session session, String message) throws IOException {
 
-        int port = Integer.parseInt(System.getenv("BROKER_CLIENT_PORT"));
-
         //Send request to broker
-        Socket brokerConnection = new Socket("localhost", port);
         Writer serverInfoRequest = new BufferedWriter(new OutputStreamWriter(
-                brokerConnection.getOutputStream()));
+                connection.getOutputStream()));
 
-        serverInfoRequest.append(message).flush();
+        serverInfoRequest.append(message).append("\n").flush();
 
         //Read response from broker
         StringWriter infoDataWriter = new StringWriter();
-        IOUtil.copy(brokerConnection.getInputStream(), infoDataWriter, "UTF-8");
+        IOUtil.copy(connection.getInputStream(), infoDataWriter, "UTF-8");
         String infoData = infoDataWriter.toString();
-        brokerConnection.close();
 
         //Send response to web client
         session.getBasicRemote().sendText(infoData);
     }
 
     @OnClose
-    public void onClose(Session session) throws IOException {}
+    public void onClose(Session session) throws IOException {
+        connection.close();
+    }
 
     @OnError
     public void onError(Session session, Throwable throwable) {}

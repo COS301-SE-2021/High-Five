@@ -1,6 +1,8 @@
 package clients.webclients.connection;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 
 /**
@@ -10,22 +12,23 @@ import java.io.Writer;
 public interface Connection {
 
     /**
-     * Accepts a Writer from which it collects information to be sent over the connection.
+     * Returns a reader to read data from the connection
      *
-     * @param inputWriter Writer to use for outgoing communication.
-     * @throws IOException
+     * @return Reader for reading data
      */
-    void setInputWriter(Writer inputWriter) throws IOException;
+    BufferedReader getReader() throws IOException;
 
     /**
      * Returns a Writer from which to read data coming in from the connection.
      *
      * @return Writer to use for incoming communication.
      */
-    Writer getOutputWriter() throws IOException;
+    Writer getWriter() throws IOException;
 
     /**
      * Closes the connection
      */
     void close() throws IOException;
+
+    boolean isConnected();
 }

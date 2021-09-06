@@ -15,7 +15,8 @@ public class Main {
 
         EventLogger.getLogger().info("Starting Embedded Tomcat server");
         Tomcat tomcat = new Tomcat();
-        String port = "8080"; // Also change in index.html
+        String port = "8080";
+        tomcat.setHostname("0.0.0.0");
         tomcat.setPort(Integer.parseInt(port));
         tomcat.addWebapp("/", new File("tempwebapp").getAbsolutePath());
         tomcat.start();

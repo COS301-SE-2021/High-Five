@@ -37,26 +37,28 @@ public class ClientParticipant extends WebClient{
     @Override
     public void listen() throws InterruptedException {
         ServerInformation info = informationHolder.get();
+        if (!connection.isConnected()) {
+            return;
+        }
         try {
             //Fetch the request from the client
-            StringWriter requestDataWriter = new StringWriter();
-            connection.setInputWriter(requestDataWriter);
-            String requestData = requestDataWriter.toString();
+            BufferedReader reader = connection.getReader();
+            String requestData = reader.readLine();
 
             //Response object for sending a response to the client
-            Writer out = connection.getOutputWriter();
+            Writer out = connection.getWriter();
 
             try {
                 //Decodes the JSON message
                 EventLogger.getLogger().info("Decoding request from client");
                 AnalysisRequest request;
+                EventLogger.getLogger().debug(requestData);
                 JsonElement element = new Gson().fromJson(requestData, JsonElement.class);
                 request = new RequestDecoder().deserialize(element, null,null);
 
                 //Process request based on analysis type
                 if (request.getAnalysisType().equals("live")) {
                     EventLogger.getLogger().info("Performing live analysis request");
-                    EventLogger.getLogger().debug(requestData);
                     new LiveAnalysisStrategy().processRequest(request, info, out);
                 } else {
                     EventLogger.getLogger().info("Performing analysis on uploaded media");
@@ -66,8 +68,6 @@ public class ClientParticipant extends WebClient{
                 out.append(e.getMessage()).flush();
                 EventLogger.getLogger().error(e.getMessage());
             }
-
-            connection.close();
         } catch (IOException exception) {
             EventLogger.getLogger().error(exception.getMessage());
         }

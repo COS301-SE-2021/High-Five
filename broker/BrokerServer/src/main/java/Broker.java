@@ -27,8 +27,6 @@ public class Broker {
     private Thread serverListener;
     private Thread clientListener;
     private Thread serverParticipant;
-    private final Object infoLock = new Object();
-    private final Object topicLock = new Object();
     private final ArrayList<String> topics = new ArrayList<>();
     private final Executor clientConnections = Executors.newFixedThreadPool(8);
     private final ServerInformationHolder serverInformationHolder = new ServerInformationHolder();
@@ -50,9 +48,7 @@ public class Broker {
 
             @Override
             public void onNext(@NonNull String message) {
-                synchronized (topicLock) {
-                    topics.add(message);
-                }
+                topics.add(message);
             }
 
             @Override
@@ -84,29 +80,28 @@ public class Broker {
              */
             @Override
             public void onNext(@NonNull String message) {
-                synchronized (infoLock) {
 
-                    //Decodes the JSON message
-                    ServerInformation information;
-                    try {
-                        EventLogger.getLogger().info("Decoding server information from JSON message");
-                        JsonElement element = new Gson().fromJson(message, JsonElement.class);
-                        information = ServerInformationWrapper.get().deserialize(element, null, null);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        EventLogger.getLogger().error(e.getMessage());
-                        return;
-                    }
-
-                    //Extracts usage information from the message and calculates the usage of the server
-                    Telemetry usageTelemetry = new TelemetryBuilder()
-                            .setData(message)
-                            .setCollector(TelemetryCollector.ALL)
-                            .build();
-                    long usage = usageTelemetry.getTelemetry();
-                    information.setUsage(usage);
-                    serverInformationHolder.add(information);
+                //Decodes the JSON message
+                ServerInformation information;
+                try {
+                    EventLogger.getLogger().info("Decoding server information from JSON message");
+                    JsonElement element = new Gson().fromJson(message, JsonElement.class);
+                    information = ServerInformationWrapper.get().deserialize(element, null, null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    EventLogger.getLogger().error(e.getMessage());
+                    return;
                 }
+
+                //Extracts usage information from the message and calculates the usage of the server
+                Telemetry usageTelemetry = new TelemetryBuilder()
+                        .setData(message)
+                        .setCollector(TelemetryCollector.ALL)
+                        .build();
+                long usage = usageTelemetry.getTelemetry();
+                information.setUsage(usage);
+                serverInformationHolder.add(information);
+
             }
 
             @Override

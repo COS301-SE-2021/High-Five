@@ -44,7 +44,7 @@ public class KafkaTopicListener extends ConnectionListener<String> {
             while ((line = inputStreamReader.readLine()) != null) {
 
                 //Ensures that the topic does not already exist
-                if (!isIgnored(line) && !topics.contains(line)) {
+                if (!isIgnored(line) && !topics.contains(line) && line.length() > 0) {
                     EventLogger.getLogger().info("New topic found: " + line);
                     notify(line);
                 }
