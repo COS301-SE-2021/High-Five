@@ -56,7 +56,6 @@ public class ClientParticipant extends WebClient{
                 //Decodes the JSON message
                 EventLogger.getLogger().info("Decoding request from client");
                 AnalysisRequest request;
-                EventLogger.getLogger().debug(requestData);
                 JsonElement element = new Gson().fromJson(requestData, JsonElement.class);
                 request = new RequestDecoder().deserialize(element, null,null);
 
