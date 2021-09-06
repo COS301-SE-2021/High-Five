@@ -8,10 +8,11 @@ import logger.EventLogger;
 import java.io.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class VideoAnalysisStrategy implements AnalysisStrategy{
+public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
 
     /**
-     * Sends an instruction to an analysis server to process a file specified by the client.
+     * Sends an instruction to an analysis server to process a file specified by the client and sends
+     * the response back to the client.
      *
      * @param request Analysis request for media to be analysed
      * @param information Information about the server to perform analysis.

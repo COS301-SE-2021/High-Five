@@ -63,7 +63,7 @@ public class ClientParticipant extends WebClient{
                 //Process request based on analysis type
                 if (request.getRequestType().contains("Analyze")) {
                     EventLogger.getLogger().info("Performing analysis on uploaded media");
-                    new VideoAnalysisStrategy().processRequest(request, info, out);
+                    new StoredMediaAnalysisStrategy().processRequest(request, info, out);
                 } else {
                     EventLogger.getLogger().info("Performing live analysis request");
                     new LiveAnalysisStrategy().processRequest(request, info, out);
