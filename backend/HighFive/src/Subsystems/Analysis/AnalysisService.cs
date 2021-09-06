@@ -88,11 +88,10 @@ namespace src.Subsystems.Analysis
 
             await _analysisSocket.Send(JsonConvert.SerializeObject(request));
             var responseString = _analysisSocket.Receive().Result;
-            //TODO: construct AnalyzedVideoMetadata from responseString
+            response = JsonConvert.DeserializeObject<AnalyzedImageMetaData>(responseString);
 
             return response;
             
-                        
             /*var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
             analyzedFile.AddMetadata("imageId", request.ImageId);
             analyzedFile.AddMetadata("pipelineId", request.PipelineId);
@@ -142,7 +141,7 @@ namespace src.Subsystems.Analysis
             
             await _analysisSocket.Send(JsonConvert.SerializeObject(request));
             var responseString = _analysisSocket.Receive().Result;
-            //TODO: extract response object from responseString
+            response = JsonConvert.DeserializeObject<AnalyzedVideoMetaData>(responseString);
             
             return response;
             
