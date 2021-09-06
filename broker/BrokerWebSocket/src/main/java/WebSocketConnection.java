@@ -36,9 +36,8 @@ public class WebSocketConnection {
         serverInfoRequest.append(message).append("\n").flush();
 
         //Read response from broker
-        StringWriter infoDataWriter = new StringWriter();
-        IOUtil.copy(connection.getInputStream(), infoDataWriter, "UTF-8");
-        String infoData = infoDataWriter.toString();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String infoData = bufferedReader.readLine();
 
         //Send response to web client
         session.getBasicRemote().sendText(infoData);

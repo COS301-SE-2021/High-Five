@@ -2,31 +2,31 @@ package dataclasses.clientrequest;
 
 
 public class AnalysisRequest {
-    private final String analysisType;
-    private final String authChallenge;
-    private final String mediaType;
-    private final String mediaID;
+    private final String authorization;
+    private final String requestType;
+    private final String mediaId;
+    private final String pipelineId;
 
-    public AnalysisRequest(String type, String challenge, String mediaType, String mediaID) {
-        analysisType = type;
-        authChallenge = challenge;
-        this.mediaType = mediaType;
-        this.mediaID = mediaID;
+    public AnalysisRequest(String authorization, String requestType, String mediaId, String pipelineId) {
+        this.authorization = authorization;
+        this.requestType = requestType;
+        this.mediaId = mediaId;
+        this.pipelineId = pipelineId;
     }
 
-    public String getAnalysisType() {
-        return analysisType;
+    public String getAuthorization() {
+        return authorization;
     }
 
-    public String getAuthChallenge() {
-        return authChallenge;
+    public String getRequestType() {
+        return requestType;
     }
 
-    public String getMediaType() {
-        return mediaType;
+    public String getMediaId() {
+        return mediaId;
     }
 
-    public String getMediaID() {
-        return mediaID;
+    public String getPipelineId() {
+        return pipelineId;
     }
 }

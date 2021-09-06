@@ -54,16 +54,19 @@ public class ClientParticipant extends WebClient{
                 AnalysisRequest request;
                 EventLogger.getLogger().debug(requestData);
                 JsonElement element = new Gson().fromJson(requestData, JsonElement.class);
+                EventLogger.getLogger().info("JSON decoded");
                 request = new RequestDecoder().deserialize(element, null,null);
+                EventLogger.getLogger().info(request.getPipelineId());
+                out.append("DONE").flush();
 
-                //Process request based on analysis type
-                if (request.getAnalysisType().equals("live")) {
-                    EventLogger.getLogger().info("Performing live analysis request");
-                    new LiveAnalysisStrategy().processRequest(request, info, out);
-                } else {
-                    EventLogger.getLogger().info("Performing analysis on uploaded media");
-                    new VideoAnalysisStrategy().processRequest(request, info, out);
-                }
+//                //Process request based on analysis type
+//                if (request.getAnalysisType().equals("live")) {
+//                    EventLogger.getLogger().info("Performing live analysis request");
+//                    new LiveAnalysisStrategy().processRequest(request, info, out);
+//                } else {
+//                    EventLogger.getLogger().info("Performing analysis on uploaded media");
+//                    new VideoAnalysisStrategy().processRequest(request, info, out);
+//                }
             } catch (Exception e) {
                 out.append(e.getMessage()).flush();
                 EventLogger.getLogger().error(e.getMessage());

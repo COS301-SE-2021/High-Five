@@ -10,11 +10,12 @@ public class RequestDecoder implements JsonDeserializer<AnalysisRequest> {
 
     @Override
     public AnalysisRequest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        String type = json.getAsJsonObject().get("analysis_type").getAsString();
-        String auth = json.getAsJsonObject().get("auth_challenge").getAsString();
-        String mediaType = json.getAsJsonObject().get("media_type").getAsString();
-        String mediaId = json.getAsJsonObject().get("media_id").getAsString();
+        String type = json.getAsJsonObject().get("Request").getAsString();
+        String auth = json.getAsJsonObject().get("Authorization").getAsString();
+        JsonObject body = json.getAsJsonObject().get("Body").getAsJsonObject();
+        String pipelineId = body.get("imageId").getAsString();
+        String mediaId = body.get("pipelineId").getAsString();
 
-        return new AnalysisRequest(type, auth, mediaType, mediaId);
+        return new AnalysisRequest(auth, type, mediaId, pipelineId);
     }
 }

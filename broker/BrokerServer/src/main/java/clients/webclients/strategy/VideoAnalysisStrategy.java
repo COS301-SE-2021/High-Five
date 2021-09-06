@@ -18,7 +18,7 @@ public class VideoAnalysisStrategy implements AnalysisStrategy{
     @Override
     public void processRequest(AnalysisRequest request, ServerInformation information, Writer writer) throws IOException {
         Runtime rt = Runtime.getRuntime();
-        AnalysisCommand commandString = new AnalysisCommand(request.getMediaType(), request.getMediaID());
+        AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getMediaId());
         String command = System.getenv("KAFKA_SEND_COMMAND").replace("{topic}", information.getServerId());
         Process proc = rt.exec(command);
 
