@@ -9,9 +9,6 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import logger.EventLogger;
-import org.apache.juli.logging.Log;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import servicelocator.wrappers.*;
 
 import java.lang.reflect.*;

@@ -90,8 +90,7 @@ public class KafkaTopicListener extends ConnectionListener<String> {
             }
             ignoredTopics.add(line);
         }
-
         //Check if the list contains the topic
-        return ignoredTopics.contains(topic);
+        return ignoredTopics.stream().anyMatch(topic::contains);
     }
 }
