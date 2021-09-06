@@ -1,32 +1,41 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AzureFunctionsToolkit.Portable.Extensions;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Org.OpenAPITools.Models;
 using src.Subsystems.Analysis;
 
 namespace src.Websockets
 {
-    [Authorize]
+    //[Authorize]
     public class WebsocketController: WebsocketControllerAbstract
     {
         private readonly IAnalysisService _analysisService;
+        private readonly IConfiguration _configuration;
+        private bool _baseContainerSet;
 
-        public WebsocketController(IAnalysisService analysisService)
+        public WebsocketController(IAnalysisService analysisService, IConfiguration configuration)
         {
             _analysisService = analysisService;
+            _configuration = configuration;
+            _baseContainerSet = false;
         }
         
         public override async Task Get()
         {
-            ConfigureStorageManager();
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 using var webSocket = await 
@@ -34,18 +43,20 @@ namespace src.Websockets
                 await SendMessage("Connected", "You have connected to the socket server.", "info", webSocket);
                 while (webSocket.State == WebSocketState.Open)
                 {
-                    var request = ReceiveMessage(webSocket).Result;
-                    if (request == null)
-                    {
-                        await SendMessage("Invalid Format", "Request is not structured correctly.", "error", webSocket);
-                        continue;
-                    }
-                    
-                    string responseTitle;
-                    string responseBody;
-                    string responseType;
+                    string responseTitle = "";
+                    string responseBody = "";
+                    string responseType = "";
                     try
                     {
+                        var request = ReceiveMessage(webSocket).Result;
+                        ConfigureStorageManager(request);
+                        if (request == null)
+                        {
+                            await SendMessage("Invalid Format", "Request is not structured correctly.", "error",
+                                webSocket);
+                            continue;
+                        }
+
                         switch (request.Request)
                         {
                             case "AnalyzeImage":
@@ -62,6 +73,7 @@ namespace src.Websockets
                                     responseBody = JsonConvert.SerializeObject(analyzedImage);
                                     responseType = "success";
                                 }
+
                                 break;
                             case "AnalyzeVideo":
                                 var analyzedVideo = _analysisService.AnalyzeVideo(request).Result;
@@ -77,6 +89,7 @@ namespace src.Websockets
                                     responseBody = JsonConvert.SerializeObject(analyzedVideo);
                                     responseType = "success";
                                 }
+
                                 break;
                             case "Exit":
                                 await SendMessage("Socket Closed", "Connection to the socket was closed.", "info",
@@ -93,6 +106,11 @@ namespace src.Websockets
                     catch (JsonSerializationException)
                     {
                         await SendMessage("Invalid Format", "Invalid request body.", "error", webSocket);
+                        continue;
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        await SendMessage("Unauthorized", "Invalid jwt provided.", "error", webSocket);
                         continue;
                     }
                     catch (Exception e)
@@ -134,16 +152,65 @@ namespace src.Websockets
             }
         }
         
-        private void ConfigureStorageManager()
+        private void ConfigureStorageManager(SocketRequest request)
         {
-            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
+            if (_baseContainerSet)
+            {
+                return;
+            }
+
+            _baseContainerSet = true;
+            var tokenString = request.Authorization;
             if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
             {
                 return;
             }
             var handler = new JwtSecurityTokenHandler();
+            if (!IsJwtValid(handler, tokenString).Result)
+            {
+                throw new UnauthorizedAccessException();
+            }
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
             _analysisService.SetBaseContainer(jsonToken.Subject);
         }
+
+        private async Task<bool> IsJwtValid(JwtSecurityTokenHandler handler, string tokenString)
+        {
+            var token = handler.ReadJwtToken(tokenString);
+            var iss = token.Issuer;
+            var tfp = token.Payload["tfp"].ToString(); // Sign-in policy name
+            var metadataEndpoint = $"{iss}.well-known/openid-configuration?p={tfp}";
+            var cm = new ConfigurationManager<OpenIdConnectConfiguration>(metadataEndpoint,
+                new OpenIdConnectConfigurationRetriever(),
+                new HttpDocumentRetriever());
+            var discoveryDocument = await cm.GetConfigurationAsync();
+            var signingKeys = discoveryDocument.SigningKeys;
+
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidIssuers = new[] {"https://highfiveactivedirectory.b2clogin.com/" + _configuration["AzureAdB2C:TenantId"] +
+                                      "/v2.0/"},
+                ValidAudiences = new [] {_configuration["AzureAdB2C:ClientId"]},
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                RequireSignedTokens = true,
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.FromMinutes(60),
+                IssuerSigningKeys = signingKeys
+            };
+            SecurityToken validateToken;
+            try
+            {
+                handler.ValidateToken(tokenString, validationParameters, out validateToken);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        
     }
 }

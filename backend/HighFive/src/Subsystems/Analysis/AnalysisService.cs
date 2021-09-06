@@ -90,7 +90,10 @@ namespace src.Subsystems.Analysis
             await _analysisSocket.Send(JsonConvert.SerializeObject(request));
             var responseString = _analysisSocket.Receive().Result;
             //TODO: construct AnalyzedVideoMetadata from responseString
+
+            return response;
             
+                        
             /*var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
             analyzedFile.AddMetadata("imageId", request.ImageId);
             analyzedFile.AddMetadata("pipelineId", request.PipelineId);
@@ -101,7 +104,6 @@ namespace src.Subsystems.Analysis
                 response.DateAnalyzed = analyzedFile.Properties.LastModified.Value.DateTime;
             response.Id = analyzedMediaName.Replace(fileExtension, "");
             response.Url = analyzedFile.GetUrl();*/
-            return response;
         }
 
         public async Task<AnalyzedVideoMetaData> AnalyzeVideo(SocketRequest fullRequest)
@@ -141,7 +143,9 @@ namespace src.Subsystems.Analysis
             
             await _analysisSocket.Send(JsonConvert.SerializeObject(request));
             var responseString = _analysisSocket.Receive().Result;
-            var analysisResponse = JsonConvert.DeserializeObject<SocketResponse>(responseString);
+            //TODO: extract response object from responseString
+            
+            return response;
             
             /*rawVideoStream.Seek(0, SeekOrigin.Begin);
             watch.Reset();
@@ -171,7 +175,6 @@ namespace src.Subsystems.Analysis
             response.Id = analyzedMediaName.Replace(fileExtension, "");
             response.Url = analyzedFile.GetUrl();
             response.Thumbnail = thumbnail.GetUrl();*/
-            return response;
         }
 
         public void SetBaseContainer(string containerName)
