@@ -12,6 +12,9 @@
         <Logger name="foo" level="warn" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
+        <Logger name="foo" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
         <Root level="info">
             <AppenderRef ref="Console"/>
         </Root>

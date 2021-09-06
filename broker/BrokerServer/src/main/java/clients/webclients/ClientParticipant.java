@@ -56,6 +56,7 @@ public class ClientParticipant extends WebClient{
                 //Process request based on analysis type
                 if (request.getAnalysisType().equals("live")) {
                     EventLogger.getLogger().info("Performing live analysis request");
+                    EventLogger.getLogger().debug(requestData);
                     new LiveAnalysisStrategy().processRequest(request, info, out);
                 } else {
                     EventLogger.getLogger().info("Performing analysis on uploaded media");

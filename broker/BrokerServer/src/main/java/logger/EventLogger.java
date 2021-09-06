@@ -4,6 +4,9 @@ package logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Logger class to log events in the Broker system.
+ */
 public class EventLogger {
     private static EventLogger _instance;
     private final Logger logger = LogManager.getLogger(EventLogger.class.getName());
@@ -30,5 +33,10 @@ public class EventLogger {
     public void warn(String message) {
         String callerClass = new Exception().getStackTrace()[1].getClassName();
         logger.warn(callerClass + ": " + message);
+    }
+
+    public void debug(String message) {
+        String callerClass = new Exception().getStackTrace()[1].getClassName();
+        logger.debug(callerClass + ": " + message);
     }
 }

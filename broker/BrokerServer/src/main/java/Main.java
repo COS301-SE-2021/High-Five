@@ -1,8 +1,5 @@
 import logger.EventLogger;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import servicelocator.ServiceLocator;
 
 import java.io.*;
 
