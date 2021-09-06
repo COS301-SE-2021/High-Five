@@ -1,6 +1,5 @@
 ﻿using System;
 
-;
 namespace analysis_engine
 {
     public class PipelineBuilderDirector

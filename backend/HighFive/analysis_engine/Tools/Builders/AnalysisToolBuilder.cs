@@ -18,7 +18,7 @@
                 case "animals-1":
                     Tool = new SelfDrawingAnimalRecognitionTool();
                     break;
-                case "vehicle":
+                case "vehicles":
                     Tool = new VehicleRecognitionTool();
                     break;
                 case "vehicles-1":
