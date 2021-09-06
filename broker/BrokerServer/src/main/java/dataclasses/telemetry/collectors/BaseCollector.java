@@ -1,22 +1,23 @@
 package dataclasses.telemetry.collectors;
 
+import dataclasses.serverinfo.ServerUsage;
+
 public class BaseCollector implements Collector {
 
     private Collector nextCollector;
-    private long weight = 0;
-    private long weightMultiplier = 0;
-    private static long MAX_USAGE = 100;
+    protected short weight = 0;
+    protected short weightMultiplier = 0;
 
-    public BaseCollector(long weightMultiplier) {
+    public BaseCollector(short weightMultiplier) {
         this.weightMultiplier = weightMultiplier;
     }
 
     @Override
-    public long getUsage(String data) {
+    public short getUsage(ServerUsage data) {
         if (nextCollector != null) {
             return nextCollector.getUsage(data);
         } else {
-            return MAX_USAGE;
+            return 0;
         }
     }
 
@@ -30,7 +31,7 @@ public class BaseCollector implements Collector {
     }
 
     @Override
-    public void setWeight(long weight) {
+    public void setWeight(short weight) {
         this.weight = weight;
         if (nextCollector != null) {
             nextCollector.setWeight(weight);

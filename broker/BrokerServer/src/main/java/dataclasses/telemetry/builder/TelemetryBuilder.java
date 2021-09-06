@@ -1,5 +1,6 @@
 package dataclasses.telemetry.builder;
 
+import dataclasses.serverinfo.ServerUsage;
 import dataclasses.telemetry.Telemetry;
 import dataclasses.telemetry.collectors.BaseCollector;
 import dataclasses.telemetry.collectors.Collector;
@@ -8,19 +9,19 @@ import dataclasses.telemetry.collectors.decorators.GPUCollector;
 
 public class TelemetryBuilder {
     private Collector telemetryCollector;
-    private String telemetryString;
-    private long weight = 1;
+    private ServerUsage telemetryUsage;
+    private short weight = 1;
 
     public TelemetryBuilder setCollector(TelemetryCollector priority) {
         if (telemetryCollector == null) {
-            telemetryCollector = new BaseCollector(0);
+            telemetryCollector = new BaseCollector((short) 0);
         }
         Collector newCollector = null;
         switch (priority) {
-            case CPU -> newCollector = new CPUCollector(1);
-            case CPU_PRIORITY -> newCollector = new CPUCollector(2);
-            case GPU -> newCollector = new GPUCollector(1);
-            case GPU_PRIORITY -> newCollector = new GPUCollector(2);
+            case CPU -> newCollector = new CPUCollector((short) 1);
+            case CPU_PRIORITY -> newCollector = new CPUCollector((short) 2);
+            case GPU -> newCollector = new GPUCollector((short) 1);
+            case GPU_PRIORITY -> newCollector = new GPUCollector((short) 2);
             default -> {
                 setCollector(TelemetryCollector.CPU);
                 setCollector(TelemetryCollector.GPU);
@@ -31,18 +32,18 @@ public class TelemetryBuilder {
         return this;
     }
 
-    public TelemetryBuilder setData(String data) {
-        this.telemetryString = data;
+    public TelemetryBuilder setData(ServerUsage data) {
+        this.telemetryUsage = data;
         return this;
     }
 
     public Telemetry build() {
-        return new TelemetryImpl(telemetryString, telemetryCollector);
+        return new TelemetryImpl(telemetryUsage, telemetryCollector);
     }
 
     private class TelemetryImpl extends Telemetry {
 
-        public TelemetryImpl(String data, Collector collector) {
+        public TelemetryImpl(ServerUsage data, Collector collector) {
             super(data, collector);
         }
 

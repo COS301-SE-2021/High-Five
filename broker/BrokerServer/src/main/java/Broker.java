@@ -2,6 +2,7 @@ import clients.webclients.WebClient;
 import clients.webclients.connection.Connection;
 import com.google.gson.*;
 import dataclasses.serverinfo.*;
+import dataclasses.serverinfo.codecs.ServerUsageDecoder;
 import dataclasses.telemetry.Telemetry;
 import dataclasses.telemetry.builder.*;
 import io.reactivex.rxjava3.annotations.NonNull;
@@ -87,21 +88,22 @@ public class Broker {
                     EventLogger.getLogger().info("Decoding server information from JSON message");
                     JsonElement element = new Gson().fromJson(message, JsonElement.class);
                     information = ServerInformationWrapper.get().deserialize(element, null, null);
+
+                    //Extracts usage information from the message and calculates the usage of the server
+                    ServerUsage usage = new ServerUsageDecoder().deserialize(element, null, null);
+
+
+                    Telemetry usageTelemetry = new TelemetryBuilder()
+                            .setData(usage)
+                            .setCollector(TelemetryCollector.ALL)
+                            .build();
+                    information.setUsage(usageTelemetry.getTelemetry());
+                    serverInformationHolder.add(information);
                 } catch (Exception e) {
                     e.printStackTrace();
                     EventLogger.getLogger().error(e.getMessage());
                     return;
                 }
-
-                //Extracts usage information from the message and calculates the usage of the server
-                Telemetry usageTelemetry = new TelemetryBuilder()
-                        .setData(message)
-                        .setCollector(TelemetryCollector.ALL)
-                        .build();
-                long usage = usageTelemetry.getTelemetry();
-                information.setUsage(usage);
-                serverInformationHolder.add(information);
-
             }
 
             @Override

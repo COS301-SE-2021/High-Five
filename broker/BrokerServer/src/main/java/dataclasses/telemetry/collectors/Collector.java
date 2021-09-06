@@ -1,7 +1,9 @@
 package dataclasses.telemetry.collectors;
 
+import dataclasses.serverinfo.ServerUsage;
+
 public interface Collector {
-    long getUsage(String data);
-    void setWeight(long weight);
+    short getUsage(ServerUsage data);
+    void setWeight(short weight);
     void setNextCollector(Collector next);
 }

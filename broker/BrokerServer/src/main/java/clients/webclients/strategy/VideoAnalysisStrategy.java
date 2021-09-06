@@ -3,6 +3,7 @@ package clients.webclients.strategy;
 import dataclasses.analysiscommand.AnalysisCommand;
 import dataclasses.serverinfo.ServerInformation;
 import dataclasses.clientrequest.AnalysisRequest;
+import logger.EventLogger;
 
 import java.io.*;
 
@@ -17,20 +18,19 @@ public class VideoAnalysisStrategy implements AnalysisStrategy{
      */
     @Override
     public void processRequest(AnalysisRequest request, ServerInformation information, Writer writer) throws IOException {
-        Runtime rt = Runtime.getRuntime();
-        AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getMediaId());
+        AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getMediaId(), request.getPipelineId());
+        EventLogger.getLogger().info("Sending command to server " + information.getServerId());
         String command = System.getenv("KAFKA_SEND_COMMAND").replace("{topic}", information.getServerId());
-        Process proc = rt.exec(command);
 
 
-        BufferedWriter outputStreamWriter =
-                new BufferedWriter(new OutputStreamWriter(proc.getOutputStream()));
+//        BufferedWriter outputStreamWriter =
+//                new BufferedWriter(new OutputStreamWriter(proc.getOutputStream()));
+//
+//        outputStreamWriter.write(commandString.toString());
+//        outputStreamWriter.flush();
+//        proc.destroy();
 
-        outputStreamWriter.write(commandString.toString());
-        outputStreamWriter.flush();
-        proc.destroy();
-
-        writer.write("Analysis request sent");
+        writer.write("Analysis request sent\n");
         writer.flush();
     }
 }

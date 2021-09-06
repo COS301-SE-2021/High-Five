@@ -1,12 +1,13 @@
 package dataclasses.telemetry;
 
+import dataclasses.serverinfo.ServerUsage;
 import dataclasses.telemetry.collectors.Collector;
 
 public abstract class Telemetry {
-    protected String telemetryData;
+    protected ServerUsage telemetryData;
     protected final Collector telemetryCollector;
 
-    public Telemetry(String data, Collector collector) {
+    public Telemetry(ServerUsage data, Collector collector) {
         this.telemetryData = data;
         this.telemetryCollector = collector;
     }
