@@ -43,9 +43,9 @@ namespace src.Websockets
                 await SendMessage("Connected", "You have connected to the socket server.", "info", webSocket);
                 while (webSocket.State == WebSocketState.Open)
                 {
-                    string responseTitle = "";
-                    string responseBody = "";
-                    string responseType = "";
+                    string responseTitle;
+                    string responseBody;
+                    string responseType;
                     try
                     {
                         var request = ReceiveMessage(webSocket).Result;
@@ -199,10 +199,9 @@ namespace src.Websockets
                 ClockSkew = TimeSpan.FromMinutes(60),
                 IssuerSigningKeys = signingKeys
             };
-            SecurityToken validateToken;
             try
             {
-                handler.ValidateToken(tokenString, validationParameters, out validateToken);
+                handler.ValidateToken(tokenString, validationParameters, out _);
             }
             catch (Exception)
             {
