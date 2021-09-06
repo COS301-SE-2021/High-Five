@@ -6,14 +6,17 @@ using System.IO;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AzureFunctionsToolkit.Portable.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Org.OpenAPITools.Models;
 using src.AnalysisTools;
 using src.AnalysisTools.VideoDecoder;
 using src.Storage;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
+using src.Websockets;
 
 namespace src.Subsystems.Analysis
 {
@@ -35,23 +38,23 @@ namespace src.Subsystems.Analysis
         private readonly IStorageManager _storageManager;
         private readonly IMediaStorageService _mediaStorageService;
         private readonly IPipelineService _pipelineService;
-        private readonly IAnalysisModels _analysisModels;
-        private readonly IVideoDecoder _videoDecoder;
         private readonly IConfiguration _configuration;
+        private readonly IWebSocketClient _analysisSocket;
 
         public AnalysisService(IStorageManager storageManager, IMediaStorageService mediaStorageService,
-            IPipelineService pipelineService, IAnalysisModels analysisModels, IVideoDecoder videoDecoder, IConfiguration configuration)
+            IPipelineService pipelineService, IConfiguration configuration)
         {
             _storageManager = storageManager;
             _mediaStorageService = mediaStorageService;
             _pipelineService = pipelineService;
-            _analysisModels = analysisModels;
-            _videoDecoder = videoDecoder;
             _configuration = configuration;
+            _analysisSocket = new WebSocketClient();
+            _analysisSocket.Connect(_configuration["BrokerUri"]);
         }
 
-        public async Task<AnalyzedImageMetaData> AnalyzeImage(AnalyzeImageRequest request)
+        public async Task<AnalyzedImageMetaData> AnalyzeImage(SocketRequest fullRequest)
         {
+            var request = JsonConvert.DeserializeObject<AnalyzeImageRequest>(fullRequest.Body.Serialise());
             var pipelineSearchRequest = new GetPipelineRequest {PipelineId = request.PipelineId};
             var analysisPipeline = _pipelineService.GetPipeline(pipelineSearchRequest).Result;
             if (analysisPipeline == null)
@@ -63,6 +66,177 @@ namespace src.Subsystems.Analysis
              * If this is the case, no analysis needs to be done. Simply return the already analyzed
              * media
              */
+            
+            analysisPipeline.Tools.Sort();
+            const string storageContainer = "analyzed/image";
+            const string fileExtension = ".img";
+            var analyzedMediaName = _storageManager.HashMd5(request.ImageId + "|" + string.Join(",",analysisPipeline.Tools)) + fileExtension;
+            var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
+            var response = new AnalyzedImageMetaData
+            {
+                ImageId = request.ImageId,
+                PipelineId = request.PipelineId
+            };
+            if (testFile != null) //This means the media has already been analyzed with this pipeline combination
+            {
+                if (testFile.Properties is {LastModified: { }})
+                    response.DateAnalyzed = testFile.Properties.LastModified.Value.DateTime;
+                response.Id = testFile.Name;
+                response.Url = testFile.GetUrl();
+                return response;
+            }
+
+            await _analysisSocket.Send(JsonConvert.SerializeObject(fullRequest));
+            var responseString = _analysisSocket.Receive().Result;
+            response = JsonConvert.DeserializeObject<AnalyzedImageMetaData>(responseString);
+
+            return response;
+            
+            /*var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
+            analyzedFile.AddMetadata("imageId", request.ImageId);
+            analyzedFile.AddMetadata("pipelineId", request.PipelineId);
+            const string contentType = "image/jpg";
+            await analyzedFile.UploadFileFromByteArray(analyzedImageData, contentType);
+
+            if (analyzedFile.Properties.LastModified != null)
+                response.DateAnalyzed = analyzedFile.Properties.LastModified.Value.DateTime;
+            response.Id = analyzedMediaName.Replace(fileExtension, "");
+            response.Url = analyzedFile.GetUrl();*/
+        }
+
+        public async Task<AnalyzedVideoMetaData> AnalyzeVideo(SocketRequest fullRequest)
+        {
+            var request = JsonConvert.DeserializeObject<AnalyzeVideoRequest>(fullRequest.Body.Serialise());
+            var pipelineSearchRequest = new GetPipelineRequest {PipelineId = request.PipelineId};
+            var analysisPipeline = _pipelineService.GetPipeline(pipelineSearchRequest).Result;
+            if (analysisPipeline == null)
+            {
+                return null; //invalid pipelineId provided
+            }
+
+            /* First, check if the Media and Pipeline combination has already been analyzed and stored before.
+             * If this is the case, no analysis needs to be done. Simply return the already analyzed
+             * media
+             */
+            analysisPipeline.Tools.Sort();
+            const string storageContainer = "analyzed/video";
+            const string fileExtension = ".mp4";
+            var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + string.Join(",",analysisPipeline.Tools)) + fileExtension;
+            var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
+            var response = new AnalyzedVideoMetaData
+            {
+                VideoId = request.VideoId,
+                PipelineId = request.PipelineId
+            };
+            if (testFile != null) //This means the media has already been analyzed with this pipeline combination
+            {
+                if (testFile.Properties is {LastModified: { }})
+                    response.DateAnalyzed = testFile.Properties.LastModified.Value.DateTime;
+                response.Id = analyzedMediaName.Replace(fileExtension, "");
+                response.Url = testFile.GetUrl();
+                var thumbnailFile = _storageManager.GetFile(analyzedMediaName.Replace(".mp4", "-thumbnail.jpg"), storageContainer).Result;
+                response.Thumbnail = thumbnailFile.GetUrl();
+                return response;
+            }
+            
+            await _analysisSocket.Send(JsonConvert.SerializeObject(fullRequest));
+            var responseString = _analysisSocket.Receive().Result;
+            response = JsonConvert.DeserializeObject<AnalyzedVideoMetaData>(responseString);
+            
+            return response;
+            
+            /*rawVideoStream.Seek(0, SeekOrigin.Begin);
+            watch.Reset();
+            watch.Start();
+            var analyzedVideoData = _videoDecoder.EncodeVideoFromFrames(analyzedFrameData, rawVideoStream);
+            watch.Stop();
+            Console.WriteLine("Convert from frames to video: " + watch.ElapsedMilliseconds + "ms");
+
+            watch.Reset();
+            watch.Start();
+            //create thumbnail from analyzed video
+            var thumbnail =
+                _storageManager.CreateNewFile(analyzedMediaName.Replace(fileExtension, "") + "-thumbnail.jpg",
+                    storageContainer).Result;
+            await thumbnail.UploadFileFromByteArray(analyzedFrameData[0], "image/jpg");//uploads synchronously
+
+            var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
+            analyzedFile.AddMetadata("videoId", request.VideoId);
+            analyzedFile.AddMetadata("pipelineId", request.PipelineId);
+            const string contentType = "video/mp4";
+            await analyzedFile.UploadFileFromByteArray(analyzedVideoData, contentType);
+            watch.Stop();
+            Console.WriteLine("Store video & thumbnail to cloud: " + watch.ElapsedMilliseconds + " ms");
+
+            if (analyzedFile.Properties.LastModified != null)
+                response.DateAnalyzed = analyzedFile.Properties.LastModified.Value.DateTime;
+            response.Id = analyzedMediaName.Replace(fileExtension, "");
+            response.Url = analyzedFile.GetUrl();
+            response.Thumbnail = thumbnail.GetUrl();*/
+        }
+
+        public void SetBaseContainer(string containerName)
+        {
+            /*
+             *      Description:
+             * This function tests if a baseContainer has been set yet, it will be called before any of the
+             * other StorageManager method code executes. If a base container has already been set, this code
+             * will do nothing, else it will set the base container to the user's Azure AD B2C unique object
+             * id - hence pointing towards the user's own container within the storage.
+             *
+             *      Parameters:
+             * -> containerName: the user's id that will be used as the container name.
+             */
+
+            if (_storageManager.IsContainerSet()) return;
+
+            _storageManager.SetBaseContainer(containerName);
+            _pipelineService.SetBaseContainer(containerName);
+            _mediaStorageService.SetBaseContainer(containerName);
+        }
+
+        public GetLiveAnalysisTokenResponse GetLiveAnalysisToken(string userId)
+        {
+            var key = _configuration["JWTSecret"];
+            const string issuer = "localhost:5001";//TODO: change this to analysis engine server ip
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));    
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var permClaims = new List<Claim>
+            {
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), new Claim("userId", userId)
+            };
+
+            var token = new JwtSecurityToken(issuer, //Issure    
+                issuer,  //Audience    
+                permClaims,    
+                expires: DateTime.Now.AddDays(1),    
+                signingCredentials: credentials);    
+            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token); 
+            
+            //TODO: Send token over socket to analysis engine
+            return new GetLiveAnalysisTokenResponse {Token = jwtToken};
+        }
+
+    }
+}
+
+/*
+ * -----------------------------------LEGACY ANALYSIS FUNCTIONS-------------------------------
+ *
+ *   public async Task<AnalyzedImageMetaData> AnalyzeImage(AnalyzeImageRequest request)
+        {
+            var pipelineSearchRequest = new GetPipelineRequest {PipelineId = request.PipelineId};
+            var analysisPipeline = _pipelineService.GetPipeline(pipelineSearchRequest).Result;
+            if (analysisPipeline == null)
+            {
+                return null; //invalid pipelineId provided
+            }
+
+            /* First, check if the Media and Pipeline combination has already been analyzed and stored before.
+             * If this is the case, no analysis needs to be done. Simply return the already analyzed
+             * media
+             
             
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/image";
@@ -124,7 +298,7 @@ namespace src.Subsystems.Analysis
             /* First, check if the Media and Pipeline combination has already been analyzed and stored before.
              * If this is the case, no analysis needs to be done. Simply return the already analyzed
              * media
-             */
+             
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/video";
             const string fileExtension = ".mp4";
@@ -206,48 +380,4 @@ namespace src.Subsystems.Analysis
             response.Thumbnail = thumbnail.GetUrl();
             return response;
         }
-
-        public void SetBaseContainer(string containerName)
-        {
-            /*
-             *      Description:
-             * This function tests if a baseContainer has been set yet, it will be called before any of the
-             * other StorageManager method code executes. If a base container has already been set, this code
-             * will do nothing, else it will set the base container to the user's Azure AD B2C unique object
-             * id - hence pointing towards the user's own container within the storage.
-             *
-             *      Parameters:
-             * -> containerName: the user's id that will be used as the container name.
-             */
-
-            if (_storageManager.IsContainerSet()) return;
-
-            _storageManager.SetBaseContainer(containerName);
-            _pipelineService.SetBaseContainer(containerName);
-            _mediaStorageService.SetBaseContainer(containerName);
-        }
-
-        public GetLiveAnalysisTokenResponse GetLiveAnalysisToken(string userId)
-        {
-            var key = _configuration["JWTSecret"];
-            const string issuer = "localhost:5001";//TODO: change this to analysis engine server ip
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));    
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var permClaims = new List<Claim>
-            {
-                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), new Claim("userId", userId)
-            };
-
-            var token = new JwtSecurityToken(issuer, //Issure    
-                issuer,  //Audience    
-                permClaims,    
-                expires: DateTime.Now.AddDays(1),    
-                signingCredentials: credentials);    
-            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token); 
-            
-            //TODO: Send token over socket to analysis engine
-            return new GetLiveAnalysisTokenResponse {Token = jwtToken};
-        }
-    }
-}
+ */
