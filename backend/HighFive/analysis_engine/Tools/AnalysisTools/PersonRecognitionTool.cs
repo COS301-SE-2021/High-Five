@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using NumSharp;
@@ -39,7 +40,7 @@ namespace analysis_engine
         }
         public override Data Process(Data data)
         {
-            var image = Resize(new Matrix<byte>(data.Frame.Image.Bytes).Mat);
+            var image = Resize(data.Frame.Image);
             
             image = np.transpose(image, new[] { 2, 0, 1 });
             (image[0], image[2]) = (image[2], image[0]);
@@ -99,13 +100,12 @@ namespace analysis_engine
             return data;
         }
         
-        private static NDArray Resize(Mat image)
+        private static NDArray Resize(Image<Rgb,byte> image)
         {
-            //resize image
-            var resized = new Mat();
-            CvInvoke.Resize(image, resized, new Size(1200,1200), 0, 0, Inter.Area);
+            var resized = image.Resize(1200, 1200, Inter.Area);
+            
 
-            var result = np.array(resized.GetData(false)).reshape(resized.Height, resized.Width, 3);
+            var result = np.array(resized.Data).reshape(resized.Height, resized.Width, 3);
         
             return result;
         }
