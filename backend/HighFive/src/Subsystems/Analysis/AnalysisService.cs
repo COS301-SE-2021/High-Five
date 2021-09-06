@@ -40,7 +40,6 @@ namespace src.Subsystems.Analysis
         private readonly IPipelineService _pipelineService;
         private readonly IConfiguration _configuration;
         private readonly IWebSocketClient _analysisSocket;
-        private const string BrokerServerUri = "";
 
         public AnalysisService(IStorageManager storageManager, IMediaStorageService mediaStorageService,
             IPipelineService pipelineService, IConfiguration configuration, IWebSocketClient analysisSocket)
@@ -50,7 +49,7 @@ namespace src.Subsystems.Analysis
             _pipelineService = pipelineService;
             _configuration = configuration;
             _analysisSocket = analysisSocket;
-            _analysisSocket.Connect(BrokerServerUri);
+            _analysisSocket.Connect(_configuration["BrokerUri"]);
         }
 
         public async Task<AnalyzedImageMetaData> AnalyzeImage(SocketRequest fullRequest)
