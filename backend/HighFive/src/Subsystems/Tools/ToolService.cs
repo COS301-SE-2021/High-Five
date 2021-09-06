@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Accord.Math;
 using IronPython.Runtime.Operations;
 using Microsoft.AspNetCore.Http;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.VisualBasic;
 using Org.OpenAPITools.Models;
 using src.Storage;
@@ -35,6 +40,7 @@ namespace src.Subsystems.Tools
 
             var modelNameArr = model.FileName.Split(".");
             var modelName = _storageManager.HashMd5(model.FileName);
+            sourceCodeFile.AddMetadata("modelName", model.FileName);
             var modelFile = _storageManager
                 .CreateNewFile(modelName + "." + modelNameArr[^1], ContainerName + "/analysis/" + generatedToolName).Result;
             await modelFile.UploadFile(model);
@@ -185,6 +191,93 @@ namespace src.Subsystems.Tools
 
             toolsFile.UploadText(updatedToolsList);
             return removed;
+        }
+        
+        //-----------------------------------TOOL LOADING FUNCTIONS-----------------------------------//
+        //------------------------------Will be added to analysis engine------------------------------//
+
+        private void LoadAnalysisTool(string id)
+        {
+            var toolFiles = _storageManager.GetAllFilesInContainer("tools/analysis/" + id).Result;
+            if (toolFiles.Count == 0)
+            {
+                return;//invalid id
+            }
+
+            IBlobFile sourceCodeFile = null;
+            IBlobFile modelFile = null;
+            foreach (var toolFile in toolFiles)
+            {
+                if (toolFile.GetMetaData("modelName") != null)
+                {
+                    modelFile = toolFile;
+                }
+                else
+                {
+                    sourceCodeFile = toolFile;
+                }
+            }
+            
+            
+            //write model to disk
+            var modelStream = modelFile.ToStream().Result;
+            var modelPath = Directory.GetCurrentDirectory() + "\\Models\\" + modelFile.GetMetaData("modelName");
+            var fileStream = File.Create(modelPath);
+            modelStream.Seek(0, SeekOrigin.Begin);
+            modelStream.CopyTo(fileStream);
+            fileStream.Close();
+            
+            //compile source code
+            var syntaxTree = CSharpSyntaxTree.ParseText(sourceCodeFile.ToText().Result);
+            var assemblyName = Path.GetRandomFileName();
+            var references = new MetadataReference[]
+            {
+                /*
+                 * TODO: in the references variable, all data types that are not in system must be
+                 * explicitly referenced.
+                 */
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location)
+            };
+            
+            var compilation = CSharpCompilation.Create(
+                assemblyName,
+                new []{syntaxTree},
+                references,
+                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+            
+            using var ms = new MemoryStream();
+            var result = compilation.Emit(ms);
+            if (!result.Success)
+            {
+                //TODO: Handle errors here
+                var failures = result.Diagnostics.Where(diagnostic => 
+                    diagnostic.IsWarningAsError || 
+                    diagnostic.Severity == DiagnosticSeverity.Error);
+
+                foreach (var diagnostic in failures)
+                {
+                    Console.WriteLine("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
+                }
+            }
+            else
+            {
+                //TODO: This is where constructors/functions of compiled code is called
+                ms.Seek(0, SeekOrigin.Begin);
+                var assembly = Assembly.Load(ms.ToArray());
+                //parameter for assembly.GetType should be namespace.class
+                var type = assembly.GetType("CustomTool.TestTool");
+                //constructors can be called by passing parameters to Activator.CreateInstance
+                var obj = Activator.CreateInstance(type);
+                
+                //First parameter in type.InvokeMember is function to be called. Last parameter is object of parameters
+                var answer = type.InvokeMember("DoSomething",
+                    BindingFlags.Default | BindingFlags.InvokeMethod,
+                    null,
+                    obj,
+                    null
+                );
+            }
         }
     }
 }
