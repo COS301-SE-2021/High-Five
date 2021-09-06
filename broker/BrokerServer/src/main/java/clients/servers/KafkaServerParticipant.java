@@ -31,11 +31,29 @@ public class KafkaServerParticipant extends ServerParticipant {
         EventLogger.getLogger().info("Listening for new messages from servers");
         while (true) {
             for (String topic: topics) {
-                Runtime rt = Runtime.getRuntime();
-                Process proc = null;
-                String exec = System.getenv("KAFKA_GET_MESSAGES").replace("{topic}", topic);
+
+                int offset = 0;
+
                 try {
-                    proc = rt.exec(exec);
+                    offset = getLastOffset(topic);
+                } catch (IOException e) {
+                    EventLogger.getLogger().error(e.getMessage());
+                    continue;
+                }
+
+                //No messages were found
+                if (offset <= 0 ) {
+                    continue;
+                }
+
+                Process proc;
+
+                String exec = System.getenv("KAFKA_GET_MESSAGES")
+                        .replace("{topic}", topic)
+                        .replace("{offset}", Integer.toString(offset));
+                try {
+                    ProcessBuilder builder = new ProcessBuilder(exec.split(" "));
+                    proc = builder.start();
                 } catch (IOException e) {
                     EventLogger.getLogger().error(e.getMessage());
                     beat = false;
@@ -60,7 +78,7 @@ public class KafkaServerParticipant extends ServerParticipant {
                 }
 
                 if (msg == null) {
-                    break;
+                    continue;
                 }
 
                 //delete topic if the last message sent is older than 45 seconds. This means the server is
@@ -82,12 +100,12 @@ public class KafkaServerParticipant extends ServerParticipant {
      * @param topic Name of topic to be deleted.
      */
     private void deleteTopic(String topic) {
-        Runtime rt = Runtime.getRuntime();
         String exec = System.getenv("KAFKA_DELETE_TOPIC").replace("{topic}", topic);
         try {
-            rt.exec(exec);
-        } catch (IOException ignored) {
-
+            ProcessBuilder builder = new ProcessBuilder(exec.split(" "));
+            builder.start();
+        } catch (IOException e) {
+            EventLogger.getLogger().error(e.getMessage());
         }
     }
 
