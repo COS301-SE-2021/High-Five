@@ -42,13 +42,13 @@ namespace src.Subsystems.Analysis
         private readonly IWebSocketClient _analysisSocket;
 
         public AnalysisService(IStorageManager storageManager, IMediaStorageService mediaStorageService,
-            IPipelineService pipelineService, IConfiguration configuration, IWebSocketClient analysisSocket)
+            IPipelineService pipelineService, IConfiguration configuration)
         {
             _storageManager = storageManager;
             _mediaStorageService = mediaStorageService;
             _pipelineService = pipelineService;
             _configuration = configuration;
-            _analysisSocket = analysisSocket;
+            _analysisSocket = new WebSocketClient();
             _analysisSocket.Connect(_configuration["BrokerUri"]);
         }
 

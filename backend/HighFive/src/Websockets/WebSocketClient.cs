@@ -10,7 +10,7 @@ namespace src.Websockets
 {
     public class WebSocketClient: IWebSocketClient
     {
-        private ClientWebSocket _socket = null;
+        private readonly ClientWebSocket _socket = null;
 
         public async Task Connect(string uri)
         {
@@ -49,6 +49,10 @@ namespace src.Websockets
 
             return received;
         }
-        
+
+        public void Close()
+        {
+            _socket.CloseAsync(WebSocketCloseStatus.Empty, "Websocket closed.", CancellationToken.None);
+        }
     }
 }

@@ -7,5 +7,6 @@ namespace src.Websockets
         public Task Connect(string uri);
         public Task Send(string data);
         public Task<string> Receive();
+        public void Close();
     }
 }

@@ -20,7 +20,6 @@ using src.Subsystems.Analysis;
 
 namespace src.Websockets
 {
-    //[Authorize]
     public class WebsocketController: WebsocketControllerAbstract
     {
         private readonly IAnalysisService _analysisService;
@@ -115,12 +114,11 @@ namespace src.Websockets
                     }
                     catch (Exception e)
                     {
-                        await SendMessage("Internal Error", e.InnerException.ToString(), "error", webSocket);
+                        await SendMessage("Internal Error", e.StackTrace, "error", webSocket);
                         continue;
                     }
 
                     await SendMessage(responseTitle, responseBody, responseType, webSocket);
-
                 }
             }
             else
