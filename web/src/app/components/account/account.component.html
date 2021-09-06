@@ -120,154 +120,29 @@
                 to delete the tool
               </ion-label>
             </ion-list-header>
-            <ion-item>
+            <ion-item *ngFor="let userTool of userToolsService.userTools$ | async; trackBy: usersTrackFn">
               <ion-label>
-                asd
+                {{userTool.name}}
               </ion-label>
+              <ion-chip [color]="userTool.onnxModel ? 'success' : 'danger'" [disabled]="userTool.onnxModel">
+                <ion-icon *ngIf="!userTool.onnxModel" name="cloud-upload-outline"></ion-icon>
+                <ion-label>ONNX Model</ion-label>
+                <ion-icon [name]="userTool.onnxModel ? 'checkmark-outline' : 'close-outline'" ></ion-icon>
+              </ion-chip>
+              <ion-chip [color]="userTool.toolClassFile ? 'success' : 'danger'" [disabled]="userTool.toolClassFile">
+                <ion-icon *ngIf="!userTool.toolClassFile" name="cloud-upload-outline"></ion-icon>
+                <ion-label>Tool Class File</ion-label>
+                <ion-icon [name]="userTool.toolClassFile ? 'checkmark-outline' : 'close-outline'"></ion-icon>
+              </ion-chip>
               <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                asd
-              </ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger">
+              <ion-button slot="end" fill="clear" expand="block" color="danger" (click)="userToolsService.removeUserTool(userTool.id)">
                 <ion-icon name="trash-outline"></ion-icon>
               </ion-button>
             </ion-item>
           </ion-list>
         </ion-content>
         <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-          <ion-fab-button>
+          <ion-fab-button (click)="addUserTool()">
             <ion-icon name="add"></ion-icon>
           </ion-fab-button>
         </ion-fab>
