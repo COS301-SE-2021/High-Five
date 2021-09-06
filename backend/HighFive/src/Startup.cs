@@ -22,6 +22,7 @@ using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
 using src.Subsystems.Tools;
 using src.Subsystems.User;
+using src.Websockets;
 
 namespace src
 {
@@ -70,15 +71,6 @@ namespace src
                     jwtOptions.SaveToken = true;
                     jwtOptions.Events = new JwtBearerEvents
                     {
-                        OnMessageReceived = ctx =>
-                        {
-                            var accessToken = ctx.Request.Query["access_token"];
-                            if (!string.IsNullOrEmpty(accessToken))
-                            {
-                                ctx.Token = accessToken;
-                            }
-                            return Task.CompletedTask;
-                        },
                         OnAuthenticationFailed = async c =>
                         {
                             c.NoResult();
@@ -102,8 +94,7 @@ namespace src
                         }
                     };
                 });
-            
-            
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
