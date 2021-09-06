@@ -1,0 +1,2 @@
+__consumer_offsets
+quickstart-events

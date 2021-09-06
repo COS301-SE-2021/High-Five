@@ -6,7 +6,9 @@ import logger.EventLogger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,7 +48,7 @@ public class KafkaTopicListener extends ConnectionListener<String> {
             while ((line = inputStreamReader.readLine()) != null) {
 
                 //Ensures that the topic does not already exist
-                if (!topics.contains(line)) {
+                if (!isIgnored(line) && !topics.contains(line)) {
                     EventLogger.getLogger().info("New topic found: " + line);
                     notify(line);
                 }
@@ -59,5 +61,41 @@ public class KafkaTopicListener extends ConnectionListener<String> {
             }
             Thread.sleep(1000L);
         }
+    }
+
+    /**
+     * Checks if the given topic is to be ignored. Primarily used for system reserved
+     * topics we don't want the Broker to listen to.
+     * @param topic Topic to check
+     * @return Whether the topic should be ignored or not.
+     */
+    private boolean isIgnored(String topic) {
+
+        //open and read file containing ignored topics
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("ignored_topics.txt");
+
+        if (is == null) {
+            EventLogger.getLogger().warn("Cannot read ignored_topics.txt");
+            return false;
+        }
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+        ArrayList<String> ignoredTopics = new ArrayList<>();
+
+        //Add these topics to a list
+        String line;
+        while (true) {
+            try {
+                if ((line = bufferedReader.readLine()) == null) break;
+            } catch (IOException e) {
+                EventLogger.getLogger().error(e.getMessage());
+                return false;
+            }
+            ignoredTopics.add(line);
+        }
+
+        //Check if the list contains the topic
+        return ignoredTopics.contains(topic);
     }
 }
