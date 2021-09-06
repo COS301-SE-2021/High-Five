@@ -13,24 +13,35 @@ namespace analysis_engine
     {
         public static void Main(string[] args)
         {
-            var originalImage = CvInvoke.Imread(@"C:\Users\hanne\RiderProjects\ConsoleApp1\ConsoleApp1\Tensorflow\data\cows.jpg", ImreadModes.Unchanged);
-            var watch = new Stopwatch();
-            var runner = new SelfDrawingAnimalRecognitionTool();
-            runner.Init();
-            var data = new Data();
-            data.Frame.Image = originalImage.ToImage<Rgb, byte>();
-            var result=runner.Process(data);
-            watch.Reset();
-            watch.Start();
-            for (int i = 0; i < 1; i++)
-            {
-                result=runner.Process(data);
-            }
+            var originalImage1 = CvInvoke.Imread("C:\\Users\\Bieldt\\OneDrive\\Pictures\\cows.jpg", ImreadModes.Unchanged);
             
-            watch.Stop();
-            Console.WriteLine("Execution time: " + watch.ElapsedMilliseconds + "ms");
-            CvInvoke.Imwrite(@"C:\Users\hanne\RiderProjects\ConsoleApp1\ConsoleApp1\Tensorflow\data\output.jpg", result.Frame.Image);
+            var watch1 = new Stopwatch();
             
+            var runner1 = new FastVehicleRecognitionTool();
+            
+            runner1.Init();
+            
+            var data1 = new Data();
+            
+            data1.Frame.Image = originalImage1.ToImage<Rgb, byte>();
+            
+            var result1 = data1;
+            
+            // Task.Run(() =>
+            // {
+            //     watch1.Reset();
+            //     watch1.Start();
+            //     for (int i = 0; i < 100; i++)
+            //     {
+            //         result1=runner1.Process(data1);
+            //     }
+            //     watch1.Stop();
+            //     Console.WriteLine("1: Execution time: " + watch1.ElapsedMilliseconds/100.0 + "ms");
+            // });
+            
+
+            while (true) ;
+            // CvInvoke.Imwrite("C:\\Users\\Bieldt\\OneDrive\\Pictures\\output.jpg", result.Frame.Image);
         }
 
         

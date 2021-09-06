@@ -13,7 +13,7 @@ namespace analysis_engine
 {
     public class FastVehicleRecognitionTool : AnalysisTool
     {
-        private const string ModelPath = @"../Models/ssd-10.onnx";
+        private const string ModelPath = @"C:/ssd_mobilenet_v1_10.onnx";
         private InferenceSession _model;
         private string _modelInputLayerName;
         private const double MinScore=0.50;
@@ -35,9 +35,10 @@ namespace analysis_engine
 
         public override void Init()
         {
+            //
             _model = new InferenceSession(
-                ModelPath,
-                SessionOptions.MakeSessionOptionWithCudaProvider());
+                ModelPath,SessionOptions.MakeSessionOptionWithCudaProvider()
+                );
             _modelInputLayerName = _model.InputMetadata.Keys.Single();
         }
         public override Data Process(Data data)

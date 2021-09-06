@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using Emgu.CV;
@@ -13,13 +14,12 @@ namespace analysis_engine
 {
     public class SelfDrawingAnimalRecognitionTool : AnalysisTool
     {
-        private const string ModelPath = @"C:\Users\hanne\RiderProjects\ConsoleApp1\ConsoleApp1\Tensorflow\data\ssd-10.onnx";
-        private InferenceSession _model;
+        private const string ModelPath = @"C:\ssd-10.onnx";
+        private static InferenceSession _model;
         private string _modelInputLayerName;
         private const double MinScore=0.5;
         private const long MinClass = 15;
         private const long MaxClass = 24;
-        
         private readonly string[] _classes ={
             "__background", "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat",
             "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse",
@@ -41,12 +41,15 @@ namespace analysis_engine
         }
         public override Data Process(Data data)
         {
+            
             var image = Resize(data.Frame.Image);
             
             image = np.transpose(image, new[] { 2, 0, 1 });
+            
             (image[0], image[2]) = (image[2], image[0]);
+            
             image = np.expand_dims(image, 0);
-
+           
             float[] mean = { 0.485f, 0.456f, 0.406f };
             float[] std = { 0.229f, 0.224f, 0.225f };
             var input = image/255.0f;
@@ -56,7 +59,6 @@ namespace analysis_engine
             input[0][0] = input[0][0] / std[0];
             input[0][1] = input[0][1] / std[1];
             input[0][2] = input[0][2] / std[2];
-            
             
             int[] dimensions = { 1, 3, 1200, 1200 };
             var inputTensor = new DenseTensor<float>(input.reshape(1*1200*1200*3).ToArray<float>(),dimensions);
@@ -78,6 +80,7 @@ namespace analysis_engine
 
         private Data PostProcessFrame(Data data, IReadOnlyList<float> boxes, IReadOnlyList<long> labels, IReadOnlyList<float> scores)
         {
+            
             var output= new BoxCoordinateData();
             output.Classes = new List<string>();
             output.Boxes = new List<float>();

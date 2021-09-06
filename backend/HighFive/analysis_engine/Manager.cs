@@ -1,4 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Emgu.CV;
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
 
 namespace analysis_engine
 {
@@ -7,8 +10,10 @@ namespace analysis_engine
         private Pipeline _pipeline;
         private PipelineBuilderDirector _builderDirector;
         private DataPool _dataPool;
+        private int _frameCount;
         public Manager()
         {
+            _frameCount = 0;
         }
 
         public void CreatePipeline(string type, string pipelineString)
@@ -22,12 +27,17 @@ namespace analysis_engine
                 //TODO parallel builder implementation
             }
             _dataPool = new DataPool(5000, new DataFactory());
-            _pipeline = _builderDirector.Construct("analysis:vehicles,drawing:box");
+            _pipeline = _builderDirector.Construct("analysis:animals1");
         }
 
         private Data GetNextFrame()
         {
-            return _dataPool.GetData();
+            Data temp = _dataPool.GetData();
+            var image = CvInvoke.Imread("C:\\Users\\Bieldt\\OneDrive\\Pictures\\cows.jpg", ImreadModes.Unchanged).ToImage<Rgb,byte>();
+            temp.Frame.Image = image;
+            temp.Frame.FrameID = _frameCount;
+            _frameCount++;
+            return temp;
         }
 
         private void ReturnAnalyzedFrame(Data data)
