@@ -95,7 +95,7 @@ namespace src.Subsystems.Pipelines
 
             var response = new CreatePipelineResponse()
             {
-                PipelineId = generatedName
+                Pipeline = newPipeline
             };
             return response;
         }
@@ -222,7 +222,7 @@ namespace src.Subsystems.Pipelines
             await blobFile.UploadText(jsonData);
         }
 
-        public void SetBaseContainer(string containerName)
+        public bool SetBaseContainer(string containerName)
         {
             /*
              *      Description:
@@ -237,8 +237,10 @@ namespace src.Subsystems.Pipelines
             
             if (!_storageManager.IsContainerSet())
             {
-                _storageManager.SetBaseContainer(containerName);
+                return _storageManager.SetBaseContainer(containerName).Result;
             }
+
+            return true;
         }
 
         public GetPipelineIdsResponse GetPipelineIds()
@@ -276,6 +278,11 @@ namespace src.Subsystems.Pipelines
             if (pipelineFile == null || !await pipelineFile.Exists()) return null;
             var pipeline = ConvertFileToPipeline(pipelineFile);
             return pipeline;
+        }
+        
+        public void StoreUserInfo(string id, string displayName, string email)
+        {
+            _storageManager.StoreUserInfo(id, displayName, email);
         }
     }
 }

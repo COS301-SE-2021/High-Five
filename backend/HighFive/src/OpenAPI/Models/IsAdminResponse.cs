@@ -24,13 +24,13 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class CreatePipelineResponse : IEquatable<CreatePipelineResponse>
+    public class IsAdminResponse : IEquatable<IsAdminResponse>
     {
         /// <summary>
-        /// Gets or Sets Pipeline
+        /// Gets or Sets IsAdmin
         /// </summary>
-        [DataMember(Name="pipeline", EmitDefaultValue=false)]
-        public Pipeline Pipeline { get; set; }
+        [DataMember(Name="isAdmin", EmitDefaultValue=false)]
+        public bool IsAdmin { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -39,8 +39,8 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class CreatePipelineResponse {\n");
-            sb.Append("  Pipeline: ").Append(Pipeline).Append("\n");
+            sb.Append("class IsAdminResponse {\n");
+            sb.Append("  IsAdmin: ").Append(IsAdmin).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -63,24 +63,24 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((CreatePipelineResponse)obj);
+            return obj.GetType() == GetType() && Equals((IsAdminResponse)obj);
         }
 
         /// <summary>
-        /// Returns true if CreatePipelineResponse instances are equal
+        /// Returns true if IsAdminResponse instances are equal
         /// </summary>
-        /// <param name="other">Instance of CreatePipelineResponse to be compared</param>
+        /// <param name="other">Instance of IsAdminResponse to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(CreatePipelineResponse other)
+        public bool Equals(IsAdminResponse other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    Pipeline == other.Pipeline ||
-                    Pipeline != null &&
-                    Pipeline.Equals(other.Pipeline)
+                    IsAdmin == other.IsAdmin ||
+                    
+                    IsAdmin.Equals(other.IsAdmin)
                 );
         }
 
@@ -94,8 +94,8 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Pipeline != null)
-                    hashCode = hashCode * 59 + Pipeline.GetHashCode();
+                    
+                    hashCode = hashCode * 59 + IsAdmin.GetHashCode();
                 return hashCode;
             }
         }
@@ -103,12 +103,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(CreatePipelineResponse left, CreatePipelineResponse right)
+        public static bool operator ==(IsAdminResponse left, IsAdminResponse right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(CreatePipelineResponse left, CreatePipelineResponse right)
+        public static bool operator !=(IsAdminResponse left, IsAdminResponse right)
         {
             return !Equals(left, right);
         }

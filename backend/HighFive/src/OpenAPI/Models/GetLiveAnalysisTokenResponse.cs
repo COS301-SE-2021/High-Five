@@ -24,13 +24,13 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class CreatePipelineResponse : IEquatable<CreatePipelineResponse>
+    public class GetLiveAnalysisTokenResponse : IEquatable<GetLiveAnalysisTokenResponse>
     {
         /// <summary>
-        /// Gets or Sets Pipeline
+        /// Gets or Sets Token
         /// </summary>
-        [DataMember(Name="pipeline", EmitDefaultValue=false)]
-        public Pipeline Pipeline { get; set; }
+        [DataMember(Name="token", EmitDefaultValue=false)]
+        public string Token { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -39,8 +39,8 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class CreatePipelineResponse {\n");
-            sb.Append("  Pipeline: ").Append(Pipeline).Append("\n");
+            sb.Append("class GetLiveAnalysisTokenResponse {\n");
+            sb.Append("  Token: ").Append(Token).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -63,24 +63,24 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((CreatePipelineResponse)obj);
+            return obj.GetType() == GetType() && Equals((GetLiveAnalysisTokenResponse)obj);
         }
 
         /// <summary>
-        /// Returns true if CreatePipelineResponse instances are equal
+        /// Returns true if GetLiveAnalysisTokenResponse instances are equal
         /// </summary>
-        /// <param name="other">Instance of CreatePipelineResponse to be compared</param>
+        /// <param name="other">Instance of GetLiveAnalysisTokenResponse to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(CreatePipelineResponse other)
+        public bool Equals(GetLiveAnalysisTokenResponse other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    Pipeline == other.Pipeline ||
-                    Pipeline != null &&
-                    Pipeline.Equals(other.Pipeline)
+                    Token == other.Token ||
+                    Token != null &&
+                    Token.Equals(other.Token)
                 );
         }
 
@@ -94,8 +94,8 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Pipeline != null)
-                    hashCode = hashCode * 59 + Pipeline.GetHashCode();
+                    if (Token != null)
+                    hashCode = hashCode * 59 + Token.GetHashCode();
                 return hashCode;
             }
         }
@@ -103,12 +103,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(CreatePipelineResponse left, CreatePipelineResponse right)
+        public static bool operator ==(GetLiveAnalysisTokenResponse left, GetLiveAnalysisTokenResponse right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(CreatePipelineResponse left, CreatePipelineResponse right)
+        public static bool operator !=(GetLiveAnalysisTokenResponse left, GetLiveAnalysisTokenResponse right)
         {
             return !Equals(left, right);
         }

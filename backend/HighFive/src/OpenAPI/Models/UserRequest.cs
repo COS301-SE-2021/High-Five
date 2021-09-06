@@ -24,19 +24,14 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class StoreVideoResponse : IEquatable<StoreVideoResponse>
+    public class UserRequest : IEquatable<UserRequest>
     {
         /// <summary>
-        /// Gets or Sets Success
+        /// user id
         /// </summary>
-        [DataMember(Name="success", EmitDefaultValue=false)]
-        public bool Success { get; set; }
-
-        /// <summary>
-        /// Gets or Sets VideoId
-        /// </summary>
-        [DataMember(Name="videoId", EmitDefaultValue=false)]
-        public string VideoId { get; set; }
+        /// <value>user id</value>
+        [DataMember(Name="id", EmitDefaultValue=false)]
+        public string Id { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -45,9 +40,8 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class StoreVideoResponse {\n");
-            sb.Append("  Success: ").Append(Success).Append("\n");
-            sb.Append("  VideoId: ").Append(VideoId).Append("\n");
+            sb.Append("class UserRequest {\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -70,29 +64,24 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((StoreVideoResponse)obj);
+            return obj.GetType() == GetType() && Equals((UserRequest)obj);
         }
 
         /// <summary>
-        /// Returns true if StoreVideoResponse instances are equal
+        /// Returns true if UserRequest instances are equal
         /// </summary>
-        /// <param name="other">Instance of StoreVideoResponse to be compared</param>
+        /// <param name="other">Instance of UserRequest to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(StoreVideoResponse other)
+        public bool Equals(UserRequest other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    Success == other.Success ||
-                    
-                    Success.Equals(other.Success)
-                ) && 
-                (
-                    VideoId == other.VideoId ||
-                    VideoId != null &&
-                    VideoId.Equals(other.VideoId)
+                    Id == other.Id ||
+                    Id != null &&
+                    Id.Equals(other.Id)
                 );
         }
 
@@ -106,10 +95,8 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    
-                    hashCode = hashCode * 59 + Success.GetHashCode();
-                    if (VideoId != null)
-                    hashCode = hashCode * 59 + VideoId.GetHashCode();
+                    if (Id != null)
+                    hashCode = hashCode * 59 + Id.GetHashCode();
                 return hashCode;
             }
         }
@@ -117,12 +104,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(StoreVideoResponse left, StoreVideoResponse right)
+        public static bool operator ==(UserRequest left, UserRequest right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(StoreVideoResponse left, StoreVideoResponse right)
+        public static bool operator !=(UserRequest left, UserRequest right)
         {
             return !Equals(left, right);
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Org.OpenAPITools.Models;
 
 namespace src.Storage
 {
@@ -140,7 +141,7 @@ namespace src.Storage
             return sb.ToString();
         }
 
-        public bool SetBaseContainer(string container)
+        public async Task<bool> SetBaseContainer(string container)
         {
             /*
              *      Description:
@@ -176,7 +177,22 @@ namespace src.Storage
             return _baseContainer;
         }
 
-        public string RandomString()
+        public void StoreUserInfo(string id, string displayName, string email)
+        {
+            
+        }
+
+        public Task<List<User>> GetAllUsers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAllFilesInContainer(string container)
+        {
+            return null;
+        }
+
+        public string RandomString(int length=5)
         {
             /*
              *      Description:
@@ -186,7 +202,7 @@ namespace src.Storage
              */
             
             var str = "";
-            for(var i =0; i<5; i++)
+            for(var i =0; i<length; i++)
             {
                 var a = _random.Next(Alphanumeric.Length);
                 str += Alphanumeric.ElementAt(a);

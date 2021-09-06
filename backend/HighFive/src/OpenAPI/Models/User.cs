@@ -24,13 +24,31 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class CreatePipelineResponse : IEquatable<CreatePipelineResponse>
+    public class User : IEquatable<User>
     {
         /// <summary>
-        /// Gets or Sets Pipeline
+        /// Gets or Sets DisplayName
         /// </summary>
-        [DataMember(Name="pipeline", EmitDefaultValue=false)]
-        public Pipeline Pipeline { get; set; }
+        [DataMember(Name="displayName", EmitDefaultValue=false)]
+        public string DisplayName { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Email
+        /// </summary>
+        [DataMember(Name="email", EmitDefaultValue=false)]
+        public string Email { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Id
+        /// </summary>
+        [DataMember(Name="id", EmitDefaultValue=false)]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or Sets IsAdmin
+        /// </summary>
+        [DataMember(Name="isAdmin", EmitDefaultValue=false)]
+        public bool IsAdmin { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -39,8 +57,11 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class CreatePipelineResponse {\n");
-            sb.Append("  Pipeline: ").Append(Pipeline).Append("\n");
+            sb.Append("class User {\n");
+            sb.Append("  DisplayName: ").Append(DisplayName).Append("\n");
+            sb.Append("  Email: ").Append(Email).Append("\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("  IsAdmin: ").Append(IsAdmin).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -63,24 +84,39 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((CreatePipelineResponse)obj);
+            return obj.GetType() == GetType() && Equals((User)obj);
         }
 
         /// <summary>
-        /// Returns true if CreatePipelineResponse instances are equal
+        /// Returns true if User instances are equal
         /// </summary>
-        /// <param name="other">Instance of CreatePipelineResponse to be compared</param>
+        /// <param name="other">Instance of User to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(CreatePipelineResponse other)
+        public bool Equals(User other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    Pipeline == other.Pipeline ||
-                    Pipeline != null &&
-                    Pipeline.Equals(other.Pipeline)
+                    DisplayName == other.DisplayName ||
+                    DisplayName != null &&
+                    DisplayName.Equals(other.DisplayName)
+                ) && 
+                (
+                    Email == other.Email ||
+                    Email != null &&
+                    Email.Equals(other.Email)
+                ) && 
+                (
+                    Id == other.Id ||
+                    Id != null &&
+                    Id.Equals(other.Id)
+                ) && 
+                (
+                    IsAdmin == other.IsAdmin ||
+                    
+                    IsAdmin.Equals(other.IsAdmin)
                 );
         }
 
@@ -94,8 +130,14 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Pipeline != null)
-                    hashCode = hashCode * 59 + Pipeline.GetHashCode();
+                    if (DisplayName != null)
+                    hashCode = hashCode * 59 + DisplayName.GetHashCode();
+                    if (Email != null)
+                    hashCode = hashCode * 59 + Email.GetHashCode();
+                    if (Id != null)
+                    hashCode = hashCode * 59 + Id.GetHashCode();
+                    
+                    hashCode = hashCode * 59 + IsAdmin.GetHashCode();
                 return hashCode;
             }
         }
@@ -103,12 +145,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(CreatePipelineResponse left, CreatePipelineResponse right)
+        public static bool operator ==(User left, User right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(CreatePipelineResponse left, CreatePipelineResponse right)
+        public static bool operator !=(User left, User right)
         {
             return !Equals(left, right);
         }

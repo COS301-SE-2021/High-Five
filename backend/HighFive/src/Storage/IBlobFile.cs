@@ -11,7 +11,7 @@ namespace src.Storage
         public string Name { get; }
         public void AddMetadata(string key, string value);
         public string GetMetaData(string key);
-        public Task UploadFile(IFormFile newFile);
+        public Task UploadFile(IFormFile newFile, string contentType="");
         public Task UploadFile(string path, string contentType="");
         public Task UploadFileFromStream(Stream stream, string contentType="");
         public Task UploadFileFromByteArray(byte[] array, string contentType = "");

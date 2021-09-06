@@ -24,19 +24,26 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class StoreImageResponse : IEquatable<StoreImageResponse>
+    public class Tool : IEquatable<Tool>
     {
         /// <summary>
-        /// Gets or Sets Success
+        /// Gets or Sets ToolId
         /// </summary>
-        [DataMember(Name="success", EmitDefaultValue=false)]
-        public bool Success { get; set; }
+        [DataMember(Name="toolId", EmitDefaultValue=false)]
+        public string ToolId { get; set; }
 
         /// <summary>
-        /// Gets or Sets ImageId
+        /// Gets or Sets ToolName
         /// </summary>
-        [DataMember(Name="imageId", EmitDefaultValue=false)]
-        public string ImageId { get; set; }
+        [DataMember(Name="toolName", EmitDefaultValue=false)]
+        public string ToolName { get; set; }
+
+        /// <summary>
+        /// Analysis or drawing
+        /// </summary>
+        /// <value>Analysis or drawing</value>
+        [DataMember(Name="toolType", EmitDefaultValue=false)]
+        public string ToolType { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -45,9 +52,10 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class StoreImageResponse {\n");
-            sb.Append("  Success: ").Append(Success).Append("\n");
-            sb.Append("  ImageId: ").Append(ImageId).Append("\n");
+            sb.Append("class Tool {\n");
+            sb.Append("  ToolId: ").Append(ToolId).Append("\n");
+            sb.Append("  ToolName: ").Append(ToolName).Append("\n");
+            sb.Append("  ToolType: ").Append(ToolType).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -70,29 +78,34 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((StoreImageResponse)obj);
+            return obj.GetType() == GetType() && Equals((Tool)obj);
         }
 
         /// <summary>
-        /// Returns true if StoreImageResponse instances are equal
+        /// Returns true if Tool instances are equal
         /// </summary>
-        /// <param name="other">Instance of StoreImageResponse to be compared</param>
+        /// <param name="other">Instance of Tool to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(StoreImageResponse other)
+        public bool Equals(Tool other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    Success == other.Success ||
-                    
-                    Success.Equals(other.Success)
+                    ToolId == other.ToolId ||
+                    ToolId != null &&
+                    ToolId.Equals(other.ToolId)
                 ) && 
                 (
-                    ImageId == other.ImageId ||
-                    ImageId != null &&
-                    ImageId.Equals(other.ImageId)
+                    ToolName == other.ToolName ||
+                    ToolName != null &&
+                    ToolName.Equals(other.ToolName)
+                ) && 
+                (
+                    ToolType == other.ToolType ||
+                    ToolType != null &&
+                    ToolType.Equals(other.ToolType)
                 );
         }
 
@@ -106,10 +119,12 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    
-                    hashCode = hashCode * 59 + Success.GetHashCode();
-                    if (ImageId != null)
-                    hashCode = hashCode * 59 + ImageId.GetHashCode();
+                    if (ToolId != null)
+                    hashCode = hashCode * 59 + ToolId.GetHashCode();
+                    if (ToolName != null)
+                    hashCode = hashCode * 59 + ToolName.GetHashCode();
+                    if (ToolType != null)
+                    hashCode = hashCode * 59 + ToolType.GetHashCode();
                 return hashCode;
             }
         }
@@ -117,12 +132,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(StoreImageResponse left, StoreImageResponse right)
+        public static bool operator ==(Tool left, Tool right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(StoreImageResponse left, StoreImageResponse right)
+        public static bool operator !=(Tool left, Tool right)
         {
             return !Equals(left, right);
         }
