@@ -34,11 +34,12 @@ public class KafkaTopicListener extends ConnectionListener<String> {
         EventLogger.getLogger().info("Listening for new servers");
 
         while (true) {
-            Runtime rt = Runtime.getRuntime();
-            Process proc = rt.exec(System.getenv("KAFKA_LIST_TOPICS"));
+            //Runtime rt = Runtime.getRuntime();
+            ProcessBuilder builder = new ProcessBuilder(System.getenv("KAFKA_LIST_TOPICS").split(" "));
+            Process proc = builder.start();
 
 
-            String line = null;
+            String line;
 
             BufferedReader inputStreamReader =
                     new BufferedReader(new InputStreamReader(proc.getInputStream()));

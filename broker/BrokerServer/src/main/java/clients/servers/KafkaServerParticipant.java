@@ -1,13 +1,11 @@
 package clients.servers;
 
 import io.reactivex.rxjava3.core.Observer;
+import logger.EventLogger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
 public class KafkaServerParticipant extends ServerParticipant {
 
@@ -15,6 +13,7 @@ public class KafkaServerParticipant extends ServerParticipant {
 
     public KafkaServerParticipant(Observer<String> observable, List<String> topics) {
         super(observable);
+        EventLogger.getLogger().info("Creating new KafkaServerParticipant");
         this.topics = topics;
     }
 
@@ -29,6 +28,7 @@ public class KafkaServerParticipant extends ServerParticipant {
      */
     @Override
     public void listen() throws InterruptedException {
+        EventLogger.getLogger().info("Listening for new messages from servers");
         while (true) {
             for (String topic: topics) {
                 Runtime rt = Runtime.getRuntime();
@@ -37,6 +37,7 @@ public class KafkaServerParticipant extends ServerParticipant {
                 try {
                     proc = rt.exec(exec);
                 } catch (IOException e) {
+                    EventLogger.getLogger().error(e.getMessage());
                     beat = false;
                     return;
                 }
@@ -52,18 +53,20 @@ public class KafkaServerParticipant extends ServerParticipant {
                         if ((line = inputStreamReader.readLine()) == null) break;
                     } catch (IOException e) {
                         beat = false;
+                        EventLogger.getLogger().error(e.getMessage());
                         return;
                     }
                     msg = line;
                 }
 
                 if (msg == null) {
-                    return;
+                    break;
                 }
 
                 //delete topic if the last message sent is older than 45 seconds. This means the server is
                 //offline.
                 if (((int) System.currentTimeMillis()/1000L) - getMessageTime(msg) > 45 ) {
+                    EventLogger.getLogger().info("Deleting topic: " + topic);
                     deleteTopic(topic);
                 } else {
                     notify(msg);
@@ -99,5 +102,31 @@ public class KafkaServerParticipant extends ServerParticipant {
             return 0;
         }
         return Long.parseLong(timePattern.group(1));
+    }
+
+    /**
+     * Fetches the last offset from a Kafka topic. This is used to fetch the latest
+     * message from the topic.
+     * @param topic Kafka topic to get offset from
+     * @return Latest offset
+     */
+    private int getLastOffset(String topic) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(System.getenv("KAFKA_GET_OFFSET")
+                .replace("{topic}", topic).split(" "));
+
+        Process process= builder.start();
+
+        BufferedReader inputStreamReader =
+                new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = inputStreamReader.readLine();
+        process.destroy();
+
+        Matcher matcher = Pattern.compile(topic + ":0:(\\d+)").matcher(line);
+
+        if (!matcher.find()) {
+            return -1;
+        } else {
+            return Integer.parseInt(matcher.group(1)) - 1;
+        }
     }
 }
