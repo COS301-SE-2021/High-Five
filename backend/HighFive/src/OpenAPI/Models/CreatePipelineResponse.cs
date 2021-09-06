@@ -27,10 +27,10 @@ namespace Org.OpenAPITools.Models
     public class CreatePipelineResponse : IEquatable<CreatePipelineResponse>
     {
         /// <summary>
-        /// Gets or Sets PipelineId
+        /// Gets or Sets Pipeline
         /// </summary>
-        [DataMember(Name="pipelineId", EmitDefaultValue=false)]
-        public string PipelineId { get; set; }
+        [DataMember(Name="pipeline", EmitDefaultValue=false)]
+        public Pipeline Pipeline { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -40,7 +40,7 @@ namespace Org.OpenAPITools.Models
         {
             var sb = new StringBuilder();
             sb.Append("class CreatePipelineResponse {\n");
-            sb.Append("  PipelineId: ").Append(PipelineId).Append("\n");
+            sb.Append("  Pipeline: ").Append(Pipeline).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -78,9 +78,9 @@ namespace Org.OpenAPITools.Models
 
             return 
                 (
-                    PipelineId == other.PipelineId ||
-                    PipelineId != null &&
-                    PipelineId.Equals(other.PipelineId)
+                    Pipeline == other.Pipeline ||
+                    Pipeline != null &&
+                    Pipeline.Equals(other.Pipeline)
                 );
         }
 
@@ -94,8 +94,8 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (PipelineId != null)
-                    hashCode = hashCode * 59 + PipelineId.GetHashCode();
+                    if (Pipeline != null)
+                    hashCode = hashCode * 59 + Pipeline.GetHashCode();
                 return hashCode;
             }
         }

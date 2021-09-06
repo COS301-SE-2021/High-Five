@@ -14,14 +14,6 @@ import javax.inject.Inject
 class VideoFragmentRecyclerViewAdapterImpl @Inject constructor():
     VideoFragmentRecyclerViewAdapter() {
 
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder).
-     */
-    class ViewHolder(view: FragmentVideoItemBinding) : RecyclerView.ViewHolder(view.root) {
-        val videoItem: FragmentVideoItemBinding = view
-    }
-
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
@@ -49,5 +41,4 @@ class VideoFragmentRecyclerViewAdapterImpl @Inject constructor():
             0
         }
     }
-
 }

@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Org.OpenAPITools.Controllers;
 using Org.OpenAPITools.Models;
+using src.Websockets;
 
 namespace src.Subsystems.MediaStorage
 {
@@ -28,6 +33,7 @@ namespace src.Subsystems.MediaStorage
             {
                 ConfigureStorageManager();
             }
+            
             var resultList = _mediaStorageService.GetAllImages();
             var result = new GetAllImagesResponse
             {
@@ -56,12 +62,14 @@ namespace src.Subsystems.MediaStorage
             {
                 ConfigureStorageManager();
             }
+            
             var resultList = _mediaStorageService.GetAnalyzedImages()?.Images;
             var result = new GetAnalyzedImagesResponse
             {
                 Images = resultList
             };
             return StatusCode(200, result);
+
         }
 
         public override IActionResult GetAnalyzedVideos()
@@ -78,7 +86,7 @@ namespace src.Subsystems.MediaStorage
             return StatusCode(200, result);
         }
 
-        public override async Task<IActionResult> StoreImage(IFormFile file)
+         public override async Task<IActionResult> StoreImage(IFormFile file)
          {
              if (!_baseContainerSet)
              {
@@ -92,11 +100,7 @@ namespace src.Subsystems.MediaStorage
                      return StatusCode(400, response400);
                  }
 
-                 var response = new StoreVideoResponse
-                 {
-                     VideoId = "Image stored successfully", Success = true
-                 };
-                 await _mediaStorageService.StoreImage(file);
+                 var response = await _mediaStorageService.StoreImage(file);
                  return StatusCode(200, response);
              }
              catch (Exception e)
@@ -106,7 +110,7 @@ namespace src.Subsystems.MediaStorage
              }
          }
 
-         public override async Task<IActionResult> StoreVideo(IFormFile file)
+        public override async Task<IActionResult> StoreVideo(IFormFile file)
         {
             if (!_baseContainerSet)
             {
@@ -119,12 +123,8 @@ namespace src.Subsystems.MediaStorage
                     var response400 = new EmptyObject() {Success = false, Message = "The uploaded file is null."};
                     return StatusCode(400, response400);
                 }
-
-                var response = new StoreVideoResponse
-                {
-                    VideoId = "Video stored successfully.", Success = true
-                };
-                await _mediaStorageService.StoreVideo(file);
+                
+                var response = await _mediaStorageService.StoreVideo(file);
                 return StatusCode(200, response);
             }
             catch (Exception e)
@@ -134,7 +134,33 @@ namespace src.Subsystems.MediaStorage
             }
         }
 
-        public override IActionResult DeleteImage(DeleteImageRequest deleteImageRequest)
+         public override IActionResult DeleteAnalyzedImage(DeleteImageRequest deleteImageRequest)
+         {
+             if (!_baseContainerSet)
+             {
+                 ConfigureStorageManager();
+             }
+             var response = new EmptyObject {Success = true};
+             if (_mediaStorageService.DeleteAnalyzedImage(deleteImageRequest).Result) return StatusCode(200, response);
+             response.Success = false;
+             response.Message = "Image could not be deleted.";
+             return StatusCode(400, response);
+         }
+
+         public override IActionResult DeleteAnalyzedVideo(DeleteVideoRequest deleteVideoRequest)
+         {
+             if (!_baseContainerSet)
+             {
+                 ConfigureStorageManager();
+             }
+             var response = new EmptyObject {Success = true};
+             if (_mediaStorageService.DeleteAnalyzedVideo(deleteVideoRequest).Result) return StatusCode(200, response);
+             response.Success = false;
+             response.Message = "Video could not be deleted.";
+             return StatusCode(400, response);
+         }
+
+         public override IActionResult DeleteImage(DeleteImageRequest deleteImageRequest)
         {
             if (!_baseContainerSet)
             {
@@ -169,7 +195,14 @@ namespace src.Subsystems.MediaStorage
             }
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
-            _mediaStorageService.SetBaseContainer(jsonToken.Subject);
+            var alreadyExisted = _mediaStorageService.SetBaseContainer(jsonToken.Subject);
+            if (!alreadyExisted)
+            {
+                var id = jsonToken.Subject;
+                var displayName = jsonToken.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
+                var email = jsonToken.Claims.FirstOrDefault(x => x.Type == "emails")?.Value;
+                _mediaStorageService.StoreUserInfo(id,displayName,email);
+            }
             _baseContainerSet = true;
         }
 

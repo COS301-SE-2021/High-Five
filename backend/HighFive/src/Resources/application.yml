@@ -10,6 +10,8 @@ tags:
   - name: "Test"
   - name: "Pipelines"
   - name: "Analysis"
+  - name: "User"
+  - name: "Tools"
 
   #==========================================================
   #     PATHS
@@ -76,10 +78,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/storeVideoResponse'
+                $ref: '#/components/schemas/videoMetaData'
 
   /media/getAllVideos:
-    post:
+    get:
       tags:
         - "MediaStorage"
       description: Endpoint for Get All Videos use case
@@ -130,10 +132,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/storeImageResponse'
+                $ref: '#/components/schemas/imageMetaData'
 
   /media/getAllImages:
-    post:
+    get:
       tags:
         - "MediaStorage"
       description: Endpoint for Get All Images use case
@@ -167,7 +169,7 @@ paths:
                 $ref: '#/components/schemas/emptyObject'
 
   /media/getAnalyzedImages:
-    post:
+    get:
       tags:
         - "MediaStorage"
       description: Endpoint for Get Analyzed Images use case
@@ -181,7 +183,7 @@ paths:
                 $ref: '#/components/schemas/getAnalyzedImagesResponse'
 
   /media/getAnalyzedVideos:
-    post:
+    get:
       tags:
         - "MediaStorage"
       description: Endpoint for Get Analyzed Videos use case
@@ -193,6 +195,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getAnalyzedVideosResponse'
+
+  /media/deleteAnalyzedImage:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Delete Analyzed Image use case
+      operationId: DeleteAnalyzedImage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteImageRequest'
+      responses:
+        "200":
+          description: Deletes analyzed image
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /media/deleteAnalyzedVideo:
+    post:
+      tags:
+        - "MediaStorage"
+      description: Endpoint for Delete Analyzed Video use case
+      operationId: DeleteAnalyzedVideo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteVideoRequest'
+      responses:
+        "200":
+          description: Deletes analyzed video
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
   #==========================================================
   #     PIPELINES SUBSYSTEM PATHING
   #==========================================================
@@ -218,7 +260,7 @@ paths:
                 $ref: '#/components/schemas/createPipelineResponse'
 
   /pipelines/getPipelines:
-    post:
+    get:
       tags:
         - "Pipelines"
       description: Endpoint for Get Pipelines use case
@@ -232,7 +274,7 @@ paths:
                 $ref: '#/components/schemas/getPipelinesResponse'
 
   /pipelines/getPipelineIds:
-    post:
+    get:
       tags:
         - "Pipelines"
       description: Endpoint for Get Pipeline Ids use case
@@ -326,7 +368,7 @@ paths:
                 $ref: '#/components/schemas/emptyObject'
 
   /pipelines/getAllTools:
-    post:
+    get:
       tags:
         - "Pipelines"
       description: Endpoint for Get All Tools use case
@@ -345,26 +387,259 @@ paths:
   #     ANALYSIS SUBSYSTEM PATHING
   #==========================================================
 
-  /analysis/analyzeMedia:
+  /analysis/analyzeImage:
     post:
       tags:
         - "Analysis"
-      description: Endpoint for Analyze Media use case
-      operationId: AnalyzeMedia
+      description: Endpoint for Analyze Image use case
+      operationId: AnalyzeImage
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/analyzeMediaRequest'
+              $ref: '#/components/schemas/analyzeImageRequest'
       responses:
         "200":
           description: A url of the analyzed media is returned
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/analyzeMediaResponse'
+                $ref: '#/components/schemas/analyzedImageMetaData'
 
+  /analysis/analyzeVideo:
+    post:
+      tags:
+        - "Analysis"
+      description: Endpoint for Analyze Video use case
+      operationId: AnalyzeVideo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/analyzeVideoRequest'
+      responses:
+        "200":
+          description: A url of the analyzed media is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/analyzedVideoMetaData'
+
+  /analysis/getLiveAnalysisToken:
+    get:
+      tags:
+        - "Analysis"
+      description: Endpoint for Get Live Analysis Token use case
+      operationId: GetLiveAnalysisToken
+      responses:
+        "200":
+          description: Returns a token that can be used to connect a client to the analysis engine for live streaming/analysis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getLiveAnalysisTokenResponse'
+
+  #==========================================================
+  #     USER SUBSYSTEM PATHING
+  #==========================================================
+
+  /users/getAllUsers:
+    get:
+      tags:
+        - "User"
+      description: Endpoint for Get All Users use case
+      operationId: Get All Users
+      responses:
+        "200":
+          description: All users are returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllUsersResponse'
+
+  /users/deleteMedia:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Delete Media use case
+      operationId: DeleteMedia
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userRequest'
+      responses:
+        "200":
+          description: Called by an admin to delete all the media of another user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /users/deleteOwnMedia:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Delete Own Media use case
+      operationId: DeleteOwnMedia
+      responses:
+        "200":
+          description: Called by a user to delete all of their own media
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /users/upgradeToAdmin:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Upgrade To Admin use case
+      operationId: UpgradeToAdmin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userRequest'
+      responses:
+        "200":
+          description: Called by an admin to upgrade a normal use to an administrator
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /users/isAdmin:
+    get:
+      tags:
+        - "User"
+      description: Endpoint for Is Admin use case
+      operationId: IsAdmin
+      responses:
+        "200":
+          description: Used to verify whether the currently logged in user is an admin or not
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/isAdminResponse'
+
+  /users/revokeAdmin:
+    post:
+      tags:
+        - "User"
+      description: Endpoint for Revoke Admin use case
+      operationId: RevokeAdmin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userRequest'
+      responses:
+        "200":
+          description: Used to remove admin rights from an existing admin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/isAdminResponse'
+
+  #==========================================================
+  #     USER SUBSYSTEM PATHING
+  #==========================================================
+
+  /tools/uploadAnalysisTool:
+    post:
+      tags:
+        - "Tools"
+      description: Endpoint for Upload Analysis Tool use case
+      operationId: UploadAnalysisTool
+      requestBody:
+        required: true
+        description: Receives .cs source code and model for analysis tool.
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/storeAnalysisToolRequest'
+      responses:
+        "200":
+          description: The Analysis Tool has been uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /tools/uploadDrawingTool:
+    post:
+      tags:
+        - "Tools"
+      description: Endpoint for Upload Drawing Tool use case
+      operationId: UploadDrawingTool
+      requestBody:
+        required: true
+        description: Receives .cs source code for drawing.
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/storeDrawingToolRequest'
+      responses:
+        "200":
+          description: The Drawing Tool has been uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /tools/deleteTool:
+    post:
+      tags:
+        - "Tools"
+      description: Endpoint for Delete Tool use case
+      operationId: DeleteTool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteToolRequest'
+      responses:
+        "200":
+          description: The Tool has been deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /tools/getAllTools:
+    get:
+      tags:
+        - "Tools"
+      description: Endpoint for Delete Tool use case
+      operationId: GetTools
+      responses:
+        "200":
+          description: All tools have been returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllToolsResponse'
+
+  /tools/getToolTypes:
+    get:
+      tags:
+        - "Tools"
+      description: Endpoint for Get Tool Types use case
+      operationId: GetToolTypes
+      responses:
+        "200":
+          description: All tool types have been returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getToolTypesResponse'
 
   #==========================================================
   #     SCHEMAS
@@ -399,28 +674,12 @@ components:
           type: string
           format: binary
 
-    storeVideoResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        videoId:
-          type: string
-
     storeImageRequest:
       type: object
       properties:
         file:
           type: string
           format: binary
-
-    storeImageResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        imageId:
-          type: string
 
     getAllVideosResponse:
       type: object
@@ -481,7 +740,7 @@ components:
         id:
           type: string
           description: unique id assossciated with a certain image stored on the blob storage
-          
+
     getAnalyzedImagesResponse:
       type: object
       properties:
@@ -529,7 +788,9 @@ components:
           type: string
         pipelineId:
           type: string
-        
+        thumbnail:
+          type: string
+
 
     #==========================================================
     #     PIPELINES COMPONENTS
@@ -544,8 +805,8 @@ components:
     createPipelineResponse:
       type: object
       properties:
-        pipelineId:
-          type: string
+        pipeline:
+          $ref: '#/components/schemas/pipeline'
 
     getPipelinesResponse:
       type: object
@@ -624,22 +885,131 @@ components:
     #     ANALYSIS COMPONENTS
     #==========================================================
 
-    analyzeMediaRequest:
+    analyzeImageRequest:
       type: object
       properties:
-        mediaId:
+        imageId:
           type: string
         pipelineId:
           type: string
-        mediaType:
+
+    analyzeVideoRequest:
+      type: object
+      properties:
+        videoId:
           type: string
-          description: This string can only be "image" or "video"
+        pipelineId:
+          type: string
 
     analyzeMediaResponse:
       type: object
       properties:
         url:
-          type: string      
+          type: string
+
+    getLiveAnalysisTokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+
+    #==========================================================
+    #     USER COMPONENTS
+    #==========================================================
+
+    getAllUsersResponse:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/user'
+
+    user:
+      type: object
+      properties:
+        displayName:
+          type: string
+        email:
+          type: string
+        id:
+          type: string
+        isAdmin:
+          type: boolean
+
+    userRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: user id
+
+    isAdminResponse:
+      type: object
+      properties:
+        isAdmin:
+          type: boolean
+
+    #==========================================================
+    #     TOOLS COMPONENTS
+    #==========================================================
+
+    storeAnalysisToolRequest:
+      type: object
+      properties:
+        sourceCode:
+          type: string
+          format: binary
+        model:
+          type: string
+          format: binary
+        toolName:
+          type: string
+
+    storeDrawingToolRequest:
+      type: object
+      properties:
+        sourceCode:
+          type: string
+          format: binary
+        toolName:
+          type: string
+
+    deleteToolRequest:
+      type: object
+      properties:
+        toolType:
+          type: string
+          description: Analysis or Drawing
+        toolId:
+          type: string
+
+    getAllToolsResponse:
+      type: object
+      properties:
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/tool'
+
+    tool:
+      type: object
+      properties:
+        toolId:
+          type: string
+        toolName:
+          type: string
+        toolType:
+          type: string
+          description: Analysis or drawing
+    
+    getToolTypesResponse:
+      type: object
+      properties:
+        toolTypes:
+          type: array
+          items:
+            type: string
 
     #==========================================================
     #     GENERIC COMPONENTS
