@@ -13,9 +13,10 @@ namespace analysis_engine
     {
         public static void Main(string[] args)
         {
-            var originalImage = CvInvoke.Imread("C:\\Users\\Bieldt\\OneDrive\\Pictures\\cows.jpg", ImreadModes.Unchanged);
+            var originalImage = CvInvoke.Imread(@"C:\Users\hanne\RiderProjects\ConsoleApp1\ConsoleApp1\Tensorflow\data\cows.jpg", ImreadModes.Unchanged);
             var watch = new Stopwatch();
             var runner = new SelfDrawingAnimalRecognitionTool();
+            runner.Init();
             var data = new Data();
             data.Frame.Image = originalImage.ToImage<Rgb, byte>();
             var result=runner.Process(data);
@@ -28,7 +29,7 @@ namespace analysis_engine
             
             watch.Stop();
             Console.WriteLine("Execution time: " + watch.ElapsedMilliseconds + "ms");
-            CvInvoke.Imwrite("C:\\Users\\Bieldt\\OneDrive\\Pictures\\output.jpg", result.Frame.Image);
+            CvInvoke.Imwrite(@"C:\Users\hanne\RiderProjects\ConsoleApp1\ConsoleApp1\Tensorflow\data\output.jpg", result.Frame.Image);
             
         }
 

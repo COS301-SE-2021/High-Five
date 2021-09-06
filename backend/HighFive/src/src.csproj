@@ -22,7 +22,6 @@
         <PackageReference Include="FFMediaToolkit" Version="4.1.1" />
         <PackageReference Include="IronPython" Version="3.4.0-alpha1" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.0" />
-        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.8.1" />
         <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.8.1" />
         <PackageReference Include="Microsoft.WindowsAzure.ConfigurationManager" Version="3.2.3" />
         <PackageReference Include="Moq" Version="4.16.1" />
