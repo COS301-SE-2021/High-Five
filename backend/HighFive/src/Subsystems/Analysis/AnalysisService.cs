@@ -86,7 +86,7 @@ namespace src.Subsystems.Analysis
                 return response;
             }
 
-            await _analysisSocket.Send(JsonConvert.SerializeObject(request));
+            await _analysisSocket.Send(JsonConvert.SerializeObject(fullRequest));
             var responseString = _analysisSocket.Receive().Result;
             response = JsonConvert.DeserializeObject<AnalyzedImageMetaData>(responseString);
 
@@ -139,7 +139,7 @@ namespace src.Subsystems.Analysis
                 return response;
             }
             
-            await _analysisSocket.Send(JsonConvert.SerializeObject(request));
+            await _analysisSocket.Send(JsonConvert.SerializeObject(fullRequest));
             var responseString = _analysisSocket.Receive().Result;
             response = JsonConvert.DeserializeObject<AnalyzedVideoMetaData>(responseString);
             

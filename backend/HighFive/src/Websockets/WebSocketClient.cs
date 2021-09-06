@@ -10,12 +10,13 @@ namespace src.Websockets
 {
     public class WebSocketClient: IWebSocketClient
     {
-        private readonly ClientWebSocket _socket = null;
+        private ClientWebSocket _socket = null;
 
         public async Task Connect(string uri)
         {
             if (_socket == null)
             {
+                _socket = new ClientWebSocket();
                 await _socket.ConnectAsync(new Uri(uri), CancellationToken.None);
             }
         }
