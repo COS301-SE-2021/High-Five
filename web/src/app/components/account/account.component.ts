@@ -4,6 +4,7 @@ import {MsalService} from '@azure/msal-angular';
 import {UsersService} from '../../services/users/users.service';
 import {User} from '../../models/user';
 import {UserToolsService} from '../../services/user-tools/user-tools.service';
+import {CreateToolComponent} from '../create-tool/create-tool.component';
 
 @Component({
   selector: 'app-account',
@@ -16,6 +17,7 @@ export class AccountComponent implements OnInit {
 
   constructor(private modalController: ModalController, public msalService: MsalService,
               public usersService: UsersService, public userToolsService: UserToolsService) {
+
     this.option = 'details';
   }
 
@@ -56,7 +58,15 @@ export class AccountComponent implements OnInit {
     await this.usersService.purgeOwnMedia();
   }
 
-  public addUserTool() {
-
+  public async addUserTool() {
+    this.modalController.dismiss({dismissed: true}).then(() => this.modalController.create({
+      component: CreateToolComponent,
+      cssClass: 'accountPreferencesModal',
+      showBackdrop: false,
+      animated: true,
+      backdropDismiss: true
+    }).then((c) => {
+      c.present();
+    }));
   }
 }

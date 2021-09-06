@@ -31,3 +31,5 @@ export * from './storeVideoRequest';
 export * from './user';
 export * from './userRequest';
 export * from './videoMetaData';
+export * from './userTool';
+export * from './metaData';

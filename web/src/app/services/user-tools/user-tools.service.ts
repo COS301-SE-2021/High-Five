@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {UserTool} from '../../models/userTool';
+import {MetaData} from '../../models/metaData';
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +27,8 @@ export class UserToolsService {
   }
 
 
-  public async addUserTool(name: string, id: string, onnxModel: any, toolClassFile: any, metaDataType) {
-    this.userTools = this.userTools.concat({id, name, toolClassFile, metaDataType,onnxModel});
+  public async addUserTool(name: string, id: string, onnxModel: any, toolClassFile: any, metaDataType: MetaData, type: string) {
+    this.userTools = this.userTools.concat({id, name, toolClassFile, metaDataType, onnxModel, type});
   }
 
 
@@ -39,6 +40,13 @@ export class UserToolsService {
 
   public async fetchAllTools() {
     //this.tools = await this.pipelinesService.getAllTools().toPromise();
-    this.userTools = [{id: 'x', toolClassFile: 'some', name: 'Tool1', metaDataType: 'NAN'}];
+    this.userTools = [{
+      id: 'x',
+      toolClassFile: 'some',
+      name: 'Tool1',
+      onnxModel: 'xd',
+      metaDataType: {id: 'xd2meta', name: 'boxbox'},
+      type: 'analysis'
+    }];
   }
 }
