@@ -24,7 +24,7 @@ public class BaseCollector implements Collector {
     @Override
     public void setNextCollector(Collector nextCollector) {
         if (this.nextCollector != null) {
-            nextCollector.setNextCollector(nextCollector);
+            this.nextCollector.setNextCollector(nextCollector);
         } else {
             this.nextCollector = nextCollector;
         }

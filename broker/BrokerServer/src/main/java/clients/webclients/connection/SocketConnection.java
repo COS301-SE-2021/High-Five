@@ -24,7 +24,7 @@ public class SocketConnection implements Connection{
     }
 
     @Override
-    public Writer getWriter() throws IOException {
+    public BufferedWriter getWriter() throws IOException {
         return new BufferedWriter(new OutputStreamWriter(
                 connection.getOutputStream()));
     }

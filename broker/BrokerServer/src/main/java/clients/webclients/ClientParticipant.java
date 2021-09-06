@@ -50,7 +50,7 @@ public class ClientParticipant extends WebClient{
             String requestData = reader.readLine();
 
             //Response object for sending a response to the client
-            Writer out = connection.getWriter();
+            BufferedWriter out = connection.getWriter();
 
             try {
                 //Decodes the JSON message

@@ -42,7 +42,8 @@ public class KafkaServerParticipant extends ServerParticipant {
                 }
 
                 //No messages were found
-                if (offset <= 0 ) {
+                if (offset < 0 ) {
+                    EventLogger.getLogger().info("No messages found!");
                     continue;
                 }
 

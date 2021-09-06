@@ -27,8 +27,10 @@ public class TelemetryBuilder {
                 setCollector(TelemetryCollector.GPU);
             }
         }
-        telemetryCollector.setNextCollector(newCollector);
-        telemetryCollector.setWeight(weight++);
+        if (newCollector != null) {
+            telemetryCollector.setNextCollector(newCollector);
+            telemetryCollector.setWeight(weight++);
+        }
         return this;
     }
 

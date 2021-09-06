@@ -17,10 +17,10 @@ public class VideoAnalysisStrategy implements AnalysisStrategy{
      * @param writer Writer to inform web client that media is going to be analysed
      */
     @Override
-    public void processRequest(AnalysisRequest request, ServerInformation information, Writer writer) throws IOException {
+    public void processRequest(AnalysisRequest request, ServerInformation information, BufferedWriter writer) throws IOException {
         AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getMediaId(), request.getPipelineId());
         EventLogger.getLogger().info("Sending command to server " + information.getServerId());
-        String command = System.getenv("KAFKA_SEND_COMMAND").replace("{topic}", information.getServerId());
+        //String command = System.getenv("KAFKA_SEND_COMMAND").replace("{topic}", information.getServerId());
 
 
 //        BufferedWriter outputStreamWriter =
@@ -30,7 +30,6 @@ public class VideoAnalysisStrategy implements AnalysisStrategy{
 //        outputStreamWriter.flush();
 //        proc.destroy();
 
-        writer.write("Analysis request sent\n");
-        writer.flush();
+        writer.append("Analysis request sent\n").flush();
     }
 }

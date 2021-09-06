@@ -1,9 +1,6 @@
 package clients.webclients.connection;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 
 /**
  * Interface for connections to a client. A connection could be over
@@ -23,7 +20,7 @@ public interface Connection {
      *
      * @return Writer to use for incoming communication.
      */
-    Writer getWriter() throws IOException;
+    BufferedWriter getWriter() throws IOException;
 
     /**
      * Closes the connection

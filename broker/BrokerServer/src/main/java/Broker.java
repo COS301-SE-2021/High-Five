@@ -85,7 +85,6 @@ public class Broker {
                 //Decodes the JSON message
                 ServerInformation information;
                 try {
-                    EventLogger.getLogger().info("Decoding server information from JSON message");
                     JsonElement element = new Gson().fromJson(message, JsonElement.class);
                     information = ServerInformationWrapper.get().deserialize(element, null, null);
 
