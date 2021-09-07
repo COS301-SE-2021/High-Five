@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "analysis_engine", "analysis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "broker_analysis_client", "broker_analysis_client\broker_analysis_client.csproj", "{2DCD610F-BEC3-465B-BD23-7069F66C612E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "analysis_engine_v2", "analysis_engine_v2\analysis_engine_v2.csproj", "{2BFA80D5-1103-4D1F-BE12-6C7D1A4A5B01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{2DCD610F-BEC3-465B-BD23-7069F66C612E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DCD610F-BEC3-465B-BD23-7069F66C612E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DCD610F-BEC3-465B-BD23-7069F66C612E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BFA80D5-1103-4D1F-BE12-6C7D1A4A5B01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BFA80D5-1103-4D1F-BE12-6C7D1A4A5B01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BFA80D5-1103-4D1F-BE12-6C7D1A4A5B01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BFA80D5-1103-4D1F-BE12-6C7D1A4A5B01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
