@@ -209,13 +209,13 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="BrokerClient\Client\AnalysisClientService.cs" />
-        <Compile Include="BrokerClient\Client\IAnalysisClientService.cs" />
-        <Compile Include="BrokerClient\Client\Models\AnalysisTool.cs" />
-        <Compile Include="BrokerClient\Client\Models\AnalyzedImageMetaData.cs" />
-        <Compile Include="BrokerClient\Client\Models\AnalyzedVideoMetaData.cs" />
-        <Compile Include="BrokerClient\Client\Models\AnalyzeImageRequest.cs" />
-        <Compile Include="BrokerClient\Client\Models\AnalyzeVideoRequest.cs" />
+        <Compile Include="BrokerClient\Service\AnalysisClientService.cs" />
+        <Compile Include="BrokerClient\Service\IAnalysisClientService.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalysisTool.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalyzedImageMetaData.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalyzedVideoMetaData.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalyzeImageRequest.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalyzeVideoRequest.cs" />
         <Compile Include="BrokerClient\Storage\BlobFile.cs" />
         <Compile Include="BrokerClient\Storage\IBlobFile.cs" />
         <Compile Include="BrokerClient\Storage\IStorageManager.cs" />

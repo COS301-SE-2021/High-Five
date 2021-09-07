@@ -50,6 +50,10 @@ namespace broker_analysis_client.Client
 
         public AnalysisTool GetAnalysisTool(string toolId)
         {
+            /*
+             * Writes Model to disk and returns analysis source code
+             */
+            
             var toolSet = _storageManager.GetAllFilesInContainer("tools/analysis/" + toolId).Result;
             IBlobFile sourceCodeFile = null;
             IBlobFile modelFile = null;
