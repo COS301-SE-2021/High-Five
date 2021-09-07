@@ -39,7 +39,7 @@ namespace broker_analysis_client.Storage
         public StorageManager()
         {
             //SetBaseContainer("unset");//This initial value indicates that the initial container has not yet been set
-            var connectionString = "DefaultEndpointsProtocol=https;AccountName=high5storage;AccountKey=wAOU403kEW/sMui01WSD+n8xWNnMymbjW4E3RxSdUCpMp+SdlYm/BurfYyroEHF8LxVlmM+XNxHWfWP2xryCPA==;EndpointSuffix=core.windows.net";//config.GetConnectionString("StorageConnection");
+            var connectionString = "";
             _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             _random = new Random();
         }
