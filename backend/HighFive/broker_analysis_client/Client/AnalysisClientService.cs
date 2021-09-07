@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using broker_analysis_client.Client.Models;
 using broker_analysis_client.Storage;
@@ -47,9 +48,38 @@ namespace broker_analysis_client.Client
             return await image.ToByteArray();
         }
 
-        public string GetAnalysisTool(string toolId)
+        public AnalysisTool GetAnalysisTool(string toolId)
         {
-            throw new System.NotImplementedException();
+            var toolSet = _storageManager.GetAllFilesInContainer("tools/analysis/" + toolId).Result;
+            IBlobFile sourceCodeFile = null;
+            IBlobFile modelFile = null;
+            foreach (var tool in toolSet)
+            {
+                if (tool.GetMetaData("toolName") != null)
+                {
+                    sourceCodeFile = tool;
+                }
+                else
+                {
+                    modelFile = tool;
+                }
+            }
+
+            var response = new AnalysisTool
+            {
+                ModelPath = Path.GetTempFileName()
+            };
+
+            var model = new FileStream(response.ModelPath, FileMode.Create);
+            using var ms = modelFile.ToStream().Result;
+            var bytes = new byte[ms.Length];
+            ms.Read(bytes, 0, (int) ms.Length);
+            model.Write(bytes, 0, bytes.Length);
+            ms.Close();
+
+            response.SourceCode = sourceCodeFile?.ToString();
+            
+            return response;
         }
 
         public string GetDrawingTool(string toolId)

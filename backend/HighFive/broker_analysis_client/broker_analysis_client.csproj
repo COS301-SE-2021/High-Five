@@ -69,6 +69,7 @@
     <ItemGroup>
         <Compile Include="Client\AnalysisClientService.cs" />
         <Compile Include="Client\IAnalysisClientService.cs" />
+        <Compile Include="Client\Models\AnalysisTool.cs" />
         <Compile Include="Client\Models\AnalyzedImageMetaData.cs" />
         <Compile Include="Client\Models\AnalyzedVideoMetaData.cs" />
         <Compile Include="Client\Models\AnalyzeImageRequest.cs" />
