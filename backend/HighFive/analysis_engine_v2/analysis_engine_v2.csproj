@@ -210,7 +210,9 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="BrokerClient\Service\AnalysisClientService.cs" />
+        <Compile Include="BrokerClient\Service\AnalysisStorageManager.cs" />
         <Compile Include="BrokerClient\Service\IAnalysisClientService.cs" />
+        <Compile Include="BrokerClient\Service\IAnalysisStorageManager.cs" />
         <Compile Include="BrokerClient\Service\Models\AnalysisTool.cs" />
         <Compile Include="BrokerClient\Service\Models\AnalyzedImageMetaData.cs" />
         <Compile Include="BrokerClient\Service\Models\AnalyzedVideoMetaData.cs" />
