@@ -77,17 +77,19 @@ namespace broker_analysis_client.Client
             model.Write(bytes, 0, bytes.Length);
             ms.Close();
 
-            response.SourceCode = sourceCodeFile?.ToString();
+            response.SourceCode = sourceCodeFile?.ToText().Result;
             
             return response;
         }
 
         public string GetDrawingTool(string toolId)
         {
-            throw new System.NotImplementedException();
+            var toolSet = _storageManager.GetAllFilesInContainer("tools/drawing/" + toolId).Result;
+            var drawingToolFile = toolSet[0];
+            return drawingToolFile.ToText().Result;
         }
 
-        public void UnloadAnalysisModel(string modelId)
+        public void UnloadAnalysisModel(string modelPath)
         {
             throw new System.NotImplementedException();
         }

@@ -12,7 +12,7 @@ namespace broker_analysis_client.Client
 
         public AnalysisTool GetAnalysisTool(string toolId);
         public string GetDrawingTool(string toolId);
-        public void UnloadAnalysisModel(string modelId);
+        public void UnloadAnalysisModel(string modelPath);
         
         //TODO: GetPipeline functionality
     }
