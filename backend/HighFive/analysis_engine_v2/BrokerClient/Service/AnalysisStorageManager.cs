@@ -48,7 +48,7 @@ namespace broker_analysis_client.Client
             return await image.ToByteArray();
         }
 
-        public AnalysisTool GetAnalysisTool(string toolId)
+        public AnalysisToolComposite GetAnalysisTool(string toolId)
         {
             /*
              * Writes Model to disk and returns analysis source code
@@ -69,7 +69,7 @@ namespace broker_analysis_client.Client
                 }
             }
 
-            var response = new AnalysisTool
+            var response = new AnalysisToolComposite
             {
                 ModelPath = Path.GetTempFileName()
             };

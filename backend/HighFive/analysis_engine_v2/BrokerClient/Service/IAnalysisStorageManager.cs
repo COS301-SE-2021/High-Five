@@ -10,7 +10,7 @@ namespace broker_analysis_client.Client
         public Task<byte[]> GetVideo(string videoId);
         public Task<byte[]> GetImage(string imageId);
 
-        public AnalysisTool GetAnalysisTool(string toolId);
+        public AnalysisToolComposite GetAnalysisTool(string toolId);
         public string GetDrawingTool(string toolId);
         public void UnloadAnalysisModel(string modelPath);
         
