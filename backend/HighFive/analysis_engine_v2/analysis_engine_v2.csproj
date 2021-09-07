@@ -37,6 +37,22 @@
           <HintPath>..\packages\Emgu.CV.4.5.3.4721\lib\netstandard2.0\Emgu.CV.Platform.NetStandard.dll</HintPath>
           <Private>True</Private>
         </Reference>
+        <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
+        <Reference Include="Microsoft.Data.Edm, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <HintPath>..\packages\Microsoft.Data.Edm.5.6.4\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
+        <Reference Include="Microsoft.Data.OData, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <HintPath>..\packages\Microsoft.Data.OData.5.6.4\lib\net40\Microsoft.Data.OData.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
+        <Reference Include="Microsoft.Data.Services.Client, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.4\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
         <Reference Include="Microsoft.ML.OnnxRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=f27f157f0a5b7bb6">
           <HintPath>..\packages\Microsoft.ML.OnnxRuntime.Managed.1.8.1\lib\netstandard1.1\Microsoft.ML.OnnxRuntime.dll</HintPath>
           <Private>True</Private>
@@ -45,7 +61,15 @@
           <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
           <Private>True</Private>
         </Reference>
+        <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
         <Reference Include="mscorlib" />
+        <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+          <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
         <Reference Include="NumSharp, Version=0.30.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
           <HintPath>..\packages\NumSharp.0.30.0\lib\netstandard2.0\NumSharp.dll</HintPath>
           <Private>True</Private>
@@ -169,6 +193,10 @@
           <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
           <Private>True</Private>
         </Reference>
+        <Reference Include="System.Spatial, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <HintPath>..\packages\System.Spatial.5.6.4\lib\net40\System.Spatial.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
         <Reference Include="System.Text.RegularExpressions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
           <HintPath>..\packages\System.Text.RegularExpressions.4.3.0\lib\net463\System.Text.RegularExpressions.dll</HintPath>
           <Private>True</Private>
@@ -181,6 +209,17 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="BrokerClient\Client\AnalysisClientService.cs" />
+        <Compile Include="BrokerClient\Client\IAnalysisClientService.cs" />
+        <Compile Include="BrokerClient\Client\Models\AnalysisTool.cs" />
+        <Compile Include="BrokerClient\Client\Models\AnalyzedImageMetaData.cs" />
+        <Compile Include="BrokerClient\Client\Models\AnalyzedVideoMetaData.cs" />
+        <Compile Include="BrokerClient\Client\Models\AnalyzeImageRequest.cs" />
+        <Compile Include="BrokerClient\Client\Models\AnalyzeVideoRequest.cs" />
+        <Compile Include="BrokerClient\Storage\BlobFile.cs" />
+        <Compile Include="BrokerClient\Storage\IBlobFile.cs" />
+        <Compile Include="BrokerClient\Storage\IStorageManager.cs" />
+        <Compile Include="BrokerClient\Storage\StorageManager.cs" />
         <Compile Include="Data\BoxCoordinateData.cs" />
         <Compile Include="Data\Buffer.cs" />
         <Compile Include="Data\ConcurrentMergerRingBuffer.cs" />
@@ -248,6 +287,9 @@
     </ItemGroup>
     <ItemGroup>
       <None Include="packages.config" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="BrokerClient" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <Import Project="..\packages\Microsoft.ML.OnnxRuntime.Managed.1.8.1\build\netstandard1.1\Microsoft.ML.OnnxRuntime.Managed.targets" Condition="Exists('..\packages\Microsoft.ML.OnnxRuntime.Managed.1.8.1\build\netstandard1.1\Microsoft.ML.OnnxRuntime.Managed.targets')" />
