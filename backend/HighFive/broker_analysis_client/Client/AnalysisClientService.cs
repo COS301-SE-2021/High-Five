@@ -70,7 +70,7 @@ namespace broker_analysis_client.Client
                 ModelPath = Path.GetTempFileName()
             };
 
-            var model = new FileStream(response.ModelPath, FileMode.Create);
+            var model = File.Create(response.ModelPath);
             using var ms = modelFile.ToStream().Result;
             var bytes = new byte[ms.Length];
             ms.Read(bytes, 0, (int) ms.Length);
@@ -91,7 +91,7 @@ namespace broker_analysis_client.Client
 
         public void UnloadAnalysisModel(string modelPath)
         {
-            throw new System.NotImplementedException();
+            File.Delete(modelPath);
         }
     }
 }
