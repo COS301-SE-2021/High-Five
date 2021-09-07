@@ -30,7 +30,11 @@ public class KafkaServerParticipant extends ServerParticipant {
     public void listen() throws InterruptedException {
         EventLogger.getLogger().info("Listening for new messages from servers");
         while (true) {
-            for (String topic: topics) {
+
+            //Enhanced for loop not used because of concurrent access to topics
+            for (int i = 0; i < topics.size(); i++) {
+
+                String topic = topics.get(i);
 
                 int offset = 0;
 
