@@ -1,4 +1,6 @@
-﻿using broker_analysis_client.Client.Models;
+﻿using System;
+using System.Threading.Tasks;
+using broker_analysis_client.Client.Models;
 using broker_analysis_client.Storage;
 
 namespace broker_analysis_client.Client
@@ -12,24 +14,37 @@ namespace broker_analysis_client.Client
             _storageManager = new StorageManager();
         }
         
-        public AnalyzedImageMetaData StoreImage(byte[] image)
+        public AnalyzedImageMetaData StoreImage(byte[] image, AnalyzeImageRequest request)
+        {
+            //var blobFile = _storageManager.CreateNewFile(fileName, "analyzed/video").Result;
+            throw new NotImplementedException();
+        }
+
+        public AnalyzedVideoMetaData StoreVideo(byte[] video, AnalyzeVideoRequest requests)
         {
             throw new System.NotImplementedException();
         }
 
-        public AnalyzedVideoMetaData StoreVideo(byte[] video)
+        public async Task<byte[]> GetVideo(string videoId)
         {
-            throw new System.NotImplementedException();
+            var video = _storageManager.GetFile(videoId + ".mp4", "video").Result;
+            if (!await video.Exists())
+            {
+                return null;
+            }
+
+            return await video.ToByteArray();
         }
 
-        public byte[] GetVideo(string videoId)
+        public async Task<byte[]> GetImage(string imageId)
         {
-            throw new System.NotImplementedException();
-        }
+            var image = _storageManager.GetFile(imageId + ".mp4", "image").Result;
+            if (!await image.Exists())
+            {
+                return null;
+            }
 
-        public byte[] GetImage(string imageId)
-        {
-            throw new System.NotImplementedException();
+            return await image.ToByteArray();
         }
 
         public string GetAnalysisTool(string toolId)

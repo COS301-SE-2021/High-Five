@@ -71,6 +71,8 @@
         <Compile Include="Client\IAnalysisClientService.cs" />
         <Compile Include="Client\Models\AnalyzedImageMetaData.cs" />
         <Compile Include="Client\Models\AnalyzedVideoMetaData.cs" />
+        <Compile Include="Client\Models\AnalyzeImageRequest.cs" />
+        <Compile Include="Client\Models\AnalyzeVideoRequest.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="Storage\BlobFile.cs" />
