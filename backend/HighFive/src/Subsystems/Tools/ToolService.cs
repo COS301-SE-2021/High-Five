@@ -87,6 +87,18 @@ namespace src.Subsystems.Tools
         public List<Tool> GetAllTools()
         {
             var toolsList = new List<Tool>();
+            var defaultCounter = 0;
+            foreach(var defaultToolString in GetDefaultTools())
+            {
+                var toolNameArr = defaultToolString.Split("/");
+                var newTool = new Tool
+                {
+                    ToolId = "D" + defaultCounter++,
+                    ToolName = toolNameArr[1],
+                    ToolType = toolNameArr[0]
+                };
+                toolsList.Add(newTool);
+            }
             var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
             var toolsArray = toolsFile.ToText().Result.Split("\n");
             if (toolsArray[0].Equals(string.Empty))
@@ -114,7 +126,7 @@ namespace src.Subsystems.Tools
                 }
                 toolsList.Add(newTool);
             }
-
+            
             return toolsList;
         }
 
