@@ -548,7 +548,7 @@ paths:
                 $ref: '#/components/schemas/isAdminResponse'
 
   #==========================================================
-  #     USER SUBSYSTEM PATHING
+  #     TOOL SUBSYSTEM PATHING
   #==========================================================
 
   /tools/uploadAnalysisTool:
@@ -640,6 +640,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getToolTypesResponse'
+
+  /tools/createMetaDataType:
+    post:
+      tags:
+        - "Tools"
+      description: Endpoint for Create Meta Data Type use case
+      operationId: CreateMetaDataType
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createToolMetaDataTypeRequest'
+      responses:
+        "200":
+          description: All tool types have been returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /tools/getMetaDataTypes:
+    get:
+      tags:
+        - "Tools"
+      description: Endpoint for Get Meta Data Types use case
+      operationId: GetMetaDataTypes
+      responses:
+        "200":
+          description: Returns all meta data types
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getToolMetaDataTypes'
 
   #==========================================================
   #     SCHEMAS
@@ -821,11 +855,13 @@ components:
       properties:
         name:
           type: string
+        metadataType:
+          type: string
         tools:
           type: array
           items:
             type: string
-            description: All the tools stored as strings
+            description: All the tool id's stored as strings
 
     pipeline:
       type: object
@@ -835,11 +871,13 @@ components:
         id:
           type: string
           description: Unique id associated with the pipeline
+        metadataType:
+          type: string
         tools:
           type: array
           items:
             type: string
-            description: All the tools stored as strings
+            description: All the tool id's stored as strings
 
     addToolsRequest:
       type: object
@@ -963,6 +1001,8 @@ components:
         model:
           type: string
           format: binary
+        metadataType:
+          type: string
         toolName:
           type: string
 
@@ -972,6 +1012,8 @@ components:
         sourceCode:
           type: string
           format: binary
+        metadataType:
+          type: string
         toolName:
           type: string
 
@@ -1002,11 +1044,28 @@ components:
         toolType:
           type: string
           description: Analysis or drawing
-    
+
     getToolTypesResponse:
       type: object
       properties:
         toolTypes:
+          type: array
+          items:
+            type: string
+
+    createToolMetaDataTypeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        file:
+          type: string
+          format: binary
+
+    getToolMetaDataTypes:
+      type: object
+      properties:
+        metaDataTypes:
           type: array
           items:
             type: string

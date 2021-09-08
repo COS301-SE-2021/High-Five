@@ -24,7 +24,7 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class NewPipeline : IEquatable<NewPipeline>
+    public class CreateToolMetaDataTypeRequest : IEquatable<CreateToolMetaDataTypeRequest>
     {
         /// <summary>
         /// Gets or Sets Name
@@ -33,16 +33,10 @@ namespace Org.OpenAPITools.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or Sets MetadataType
+        /// Gets or Sets File
         /// </summary>
-        [DataMember(Name="metadataType", EmitDefaultValue=false)]
-        public string MetadataType { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Tools
-        /// </summary>
-        [DataMember(Name="tools", EmitDefaultValue=false)]
-        public List<string> Tools { get; set; }
+        [DataMember(Name="file", EmitDefaultValue=false)]
+        public System.IO.Stream File { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -51,10 +45,9 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class NewPipeline {\n");
+            sb.Append("class CreateToolMetaDataTypeRequest {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  MetadataType: ").Append(MetadataType).Append("\n");
-            sb.Append("  Tools: ").Append(Tools).Append("\n");
+            sb.Append("  File: ").Append(File).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -77,15 +70,15 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((NewPipeline)obj);
+            return obj.GetType() == GetType() && Equals((CreateToolMetaDataTypeRequest)obj);
         }
 
         /// <summary>
-        /// Returns true if NewPipeline instances are equal
+        /// Returns true if CreateToolMetaDataTypeRequest instances are equal
         /// </summary>
-        /// <param name="other">Instance of NewPipeline to be compared</param>
+        /// <param name="other">Instance of CreateToolMetaDataTypeRequest to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(NewPipeline other)
+        public bool Equals(CreateToolMetaDataTypeRequest other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -97,15 +90,9 @@ namespace Org.OpenAPITools.Models
                     Name.Equals(other.Name)
                 ) && 
                 (
-                    MetadataType == other.MetadataType ||
-                    MetadataType != null &&
-                    MetadataType.Equals(other.MetadataType)
-                ) && 
-                (
-                    Tools == other.Tools ||
-                    Tools != null &&
-                    other.Tools != null &&
-                    Tools.SequenceEqual(other.Tools)
+                    File == other.File ||
+                    File != null &&
+                    File.Equals(other.File)
                 );
         }
 
@@ -121,10 +108,8 @@ namespace Org.OpenAPITools.Models
                 // Suitable nullity checks etc, of course :)
                     if (Name != null)
                     hashCode = hashCode * 59 + Name.GetHashCode();
-                    if (MetadataType != null)
-                    hashCode = hashCode * 59 + MetadataType.GetHashCode();
-                    if (Tools != null)
-                    hashCode = hashCode * 59 + Tools.GetHashCode();
+                    if (File != null)
+                    hashCode = hashCode * 59 + File.GetHashCode();
                 return hashCode;
             }
         }
@@ -132,12 +117,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(NewPipeline left, NewPipeline right)
+        public static bool operator ==(CreateToolMetaDataTypeRequest left, CreateToolMetaDataTypeRequest right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(NewPipeline left, NewPipeline right)
+        public static bool operator !=(CreateToolMetaDataTypeRequest left, CreateToolMetaDataTypeRequest right)
         {
             return !Equals(left, right);
         }

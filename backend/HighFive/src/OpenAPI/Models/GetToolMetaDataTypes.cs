@@ -24,19 +24,13 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class AnalyzeVideoRequest : IEquatable<AnalyzeVideoRequest>
+    public class GetToolMetaDataTypes : IEquatable<GetToolMetaDataTypes>
     {
         /// <summary>
-        /// Gets or Sets VideoId
+        /// Gets or Sets MetaDataTypes
         /// </summary>
-        [DataMember(Name="videoId", EmitDefaultValue=false)]
-        public string VideoId { get; set; }
-
-        /// <summary>
-        /// Gets or Sets PipelineId
-        /// </summary>
-        [DataMember(Name="pipelineId", EmitDefaultValue=false)]
-        public string PipelineId { get; set; }
+        [DataMember(Name="metaDataTypes", EmitDefaultValue=false)]
+        public List<string> MetaDataTypes { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -45,9 +39,8 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class AnalyzeVideoRequest {\n");
-            sb.Append("  VideoId: ").Append(VideoId).Append("\n");
-            sb.Append("  PipelineId: ").Append(PipelineId).Append("\n");
+            sb.Append("class GetToolMetaDataTypes {\n");
+            sb.Append("  MetaDataTypes: ").Append(MetaDataTypes).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -70,29 +63,25 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((AnalyzeVideoRequest)obj);
+            return obj.GetType() == GetType() && Equals((GetToolMetaDataTypes)obj);
         }
 
         /// <summary>
-        /// Returns true if AnalyzeVideoRequest instances are equal
+        /// Returns true if GetToolMetaDataTypes instances are equal
         /// </summary>
-        /// <param name="other">Instance of AnalyzeVideoRequest to be compared</param>
+        /// <param name="other">Instance of GetToolMetaDataTypes to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(AnalyzeVideoRequest other)
+        public bool Equals(GetToolMetaDataTypes other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    VideoId == other.VideoId ||
-                    VideoId != null &&
-                    VideoId.Equals(other.VideoId)
-                ) && 
-                (
-                    PipelineId == other.PipelineId ||
-                    PipelineId != null &&
-                    PipelineId.Equals(other.PipelineId)
+                    MetaDataTypes == other.MetaDataTypes ||
+                    MetaDataTypes != null &&
+                    other.MetaDataTypes != null &&
+                    MetaDataTypes.SequenceEqual(other.MetaDataTypes)
                 );
         }
 
@@ -106,10 +95,8 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (VideoId != null)
-                    hashCode = hashCode * 59 + VideoId.GetHashCode();
-                    if (PipelineId != null)
-                    hashCode = hashCode * 59 + PipelineId.GetHashCode();
+                    if (MetaDataTypes != null)
+                    hashCode = hashCode * 59 + MetaDataTypes.GetHashCode();
                 return hashCode;
             }
         }
@@ -117,12 +104,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(AnalyzeVideoRequest left, AnalyzeVideoRequest right)
+        public static bool operator ==(GetToolMetaDataTypes left, GetToolMetaDataTypes right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(AnalyzeVideoRequest left, AnalyzeVideoRequest right)
+        public static bool operator !=(GetToolMetaDataTypes left, GetToolMetaDataTypes right)
         {
             return !Equals(left, right);
         }

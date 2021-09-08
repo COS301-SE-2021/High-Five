@@ -18,7 +18,12 @@ namespace src.Subsystems.Tools
             _toolService = toolService;
             _baseContainerSet = false;
         }
-        
+
+        public override IActionResult CreateMetaDataType(CreateToolMetaDataTypeRequest createToolMetaDataTypeRequest)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override IActionResult DeleteTool(DeleteToolRequest deleteToolRequest)
         {
             if (!_baseContainerSet)
@@ -34,6 +39,11 @@ namespace src.Subsystems.Tools
             }
 
             return StatusCode(200, response);
+        }
+
+        public override IActionResult GetMetaDataTypes()
+        {
+            throw new System.NotImplementedException();
         }
 
         public override IActionResult GetToolTypes()
@@ -57,7 +67,7 @@ namespace src.Subsystems.Tools
             return StatusCode(200, response);
         }
 
-        public override IActionResult UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string toolName)
+        public override IActionResult UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataType, string toolName)
         {
             if (!_baseContainerSet)
             {
@@ -72,7 +82,7 @@ namespace src.Subsystems.Tools
             return StatusCode(200, response);
         }
 
-        public override IActionResult UploadDrawingTool(IFormFile sourceCode, string toolName)
+        public override IActionResult UploadDrawingTool(IFormFile sourceCode, string metadataType, string toolName)
         {
             if (!_baseContainerSet)
             {
