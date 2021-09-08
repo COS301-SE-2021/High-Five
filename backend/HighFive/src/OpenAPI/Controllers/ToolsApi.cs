@@ -28,6 +28,20 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Create Meta Data Type use case</remarks>
+        /// <param name="name"></param>
+        /// <param name="file"></param>
+        /// <response code="200">All tool types have been returned</response>
+        [HttpPost]
+        [Route("/tools/createMetaDataType")]
+        [Consumes("multipart/form-data")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult CreateMetaDataType([FromForm (Name = "name")]string name, IFormFile file);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Delete Tool use case</remarks>
         /// <param name="deleteToolRequest"></param>
         /// <response code="200">The Tool has been deleted</response>
@@ -37,6 +51,17 @@ namespace Org.OpenAPITools.Controllers
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
         public abstract IActionResult DeleteTool([FromBody]DeleteToolRequest deleteToolRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Get Meta Data Types use case</remarks>
+        /// <response code="200">Returns all meta data types</response>
+        [HttpGet]
+        [Route("/tools/getMetaDataTypes")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetToolMetaDataTypes))]
+        public abstract IActionResult GetMetaDataTypes();
 
         /// <summary>
         /// 
@@ -66,6 +91,7 @@ namespace Org.OpenAPITools.Controllers
         /// <remarks>Endpoint for Upload Analysis Tool use case</remarks>
         /// <param name="sourceCode"></param>
         /// <param name="model"></param>
+        /// <param name="metadataType"></param>
         /// <param name="toolName"></param>
         /// <response code="200">The Analysis Tool has been uploaded</response>
         [HttpPost]
@@ -73,13 +99,14 @@ namespace Org.OpenAPITools.Controllers
         [Consumes("multipart/form-data")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
-        public abstract IActionResult UploadAnalysisTool(IFormFile sourceCode, IFormFile model, [FromForm (Name = "toolName")]string toolName);
+        public abstract IActionResult UploadAnalysisTool(IFormFile sourceCode, IFormFile model, [FromForm (Name = "metadataType")]string metadataType, [FromForm (Name = "toolName")]string toolName);
 
         /// <summary>
         /// 
         /// </summary>
         /// <remarks>Endpoint for Upload Drawing Tool use case</remarks>
         /// <param name="sourceCode"></param>
+        /// <param name="metadataType"></param>
         /// <param name="toolName"></param>
         /// <response code="200">The Drawing Tool has been uploaded</response>
         [HttpPost]
@@ -87,6 +114,6 @@ namespace Org.OpenAPITools.Controllers
         [Consumes("multipart/form-data")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
-        public abstract IActionResult UploadDrawingTool(IFormFile sourceCode, [FromForm (Name = "toolName")]string toolName);
+        public abstract IActionResult UploadDrawingTool(IFormFile sourceCode, [FromForm (Name = "metadataType")]string metadataType, [FromForm (Name = "toolName")]string toolName);
     }
 }
