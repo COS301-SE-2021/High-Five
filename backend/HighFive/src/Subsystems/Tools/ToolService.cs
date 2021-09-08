@@ -25,7 +25,7 @@ namespace src.Subsystems.Tools
             _storageManager = storageManager;
         }
         
-        public async Task<bool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataName, string toolName)
+        public async Task<bool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataType, string toolName)
         {
             var generatedToolName = _storageManager.HashMd5(toolName);
             if (ToolExists(generatedToolName))
@@ -36,6 +36,7 @@ namespace src.Subsystems.Tools
             var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
             var sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".cs", ContainerName+ "/analysis/" + generatedToolName).Result;
             sourceCodeFile.AddMetadata("toolName",toolName);
+            sourceCodeFile.AddMetadata("metadataType", metadataType);
             await sourceCodeFile.UploadFile(sourceCode);
 
             var modelNameArr = model.FileName.Split(".");
@@ -49,7 +50,7 @@ namespace src.Subsystems.Tools
             return true;
         }
 
-        public async Task<bool> UploadDrawingTool(IFormFile sourceCode, string metadataName, string toolName)
+        public async Task<bool> UploadDrawingTool(IFormFile sourceCode, string metadataType, string toolName)
         {
             var generatedToolName = _storageManager.HashMd5(toolName);
             if (ToolExists(generatedToolName))
@@ -60,6 +61,7 @@ namespace src.Subsystems.Tools
             var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
             var sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".cs", ContainerName+ "/drawing/" + generatedToolName).Result;
             sourceCodeFile.AddMetadata("toolName",toolName);
+            sourceCodeFile.AddMetadata("metadataType", metadataType);
             await sourceCodeFile.UploadFile(sourceCode);
 
             AddToToolsFile(generatedToolName, "drawing");
@@ -201,6 +203,17 @@ namespace src.Subsystems.Tools
 
             toolsFile.UploadText(updatedToolsList);
             return removed;
+        }
+
+        private string[] GetDefaultTools()
+        {
+            var currentContainer = _storageManager.GetCurrentContainer();
+            _storageManager.SetBaseContainer("public");
+            var defaultToolsFile = _storageManager.GetFile("default_tools.txt","").Result;
+            _storageManager.SetBaseContainer(currentContainer);
+            var toolsArray = defaultToolsFile.ToText().Result.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+            //the above line splits the text file's contents by newlines into an array
+            return toolsArray;
         }
         
         //-----------------------------------TOOL LOADING FUNCTIONS-----------------------------------//
