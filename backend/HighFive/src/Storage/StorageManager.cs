@@ -217,11 +217,18 @@ namespace src.Storage
         public void StoreUserInfo(string id, string displayName, string email)
         {
             var userInfoString = id + "\n" + displayName + "\n" + email;
-            var userInfoFile = CreateNewFile("user_info.txt", "").Result;
+            var userInfoFile = GetFile("user_info.txt", "").Result;
+            if (userInfoFile == null)
+            {
+                userInfoFile = CreateNewFile("user_info.txt", "").Result;
+            }
             userInfoFile.UploadText(userInfoString);
 
             var toolsFile = CreateNewFile("tools.txt", "").Result;
-            toolsFile.UploadText("");
+            toolsFile?.UploadText("");
+
+            var metadataFile = CreateNewFile("toolmetadata.txt", "").Result;
+            metadataFile?.UploadText("");
         }
 
         public string RandomString(int length=5)
