@@ -24,25 +24,13 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class NewPipeline : IEquatable<NewPipeline>
+    public class GetToolMetaDataTypes : IEquatable<GetToolMetaDataTypes>
     {
         /// <summary>
-        /// Gets or Sets Name
+        /// Gets or Sets MetaDataTypes
         /// </summary>
-        [DataMember(Name="name", EmitDefaultValue=false)]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or Sets MetadataType
-        /// </summary>
-        [DataMember(Name="metadataType", EmitDefaultValue=false)]
-        public string MetadataType { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Tools
-        /// </summary>
-        [DataMember(Name="tools", EmitDefaultValue=false)]
-        public List<string> Tools { get; set; }
+        [DataMember(Name="metaDataTypes", EmitDefaultValue=false)]
+        public List<string> MetaDataTypes { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -51,10 +39,8 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class NewPipeline {\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  MetadataType: ").Append(MetadataType).Append("\n");
-            sb.Append("  Tools: ").Append(Tools).Append("\n");
+            sb.Append("class GetToolMetaDataTypes {\n");
+            sb.Append("  MetaDataTypes: ").Append(MetaDataTypes).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -77,35 +63,25 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((NewPipeline)obj);
+            return obj.GetType() == GetType() && Equals((GetToolMetaDataTypes)obj);
         }
 
         /// <summary>
-        /// Returns true if NewPipeline instances are equal
+        /// Returns true if GetToolMetaDataTypes instances are equal
         /// </summary>
-        /// <param name="other">Instance of NewPipeline to be compared</param>
+        /// <param name="other">Instance of GetToolMetaDataTypes to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(NewPipeline other)
+        public bool Equals(GetToolMetaDataTypes other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    Name == other.Name ||
-                    Name != null &&
-                    Name.Equals(other.Name)
-                ) && 
-                (
-                    MetadataType == other.MetadataType ||
-                    MetadataType != null &&
-                    MetadataType.Equals(other.MetadataType)
-                ) && 
-                (
-                    Tools == other.Tools ||
-                    Tools != null &&
-                    other.Tools != null &&
-                    Tools.SequenceEqual(other.Tools)
+                    MetaDataTypes == other.MetaDataTypes ||
+                    MetaDataTypes != null &&
+                    other.MetaDataTypes != null &&
+                    MetaDataTypes.SequenceEqual(other.MetaDataTypes)
                 );
         }
 
@@ -119,12 +95,8 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Name != null)
-                    hashCode = hashCode * 59 + Name.GetHashCode();
-                    if (MetadataType != null)
-                    hashCode = hashCode * 59 + MetadataType.GetHashCode();
-                    if (Tools != null)
-                    hashCode = hashCode * 59 + Tools.GetHashCode();
+                    if (MetaDataTypes != null)
+                    hashCode = hashCode * 59 + MetaDataTypes.GetHashCode();
                 return hashCode;
             }
         }
@@ -132,12 +104,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(NewPipeline left, NewPipeline right)
+        public static bool operator ==(GetToolMetaDataTypes left, GetToolMetaDataTypes right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(NewPipeline left, NewPipeline right)
+        public static bool operator !=(GetToolMetaDataTypes left, GetToolMetaDataTypes right)
         {
             return !Equals(left, right);
         }

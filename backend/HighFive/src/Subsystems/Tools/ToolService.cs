@@ -25,17 +25,18 @@ namespace src.Subsystems.Tools
             _storageManager = storageManager;
         }
         
-        public async Task<bool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string toolName)
+        public async Task<bool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataType, string toolName)
         {
             var generatedToolName = _storageManager.HashMd5(toolName);
-            if (ToolExists(generatedToolName))
+
+            var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
+            var sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".cs", ContainerName+ "/analysis/" + generatedToolName).Result;
+            if (sourceCodeFile == null)
             {
                 return false;
             }
-            
-            var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
-            var sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".cs", ContainerName+ "/analysis/" + generatedToolName).Result;
             sourceCodeFile.AddMetadata("toolName",toolName);
+            sourceCodeFile.AddMetadata("metadataType", metadataType);
             await sourceCodeFile.UploadFile(sourceCode);
 
             var modelNameArr = model.FileName.Split(".");
@@ -43,26 +44,27 @@ namespace src.Subsystems.Tools
             sourceCodeFile.AddMetadata("modelName", model.FileName);
             var modelFile = _storageManager
                 .CreateNewFile(modelName + "." + modelNameArr[^1], ContainerName + "/analysis/" + generatedToolName).Result;
+            modelFile.AddMetadata("modelName", model.FileName);
             await modelFile.UploadFile(model);
 
-            AddToToolsFile(generatedToolName, "analysis");
+            AddToToolsFile(generatedToolName, "analysis", metadataType);
             return true;
         }
 
-        public async Task<bool> UploadDrawingTool(IFormFile sourceCode, string toolName)
+        public async Task<bool> UploadDrawingTool(IFormFile sourceCode, string metadataType, string toolName)
         {
             var generatedToolName = _storageManager.HashMd5(toolName);
-            if (ToolExists(generatedToolName))
+            var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
+            var sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".cs", ContainerName+ "/drawing/" + generatedToolName).Result;
+            if (sourceCodeFile == null)
             {
                 return false;
             }
-            
-            var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
-            var sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".cs", ContainerName+ "/drawing/" + generatedToolName).Result;
             sourceCodeFile.AddMetadata("toolName",toolName);
+            sourceCodeFile.AddMetadata("metadataType", metadataType);
             await sourceCodeFile.UploadFile(sourceCode);
 
-            AddToToolsFile(generatedToolName, "drawing");
+            AddToToolsFile(generatedToolName, "drawing", metadataType);
             return true;
         }
 
@@ -85,6 +87,19 @@ namespace src.Subsystems.Tools
         public List<Tool> GetAllTools()
         {
             var toolsList = new List<Tool>();
+            var defaultCounter = 0;
+            foreach(var defaultToolString in GetDefaultTools())
+            {
+                var toolNameArr = defaultToolString.Split("/");
+                var newTool = new Tool
+                {
+                    ToolId = "D" + defaultCounter++,
+                    ToolName = toolNameArr[1],
+                    ToolType = toolNameArr[0],
+                    ToolMetadataType = toolNameArr[2]
+                };
+                toolsList.Add(newTool);
+            }
             var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
             var toolsArray = toolsFile.ToText().Result.Split("\n");
             if (toolsArray[0].Equals(string.Empty))
@@ -94,13 +109,14 @@ namespace src.Subsystems.Tools
             foreach (var tool in toolsArray)
             {
                 var toolNameArr = tool.Split("/");
-                var toolId = toolNameArr[^1];
                 var newTool = new Tool
                 {
-                    ToolId = toolId,
-                    ToolType = toolNameArr[0]
+                    ToolId = toolNameArr[1],
+                    ToolType = toolNameArr[0],
+                    ToolMetadataType = toolNameArr[2]
                 };
-                var toolFiles = _storageManager.GetAllFilesInContainer(ContainerName + "/" + tool).Result;
+                var toolDirectory = toolNameArr[0] + "/" + toolNameArr[1];
+                var toolFiles = _storageManager.GetAllFilesInContainer(ContainerName + "/" + toolDirectory).Result;
                 foreach (var toolFile in toolFiles)
                 {
                     var toolName = toolFile.GetMetaData("toolName");
@@ -112,7 +128,6 @@ namespace src.Subsystems.Tools
                 }
                 toolsList.Add(newTool);
             }
-
             return toolsList;
         }
 
@@ -148,14 +163,45 @@ namespace src.Subsystems.Tools
             return responseList;
         }
 
-        private bool ToolExists(string toolName)
+        public async Task<bool> CreateMetaDataType(IFormFile file, string name)
         {
-            var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
-            var toolsArray = toolsFile.ToText().Result.Split("\n");
-            return toolsArray.IndexOf("analysis/" + toolName) != -1 || toolsArray.IndexOf("drawing/" + toolName) != -1;
+            var generatedName = _storageManager.HashMd5(file.Name);
+            var metadataFile = _storageManager.CreateNewFile(generatedName + ".cs", ContainerName + "/metadata").Result;
+            if (metadataFile == null || GetDefaultToolMetaData().IndexOf(name) != -1)
+            {
+                return false;
+            }
+            
+            metadataFile.AddMetadata("name", name);
+            await metadataFile.UploadFile(file);
+
+            var metadataListFile = _storageManager.GetFile("toolmetadata.txt", "").Result;
+            var metadataText = metadataListFile.ToText().Result;
+            if (metadataText != string.Empty)
+            {
+                metadataText += "\n";
+            }
+            metadataText +=  name;
+
+            await metadataListFile.UploadText(metadataText);
+            
+            return true;
         }
 
-        private void AddToToolsFile(string toolName, string type)
+        public GetToolMetaDataTypes GetMetaDataTypes()
+        {
+            var responseList = new List<string>();
+            var metadataFile = _storageManager.GetFile("toolmetadata.txt", "").Result;
+            var metadataArray = metadataFile.ToText().Result.Split(new[] {'\n'}, StringSplitOptions.None);
+            //the above line splits the text file's contents by newlines into an array
+            var defaultMetadata = GetDefaultToolMetaData();
+            responseList.AddRange(metadataArray);
+            responseList.AddRange(defaultMetadata);
+
+            return new GetToolMetaDataTypes{MetaDataTypes = responseList};
+        }
+
+        private void AddToToolsFile(string toolName, string type, string metadataType)
         {
             var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
             var toolsText = toolsFile.ToText().Result;
@@ -163,7 +209,7 @@ namespace src.Subsystems.Tools
             {
                 toolsText += "\n";
             }
-            toolsText += type + "/" + toolName;
+            toolsText += type + "/" + toolName + "/" + metadataType;
 
             toolsFile.UploadText(toolsText);
         }
@@ -177,9 +223,13 @@ namespace src.Subsystems.Tools
             var removed = false;
             foreach (var tool in toolsList)
             {
-                if (tool.Equals(type + "/" +toolName))
+                if (tool.Contains(type + "/" +toolName))
                 {
                     removed = true;
+                    if (tool == toolsList[^1])
+                    {
+                        updatedToolsList = updatedToolsList.TrimEnd('\n');
+                    }
                     continue;
                 }
                 updatedToolsList += tool;
@@ -191,6 +241,28 @@ namespace src.Subsystems.Tools
 
             toolsFile.UploadText(updatedToolsList);
             return removed;
+        }
+
+        private string[] GetDefaultTools()
+        {
+            var currentContainer = _storageManager.GetCurrentContainer();
+            _storageManager.SetBaseContainer("public");
+            var defaultToolsFile = _storageManager.GetFile("default_tools.txt","").Result;
+            _storageManager.SetBaseContainer(currentContainer);
+            var toolsArray = defaultToolsFile.ToText().Result.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+            //the above line splits the text file's contents by newlines into an array
+            return toolsArray;
+        }
+        
+        private string[] GetDefaultToolMetaData()
+        {
+            var currentContainer = _storageManager.GetCurrentContainer();
+            _storageManager.SetBaseContainer("public");
+            var defaultMetadataFile = _storageManager.GetFile("default_toolmetadata.txt","").Result;
+            _storageManager.SetBaseContainer(currentContainer);
+            var metadataArray = defaultMetadataFile.ToText().Result.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+            //the above line splits the text file's contents by newlines into an array
+            return metadataArray;
         }
         
         //-----------------------------------TOOL LOADING FUNCTIONS-----------------------------------//
