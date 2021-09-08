@@ -1,12 +1,12 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using analysis_engine_v2.BrokerClient.Service.Models;
+using broker_analysis_client.Client;
 using broker_analysis_client.Client.Models;
 using broker_analysis_client.Storage;
 using Newtonsoft.Json;
 
-namespace broker_analysis_client.Client
+namespace analysis_engine_v2.BrokerClient.Storage
 {
     public class AnalysisStorageManager: IAnalysisStorageManager
     {

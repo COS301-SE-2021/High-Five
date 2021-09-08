@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using broker_analysis_client.Client.Models;
 
-namespace broker_analysis_client.Client
+namespace analysis_engine_v2.BrokerClient.Storage
 {
     public interface IAnalysisStorageManager
     {
