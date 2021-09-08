@@ -41,6 +41,7 @@ namespace src.Subsystems.Tools
 
             var modelNameArr = model.FileName.Split(".");
             var modelName = _storageManager.HashMd5(model.FileName);
+            sourceCodeFile.AddMetadata("modelName", model.FileName);
             var modelFile = _storageManager
                 .CreateNewFile(modelName + "." + modelNameArr[^1], ContainerName + "/analysis/" + generatedToolName).Result;
             modelFile.AddMetadata("modelName", model.FileName);
