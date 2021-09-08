@@ -74,6 +74,7 @@ namespace src.Subsystems.Tools
             {
                 return false;
             }
+
             var toolFiles = _storageManager
                 .GetAllFilesInContainer(ContainerName + "/" + request.ToolType + "/" + request.ToolId).Result;
             foreach (var file in toolFiles)
@@ -127,7 +128,6 @@ namespace src.Subsystems.Tools
                 }
                 toolsList.Add(newTool);
             }
-            
             return toolsList;
         }
 
@@ -153,6 +153,7 @@ namespace src.Subsystems.Tools
             {
                 return _storageManager.SetBaseContainer(containerName).Result;
             }
+
             return true;
         }
 
