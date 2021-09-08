@@ -1044,6 +1044,8 @@ components:
         toolType:
           type: string
           description: Analysis or drawing
+        toolMetadataType:
+          type: string
 
     getToolTypesResponse:
       type: object
