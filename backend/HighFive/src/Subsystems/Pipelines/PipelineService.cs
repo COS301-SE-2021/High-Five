@@ -89,7 +89,8 @@ namespace src.Subsystems.Pipelines
             {
                 Id = generatedName,
                 Name = pipeline.Name,
-                Tools = pipeline.Tools
+                Tools = pipeline.Tools,
+                MetadataType = pipeline.MetadataType
             };
             await UploadPipelineToStorage(newPipeline, blobFile);
 
