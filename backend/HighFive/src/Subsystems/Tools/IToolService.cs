@@ -14,7 +14,7 @@ namespace src.Subsystems.Tools
         public void StoreUserInfo(string id, string displayName, string email);
         public bool SetBaseContainer(string containerName);
         public List<string> GetToolTypes();
-        public bool CreateMetaDataType(IFormFile file, string name);
+        public Task<bool> CreateMetaDataType(IFormFile file, string name);
         public GetToolMetaDataTypes GetMetaDataTypes();
     }
 }

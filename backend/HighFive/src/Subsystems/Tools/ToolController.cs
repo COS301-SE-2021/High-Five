@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Org.OpenAPITools.Controllers;
@@ -8,6 +9,7 @@ using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.Tools
 {
+    [Authorize]
     public class ToolController: ToolsApiController
     {
         private readonly IToolService _toolService;
@@ -21,7 +23,19 @@ namespace src.Subsystems.Tools
 
         public override IActionResult CreateMetaDataType(string name, IFormFile file)
         {
-            throw new System.NotImplementedException();
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            var response = new EmptyObject
+            {
+                Success = _toolService.CreateMetaDataType(file, name).Result
+            };
+            if (!response.Success)
+            {
+                response.Message = "A metadata object with that name already exists.";
+            }
+            return StatusCode(200, response);
         }
 
         public override IActionResult DeleteTool(DeleteToolRequest deleteToolRequest)
@@ -43,11 +57,19 @@ namespace src.Subsystems.Tools
 
         public override IActionResult GetMetaDataTypes()
         {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
             throw new System.NotImplementedException();
         }
 
         public override IActionResult GetToolTypes()
         {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
             var response = new GetToolTypesResponse
             {
                 ToolTypes = _toolService.GetToolTypes()
@@ -107,13 +129,10 @@ namespace src.Subsystems.Tools
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
             var alreadyExisted = _toolService.SetBaseContainer(jsonToken.Subject);
-            if (!alreadyExisted)
-            {
-                var id = jsonToken.Subject;
-                var displayName = jsonToken.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
-                var email = jsonToken.Claims.FirstOrDefault(x => x.Type == "emails")?.Value;
-                _toolService.StoreUserInfo(id,displayName,email);
-            }
+            var id = jsonToken.Subject;
+            var displayName = jsonToken.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
+            var email = jsonToken.Claims.FirstOrDefault(x => x.Type == "emails")?.Value;
+            _toolService.StoreUserInfo(id,displayName,email);
             _baseContainerSet = true;
         }
     }

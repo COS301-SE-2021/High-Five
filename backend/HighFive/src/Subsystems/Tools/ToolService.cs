@@ -150,9 +150,29 @@ namespace src.Subsystems.Tools
             return responseList;
         }
 
-        public bool CreateMetaDataType(IFormFile file, string name)
+        public async Task<bool> CreateMetaDataType(IFormFile file, string name)
         {
-            throw new NotImplementedException();
+            var generatedName = _storageManager.HashMd5(file.Name);
+            var metadataFile = _storageManager.CreateNewFile(generatedName + ".cs", ContainerName + "/metadata").Result;
+            if (metadataFile == null)
+            {
+                return false;
+            }
+            
+            metadataFile.AddMetadata("name", name);
+            await metadataFile.UploadFile(file);
+
+            var metadataListFile = _storageManager.GetFile("toolmetadata.txt", "").Result;
+            var metadataText = metadataListFile.ToText().Result;
+            if (metadataText != string.Empty)
+            {
+                metadataText += "\n";
+            }
+            metadataText +=  name;
+
+            await metadataListFile.UploadText(metadataText);
+            
+            return true;
         }
 
         public GetToolMetaDataTypes GetMetaDataTypes()
