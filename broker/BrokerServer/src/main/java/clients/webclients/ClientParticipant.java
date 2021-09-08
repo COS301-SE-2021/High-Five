@@ -6,9 +6,14 @@ import com.google.gson.*;
 import dataclasses.clientrequest.AnalysisRequest;
 import dataclasses.clientrequest.codecs.RequestDecoder;
 import dataclasses.serverinfo.*;
+import dataclasses.telemetry.Telemetry;
+import dataclasses.telemetry.builder.TelemetryBuilder;
+import dataclasses.telemetry.builder.TelemetryCollector;
 import logger.EventLogger;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Client participant class that fetches server information (the server with the least usage),
@@ -36,11 +41,6 @@ public class ClientParticipant extends WebClient{
      */
     @Override
     public void listen() throws InterruptedException {
-        ServerInformation info = informationHolder.get();
-        while (info == null) {
-            Thread.sleep(1000L);
-            info = informationHolder.get();
-        }
         if (!connection.isConnected()) {
             return;
         }
@@ -62,10 +62,11 @@ public class ClientParticipant extends WebClient{
                 //Process request based on analysis type
                 if (request.getRequestType().contains("Analyze")) {
                     EventLogger.getLogger().info("Performing analysis on uploaded media");
-                    new StoredMediaAnalysisStrategy().processRequest(request, info, out);
+
+                    new StoredMediaAnalysisStrategy().processRequest(request, informationHolder, out);
                 } else {
                     EventLogger.getLogger().info("Performing live analysis request");
-                    new LiveAnalysisStrategy().processRequest(request, info, out);
+                    new LiveAnalysisStrategy().processRequest(request, informationHolder, out);
                 }
             } catch (Exception e) {
                 out.append(e.getMessage()).flush();

@@ -3,9 +3,14 @@ package clients.webclients.strategy;
 import dataclasses.analysiscommand.AnalysisCommand;
 import dataclasses.serverinfo.ServerInformation;
 import dataclasses.clientrequest.AnalysisRequest;
+import dataclasses.serverinfo.ServerInformationHolder;
+import dataclasses.serverinfo.ServerUsage;
+import dataclasses.telemetry.builder.TelemetryBuilder;
+import dataclasses.telemetry.builder.TelemetryCollector;
 import logger.EventLogger;
 
 import java.io.*;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
@@ -19,7 +24,11 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
      * @param writer Writer to inform web client that media is going to be analysed
      */
     @Override
-    public void processRequest(AnalysisRequest request, ServerInformation information, BufferedWriter writer) throws IOException {
+    public void processRequest(AnalysisRequest request, ServerInformationHolder information, BufferedWriter writer) throws IOException {
+
+        //Uploaded media analysis doesn't require any hardware priority
+        TelemetryBuilder builder = new TelemetryBuilder().setCollector(TelemetryCollector.ALL);
+        ServerInformation info = information.get(builder);
 
         //Generate random topic to get information from server
         String responseTopic = "RESPONSE_TOPIC" + ThreadLocalRandom.current().nextInt();
@@ -27,12 +36,12 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
 
         //Create new command
         AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getMediaId(), request.getPipelineId(), responseTopic);
-        EventLogger.getLogger().info("Sending command to server " + information.getServerId());
+        EventLogger.getLogger().info("Sending command to server " + info.getServerId());
 
         //Open process to send command
-        String command = System.getenv("KAFKA_SEND_COMMAND").replace("{topic}", information.getServerId());
-        ProcessBuilder builder = new ProcessBuilder(command.split(" "));
-        Process proc = builder.start();
+        String command = System.getenv("KAFKA_SEND_COMMAND").replace("{topic}", info.getServerId());
+        ProcessBuilder processBuilder = new ProcessBuilder(command.split(" "));
+        Process proc = processBuilder.start();
 
         //Send command to server
         BufferedWriter outputStreamWriter =

@@ -22,5 +22,13 @@
   {
     "name": "ServerInfoDecoder",
     "path": "dataclasses.serverinfo.codecs.ServerInformationDecoder"
+  },
+  {
+    "name": "ClientManager",
+    "path": "managers.client.ClientManagerImpl"
+  },
+  {
+    "name": "ServerManager",
+    "path": "managers.server.ServerManagerImpl"
   }
 ]

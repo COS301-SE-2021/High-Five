@@ -1,7 +1,11 @@
 package dataclasses.serverinfo;
 
+import dataclasses.telemetry.builder.TelemetryBuilder;
+
 import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
@@ -11,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class ServerInformationHolder {
     ReentrantLock lock = new ReentrantLock();
-    private LinkedList<ServerInformation> serverPerformanceInfo = new LinkedList<>();
+    private HashMap<ServerInformation, ServerUsage> serverPerformanceInfo = new HashMap<>();
 
     /**
      * Adds a ServerInformation object to the list. Once the item is added, the list is
@@ -19,36 +23,44 @@ public class ServerInformationHolder {
      *
      * @param info ServerInformation object to add
      */
-    public void add(ServerInformation info) {
+    public void add(ServerInformation info, ServerUsage usage) {
         lock.lock();
         try {
-            serverPerformanceInfo.removeIf((curInfo) -> curInfo.getServerId().equals(info.getServerId()));
-            serverPerformanceInfo.add(info);
-            serverPerformanceInfo = serverPerformanceInfo.stream()
-                    .sorted(Comparator.comparing(ServerInformation::getUsage))
-                    .collect(Collectors.toCollection(LinkedList::new));
+            serverPerformanceInfo.put(info, usage);
         } finally {
             lock.unlock();
         }
     }
 
     /**
-     * Fetches the first element from the server information list.
-     * Once this element is fetched, it is moved to the back of the list, as it's usage will soon
-     * be altered.
+     * Fetches the server information with the least usage as determined by the TelemetryBuilder
+     * passed in.
      *
+     * @param performanceSelector Builder to determine usage of server.
      * @return First ServerInformation object from the list, or null if the list is empty.
      */
-    public ServerInformation get() {
+    public ServerInformation get(TelemetryBuilder performanceSelector) {
         lock.lock();
         try {
-            if (serverPerformanceInfo.size() > 0) {
-                ServerInformation information = serverPerformanceInfo.getFirst();
-                serverPerformanceInfo.offer(serverPerformanceInfo.poll());
-                return information;
-            } else {
+            if (serverPerformanceInfo.size() == 0) {
                 return null;
             }
+
+            //Make copy of map (as to not alter values in the original list)
+            Map<ServerInformation, ServerUsage> tmp = serverPerformanceInfo.entrySet().stream()
+                    .collect(Collectors.toMap(e -> e.getKey().clone(), e -> e.getValue().clone()));
+
+            //Calculating the usage information of the items in the temporary map
+            for (var item : tmp.entrySet()) {
+                long usage = performanceSelector.setData(item.getValue()).build().getTelemetry();
+                item.getKey().setUsage(usage);
+            }
+
+            //Sort the keys in the map (the one with the least usage should be first)
+            List<ServerInformation> list = tmp.keySet()
+                    .stream().sorted(Comparator.comparing(ServerInformation::getUsage)).collect(Collectors.toList());
+
+            return list.get(0); // Return first item
         } finally {
             lock.unlock();
         }

@@ -62,4 +62,8 @@ public class ServerInformation {
                 "port: \"" + port + "\"," +
                 "credentials: \"" + credentials + "\"}";
     }
+
+    public ServerInformation clone() {
+        return new ServerInformation(address, serverId, port, credentials);
+    }
 }

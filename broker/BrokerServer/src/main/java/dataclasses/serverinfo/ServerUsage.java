@@ -5,4 +5,14 @@ public class ServerUsage {
     public short gpu;
     public short net;
     public short disk;
+
+    public ServerUsage clone() {
+        ServerUsage clone = new ServerUsage();
+        clone.cpu = cpu;
+        clone.gpu = gpu;
+        clone.net = net;
+        clone.disk = disk;
+
+        return clone;
+    }
 }
