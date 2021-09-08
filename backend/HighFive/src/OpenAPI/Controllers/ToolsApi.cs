@@ -29,14 +29,15 @@ namespace Org.OpenAPITools.Controllers
         /// 
         /// </summary>
         /// <remarks>Endpoint for Create Meta Data Type use case</remarks>
-        /// <param name="createToolMetaDataTypeRequest"></param>
+        /// <param name="name"></param>
+        /// <param name="file"></param>
         /// <response code="200">All tool types have been returned</response>
         [HttpPost]
         [Route("/tools/createMetaDataType")]
-        [Consumes("application/json")]
+        [Consumes("multipart/form-data")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
-        public abstract IActionResult CreateMetaDataType([FromBody]CreateToolMetaDataTypeRequest createToolMetaDataTypeRequest);
+        public abstract IActionResult CreateMetaDataType([FromForm (Name = "name")]string name, IFormFile file);
 
         /// <summary>
         /// 

@@ -19,7 +19,7 @@ namespace src.Subsystems.Tools
             _baseContainerSet = false;
         }
 
-        public override IActionResult CreateMetaDataType(CreateToolMetaDataTypeRequest createToolMetaDataTypeRequest)
+        public override IActionResult CreateMetaDataType(string name, IFormFile file)
         {
             throw new System.NotImplementedException();
         }
@@ -73,7 +73,7 @@ namespace src.Subsystems.Tools
             {
                 ConfigureStorageManager();
             }
-            var status =_toolService.UploadAnalysisTool(sourceCode, model, toolName).Result;
+            var status =_toolService.UploadAnalysisTool(sourceCode, model, metadataType, toolName).Result;
             var response = new EmptyObject {Success = status};
             if (!status)
             {
@@ -88,7 +88,7 @@ namespace src.Subsystems.Tools
             {
                 ConfigureStorageManager();
             }
-            var status =_toolService.UploadDrawingTool(sourceCode, toolName).Result;
+            var status =_toolService.UploadDrawingTool(sourceCode, metadataType, toolName).Result;
             var response = new EmptyObject {Success = status};
             if (!status)
             {

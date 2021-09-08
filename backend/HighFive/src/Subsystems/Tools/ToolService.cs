@@ -25,7 +25,7 @@ namespace src.Subsystems.Tools
             _storageManager = storageManager;
         }
         
-        public async Task<bool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string toolName)
+        public async Task<bool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataName, string toolName)
         {
             var generatedToolName = _storageManager.HashMd5(toolName);
             if (ToolExists(generatedToolName))
@@ -49,7 +49,7 @@ namespace src.Subsystems.Tools
             return true;
         }
 
-        public async Task<bool> UploadDrawingTool(IFormFile sourceCode, string toolName)
+        public async Task<bool> UploadDrawingTool(IFormFile sourceCode, string metadataName, string toolName)
         {
             var generatedToolName = _storageManager.HashMd5(toolName);
             if (ToolExists(generatedToolName))
@@ -146,6 +146,16 @@ namespace src.Subsystems.Tools
         {
             var responseList = new List<string> {"analysis", "drawing"};
             return responseList;
+        }
+
+        public bool CreateMetaDataType(IFormFile file, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GetToolMetaDataTypes GetMetaDataTypes()
+        {
+            throw new NotImplementedException();
         }
 
         private bool ToolExists(string toolName)
