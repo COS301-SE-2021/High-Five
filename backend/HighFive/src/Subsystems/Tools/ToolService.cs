@@ -154,7 +154,7 @@ namespace src.Subsystems.Tools
         {
             var generatedName = _storageManager.HashMd5(file.Name);
             var metadataFile = _storageManager.CreateNewFile(generatedName + ".cs", ContainerName + "/metadata").Result;
-            if (metadataFile == null)
+            if (metadataFile == null || GetDefaultToolMetaData().IndexOf(name) != -1)
             {
                 return false;
             }
@@ -177,7 +177,15 @@ namespace src.Subsystems.Tools
 
         public GetToolMetaDataTypes GetMetaDataTypes()
         {
-            throw new NotImplementedException();
+            var responseList = new List<string>();
+            var metadataFile = _storageManager.GetFile("toolmetadata.txt", "").Result;
+            var metadataArray = metadataFile.ToText().Result.Split(new[] {'\n'}, StringSplitOptions.None);
+            //the above line splits the text file's contents by newlines into an array
+            var defaultMetadata = GetDefaultToolMetaData();
+            responseList.AddRange(metadataArray);
+            responseList.AddRange(defaultMetadata);
+
+            return new GetToolMetaDataTypes{MetaDataTypes = responseList};
         }
 
         private bool ToolExists(string toolName)
@@ -234,6 +242,17 @@ namespace src.Subsystems.Tools
             var toolsArray = defaultToolsFile.ToText().Result.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
             //the above line splits the text file's contents by newlines into an array
             return toolsArray;
+        }
+        
+        private string[] GetDefaultToolMetaData()
+        {
+            var currentContainer = _storageManager.GetCurrentContainer();
+            _storageManager.SetBaseContainer("public");
+            var defaultMetadataFile = _storageManager.GetFile("default_toolmetadata.txt","").Result;
+            _storageManager.SetBaseContainer(currentContainer);
+            var metadataArray = defaultMetadataFile.ToText().Result.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+            //the above line splits the text file's contents by newlines into an array
+            return metadataArray;
         }
         
         //-----------------------------------TOOL LOADING FUNCTIONS-----------------------------------//

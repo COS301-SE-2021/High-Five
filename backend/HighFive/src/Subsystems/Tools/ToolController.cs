@@ -61,7 +61,9 @@ namespace src.Subsystems.Tools
             {
                 ConfigureStorageManager();
             }
-            throw new System.NotImplementedException();
+
+            var response = _toolService.GetMetaDataTypes();
+            return StatusCode(200, response);
         }
 
         public override IActionResult GetToolTypes()
