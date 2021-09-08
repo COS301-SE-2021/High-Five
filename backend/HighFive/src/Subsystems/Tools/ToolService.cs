@@ -199,13 +199,6 @@ namespace src.Subsystems.Tools
             return new GetToolMetaDataTypes{MetaDataTypes = responseList};
         }
 
-        private bool ToolExists(string toolName)
-        {
-            var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
-            var toolsArray = toolsFile.ToText().Result.Split("\n");
-            return toolsArray.IndexOf("analysis/" + toolName) != -1 || toolsArray.IndexOf("drawing/" + toolName) != -1;
-        }
-
         private void AddToToolsFile(string toolName, string type, string metadataType)
         {
             var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
