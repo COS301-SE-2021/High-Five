@@ -6,7 +6,7 @@ namespace broker_analysis_client.Client
     public interface IAnalysisStorageManager
     {
         public Task<AnalyzedImageMetaData> StoreImage(byte[] image, AnalyzeImageRequest request);
-        public AnalyzedVideoMetaData StoreVideo(byte[] video, AnalyzeVideoRequest requests);
+        public Task<AnalyzedVideoMetaData> StoreVideo(byte[] video, AnalyzeVideoRequest requests);
         public Task<byte[]> GetVideo(string videoId);
         public Task<byte[]> GetImage(string imageId);
 

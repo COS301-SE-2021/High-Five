@@ -37,9 +37,24 @@ namespace broker_analysis_client.Client
             return response;
         }
 
-        public AnalyzedVideoMetaData StoreVideo(byte[] video, AnalyzeVideoRequest requests)
+        public async Task<AnalyzedVideoMetaData> StoreVideo(byte[] video, AnalyzeVideoRequest request)
         {
-            throw new System.NotImplementedException();
+            var analysisPipeline = JsonConvert.DeserializeObject<PipelineRequest>(GetPipeline(request.PipelineId).Result);
+            analysisPipeline.Tools.Sort();
+            const string storageContainer = "analyzed/video";
+            const string fileExtension = ".mp4";
+            var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + string.Join(",",analysisPipeline.Tools));
+            var testFile = _storageManager.CreateNewFile(analyzedMediaName+ fileExtension, storageContainer).Result;
+            await testFile.UploadFileFromByteArray(video);
+
+            var response = new AnalyzedVideoMetaData
+            {
+                Id = analyzedMediaName,
+                VideoId = request.VideoId,
+                PipelineId = request.PipelineId,
+                Url = testFile.GetUrl()
+            };
+            return response;
         }
 
         public async Task<byte[]> GetVideo(string videoId)
