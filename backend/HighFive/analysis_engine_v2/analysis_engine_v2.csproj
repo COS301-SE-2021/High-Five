@@ -218,6 +218,7 @@
         <Compile Include="BrokerClient\Service\Models\AnalyzedVideoMetaData.cs" />
         <Compile Include="BrokerClient\Service\Models\AnalyzeImageRequest.cs" />
         <Compile Include="BrokerClient\Service\Models\AnalyzeVideoRequest.cs" />
+        <Compile Include="BrokerClient\Service\Models\PipelineRequest.cs" />
         <Compile Include="BrokerClient\Storage\BlobFile.cs" />
         <Compile Include="BrokerClient\Storage\IBlobFile.cs" />
         <Compile Include="BrokerClient\Storage\IStorageManager.cs" />

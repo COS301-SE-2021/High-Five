@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using analysis_engine_v2.BrokerClient.Service.Models;
 using broker_analysis_client.Client.Models;
 using broker_analysis_client.Storage;
+using Newtonsoft.Json;
 
 namespace broker_analysis_client.Client
 {
@@ -15,10 +17,24 @@ namespace broker_analysis_client.Client
             _storageManager = new StorageManager();
         }
         
-        public AnalyzedImageMetaData StoreImage(byte[] image, AnalyzeImageRequest request)
+        public async Task<AnalyzedImageMetaData> StoreImage(byte[] image, AnalyzeImageRequest request)
         {
-            //var blobFile = _storageManager.CreateNewFile(fileName, "analyzed/video").Result;
-            throw new NotImplementedException();
+            var analysisPipeline = JsonConvert.DeserializeObject<PipelineRequest>(GetPipeline(request.PipelineId).Result);
+            analysisPipeline.Tools.Sort();
+            const string storageContainer = "analyzed/image";
+            const string fileExtension = ".img";
+            var analyzedMediaName = _storageManager.HashMd5(request.ImageId + "|" + string.Join(",",analysisPipeline.Tools));
+            var testFile = _storageManager.CreateNewFile(analyzedMediaName+ fileExtension, storageContainer).Result;
+            await testFile.UploadFileFromByteArray(image);
+
+            var response = new AnalyzedImageMetaData
+            {
+                Id = analyzedMediaName,
+                ImageId = request.ImageId,
+                PipelineId = request.PipelineId,
+                Url = testFile.GetUrl()
+            };
+            return response;
         }
 
         public AnalyzedVideoMetaData StoreVideo(byte[] video, AnalyzeVideoRequest requests)
