@@ -3,6 +3,7 @@ package clients.servers;
 import dataclasses.serverinfo.ServerTopics;
 import io.reactivex.rxjava3.core.Observer;
 import logger.EventLogger;
+import managers.topicmanager.TopicManager;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
@@ -46,18 +47,20 @@ public class KafkaServerParticipant extends ServerParticipant {
             KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
 
             consumer.assign(partitions);
-            consumer.seekToEnd(partitions);
 
             //Iterate through each server
             for (TopicPartition partition : partitions) {
 
-                List<ConsumerRecord<String, String>> messageList = consumer.poll(Duration.ofSeconds(10)).records(partition);
+                //Get the last message from the server
+                long offset = consumer.position(partition);
+                System.out.println(offset);
+                consumer.seek(partition, offset);
 
-                System.out.println(messageList);
+                List<ConsumerRecord<String, String>> messageList = consumer.poll(Duration.ofSeconds(10)).records(partition);
 
                 //Check if the server has any messages
                 if (messageList.size() == 0) {
-                    EventLogger.getLogger().info("No messages found!");
+                    //EventLogger.getLogger().info("No messages found!");
                     continue;
                 }
 
@@ -67,7 +70,7 @@ public class KafkaServerParticipant extends ServerParticipant {
                 //offline.
                 if (((int) System.currentTimeMillis() / 1000L) - getMessageTime(msg.value()) > 45) {
                     EventLogger.getLogger().info("Deleting topic: " + msg.topic());
-                    deleteTopic(msg.topic());
+                    TopicManager.getInstance().deleteTopic(msg.topic());
                 } else {
                     notify(msg.value());
                 }
@@ -75,20 +78,6 @@ public class KafkaServerParticipant extends ServerParticipant {
 
             consumer.close();
             Thread.sleep(1000L);
-        }
-    }
-
-    /**
-     * Delete a topic.
-     * @param topic Name of topic to be deleted.
-     */
-    private void deleteTopic(String topic) {
-        String exec = System.getenv("KAFKA_DELETE_TOPIC").replace("{topic}", topic);
-        try {
-            ProcessBuilder builder = new ProcessBuilder(exec.split(" "));
-            builder.start();
-        } catch (IOException e) {
-            EventLogger.getLogger().error(e.getMessage());
         }
     }
 
