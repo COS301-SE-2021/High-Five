@@ -338,7 +338,8 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
-      <Content Include="BrokerClient\Service\SampleCode.txt" />
+      <Content Include="DynamicTools\SampleCode.txt" />
+      <Content Include="DynamicTools\SampleMetadata.txt" />
     </ItemGroup>
     <ItemGroup>
       <None Include="packages.config" />

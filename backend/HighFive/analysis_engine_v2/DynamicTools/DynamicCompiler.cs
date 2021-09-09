@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace analysis_engine.BrokerClient
 {
-    public class DynamicCompiler
+    public class DynamicCompiler: MarshalByRefObject
     {
         /*
          * This class dynamically compiles the source code for an analysis- or drawing
@@ -33,7 +33,8 @@ namespace analysis_engine.BrokerClient
                 MetadataReference.CreateFromFile(typeof(AnalysisTool).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(DrawingTool).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Data).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(FileMode).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(FileMode).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(BoxCoordinateData).Assembly.Location)
             };
             Assembly.GetEntryAssembly()
                 ?.GetReferencedAssemblies()

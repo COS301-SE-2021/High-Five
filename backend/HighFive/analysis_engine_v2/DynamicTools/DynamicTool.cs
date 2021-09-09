@@ -33,11 +33,11 @@ namespace analysis_engine.BrokerClient
         public void LoadCompiledBytes(byte[] assemblyBytes)
         {
             var assembly = Assembly.Load(assemblyBytes);
-            _dynamicType = assembly.GetType("CustomTool.TestTool");
+            _dynamicType = assembly.GetType("High5.CustomTool");
             //constructors can be called by passing parameters to Activator.CreateInstance
             _dynamicObject = Activator.CreateInstance(_dynamicType);
         }
-        
+
         public override Data Process(Data data)
         {
             return (Data) _dynamicType.InvokeMember("Process",

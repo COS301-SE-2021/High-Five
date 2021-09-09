@@ -14,7 +14,6 @@ namespace broker_analysis_client.Client
         public AnalyzedImageMetaData AnalyzeImage(AnalyzeImageRequest request)
         {
             DynamicCompilation();//A test function
-            return null;
             throw new System.NotImplementedException();
         }
 
@@ -25,10 +24,15 @@ namespace broker_analysis_client.Client
         
         //----------------------------TEST CODE----------------------------------//
         //TODO: REMOVE THIS LATER
+        /* This is an example code segment of how the DynamicToolFactory should be called.
+         * This creates a user-written tool dynamically and loads it into a secure
+         * AppDomain.
+         */
 
         private void DynamicCompilation()
         {
-            var sourceCode = File.ReadAllText("../../BrokerClient/Service/SampleCode.txt");
+            var sourceCode = File.ReadAllText("../../DynamicTools/SampleCode.txt");
+            //var metadataCode = File.ReadAllText("../../DynamicTools/SampleMetadata.txt");
             var userToolFactory = new DynamicToolFactory();
 
             var dynamicTool = userToolFactory.CreateDynamicTool("MyCustomTool", sourceCode);

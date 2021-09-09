@@ -42,7 +42,7 @@ namespace broker_analysis_client.Storage
             SetBaseContainer("unset");//This initial value indicates that the initial container has not yet been set
             if (_cloudStorageAccount != null)
             {
-                _cloudStorageAccount = CloudStorageAccount.Parse(ConfigStrings.StorageConectionString);
+                _cloudStorageAccount = CloudStorageAccount.Parse(ConfigStrings.StorageConnectionString);
             }
             _random = new Random();
         }

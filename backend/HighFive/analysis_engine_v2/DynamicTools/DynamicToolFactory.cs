@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
+using Microsoft.CodeAnalysis;
 
 namespace analysis_engine.BrokerClient
 {
@@ -22,18 +24,18 @@ namespace analysis_engine.BrokerClient
                 null,
                 setup,
                 permissions);
+            
         }
 
-        public DynamicTool CreateDynamicTool(string toolName, string toolCode, string metadataCode = null)
+        public Tool CreateDynamicTool(string toolName, string toolCode)
         {
             /*
              * This function might throw an exception. If it does, it means there is a compilation
              * error within the user's uploaded code.
              */
-            
-            DynamicTool dynamicTool;
+
             var assemblyBytes = DynamicCompiler.Compile(toolCode);
-            dynamicTool = (DynamicTool) _restrictedDomain.CreateInstanceAndUnwrap(
+            var dynamicTool = (DynamicTool) _restrictedDomain.CreateInstanceAndUnwrap(
                 _dynamicToolType.Assembly.FullName, _dynamicToolType.FullName,
                 false, BindingFlags.Default, null, new object[] {toolName}, null, null);
             dynamicTool.LoadCompiledBytes(assemblyBytes);
