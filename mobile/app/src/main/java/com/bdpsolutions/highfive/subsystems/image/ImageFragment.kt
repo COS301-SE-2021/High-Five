@@ -3,11 +3,8 @@ package com.bdpsolutions.highfive.subsystems.image
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -25,16 +22,20 @@ import com.bdpsolutions.highfive.subsystems.image.view.ImageItemView
 import com.bdpsolutions.highfive.subsystems.image.viewmodel.ImageViewModel
 import com.bdpsolutions.highfive.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
-import com.bdpsolutions.highfive.subsystems.main.MainActivity
 
 import androidx.core.content.FileProvider
 import com.bdpsolutions.highfive.utils.ImageURL
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.IntentFilter
+import android.util.Log
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import java.text.SimpleDateFormat
 
 
 @AndroidEntryPoint
@@ -49,6 +50,13 @@ class ImageFragment : Fragment() {
     private var binding: ImageFragmentBinding? = null
     private var clicked = false
     private var permissionCallBack : ArrayList<() -> Unit> = arrayListOf({})
+    private val bReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Toast.makeText(context, "Image successfully uploaded", Toast.LENGTH_LONG).show()
+            showLoader()
+            refresh()
+        }
+    }
 
     @Inject
     lateinit var adapter: ImageRecyclerViewAdapter
@@ -66,8 +74,8 @@ class ImageFragment : Fragment() {
 
         binding?.recyclerView?.adapter = adapter
 
-        viewModel.registerFetchFromGallery(this)
-        viewModel.registerFetchFromCamera(this)
+        viewModel.registerFetchImage(this)
+        viewModel.registerServiceReceiver(requireActivity(), bReceiver)
         viewModel.registerPermission(this, permissionCallBack)
 
         viewModel.imageResult.observe(viewLifecycleOwner, Observer {
@@ -144,18 +152,21 @@ class ImageFragment : Fragment() {
     }
 
     private fun galleryUploader(){
-        viewModel.launchGalleryChooser(
-            Intent(
-                Intent.ACTION_PICK,
-                MediaStore.Images.Media.INTERNAL_CONTENT_URI
-            )
+        viewModel.launchImageChooser(
+            Intent().apply {
+                action = Intent.ACTION_PICK
+                setDataAndType(MediaStore.Images.Media.INTERNAL_CONTENT_URI, "image/*")
+            }
         )
     }
 
     private fun cameraUploader(){
+
+        val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        val formatDate = formatter.format(Calendar.getInstance().time)
         val outputDir: File = requireContext().cacheDir
 
-        val outputFile = File(outputDir, "tmp.jpg")
+        val outputFile = File(outputDir, "IMG_$formatDate.jpg")
         val imageUri = FileProvider.getUriForFile(
             this.requireContext(),
             requireActivity().packageName.toString() + ".provider",
@@ -165,7 +176,7 @@ class ImageFragment : Fragment() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
 
-        viewModel.launchCamera(intent)
+        viewModel.launchImageChooser(intent)
     }
 
     fun showLoader() {
@@ -180,4 +191,15 @@ class ImageFragment : Fragment() {
             viewModel.fetchImageData()
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.registerServiceReceiver(requireActivity(), bReceiver)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(bReceiver)
+    }
+
 }

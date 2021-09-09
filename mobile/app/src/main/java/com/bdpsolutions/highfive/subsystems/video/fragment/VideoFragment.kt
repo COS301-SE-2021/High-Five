@@ -1,7 +1,10 @@
 package com.bdpsolutions.highfive.subsystems.video.fragment
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,6 +19,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bdpsolutions.highfive.R
 import com.bdpsolutions.highfive.subsystems.video.adapter.VideoFragmentRecyclerViewAdapter
 import com.bdpsolutions.highfive.databinding.FragmentVideoBinding
@@ -47,6 +51,13 @@ class VideoFragment: Fragment() {
     private var clicked = false
 
     var binding: FragmentVideoBinding? = null
+    private val bReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Toast.makeText(context, "Video successfully uploaded", Toast.LENGTH_LONG).show()
+            showLoader()
+            refresh()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,6 +72,7 @@ class VideoFragment: Fragment() {
         binding?.videoHolder?.adapter = adapter
 
         videoViewModel.registerFetchVideo(this)
+        videoViewModel.registerServiceReceiver(requireActivity(), bReceiver)
         videoViewModel.registerPermission(this, permissionCallBack)
 
         videoViewModel.videoResult.observe(viewLifecycleOwner, Observer {
@@ -138,10 +150,10 @@ class VideoFragment: Fragment() {
 
     private fun vidLibraryUploader(){
         videoViewModel.launchVideoChooser(
-            Intent(
-                Intent.ACTION_PICK,
-                MediaStore.Video.Media.INTERNAL_CONTENT_URI
-            )
+            Intent().apply {
+                action = Intent.ACTION_PICK
+                setDataAndType(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, "video/*")
+            }
         )
     }
 
@@ -164,5 +176,15 @@ class VideoFragment: Fragment() {
             adapter.clearData()
             videoViewModel.fetchVideoData()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        videoViewModel.registerServiceReceiver(requireActivity(), bReceiver)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(bReceiver)
     }
 }
