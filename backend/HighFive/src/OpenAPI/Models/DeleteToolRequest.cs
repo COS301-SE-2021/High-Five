@@ -24,26 +24,20 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class AnalyzeMediaRequest : IEquatable<AnalyzeMediaRequest>
+    public class DeleteToolRequest : IEquatable<DeleteToolRequest>
     {
         /// <summary>
-        /// Gets or Sets MediaId
+        /// Analysis or Drawing
         /// </summary>
-        [DataMember(Name="mediaId", EmitDefaultValue=false)]
-        public string MediaId { get; set; }
+        /// <value>Analysis or Drawing</value>
+        [DataMember(Name="toolType", EmitDefaultValue=false)]
+        public string ToolType { get; set; }
 
         /// <summary>
-        /// Gets or Sets PipelineId
+        /// Gets or Sets ToolId
         /// </summary>
-        [DataMember(Name="pipelineId", EmitDefaultValue=false)]
-        public string PipelineId { get; set; }
-
-        /// <summary>
-        /// This string can only be \&quot;image\&quot; or \&quot;video\&quot;
-        /// </summary>
-        /// <value>This string can only be \&quot;image\&quot; or \&quot;video\&quot;</value>
-        [DataMember(Name="mediaType", EmitDefaultValue=false)]
-        public string MediaType { get; set; }
+        [DataMember(Name="toolId", EmitDefaultValue=false)]
+        public string ToolId { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -52,10 +46,9 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class AnalyzeMediaRequest {\n");
-            sb.Append("  MediaId: ").Append(MediaId).Append("\n");
-            sb.Append("  PipelineId: ").Append(PipelineId).Append("\n");
-            sb.Append("  MediaType: ").Append(MediaType).Append("\n");
+            sb.Append("class DeleteToolRequest {\n");
+            sb.Append("  ToolType: ").Append(ToolType).Append("\n");
+            sb.Append("  ToolId: ").Append(ToolId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -78,34 +71,29 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((AnalyzeMediaRequest)obj);
+            return obj.GetType() == GetType() && Equals((DeleteToolRequest)obj);
         }
 
         /// <summary>
-        /// Returns true if AnalyzeMediaRequest instances are equal
+        /// Returns true if DeleteToolRequest instances are equal
         /// </summary>
-        /// <param name="other">Instance of AnalyzeMediaRequest to be compared</param>
+        /// <param name="other">Instance of DeleteToolRequest to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(AnalyzeMediaRequest other)
+        public bool Equals(DeleteToolRequest other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    MediaId == other.MediaId ||
-                    MediaId != null &&
-                    MediaId.Equals(other.MediaId)
+                    ToolType == other.ToolType ||
+                    ToolType != null &&
+                    ToolType.Equals(other.ToolType)
                 ) && 
                 (
-                    PipelineId == other.PipelineId ||
-                    PipelineId != null &&
-                    PipelineId.Equals(other.PipelineId)
-                ) && 
-                (
-                    MediaType == other.MediaType ||
-                    MediaType != null &&
-                    MediaType.Equals(other.MediaType)
+                    ToolId == other.ToolId ||
+                    ToolId != null &&
+                    ToolId.Equals(other.ToolId)
                 );
         }
 
@@ -119,12 +107,10 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (MediaId != null)
-                    hashCode = hashCode * 59 + MediaId.GetHashCode();
-                    if (PipelineId != null)
-                    hashCode = hashCode * 59 + PipelineId.GetHashCode();
-                    if (MediaType != null)
-                    hashCode = hashCode * 59 + MediaType.GetHashCode();
+                    if (ToolType != null)
+                    hashCode = hashCode * 59 + ToolType.GetHashCode();
+                    if (ToolId != null)
+                    hashCode = hashCode * 59 + ToolId.GetHashCode();
                 return hashCode;
             }
         }
@@ -132,12 +118,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(AnalyzeMediaRequest left, AnalyzeMediaRequest right)
+        public static bool operator ==(DeleteToolRequest left, DeleteToolRequest right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(AnalyzeMediaRequest left, AnalyzeMediaRequest right)
+        public static bool operator !=(DeleteToolRequest left, DeleteToolRequest right)
         {
             return !Equals(left, right);
         }
