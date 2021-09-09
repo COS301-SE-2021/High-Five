@@ -174,6 +174,8 @@ class ViewModelProviderFactoryTest {
     @Test
     fun `create VideoViewModel class from factory`() { //NOSONAR
         val factory = ViewModelProviderFactory()
+        val repositoryFactory = RepositoryFactoryImpl()
+        factory.repoFactory = repositoryFactory
         val viewModel = factory.create(VideoViewModel::class.java)
         Truth.assertThat(viewModel).isInstanceOf(VideoViewModel::class.java)
     }
