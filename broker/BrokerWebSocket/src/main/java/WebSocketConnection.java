@@ -2,7 +2,6 @@ import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.*;
 import java.net.Socket;
-import org.apache.logging.log4j.*;
 
 /**
  * WebSocket class that is loaded into an embedded Tomcat server. This class acts as a middleman
@@ -12,13 +11,12 @@ import org.apache.logging.log4j.*;
 public class WebSocketConnection {
 
     private Socket connection;
-    private final Logger logger = LogManager.getLogger(WebSocketConnection.class.getName());
 
     @OnOpen
     public void onOpen(Session session) throws IOException {
         int port = Integer.parseInt(System.getenv("BROKER_CLIENT_PORT"));
         connection = new Socket("localhost", port);
-        logger.info("Opening new websocket connection");
+        System.out.println("Websocket connection opened");
     }
 
     /**
@@ -47,7 +45,7 @@ public class WebSocketConnection {
     @OnClose
     public void onClose(Session session) throws IOException {
         connection.close();
-        logger.info("Closing socket connection");
+        System.out.println("Websocket connection closed");
     }
 
     @OnError
@@ -55,6 +53,6 @@ public class WebSocketConnection {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         throwable.printStackTrace(pw);
-        logger.error(sw.toString());
+        System.err.println(sw);
     }
 }
