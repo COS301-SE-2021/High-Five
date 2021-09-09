@@ -1,5 +1,6 @@
 package listeners.servers;
 
+import dataclasses.serverinfo.ServerTopics;
 import io.reactivex.rxjava3.core.Observer;
 import listeners.ConnectionListener;
 import logger.EventLogger;
@@ -14,9 +15,9 @@ import java.util.*;
  */
 public class KafkaTopicListener extends ConnectionListener<String> {
 
-    private final List<String> topics;
+    private final ServerTopics topics;
 
-    public KafkaTopicListener(Observer<String> notifier, List<String> topics) {
+    public KafkaTopicListener(Observer<String> notifier, ServerTopics topics) {
         super(notifier);
         EventLogger.getLogger().info("Starting KafkaTopicListener");
         this.topics = topics;

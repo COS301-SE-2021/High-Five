@@ -24,6 +24,7 @@ dependencies {
     implementation 'org.apache.tomcat:tomcat-jsp-api:8.0.28'
     implementation 'org.apache.logging.log4j:log4j-api:2.14.1'
     implementation 'org.apache.logging.log4j:log4j-core:2.14.1'
+    implementation 'org.apache.kafka:kafka-clients:2.8.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'

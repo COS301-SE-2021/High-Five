@@ -1,17 +1,23 @@
 package clients.servers;
 
+import dataclasses.serverinfo.ServerTopics;
 import io.reactivex.rxjava3.core.Observer;
 import logger.EventLogger;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 
 import java.io.*;
+import java.time.Duration;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.*;
 
 public class KafkaServerParticipant extends ServerParticipant {
 
-    private final List<String> topics;
+    private final ServerTopics topics;
 
-    public KafkaServerParticipant(Observer<String> observable, List<String> topics) {
+    public KafkaServerParticipant(Observer<String> observable, ServerTopics topics) {
         super(observable);
         EventLogger.getLogger().info("Creating new KafkaServerParticipant");
         this.topics = topics;
@@ -31,71 +37,43 @@ public class KafkaServerParticipant extends ServerParticipant {
         EventLogger.getLogger().info("Listening for new messages from servers");
         while (true) {
 
-            //Enhanced for loop not used because of concurrent access to topics
-            for (int i = 0; i < topics.size(); i++) {
+            //Create consumer to listen to new performance messages from servers
+            List<TopicPartition> partitions = topics.getPartitions();
+            Properties props = new Properties();
+            props.setProperty("bootstrap.servers", "localhost:9092");
+            props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
 
-                String topic = topics.get(i);
+            consumer.assign(partitions);
+            consumer.seekToEnd(partitions);
 
-                int offset = 0;
+            //Iterate through each server
+            for (TopicPartition partition : partitions) {
 
-                try {
-                    offset = getLastOffset(topic);
-                } catch (IOException e) {
-                    EventLogger.getLogger().error(e.getMessage());
-                    continue;
-                }
+                List<ConsumerRecord<String, String>> messageList = consumer.poll(Duration.ofSeconds(10)).records(partition);
 
-                //No messages were found
-                if (offset < 0 ) {
+                System.out.println(messageList);
+
+                //Check if the server has any messages
+                if (messageList.size() == 0) {
                     EventLogger.getLogger().info("No messages found!");
                     continue;
                 }
 
-                Process proc;
-
-                String exec = System.getenv("KAFKA_GET_MESSAGES")
-                        .replace("{topic}", topic)
-                        .replace("{offset}", Integer.toString(offset));
-                try {
-                    ProcessBuilder builder = new ProcessBuilder(exec.split(" "));
-                    proc = builder.start();
-                } catch (IOException e) {
-                    EventLogger.getLogger().error(e.getMessage());
-                    beat = false;
-                    return;
-                }
-
-                String line;
-                String msg = null;
-
-                //Read all the messages from the topic, but only use the latest message.
-                BufferedReader inputStreamReader =
-                        new BufferedReader(new InputStreamReader(proc.getInputStream()));
-                while (true) {
-                    try {
-                        if ((line = inputStreamReader.readLine()) == null) break;
-                    } catch (IOException e) {
-                        beat = false;
-                        EventLogger.getLogger().error(e.getMessage());
-                        return;
-                    }
-                    msg = line;
-                }
-
-                if (msg == null) {
-                    continue;
-                }
+                ConsumerRecord<String, String> msg = messageList.get(0);
 
                 //delete topic if the last message sent is older than 45 seconds. This means the server is
                 //offline.
-                if (((int) System.currentTimeMillis()/1000L) - getMessageTime(msg) > 45 ) {
-                    EventLogger.getLogger().info("Deleting topic: " + topic);
-                    deleteTopic(topic);
+                if (((int) System.currentTimeMillis() / 1000L) - getMessageTime(msg.value()) > 45) {
+                    EventLogger.getLogger().info("Deleting topic: " + msg.topic());
+                    deleteTopic(msg.topic());
                 } else {
-                    notify(msg);
-                    proc.destroy();
+                    notify(msg.value());
                 }
             }
+
+            consumer.close();
             Thread.sleep(1000L);
         }
     }
@@ -125,31 +103,5 @@ public class KafkaServerParticipant extends ServerParticipant {
             return 0;
         }
         return Long.parseLong(timePattern.group(1));
-    }
-
-    /**
-     * Fetches the last offset from a Kafka topic. This is used to fetch the latest
-     * message from the topic.
-     * @param topic Kafka topic to get offset from
-     * @return Latest offset
-     */
-    private int getLastOffset(String topic) throws IOException {
-        ProcessBuilder builder = new ProcessBuilder(System.getenv("KAFKA_GET_OFFSET")
-                .replace("{topic}", topic).split(" "));
-
-        Process process= builder.start();
-
-        BufferedReader inputStreamReader =
-                new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line = inputStreamReader.readLine();
-        process.destroy();
-
-        Matcher matcher = Pattern.compile(topic + ":0:(\\d+)").matcher(line);
-
-        if (!matcher.find()) {
-            return -1;
-        } else {
-            return Integer.parseInt(matcher.group(1)) - 1;
-        }
     }
 }
