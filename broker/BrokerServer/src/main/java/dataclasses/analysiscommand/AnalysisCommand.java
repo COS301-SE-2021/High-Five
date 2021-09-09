@@ -1,5 +1,7 @@
 package dataclasses.analysiscommand;
 
+import java.util.UUID;
+
 public class AnalysisCommand {
     private final String mediaType;
     private final String mediaId;
@@ -12,7 +14,8 @@ public class AnalysisCommand {
     }
 
     public String toString() {
-        return "{\"analyze\": { \"mediatype\": \"" +
-                mediaType + "\", \"mediaId\": " + mediaId + "\", \"pipelineId\": \""+ pipelineId + "\"}}";
+        String analysisId = UUID.randomUUID().toString();
+        return "{\"commandId\": \"" + analysisId + "\", \"analyze\": { \"mediatype\": \"" +
+                mediaType + "\", \"mediaId\": \"" + mediaId + "\", \"pipelineId\": \""+ pipelineId + "\"}}";
     }
 }

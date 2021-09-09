@@ -49,6 +49,12 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
         producer.send(commandToSend);
         producer.close();
 
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
         //Get response from server
         String response = readResponse(info.getServerId());
 

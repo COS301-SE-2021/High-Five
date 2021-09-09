@@ -10,13 +10,9 @@ import java.net.Socket;
 @ServerEndpoint(value="/broker")
 public class WebSocketConnection {
 
-    private Socket connection;
-
     @OnOpen
     public void onOpen(Session session) throws IOException {
-        int port = Integer.parseInt(System.getenv("BROKER_CLIENT_PORT"));
-        connection = new Socket("localhost", port);
-        System.out.println("Websocket connection opened");
+
     }
 
     /**
@@ -29,6 +25,8 @@ public class WebSocketConnection {
     @OnMessage
     public void onMessage(Session session, String message) throws IOException {
         //Send request to broker
+        int port = Integer.parseInt(System.getenv("BROKER_CLIENT_PORT"));
+        Socket connection = new Socket("localhost", port);
         Writer serverInfoRequest = new BufferedWriter(new OutputStreamWriter(
                 connection.getOutputStream()));
 
@@ -40,19 +38,12 @@ public class WebSocketConnection {
 
         //Send response to web client
         session.getBasicRemote().sendText(infoData);
+        connection.close();
     }
 
     @OnClose
-    public void onClose(Session session) throws IOException {
-        connection.close();
-        System.out.println("Websocket connection closed");
-    }
+    public void onClose(Session session) throws IOException {}
 
     @OnError
-    public void onError(Session session, Throwable throwable) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        throwable.printStackTrace(pw);
-        System.err.println(sw);
-    }
+    public void onError(Session session, Throwable throwable) {}
 }
