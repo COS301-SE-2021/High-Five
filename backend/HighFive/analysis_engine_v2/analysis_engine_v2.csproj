@@ -327,6 +327,9 @@
         <Compile Include="Tools\Tool.cs" />
         <Compile Include="DynamicTools\DynamicTool.cs" />
         <Compile Include="DynamicTools\DynamicCompiler.cs" />
+        <Compile Include="Video\ConcreteFrameGrabber\ImageFrameGrabber.cs" />
+        <Compile Include="Video\ConcreteFrameGrabber\StreamFrameGrabber.cs" />
+        <Compile Include="Video\ConcreteFrameGrabber\VideoFrameGrabber.cs" />
         <Compile Include="Video\FrameGrabber.cs" />
     </ItemGroup>
     <ItemGroup>
