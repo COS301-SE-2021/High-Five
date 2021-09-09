@@ -30,6 +30,10 @@ public class ServerTopics {
         }
     }
 
+    public void deleteTopic(String topic) {
+        topics.removeIf(s -> s.equals(topic));
+    }
+
     public boolean contains(String topic) {
         return topics.contains(topic);
     }

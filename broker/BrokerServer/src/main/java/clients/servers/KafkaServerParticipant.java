@@ -53,8 +53,10 @@ public class KafkaServerParticipant extends ServerParticipant {
 
                 //Get the last message from the server
                 long offset = consumer.position(partition);
-                System.out.println(offset);
-                consumer.seek(partition, offset);
+                if (offset == 0) {
+                    continue;
+                }
+                consumer.seek(partition, offset-1);
 
                 List<ConsumerRecord<String, String>> messageList = consumer.poll(Duration.ofSeconds(10)).records(partition);
 
@@ -68,9 +70,10 @@ public class KafkaServerParticipant extends ServerParticipant {
 
                 //delete topic if the last message sent is older than 45 seconds. This means the server is
                 //offline.
-                if (((int) System.currentTimeMillis() / 1000L) - getMessageTime(msg.value()) > 45) {
+                if ((System.currentTimeMillis() / 1000L) - getMessageTime(msg.value()) > 45) {
                     EventLogger.getLogger().info("Deleting topic: " + msg.topic());
                     TopicManager.getInstance().deleteTopic(msg.topic());
+                    topics.deleteTopic(msg.topic());
                 } else {
                     notify(msg.value());
                 }
@@ -87,7 +90,7 @@ public class KafkaServerParticipant extends ServerParticipant {
      * @return UNIX timestamp of time message was sent.
      */
     private long getMessageTime(String message) {
-        Matcher timePattern = Pattern.compile("timestamp: *(\\d+).*[,}]").matcher(message);
+        Matcher timePattern = Pattern.compile("\"timestamp\": *(\\d+).*[,}]").matcher(message);
         if (!timePattern.find()) {
             return 0;
         }

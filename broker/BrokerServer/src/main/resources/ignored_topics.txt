@@ -1,3 +1,0 @@
-__consumer_offsets
-quickstart-events
-RESPONSE_TOPIC
