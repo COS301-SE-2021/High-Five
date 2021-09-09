@@ -85,7 +85,7 @@ namespace src.Storage
             return string.Empty;
         }
 
-        public async Task UploadFile(IFormFile newFile)
+        public async Task UploadFile(IFormFile newFile, string contentType="")
         {
             /*
              *      Description:

@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -125,7 +126,11 @@ namespace src.Subsystems.Pipelines
             }
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
-            _pipelineService.SetBaseContainer(jsonToken.Subject);
+            var alreadyExisted = _pipelineService.SetBaseContainer(jsonToken.Subject);
+            var id = jsonToken.Subject;
+            var displayName = jsonToken.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
+            var email = jsonToken.Claims.FirstOrDefault(x => x.Type == "emails")?.Value;
+            _pipelineService.StoreUserInfo(id,displayName,email);
             _baseContainerSet = true;
         }
     }

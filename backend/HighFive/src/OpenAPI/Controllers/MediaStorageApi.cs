@@ -29,6 +29,32 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Delete Analyzed Image use case</remarks>
+        /// <param name="deleteImageRequest"></param>
+        /// <response code="200">Deletes analyzed image</response>
+        [HttpPost]
+        [Route("/media/deleteAnalyzedImage")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult DeleteAnalyzedImage([FromBody]DeleteImageRequest deleteImageRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Delete Analyzed Video use case</remarks>
+        /// <param name="deleteVideoRequest"></param>
+        /// <response code="200">Deletes analyzed video</response>
+        [HttpPost]
+        [Route("/media/deleteAnalyzedVideo")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult DeleteAnalyzedVideo([FromBody]DeleteVideoRequest deleteVideoRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Delete Image use case</remarks>
         /// <param name="deleteImageRequest"></param>
         /// <response code="200">Image successfully deleted</response>
@@ -57,7 +83,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get All Images use case</remarks>
         /// <response code="200">Returns a list of images in the blob storage</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/media/getAllImages")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetAllImagesResponse))]
@@ -68,7 +94,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get All Videos use case</remarks>
         /// <response code="200">Returns a list of metadata objects of all the videos in the blob storage</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/media/getAllVideos")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetAllVideosResponse))]
@@ -79,7 +105,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get Analyzed Images use case</remarks>
         /// <response code="200">All previously analyzed images are returned</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/media/getAnalyzedImages")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetAnalyzedImagesResponse))]
@@ -90,7 +116,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get Analyzed Videos use case</remarks>
         /// <response code="200">All previously analyzed videos are returned</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/media/getAnalyzedVideos")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetAnalyzedVideosResponse))]
@@ -106,7 +132,7 @@ namespace Org.OpenAPITools.Controllers
         [Route("/media/storeImage")]
         [Consumes("multipart/form-data")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(StoreImageResponse))]
+        [ProducesResponseType(statusCode: 200, type: typeof(ImageMetaData))]
         public abstract Task<IActionResult> StoreImage(IFormFile file);
 
         /// <summary>
@@ -119,7 +145,7 @@ namespace Org.OpenAPITools.Controllers
         [Route("/media/storeVideo")]
         [Consumes("multipart/form-data")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(StoreVideoResponse))]
+        [ProducesResponseType(statusCode: 200, type: typeof(VideoMetaData))]
         public abstract Task<IActionResult> StoreVideo(IFormFile file);
     }
 }

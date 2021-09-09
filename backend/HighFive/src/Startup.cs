@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -5,14 +10,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.WebSockets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using src.AnalysisTools.VideoDecoder;
 using src.Storage;
+using src.Subsystems.Admin;
 using src.Subsystems.Analysis;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
+using src.Subsystems.Tools;
+using src.Subsystems.User;
+using src.Websockets;
 
 namespace src
 {
@@ -35,6 +45,20 @@ namespace src
                 c.AddPolicy("AllowOrigin", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             });
             
+            // Singletons
+            services.Add(new ServiceDescriptor(typeof(IConfiguration), Configuration));
+            services.Add(new ServiceDescriptor(typeof(IAnalysisModels), new AnalysisModels()));
+            // Dependency Injections
+            services.AddScoped<IStorageManager, StorageManager>();
+            services.AddScoped<IVideoDecoder, VideoDecoder>();
+            services.AddScoped<IAdminValidator, AdminValidator>();
+            services.AddScoped<IMediaStorageService, MediaStorageService>();
+            services.AddScoped<IPipelineService, PipelineService>();
+            services.AddScoped<IAnalysisService, AnalysisService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IToolService, ToolService>();
+
+
             // Configuring of Azure AD B2C Authentication
             services.AddAuthentication(options =>
                 {
@@ -52,11 +76,30 @@ namespace src
                             c.NoResult();
                             c.Response.StatusCode = 401;
                             c.Response.ContentType = "application/json";
-                            await c.Response.WriteAsync("{\"error\":\"Invalid token provided. (Developer's note, this error might also mean something else went wrong with the back-end)\"}");
+                            await c.Response.WriteAsync("{\"error\":\"Invalid token provided.\"}");
+                        },
+                        OnTokenValidated = async ctx =>
+                        {
+                            var adminValidator = ctx.HttpContext.RequestServices.GetRequiredService<IAdminValidator>();
+                            var userId = ((JwtSecurityToken)ctx.SecurityToken).Subject;
+                            if (adminValidator.IsAdmin(userId))
+                            {
+                                var claims = new List<Claim>
+                                {
+                                    new Claim("Admin", "true")
+                                };
+                                var appIdentity = new ClaimsIdentity(claims);
+                                ctx.Principal.AddIdentity(appIdentity);
+                            }
                         }
                     };
                 });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
+            });
+            
             services.Configure<KestrelServerOptions>(options =>
             {
                 options.Limits.MaxRequestBodySize = int.MaxValue;
@@ -66,16 +109,6 @@ namespace src
                 options.ValueLengthLimit = int.MaxValue;
                 options.MultipartBodyLengthLimit = int.MaxValue;
             });
-            
-            // Singletons
-            services.Add(new ServiceDescriptor(typeof(IConfiguration), Configuration));
-            services.Add(new ServiceDescriptor(typeof(IAnalysisModels), new AnalysisModels()));
-            // Dependency Injections
-            services.AddScoped<IStorageManager, StorageManager>();
-            services.AddScoped<IMediaStorageService, MediaStorageService>();
-            services.AddScoped<IPipelineService, PipelineService>();
-            services.AddScoped<IAnalysisService, AnalysisService>();
-            services.AddScoped<IVideoDecoder, VideoDecoder>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -84,7 +117,7 @@ namespace src
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseSwagger();
             app.UseSwaggerUI(c =>
                 {
@@ -96,6 +129,11 @@ namespace src
             app.UseCors("AllowOrigin");
             app.UseAuthentication();
             app.UseAuthorization();
+            var webSocketOptions = new WebSocketOptions
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(120)
+            };
+            app.UseWebSockets(webSocketOptions);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
