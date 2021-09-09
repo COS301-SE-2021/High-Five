@@ -111,6 +111,12 @@ public class KafkaTopicListener extends ConnectionListener<String> {
         return offset;
     }
 
+    /**
+     * Add a new server to the list of servers.
+     * @param offset new offset for file
+     * @param server name of server
+     * @throws IOException
+     */
     private void addNewServer(long offset, String server) throws IOException {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream is = classloader.getResourceAsStream("server_information.json");
