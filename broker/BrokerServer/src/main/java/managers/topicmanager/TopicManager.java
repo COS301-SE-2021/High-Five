@@ -1,8 +1,13 @@
 package managers.topicmanager;
 
+import com.google.gson.*;
 import logger.EventLogger;
+import org.apache.commons.io.IOUtil;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -34,6 +39,7 @@ public class TopicManager {
                 try {
                     ProcessBuilder builder = new ProcessBuilder(exec.split(" "));
                     builder.start();
+                    deleteServer(topic);
                 } catch (IOException e) {
                     EventLogger.getLogger().error(e.getMessage());
                 }
@@ -64,5 +70,47 @@ public class TopicManager {
         }finally {
             lock.unlock();
         }
+    }
+
+    private void deleteServer(String server) throws IOException {
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("server_information.json");
+
+        if (is == null) {
+            EventLogger.getLogger().error("Failed to load server_information.json");
+            return;
+        }
+
+        StringWriter writer = new StringWriter();
+        IOUtil.copy(is, writer, "UTF-8");
+
+        try {
+            JsonObject serviceInfo = new Gson().fromJson(writer.toString(), JsonObject.class).getAsJsonObject();
+
+            JsonArray newArray = new JsonArray();
+
+            for (JsonElement element: serviceInfo.get("registered_servers").getAsJsonArray()) {
+                if (!element.getAsString().equals(server)) {
+                    newArray.add(element);
+                }
+            }
+
+            serviceInfo.add("registered_servers", newArray);
+
+            updateServerInformation(classloader, serviceInfo);
+        } catch (Exception e) {
+            EventLogger.getLogger().logException(e);
+        }
+    }
+
+    public static void updateServerInformation(ClassLoader classloader, JsonObject serviceInfo) throws FileNotFoundException {
+        URL pathUrl = classloader.getResource("server_information.json");
+        if (pathUrl == null) {
+            return;
+        }
+        String path = URLDecoder.decode(pathUrl.getPath(), StandardCharsets.UTF_8);
+        PrintWriter jsonWriter = new PrintWriter(path);
+        jsonWriter.append(serviceInfo.toString()).flush();
+        return;
     }
 }
