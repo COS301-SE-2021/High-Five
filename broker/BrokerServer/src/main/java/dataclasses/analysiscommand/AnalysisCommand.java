@@ -15,7 +15,7 @@ public class AnalysisCommand {
 
     public String toString() {
         String analysisId = UUID.randomUUID().toString();
-        return "{\"commandId\": \"" + analysisId + "\", \"analyze\": { \"mediatype\": \"" +
-                mediaType + "\", \"mediaId\": \"" + mediaId + "\", \"pipelineId\": \""+ pipelineId + "\"}}";
+        return "{\"CommandId\": \"" + analysisId + "\", \"MediaType\": \"" +
+                mediaType + "\", \"MediaId\": \"" + mediaId + "\", \"PipelineId\": \""+ pipelineId + "\"}";
     }
 }
