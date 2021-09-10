@@ -10,7 +10,6 @@ public class RequestDecoder implements JsonDeserializer<AnalysisRequest> {
 
     @Override
     public AnalysisRequest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-
         if (json == null) {
             return null;
         }

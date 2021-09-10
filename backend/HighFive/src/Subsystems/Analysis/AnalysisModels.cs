@@ -11,9 +11,9 @@ namespace src.Subsystems.Analysis
         
         public AnalysisModels()
         {
-            _animalRecognition = new AnimalRecognition();
+            /*_animalRecognition = new AnimalRecognition();
             _vehicleRecognition = new CarRecognition();
-            _personRecognition = new PersonRecognition();
+            _personRecognition = new PersonRecognition();*/
         }
 
         public Tool GetTool(string toolName)

@@ -12,6 +12,7 @@ import java.io.*;
 import java.time.Duration;
 import java.util.List;
 import java.util.Properties;
+
 import java.util.regex.*;
 
 public class KafkaServerParticipant extends ServerParticipant {
@@ -80,6 +81,7 @@ public class KafkaServerParticipant extends ServerParticipant {
             }
 
             consumer.close();
+          
             Thread.sleep(1000L);
         }
     }

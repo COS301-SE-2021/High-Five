@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bdpsolutions.highfive.constants.Endpoints
 import com.bdpsolutions.highfive.constants.Errors
+import com.bdpsolutions.highfive.subsystems.image.model.dataclass.ImageInfoEndpoint
+import com.bdpsolutions.highfive.subsystems.image.model.dataclass.ImageUploadResult
 import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoInfo
 import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoInfoEndpoint
 import com.bdpsolutions.highfive.subsystems.video.model.dataclass.VideoList
@@ -13,16 +15,26 @@ import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
 import com.bdpsolutions.highfive.utils.DatabaseHandler
 import com.bdpsolutions.highfive.utils.Result
 import com.bdpsolutions.highfive.utils.RetrofitDeserializers
+import com.bdpsolutions.highfive.utils.retrofit.CountingRequestBody
+import com.bdpsolutions.highfive.utils.retrofit.OkHttpConfiguration
 import com.google.gson.GsonBuilder
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
+import io.reactivex.Observer
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
+import java.lang.Exception
+import java.util.concurrent.TimeUnit
 
 /**
  * API implementation for the VideoDataSource. This class fetches data from the backend service.
@@ -39,6 +51,7 @@ class APIVideoDataSource private constructor(): VideoDataSource {
         // create Retrofit object and fetch data
         val retrofit = Retrofit.Builder()
             .baseUrl(Endpoints.BASE_URL)
+            .client(OkHttpConfiguration.configuration)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
@@ -72,53 +85,72 @@ class APIVideoDataSource private constructor(): VideoDataSource {
         }
     }
 
-    override fun loadVideo(image: File, callback: (() -> Unit)?) {
-        val requestFile: RequestBody =
-            RequestBody.create(MediaType.parse("multipart/form-data"), image)
+    override fun loadVideo(image: File,
+                           progressObserver: Observer<Int>,
+                           resultObserver: Observer<Result<String>>
+    ) {
+        val emitter: Flowable<Double> = Flowable.create({
+            try {
 
-        val body = MultipartBody.Part.createFormData("file", image.name, requestFile)
+                val requestFile: RequestBody = CountingRequestBody(
+                    image.asRequestBody("video/*".toMediaTypeOrNull()),
+                    object : CountingRequestBody.Listener {
+                        override fun onRequestProgress(bytesWritten: Long, contentLength: Long) {
+                            val progress = (100.0 * bytesWritten / contentLength).toInt()
+                            progressObserver.onNext(progress)
+                        }
+                    })
 
-        val gson = GsonBuilder()
-            .registerTypeHierarchyAdapter(
-                VideoUploadResult::class.java,
-                RetrofitDeserializers.VideoUploadResultDeserializer
-            ).create()
+                val body = MultipartBody.Part.createFormData("file", image.name, requestFile)
 
-        // create Retrofit object and fetch data
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Endpoints.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
+                val gson = GsonBuilder()
+                    .registerTypeHierarchyAdapter(
+                        VideoUploadResult::class.java,
+                        RetrofitDeserializers.VideoUploadResultDeserializer
+                    ).create()
 
-        val videoSource = retrofit.create(VideoInfoEndpoint::class.java)
+                // create Retrofit object and fetch data
+                val retrofit = Retrofit.Builder()
+                    .client(OkHttpConfiguration.configuration)
+                    .baseUrl(Endpoints.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build()
 
-        ConcurrencyExecutor.execute {
-            val db = DatabaseHandler.getDatabase(null).userDao()
-            val bearer = db.getUser()?.authToken
-            val call = videoSource.storeVideo(
-                authHeader = "Bearer $bearer",
-                file = body
-            )
+                val videoSource = retrofit.create(VideoInfoEndpoint::class.java)
 
-            call.enqueue(object : Callback<VideoUploadResult> {
-                override fun onResponse(
-                    call: Call<VideoUploadResult>,
-                    response: Response<VideoUploadResult>
-                ) {
+                ConcurrencyExecutor.execute {
+                    val db = DatabaseHandler.getDatabase(null).userDao()
+                    val bearer = db.getUser()?.authToken
+                    val call = videoSource.storeVideo(
+                        authHeader = "Bearer $bearer",
+                        file = body
+                    )
 
-                    if (response.isSuccessful) {
-                        Log.d("Image upload", "Success")
-                        callback?.let { it() }
-                    } else {
-                        Log.e("Image upload", "Error: ${response.message()}")
-                    }
+                    call.enqueue(object : Callback<VideoUploadResult> {
+                        override fun onResponse(
+                            call: Call<VideoUploadResult>,
+                            response: Response<VideoUploadResult>
+                        ) {
+
+                            val result: Result<String> = if (response.isSuccessful) {
+                                Result.Success("Success")
+                            } else {
+                                Result.Error(Exception(response.message()))
+                            }
+                            progressObserver.onComplete()
+                            resultObserver.onNext(result)
+                        }
+
+                        override fun onFailure(call: Call<VideoUploadResult>, t: Throwable) {
+                            resultObserver.onError(t)
+                        }
+                    })
                 }
-
-                override fun onFailure(call: Call<VideoUploadResult>, t: Throwable) {
-                    Log.e("Image upload", "Failed to fetch image data: ${t.message}")
-                }
-            })
-        }
+            } catch (e: Exception) {
+                resultObserver.onError(e)
+            }
+        }, BackpressureStrategy.BUFFER)
+        emitter.subscribe()
     }
 
     companion object {

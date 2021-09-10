@@ -66,7 +66,6 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
     private String readResponse(String topic) throws IOException {
         EventLogger.getLogger().info("Reading response from topic " + topic);
 
-
         List<ConsumerRecord<String, String>> messageList = null;
 
         boolean messageFound = false;
