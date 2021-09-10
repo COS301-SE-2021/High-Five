@@ -26,6 +26,9 @@ namespace analysis_engine
                 case "drone":
                     _toolContainerBuilder = new DroneToolContainerBuilder();
                     break;
+                case "dynamic":
+                    _toolContainerBuilder = new DynamicToolContainerBuilder();
+                    break;
                 default:
                     _toolContainerBuilder = new AnalysisToolContainerBuilder();
                     break;

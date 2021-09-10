@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
+using analysis_engine_v2.BrokerClient.Storage;
 using Microsoft.CodeAnalysis;
 
 namespace analysis_engine.BrokerClient
@@ -11,6 +12,7 @@ namespace analysis_engine.BrokerClient
     {
         private static AppDomain _restrictedDomain;
         private readonly Type _dynamicToolType = typeof(DynamicTool);
+        private static readonly IAnalysisStorageManager _analysisStorageManager;
 
         static DynamicToolFactory()
         {
@@ -24,20 +26,23 @@ namespace analysis_engine.BrokerClient
                 null,
                 setup,
                 permissions);
-            
+
+            _analysisStorageManager = new AnalysisStorageManager();
         }
 
-        public Tool CreateDynamicTool(string toolName, string toolCode)
+        public Tool CreateDynamicTool(string toolId)
         {
             /*
              * This function might throw an exception. If it does, it means there is a compilation
              * error within the user's uploaded code.
              */
 
-            var assemblyBytes = DynamicCompiler.Compile(toolCode);
+            var toolFiles = _analysisStorageManager.GetAnalysisTool(toolId);
+
+            var assemblyBytes = DynamicCompiler.Compile(toolFiles.SourceCode);
             var dynamicTool = (DynamicTool) _restrictedDomain.CreateInstanceAndUnwrap(
                 _dynamicToolType.Assembly.FullName, _dynamicToolType.FullName,
-                false, BindingFlags.Default, null, new object[] {toolName}, null, null);
+                false, BindingFlags.Default, null, new object[] {toolId}, null, null);
             dynamicTool.LoadCompiledBytes(assemblyBytes);
             return dynamicTool;
         }

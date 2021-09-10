@@ -1,10 +1,18 @@
 package listeners.servers;
 
+import com.google.gson.*;
+import dataclasses.serverinfo.ServerTopics;
 import io.reactivex.rxjava3.core.Observer;
 import listeners.ConnectionListener;
 import logger.EventLogger;
+import managers.topicmanager.TopicManager;
+import org.apache.commons.io.IOUtil;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 
 import java.io.*;
+import java.time.Duration;
 import java.util.*;
 
 /**
@@ -14,12 +22,19 @@ import java.util.*;
  */
 public class KafkaTopicListener extends ConnectionListener<String> {
 
-    private final List<String> topics;
+    private final ServerTopics topics;
+    private long offset;
 
-    public KafkaTopicListener(Observer<String> notifier, List<String> topics) {
+    public KafkaTopicListener(Observer<String> notifier, ServerTopics topics) {
         super(notifier);
         EventLogger.getLogger().info("Starting KafkaTopicListener");
         this.topics = topics;
+        try {
+            offset = loadServerList();
+        } catch (IOException e) {
+            offset = 0;
+            EventLogger.getLogger().logException(e);
+        }
     }
 
     /**
@@ -32,65 +47,86 @@ public class KafkaTopicListener extends ConnectionListener<String> {
         EventLogger.getLogger().info("Listening for new servers");
 
         while (true) {
-            //Runtime rt = Runtime.getRuntime();
-            ProcessBuilder builder = new ProcessBuilder(System.getenv("KAFKA_LIST_TOPICS").split(" "));
-            Process proc = builder.start();
+
+            //Create consumer to listen for new topics
+            Properties props = new Properties();
+            props.setProperty("bootstrap.servers", "localhost:9092");
+            props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            KafkaConsumer<String, String> topicListener = new KafkaConsumer<>(props);
+
+            TopicPartition registrationPartition = new TopicPartition("SERVER_REGISTRATION", 0);
+
+            topicListener.assign(List.of(registrationPartition));
+            topicListener.seek(registrationPartition, offset);
+
+            List<ConsumerRecord<String, String>> registrationList = topicListener.
+                    poll(Duration.ofSeconds(10)).records(registrationPartition);
 
 
-            String line;
-
-            BufferedReader inputStreamReader =
-                    new BufferedReader(new InputStreamReader(proc.getInputStream()));
-            while ((line = inputStreamReader.readLine()) != null) {
-
+            for (ConsumerRecord<String, String> registration : registrationList) {
                 //Ensures that the topic does not already exist
-                if (!isIgnored(line) && !topics.contains(line) && line.length() > 0) {
-                    EventLogger.getLogger().info("New topic found: " + line);
-                    notify(line);
+                if (!topics.contains(registration.value()) && registration.value().length() > 0) {
+                    EventLogger.getLogger().info("New topic found: " + registration.value());
+                    addNewServer(++offset, registration.value());
+                    TopicManager.getInstance().addTopic(registration.value());
+                    notify(registration.value());
                 }
             }
 
-            BufferedReader errorStreamReader =
-                    new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-            while ((line = errorStreamReader.readLine()) != null) {
-                EventLogger.getLogger().warn(line);
-            }
+            topicListener.close();
+
             Thread.sleep(1000L);
         }
     }
 
     /**
-     * Checks if the given topic is to be ignored. Primarily used for system reserved
-     * topics we don't want the Broker to listen to.
-     * @param topic Topic to check
-     * @return Whether the topic should be ignored or not.
+     * Loads servers that have previously registered and returns the offset for the last message
+     * in the server registration topic.
+     * @return Last server offset
      */
-    private boolean isIgnored(String topic) {
-
-        //open and read file containing ignored topics
+    private long loadServerList() throws IOException {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("ignored_topics.txt");
+        InputStream is = classloader.getResourceAsStream("server_information.json");
 
         if (is == null) {
-            EventLogger.getLogger().warn("Cannot read ignored_topics.txt");
-            return false;
+            EventLogger.getLogger().error("Failed to load server_information.json");
+            return 0;
         }
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
-        ArrayList<String> ignoredTopics = new ArrayList<>();
+        StringWriter writer = new StringWriter();
+        IOUtil.copy(is, writer, "UTF-8");
 
-        //Add these topics to a list
-        String line;
-        while (true) {
-            try {
-                if ((line = bufferedReader.readLine()) == null) break;
-            } catch (IOException e) {
-                EventLogger.getLogger().error(e.getMessage());
-                return false;
-            }
-            ignoredTopics.add(line);
+        JsonElement serviceInfo = new Gson().fromJson(writer.toString(), JsonObject.class);
+
+        long offset = serviceInfo.getAsJsonObject().get("offset").getAsLong();
+
+        JsonArray servers = serviceInfo.getAsJsonObject().get("registered_servers").getAsJsonArray();
+
+        for (JsonElement server : servers) {
+            TopicManager.getInstance().addTopic(server.getAsString());
+            notify(server.getAsString());
         }
-        //Check if the list contains the topic
-        return ignoredTopics.stream().anyMatch(topic::contains);
+
+        return offset;
+    }
+
+    /**
+     * Add a new server to the list of servers.
+     * @param offset new offset for file
+     * @param server name of server
+     * @throws IOException
+     */
+    private void addNewServer(long offset, String server) throws IOException {
+        StringWriter writer = TopicManager.openResource("server_information.json");
+
+        try {
+            JsonObject serviceInfo = new Gson().fromJson(writer.toString(), JsonObject.class).getAsJsonObject();
+            serviceInfo.add("offset", new JsonPrimitive(offset));
+            serviceInfo.get("registered_servers").getAsJsonArray().add(server);
+            TopicManager.updateResource("server_information.json", serviceInfo);
+        } catch (Exception e) {
+            EventLogger.getLogger().logException(e);
+        }
     }
 }
