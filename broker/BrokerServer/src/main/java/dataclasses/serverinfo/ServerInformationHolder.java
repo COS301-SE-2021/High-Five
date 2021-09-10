@@ -26,6 +26,16 @@ public class ServerInformationHolder {
     public void add(ServerInformation info, ServerUsage usage) {
         lock.lock();
         try {
+            for (var entries : serverPerformanceInfo.entrySet()) {
+                if (entries.getKey().getServerId().equals(info.getServerId())) {
+                    entries.getValue().cpu = usage.cpu;
+                    entries.getValue().gpu = usage.gpu;
+                    entries.getValue().net = usage.net;
+                    entries.getValue().disk = usage.disk;
+                    entries.getKey().setCredentials(info.getCredentials());
+                    return;
+                }
+            }
             serverPerformanceInfo.put(info, usage);
         } finally {
             lock.unlock();
