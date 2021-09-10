@@ -36,7 +36,7 @@ namespace Org.OpenAPITools.Controllers
         [Consumes("application/json")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
-        public abstract IActionResult CreateBroadcast([FromBody]GetToolFilesRequest getToolFilesRequest);
+        public abstract IActionResult CreateOneTimeToken([FromBody]GetToolFilesRequest getToolFilesRequest);
 
         /// <summary>
         /// 

@@ -74,18 +74,40 @@ namespace src.Subsystems.Livestreaming
             }
         }
 
-        public string CreateStreamingUrl()
+        public async Task<string> CreateStreamingUrl(string appName)
         {
+            var body = new StringContent(CreateStreamingUrlParameters,
+                Encoding.UTF8,
+                "application/json");
+            var requestUri =  appName + "/rest/v2/broadcasts/create?autoStart=false";
+            var response = await _httpClient.PostAsync(requestUri, body);
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+            }
+            return "";
+        }
+
+        public async Task<string> CreateOneTimeToken(string id, string type)
+        {
+            var expireDate = "1633597507";//DateTime.Now.AddHours(1);
+            var requestUri = "/rest/v2/broadcasts/" + id + "/token?id=" + id + "&expireDate=" + expireDate + "&type=" + type;
+            var response = await _httpClient.GetAsync(requestUri);
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+            }
             throw new System.NotImplementedException();
         }
 
-        public string CreateOneTimeToken()
+        public async Task<string> ReturnAllLiveStreams(string appName)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public string ReturnAllLiveStreams()
-        {
+            var requestUri = "/rest/v2/applications/live-streams/" + appName;
+            var response = await _httpClient.GetAsync(requestUri);
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+            }
             throw new System.NotImplementedException();
         }
 
@@ -251,6 +273,14 @@ namespace src.Subsystems.Livestreaming
             ""webhookAuthenticateURL"": """",
             ""hlsFlags"": ""delete_segments"",
             ""dataChannelWebHook"": null
+           }";
+
+        private const string CreateStreamingUrlParameters = @"{
+            ""type"": ""liveStream"",
+            ""publishType"": ""WebRTC"",
+            ""name"": ""S0"",
+            ""description"": ""Livestream"",
+            ""publish"": true
            }";
     }
 }

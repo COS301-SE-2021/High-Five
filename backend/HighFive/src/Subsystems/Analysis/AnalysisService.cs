@@ -91,17 +91,6 @@ namespace src.Subsystems.Analysis
             response = JsonConvert.DeserializeObject<AnalyzedImageMetaData>(responseString);
 
             return response;
-            
-            /*var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
-            analyzedFile.AddMetadata("imageId", request.ImageId);
-            analyzedFile.AddMetadata("pipelineId", request.PipelineId);
-            const string contentType = "image/jpg";
-            await analyzedFile.UploadFileFromByteArray(analyzedImageData, contentType);
-
-            if (analyzedFile.Properties.LastModified != null)
-                response.DateAnalyzed = analyzedFile.Properties.LastModified.Value.DateTime;
-            response.Id = analyzedMediaName.Replace(fileExtension, "");
-            response.Url = analyzedFile.GetUrl();*/
         }
 
         public async Task<AnalyzedVideoMetaData> AnalyzeVideo(SocketRequest fullRequest)
@@ -218,5 +207,9 @@ namespace src.Subsystems.Analysis
             return new GetLiveAnalysisTokenResponse {Token = jwtToken};
         }
 
+        public string ListenForMessage()
+        {
+            return _analysisSocket.Receive().Result;
+        }
     }
 }

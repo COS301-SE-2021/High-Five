@@ -40,6 +40,7 @@ namespace src.Websockets
                 using var webSocket = await 
                     HttpContext.WebSockets.AcceptWebSocketAsync();
                 await SendMessage("Connected", "You have connected to the socket server.", "info", webSocket);
+                ListenForBrokerMessage(webSocket);
                 while (webSocket.State == WebSocketState.Open)
                 {
                     string responseTitle;
@@ -88,7 +89,7 @@ namespace src.Websockets
                                     responseBody = JsonConvert.SerializeObject(analyzedVideo);
                                     responseType = "success";
                                 }
-
+                                
                                 break;
                             case "Exit":
                                 await SendMessage("Socket Closed", "Connection to the socket was closed.", "info",
@@ -147,6 +148,24 @@ namespace src.Websockets
             catch (Exception)
             {
                 return null;
+            }
+        }
+
+        private async Task ListenForBrokerMessage(WebSocket socket)
+        {
+            /*
+             * Listens for messages from the Broker, will only send a message to the
+             * front-end if a livestream started notification is pushed through.
+             */
+            
+            while (socket.State != WebSocketState.Closed)
+            {
+                var message = _analysisService.ListenForMessage();
+                if (!message.Contains("Livestream Started"))
+                {
+                    continue;
+                }
+                await SendMessage("Livestream Started", "The livestream has started", "info", socket);
             }
         }
         

@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
 using Accord.Math;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -12,35 +13,56 @@ namespace src.Subsystems.Livestreaming
     public class LivestreamingController: LivestreamApiController
     {
         private readonly ILivestreamingService _livestreamingService;
+        private bool _applicationCreated;
+        private string _appName;
 
         public LivestreamingController(ILivestreamingService livestreamingService)
         {
             _livestreamingService = livestreamingService;
         }
         
-        public override IActionResult CreateBroadcast(GetToolFilesRequest getToolFilesRequest)
+        public override IActionResult CreateOneTimeToken(GetToolFilesRequest getToolFilesRequest)
         {
+            if (!_applicationCreated)
+            {
+                var created = CreateUserStreamingApplication().Result;
+            }
             throw new System.NotImplementedException();
         }
 
         public override IActionResult CreateStreamingUrl()
         {
-            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
-            if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
+            if (!_applicationCreated)
             {
-                return null;
+                var created = CreateUserStreamingApplication().Result;
             }
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
-            var test = _livestreamingService.AuthenticateUser().Result;
-            var appName = _livestreamingService.CreateApplication(jsonToken.Subject).Result;
-            _livestreamingService.UpdateApplicationSettings(appName);
+            _livestreamingService.CreateStreamingUrl(_appName);
             throw new System.NotImplementedException();
         }
 
         public override IActionResult ReturnAllLiveStreams()
         {
+            if (!_applicationCreated)
+            {
+                var created = CreateUserStreamingApplication().Result;
+            }
             throw new System.NotImplementedException();
+        }
+
+        private async Task<bool> CreateUserStreamingApplication()
+        {
+            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
+            if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
+            {
+                return false;
+            }
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
+            var test = _livestreamingService.AuthenticateUser().Result;
+            _appName = _livestreamingService.CreateApplication(jsonToken.Subject).Result;
+            await _livestreamingService.UpdateApplicationSettings(_appName);
+            _applicationCreated = true;
+            return true;
         }
     }
 }

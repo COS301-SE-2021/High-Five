@@ -752,7 +752,7 @@ paths:
       tags:
         - "Livestream"
       description: Endpoint for Create One Time Token use case
-      operationId: CreateBroadcast
+      operationId: CreateOneTimeToken
       requestBody:
         required: true
         content:
