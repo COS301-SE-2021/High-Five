@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+group 'com.bdpsolutions.highfive'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation 'javax.websocket:javax.websocket-api:1.1'
+    implementation 'commons-io:commons-io:20030203.000550'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
+}
