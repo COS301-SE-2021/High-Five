@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
@@ -38,9 +39,13 @@ namespace analysis_engine
             //     watch1.Stop();
             //     Console.WriteLine("1: Execution time: " + watch1.ElapsedMilliseconds/100.0 + "ms");
             // });
-            
 
-            while (true) ;
+
+            while (true)
+            {
+                //Make thread sleep such as to not overuse resources
+                Thread.Sleep(1000);
+            }
             // CvInvoke.Imwrite("C:\\Users\\Bieldt\\OneDrive\\Pictures\\output.jpg", result.Frame.Image);
         }
 
