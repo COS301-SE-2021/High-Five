@@ -1,6 +1,6 @@
 namespace analysis_engine
 {
-    public class DynamicToolContainer
+    public class DynamicToolContainer : ToolContainer
     {
         
     }
