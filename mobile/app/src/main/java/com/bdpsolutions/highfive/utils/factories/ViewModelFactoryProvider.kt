@@ -8,7 +8,7 @@ import dagger.hilt.android.components.ActivityComponent
 
 @Module
 @InstallIn(ActivityComponent::class)
-abstract class LoginViewModuleFactoryProvider {
+abstract class ViewModelFactoryProvider {
     @Binds
     abstract fun bindLoginViewModelFactory(
         loginFactoryImpl: ViewModelProviderFactory

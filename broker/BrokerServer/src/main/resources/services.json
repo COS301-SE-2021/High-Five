@@ -1,0 +1,34 @@
+[
+  {
+    "name": "ClientListener",
+    "path": "listeners.webclients.WebClientListener"
+  },
+  {
+    "name": "ServerListener",
+    "path": "listeners.servers.KafkaTopicListener"
+  },
+  {
+    "name": "ServerParticipantListener",
+    "path": "clients.servers.KafkaServerParticipant"
+  },
+  {
+    "name": "ClientParticipant",
+    "path": "clients.webclients.ClientParticipant"
+  },
+  {
+    "name": "ClientConnection",
+    "path": "clients.webclients.connection.SocketConnection"
+  },
+  {
+    "name": "ServerInfoDecoder",
+    "path": "dataclasses.serverinfo.codecs.ServerInformationDecoder"
+  },
+  {
+    "name": "ClientManager",
+    "path": "managers.client.ClientManagerImpl"
+  },
+  {
+    "name": "ServerManager",
+    "path": "managers.server.ServerManagerImpl"
+  }
+]
