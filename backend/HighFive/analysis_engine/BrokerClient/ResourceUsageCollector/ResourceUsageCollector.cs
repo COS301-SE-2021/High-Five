@@ -36,7 +36,6 @@ namespace analysis_engine.BrokerClient.ResourceUsageCollector
                 var config = new ProducerConfig
                 {
                     BootstrapServers = "localhost:9092",
-                    ClientId = "0",
                 };
                 TopicPartition partition = new TopicPartition(clientId, 0);
                 var producer = new ProducerBuilder<Null, string>(config).Build();

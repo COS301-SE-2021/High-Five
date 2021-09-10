@@ -1,7 +1,7 @@
 namespace analysis_engine.BrokerClient.CommandHandler
 {
-    public class ICommandHandler
+    public interface ICommandHandler
     {
-        
+        public void Run();
     }
 }
