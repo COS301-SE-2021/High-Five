@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using Accord.Math;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +33,8 @@ namespace src.Subsystems.Livestreaming
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
             var test = _livestreamingService.AuthenticateUser().Result;
-            _livestreamingService.CreateApplication(jsonToken.Subject);
+            var appName = _livestreamingService.CreateApplication(jsonToken.Subject).Result;
+            _livestreamingService.UpdateApplicationSettings(appName);
             throw new System.NotImplementedException();
         }
 
