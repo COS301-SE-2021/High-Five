@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -69,7 +70,21 @@ namespace src.Subsystems.Tools
 
         public override IActionResult GetToolFiles(GetToolFilesRequest getToolFilesRequest)
         {
-            throw new System.NotImplementedException();
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            GetToolFilesResponse response;
+            try
+            {
+                response = _toolService.GetToolFiles(getToolFilesRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(400, null);
+            }
+
+            return StatusCode(200, response);
         }
 
         public override IActionResult GetToolTypes()
