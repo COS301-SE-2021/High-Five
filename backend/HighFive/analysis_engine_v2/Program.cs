@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using broker_analysis_client.Client;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -13,6 +14,10 @@ namespace analysis_engine
     {
         public static void Main(string[] args)
         {
+            var tester = new AnalysisClientService();
+            tester.AnalyzeImage(null);
+            
+            
             var originalImage1 = CvInvoke.Imread("C:\\Users\\Bieldt\\OneDrive\\Pictures\\cows.jpg", ImreadModes.Unchanged);
             
             var watch1 = new Stopwatch();

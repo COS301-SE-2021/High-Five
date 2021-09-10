@@ -35,9 +35,9 @@ namespace broker_analysis_client.Client
             //var metadataCode = File.ReadAllText("../../DynamicTools/SampleMetadata.txt");
             var userToolFactory = new DynamicToolFactory();
 
-            var dynamicTool = userToolFactory.CreateDynamicTool("MyCustomTool", sourceCode);
+            /*var dynamicTool = userToolFactory.CreateDynamicTool("MyCustomTool", sourceCode);
             dynamicTool.Init();
-            dynamicTool.Process(null);
+            dynamicTool.Process(null);*/
             
             userToolFactory.UnloadRestrictedDomain();
         }
