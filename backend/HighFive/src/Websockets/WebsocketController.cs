@@ -165,7 +165,8 @@ namespace src.Websockets
                 {
                     continue;
                 }
-                await SendMessage("Livestream Started", "The livestream has started", "info", socket);
+                var infoObject = JsonConvert.DeserializeObject<SocketResponse>(message);
+                await SendMessage("Livestream Started", infoObject.message, "info", socket);
             }
         }
         
