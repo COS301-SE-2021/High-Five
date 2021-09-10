@@ -7,6 +7,7 @@ import dataclasses.serverinfo.ServerInformationHolder;
 import dataclasses.telemetry.builder.TelemetryBuilder;
 import dataclasses.telemetry.builder.TelemetryCollector;
 import logger.EventLogger;
+import managers.topicmanager.TopicManager;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.*;
@@ -49,11 +50,6 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
         producer.send(commandToSend);
         producer.close();
 
-        try {
-            Thread.sleep(1000L);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
 
         //Get response from server
         String response = readResponse(info.getServerId());
@@ -70,28 +66,61 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
     private String readResponse(String topic) throws IOException {
         EventLogger.getLogger().info("Reading response from topic " + topic);
 
-        //Initialise the Kafka consumer to read a response from the communication partition of the topic
-        Properties props = new Properties();
-        props.setProperty("bootstrap.servers", "localhost:9092");
-        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-        TopicPartition partition = new TopicPartition(topic, 1);
 
-        consumer.assign(List.of(partition));
-        consumer.seekToEnd(List.of(partition));
+        List<ConsumerRecord<String, String>> messageList = null;
 
-        List<ConsumerRecord<String, String>> messageList = consumer.poll(Duration.ofSeconds(30)).records(partition);
+        boolean messageFound = false;
 
-        if (messageList.size() == 0) {
-            throw new IOException("No messages could be read from topic: " + partition.topic());
+        //Listen for a new message from the server.
+        for (int i = 0; i < 10; i++) {
+            //Initialise the Kafka consumer to read a response from the communication partition of the topic
+            Properties props = new Properties();
+            props.setProperty("bootstrap.servers", "localhost:9092");
+            props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+
+            TopicPartition partition = new TopicPartition(topic, 2);
+
+            KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+            consumer.assign(List.of(partition));
+            consumer.seekToEnd(List.of(partition));
+
+            long position = consumer.position(partition);
+            System.out.println(position);
+            if (position > 0) {
+                position--;
+            }
+            consumer.seek(partition, position);
+
+             messageList = consumer.poll(Duration.ofSeconds(5)).records(partition);
+
+             if (messageList.size() > 0) {
+                 messageFound = TopicManager.getInstance().isNewMessage(messageList.get(0));
+             }
+
+             //Only go through if we have a message that has not been sent before
+             if (messageFound) {
+                 break;
+             }
+
+            consumer.close();
+
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        /*
+        Throw an exception if the server has not responded.
+        A server is non-responsive when it has sent no new messages, or no messages at all.
+         */
+        if (messageList.size() == 0 || !messageFound) {
+            throw new IOException("No new messages could be read from topic: " + topic);
         }
 
         ConsumerRecord<String, String> message = messageList.get(0);
-
-        EventLogger.getLogger().info(message.toString());
-
-        consumer.close();
 
         return message.value();
     }
