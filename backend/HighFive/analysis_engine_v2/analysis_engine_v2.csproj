@@ -278,6 +278,7 @@
         <Compile Include="Data\Frame.cs" />
         <Compile Include="Data\MetaData.cs" />
         <Compile Include="Data\RingBuffer.cs" />
+        <Compile Include="DynamicTools\DynamicToolBuilder.cs" />
         <Compile Include="DynamicTools\DynamicToolFactory.cs" />
         <Compile Include="Filter\Builder\FilterBuilder.cs" />
         <Compile Include="Filter\Filter.cs" />
