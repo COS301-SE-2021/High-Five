@@ -92,7 +92,7 @@ public class KafkaServerParticipant extends ServerParticipant {
      * @return UNIX timestamp of time message was sent.
      */
     private long getMessageTime(String message) {
-        Matcher timePattern = Pattern.compile("\"timestamp\": *(\\d+).*[,}]").matcher(message);
+        Matcher timePattern = Pattern.compile("\"Timestamp\": *(\\d+).*[,}]").matcher(message);
         if (!timePattern.find()) {
             return 0;
         }
