@@ -13,6 +13,7 @@ tags:
   - name: "User"
   - name: "Tools"
   - name: "Downloads"
+  - name: "Livestream"
 
   #==========================================================
   #     PATHS
@@ -743,6 +744,58 @@ paths:
                 $ref: '#/components/schemas/downloadSdkFilesResponse'
 
   #==========================================================
+  #     LIVESTREAM SUBSYSTEM PATHING
+  #==========================================================
+
+  /livestream/createOneTimeToken:
+    post:
+      tags:
+        - "Livestream"
+      description: Endpoint for Create One Time Token use case
+      operationId: CreateBroadcast
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/getToolFilesRequest'
+      responses:
+        "200":
+          description: Returns random one time token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /livestream/returnAllLivestreams:
+    get:
+      tags:
+        - "Livestream"
+      description: Endpoint for Return All Livestreams use case
+      operationId: ReturnAllLiveStreams
+      responses:
+        "200":
+          description: Returns all livestream id's
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /livestream/createStreamingUrl:
+    get:
+      tags:
+        - "Livestream"
+      description: Endpoint for Create Streaming Url use case
+      operationId: CreateStreamingUrl
+      responses:
+        "200":
+          description: Returns streaming url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/downloadSdkFilesResponse'
+  
+  #==========================================================
   #     SCHEMAS
   #==========================================================
 components:
@@ -1183,6 +1236,16 @@ components:
         dataClass:
           $ref: '#/components/schemas/fileDownload'
 
+    #==========================================================
+    #     DOWNLOADS COMPONENTS
+    #==========================================================
+    
+    createStreamingUrlResponse:
+      type: object
+      properties:
+        streamingUrl:
+          type: string
+    
     #==========================================================
     #     GENERIC COMPONENTS
     #==========================================================
