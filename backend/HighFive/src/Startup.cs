@@ -18,6 +18,7 @@ using src.AnalysisTools.VideoDecoder;
 using src.Storage;
 using src.Subsystems.Admin;
 using src.Subsystems.Analysis;
+using src.Subsystems.FileDownloads;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
 using src.Subsystems.Tools;
@@ -57,6 +58,7 @@ namespace src
             services.AddScoped<IAnalysisService, AnalysisService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IToolService, ToolService>();
+            services.AddScoped<IDownloadsService, DownloadsService>();
 
 
             // Configuring of Azure AD B2C Authentication

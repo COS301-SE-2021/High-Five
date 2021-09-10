@@ -206,7 +206,7 @@ namespace src.Subsystems.Tools
             {
                 throw new FormatException();
             }
-            var toolSet = _storageManager.GetAllFilesInContainer("tools/" + request.ToolType + "/" + request.ToolId).Result;
+            var toolSet = _storageManager.GetAllFilesInContainer(ContainerName + "/" + request.ToolType + "/" + request.ToolId).Result;
             IBlobFile sourceCodeFile = null;
             IBlobFile modelFile = null;
             foreach (var tool in toolSet)
