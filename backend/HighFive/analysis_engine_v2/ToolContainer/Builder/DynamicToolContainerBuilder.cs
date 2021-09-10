@@ -1,4 +1,5 @@
 using System;
+using analysis_engine.BrokerClient;
 
 namespace analysis_engine
 {
