@@ -23,19 +23,20 @@ namespace src.Subsystems.Tools
 
         public override IActionResult CreateMetaDataType(string name, IFormFile file)
         {
-            if (!_baseContainerSet)
-            {
-                ConfigureStorageManager();
-            }
-            var response = new EmptyObject
-            {
-                Success = _toolService.CreateMetaDataType(file, name).Result
-            };
-            if (!response.Success)
-            {
-                response.Message = "A metadata object with that name already exists.";
-            }
-            return StatusCode(200, response);
+            return StatusCode(503, null);
+            /* if (!_baseContainerSet)
+             {
+                 ConfigureStorageManager();
+             }
+             var response = new EmptyObject
+             {
+                 Success = _toolService.CreateMetaDataType(file, name).Result
+             };
+             if (!response.Success)
+             {
+                 response.Message = "A metadata object with that name already exists.";
+             }
+             return StatusCode(200, response);*/
         }
 
         public override IActionResult DeleteTool(DeleteToolRequest deleteToolRequest)
@@ -64,6 +65,11 @@ namespace src.Subsystems.Tools
 
             var response = _toolService.GetMetaDataTypes();
             return StatusCode(200, response);
+        }
+
+        public override IActionResult GetToolFiles(GetToolFilesRequest getToolFilesRequest)
+        {
+            throw new System.NotImplementedException();
         }
 
         public override IActionResult GetToolTypes()

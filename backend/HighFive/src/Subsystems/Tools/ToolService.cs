@@ -199,6 +199,11 @@ namespace src.Subsystems.Tools
             return new GetToolMetaDataTypes{MetaDataTypes = responseList};
         }
 
+        public GetToolFilesResponse GetToolFiles(GetToolFilesRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
         private void AddToToolsFile(string toolName, string type, string metadataType)
         {
             var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
