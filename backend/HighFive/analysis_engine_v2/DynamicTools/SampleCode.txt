@@ -18,7 +18,7 @@ namespace High5
         {
             var metadata = new BoxCoordinateData();
             Console.WriteLine("Process - Called from dynamically uploaded code.");
-            //Console.WriteLine("Metadata string: " + metadata.someData);
+            //Console.WriteLine("Metwaadata string: " + metadata.someData);
             return null;
         }
     }
