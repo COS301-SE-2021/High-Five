@@ -8,12 +8,12 @@ import java.lang.reflect.Type;
 public class ServerUsageDecoder implements JsonDeserializer<ServerUsage> {
     @Override
     public ServerUsage deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        JsonObject usageBody = json.getAsJsonObject().get("usage").getAsJsonObject();
+        JsonObject usageBody = json.getAsJsonObject().get("Usage").getAsJsonObject();
 
-        short cpu = usageBody.get("cpu").getAsShort();
-        short gpu = usageBody.get("gpu").getAsShort();
-        short net = usageBody.get("net").getAsShort();
-        short disk = usageBody.get("disk").getAsShort();
+        short cpu = usageBody.get("CpuUsage").getAsShort();
+        short gpu = usageBody.get("GpuUsage").getAsShort();
+        short net = usageBody.get("NetUsage").getAsShort();
+        short disk = usageBody.get("DiskUsage").getAsShort();
 
         ServerUsage usage = new ServerUsage();
         usage.cpu = cpu;
