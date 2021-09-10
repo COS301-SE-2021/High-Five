@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using analysis_engine.BrokerClient.ResourceUsageCollector;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -14,19 +15,21 @@ namespace analysis_engine
     {
         public static void Main(string[] args)
         {
-            var originalImage1 = CvInvoke.Imread("C:\\Users\\Bieldt\\OneDrive\\Pictures\\cows.jpg", ImreadModes.Unchanged);
+            // var originalImage1 = CvInvoke.Imread("C:\\Users\\Bieldt\\OneDrive\\Pictures\\cows.jpg", ImreadModes.Unchanged);
+            //
+            // var watch1 = new Stopwatch();
+            //
+            // var runner1 = new FastVehicleRecognitionTool();
+            //
+            // runner1.Init();
+            //
+            // var data1 = new Data();
+            //
+            // data1.Frame.Image = originalImage1.ToImage<Rgb, byte>();
+            //
+            // var result1 = data1;
             
-            var watch1 = new Stopwatch();
-            
-            var runner1 = new FastVehicleRecognitionTool();
-            
-            runner1.Init();
-            
-            var data1 = new Data();
-            
-            data1.Frame.Image = originalImage1.ToImage<Rgb, byte>();
-            
-            var result1 = data1;
+            new ResourceUsageCollector().Run();
             
             // Task.Run(() =>
             // {

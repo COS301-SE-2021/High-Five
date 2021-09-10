@@ -6,11 +6,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Confluent.Kafka" Version="1.7.0" />
         <PackageReference Include="Emgu.CV" Version="4.5.3.4721" />
         <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
         <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.8.1" />
         <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.8.1" />
+        <PackageReference Include="Mono.Posix-4.5" Version="4.5.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="NumSharp" Version="0.30.0" />
         <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
