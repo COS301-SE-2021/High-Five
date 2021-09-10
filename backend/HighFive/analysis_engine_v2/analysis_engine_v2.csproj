@@ -306,10 +306,12 @@
         <Compile Include="ToolContainer\Builder\AnalysisToolContainerBuilder.cs" />
         <Compile Include="ToolContainer\Builder\DrawingToolContainerBuilder.cs" />
         <Compile Include="ToolContainer\Builder\DroneToolContainerBuilder.cs" />
+        <Compile Include="ToolContainer\Builder\DynamicToolContainerBuilder.cs" />
         <Compile Include="ToolContainer\Builder\ToolContainerbuilder.cs" />
         <Compile Include="ToolContainer\ConcurrencyManager.cs" />
         <Compile Include="ToolContainer\DrawingToolContainer.cs" />
         <Compile Include="ToolContainer\DroneToolContainer.cs" />
+        <Compile Include="ToolContainer\DynamicToolContainer.cs" />
         <Compile Include="ToolContainer\ToolContainer.cs" />
         <Compile Include="Tools\AnalysisTool.cs" />
         <Compile Include="Tools\AnalysisTools\AnimalRecognitionTool.cs" />
