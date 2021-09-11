@@ -38,22 +38,6 @@
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row>
-        <ion-col>
-            <span [hidden]="metaData==='create-one-now'">
-                <ion-item class="ion-align-items-center  ion-justify-content-center">
-              <ion-label position="floating">Metadata Name</ion-label>
-              <ion-input [(ngModel)]=newMetaData.name></ion-input>
-            </ion-item>
-            </span>
-        </ion-col>
-        <ion-col class="ion-align-items-end ion-justify-content-end">
-            <span [hidden]="metaData==='create-one-now'">
-              <ion-input type="file" name="select metadata " placeholder="Select Metadata Class File"
-                         (change)="uploadMetadataFile($event)"></ion-input>
-            </span>
-        </ion-col>
-      </ion-row>
     </ion-grid>
   </ion-card-content>
 </ion-card>
