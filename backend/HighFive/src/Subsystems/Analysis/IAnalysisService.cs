@@ -9,6 +9,7 @@ namespace src.Subsystems.Analysis
         public Task<AnalyzedImageMetaData> AnalyzeImage(SocketRequest fullRequest);
         public Task<AnalyzedVideoMetaData> AnalyzeVideo(SocketRequest fullRequest);
         public void SetBaseContainer(string containerName);
-        public GetLiveAnalysisTokenResponse GetLiveAnalysisToken(string userId);
+        public void SetBrokerToken(string userId);
+        public string ListenForMessage();
     }
 }

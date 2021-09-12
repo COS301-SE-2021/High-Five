@@ -36,8 +36,8 @@ namespace src.Subsystems.Analysis
             }
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
-            var response = _analysisService.GetLiveAnalysisToken(jsonToken.Subject);
-            return StatusCode(200, response);
+           // var response = _analysisService.SetBrokerToken(jsonToken.Subject);
+            return StatusCode(501, null);
         }
     }
 }
