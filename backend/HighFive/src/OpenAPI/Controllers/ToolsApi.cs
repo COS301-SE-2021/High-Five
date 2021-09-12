@@ -66,6 +66,19 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Get Tool Files use case</remarks>
+        /// <param name="getToolFilesRequest"></param>
+        /// <response code="200">All tool types have been returned</response>
+        [HttpPost]
+        [Route("/tools/getToolFiles")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetToolFilesResponse))]
+        public abstract IActionResult GetToolFiles([FromBody]GetToolFilesRequest getToolFilesRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Get Tool Types use case</remarks>
         /// <response code="200">All tool types have been returned</response>
         [HttpGet]

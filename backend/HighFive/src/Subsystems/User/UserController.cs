@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -13,10 +14,12 @@ namespace src.Subsystems.User
     {
         private readonly IUserService _userService;
         private string _userId = string.Empty;
+        private bool _baseContainerSet;
         
         public UserController(IUserService userService)
         {
             _userService = userService;
+            _baseContainerSet = false;
         }
 
         [Authorize(Policy = "Admin")]
@@ -80,6 +83,23 @@ namespace src.Subsystems.User
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
             _userId = jsonToken.Subject;
+        }
+        
+        private void ConfigureStorageManager()
+        {
+            var tokenString = HttpContext.GetTokenAsync("access_token").Result;
+            if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
+            {
+                return;
+            }
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
+            var alreadyExisted = _userService.SetBaseContainer(jsonToken.Subject);
+            var id = jsonToken.Subject;
+            var displayName = jsonToken.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
+            var email = jsonToken.Claims.FirstOrDefault(x => x.Type == "emails")?.Value;
+            _userService.StoreUserInfo(id,displayName,email);
+            _baseContainerSet = true;
         }
     }
 }
