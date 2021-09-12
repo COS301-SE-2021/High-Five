@@ -92,6 +92,10 @@ namespace analysis_engine_v2.BrokerClient.Storage
              */
             
             var toolSet = _storageManager.GetAllFilesInContainer("tools/analysis/" + toolId).Result;
+            if (toolSet.Count == 0)
+            {
+                return null;
+            }
             IBlobFile sourceCodeFile = null;
             IBlobFile modelFile = null;
             foreach (var tool in toolSet)
@@ -147,8 +151,9 @@ namespace analysis_engine_v2.BrokerClient.Storage
              * Returns pipeline as JSON
              */
             var pipelineFile = _storageManager.GetFile(pipelineId + ".json", "pipeline").Result;
-            if (pipelineFile == null || !await pipelineFile.Exists()) return null;
-            return await pipelineFile.ToText();
+            if (pipelineFile == null) return null;
+            var pipelineObject = JsonConvert.DeserializeObject<PipelineRequest>(await pipelineFile.ToText());
+            return FormatPipeline(pipelineObject);
         }
 
         public async Task<string> GetMetadataType(string metadataTypeName)
@@ -164,6 +169,33 @@ namespace analysis_engine_v2.BrokerClient.Storage
             }
 
             return await metadataFile.ToText();
+        }
+
+        private string FormatPipeline(PipelineRequest request)
+        {
+            var toolIds = request.Tools;
+            var resultStr = string.Empty;
+            foreach (var toolId in toolIds)
+            {
+                resultStr += MapToolIdToString(toolId);
+                if (toolId != toolIds[toolIds.Count - 1])
+                {
+                    resultStr += ",";
+                }
+            }
+            return resultStr;
+        }
+
+        private string MapToolIdToString(string toolId)
+        {
+            return toolId switch
+            {
+                "D0" => "analysis:people",
+                "D1" => "analysis:animal",
+                "D2" => "analysis:vehicles",
+                "D3" => "drawing:boxes",
+                _ => "dynamic:" + toolId
+            };
         }
     }
 }
