@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -23,19 +24,20 @@ namespace src.Subsystems.Tools
 
         public override IActionResult CreateMetaDataType(string name, IFormFile file)
         {
-            if (!_baseContainerSet)
-            {
-                ConfigureStorageManager();
-            }
-            var response = new EmptyObject
-            {
-                Success = _toolService.CreateMetaDataType(file, name).Result
-            };
-            if (!response.Success)
-            {
-                response.Message = "A metadata object with that name already exists.";
-            }
-            return StatusCode(200, response);
+            return StatusCode(503, null);
+            /* if (!_baseContainerSet)
+             {
+                 ConfigureStorageManager();
+             }
+             var response = new EmptyObject
+             {
+                 Success = _toolService.CreateMetaDataType(file, name).Result
+             };
+             if (!response.Success)
+             {
+                 response.Message = "A metadata object with that name already exists.";
+             }
+             return StatusCode(200, response);*/
         }
 
 
@@ -64,6 +66,25 @@ namespace src.Subsystems.Tools
             }
 
             var response = _toolService.GetMetaDataTypes();
+            return StatusCode(200, response);
+        }
+
+        public override IActionResult GetToolFiles(GetToolFilesRequest getToolFilesRequest)
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            GetToolFilesResponse response;
+            try
+            {
+                response = _toolService.GetToolFiles(getToolFilesRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(400, null);
+            }
+
             return StatusCode(200, response);
         }
 
