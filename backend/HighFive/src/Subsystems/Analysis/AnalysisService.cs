@@ -40,6 +40,8 @@ namespace src.Subsystems.Analysis
         private readonly IPipelineService _pipelineService;
         private readonly IConfiguration _configuration;
         private readonly IWebSocketClient _analysisSocket;
+        private string _brokerToken;
+        private string _userId;
 
         public AnalysisService(IStorageManager storageManager, IMediaStorageService mediaStorageService,
             IPipelineService pipelineService, IConfiguration configuration)
@@ -86,7 +88,8 @@ namespace src.Subsystems.Analysis
                 return response;
             }
 
-            await _analysisSocket.Send(JsonConvert.SerializeObject(fullRequest));
+            var brokerRequest = new BrokerSocketRequest(fullRequest, _userId) {Authorization = _brokerToken};
+            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
             var responseString = _analysisSocket.Receive().Result;
             response = JsonConvert.DeserializeObject<AnalyzedImageMetaData>(responseString);
 
@@ -128,7 +131,8 @@ namespace src.Subsystems.Analysis
                 return response;
             }
             
-            await _analysisSocket.Send(JsonConvert.SerializeObject(fullRequest));
+            var brokerRequest = new BrokerSocketRequest(fullRequest, _userId) {Authorization = _brokerToken};
+            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
             var responseString = _analysisSocket.Receive().Result;
             response = JsonConvert.DeserializeObject<AnalyzedVideoMetaData>(responseString);
             
@@ -184,10 +188,11 @@ namespace src.Subsystems.Analysis
             _mediaStorageService.SetBaseContainer(containerName);
         }
 
-        public GetLiveAnalysisTokenResponse GetLiveAnalysisToken(string userId)
+        public void SetBrokerToken(string userId)
         {
-            var key = _configuration["JWTSecret"];
-            const string issuer = "localhost:5001";//TODO: change this to analysis engine server ip
+            _userId = userId;
+            var key = _configuration["BrokerJWTSecret"];
+            const string issuer = "https://high5api.azurewebsites.net";
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));    
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
@@ -201,10 +206,7 @@ namespace src.Subsystems.Analysis
                 permClaims,    
                 expires: DateTime.Now.AddDays(1),    
                 signingCredentials: credentials);    
-            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token); 
-            
-            //TODO: Send token over socket to analysis engine
-            return new GetLiveAnalysisTokenResponse {Token = jwtToken};
+            _brokerToken = new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         public string ListenForMessage()

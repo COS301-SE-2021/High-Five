@@ -226,6 +226,7 @@ namespace src.Websockets
                 return false;
             }
 
+            _analysisService.SetBrokerToken(token.Subject);
             return true;
         }
         
