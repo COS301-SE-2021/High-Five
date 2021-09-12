@@ -16,5 +16,6 @@ namespace src.Subsystems.Tools
         public List<string> GetToolTypes();
         public Task<bool> CreateMetaDataType(IFormFile file, string name);
         public GetToolMetaDataTypes GetMetaDataTypes();
+        public GetToolFilesResponse GetToolFiles(GetToolFilesRequest request);
     }
 }

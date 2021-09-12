@@ -12,6 +12,8 @@ tags:
   - name: "Analysis"
   - name: "User"
   - name: "Tools"
+  - name: "Downloads"
+  - name: "Livestream"
 
   #==========================================================
   #     PATHS
@@ -675,6 +677,124 @@ paths:
               schema:
                 $ref: '#/components/schemas/getToolMetaDataTypes'
 
+  /tools/getToolFiles:
+    post:
+      tags:
+        - "Tools"
+      description: Endpoint for Get Tool Files use case
+      operationId: GetToolFiles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/getToolFilesRequest'
+      responses:
+        "200":
+          description: All tool types have been returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getToolFilesResponse'
+
+  #==========================================================
+  #     DOWNLOADS SUBSYSTEM PATHING
+  #==========================================================
+
+  /tools/downloadApk:
+    get:
+      tags:
+        - "Downloads"
+      description: Endpoint to download the mobile app's apk
+      operationId: DownloadApk
+      responses:
+        "200":
+          description: Returns an apk to install the mobile application
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fileDownload'
+
+  /tools/downloadSdkManual:
+    get:
+      tags:
+        - "Downloads"
+      description: Endpoint to download the sdk's user manual
+      operationId: DownloadSdkManual
+      responses:
+        "200":
+          description: Returns the sdk user manual
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fileDownload'
+
+  /tools/downloadSdkFiles:
+    get:
+      tags:
+        - "Downloads"
+      description: Endpoint to download the sdk's required files
+      operationId: DownloadSdkFiles
+      responses:
+        "200":
+          description: Returns the sdk required files as .cs files.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/downloadSdkFilesResponse'
+
+  #==========================================================
+  #     LIVESTREAM SUBSYSTEM PATHING
+  #==========================================================
+
+  /livestream/createOneTimeToken:
+    post:
+      tags:
+        - "Livestream"
+      description: Endpoint for Create One Time Token use case
+      operationId: CreateOneTimeToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/getToolFilesRequest'
+      responses:
+        "200":
+          description: Returns random one time token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /livestream/returnAllLivestreams:
+    get:
+      tags:
+        - "Livestream"
+      description: Endpoint for Return All Livestreams use case
+      operationId: ReturnAllLiveStreams
+      responses:
+        "200":
+          description: Returns all livestream id's
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /livestream/createStreamingUrl:
+    get:
+      tags:
+        - "Livestream"
+      description: Endpoint for Create Streaming Url use case
+      operationId: CreateStreamingUrl
+      responses:
+        "200":
+          description: Returns streaming url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/downloadSdkFilesResponse'
+  
   #==========================================================
   #     SCHEMAS
   #==========================================================
@@ -824,7 +944,6 @@ components:
           type: string
         thumbnail:
           type: string
-
 
     #==========================================================
     #     PIPELINES COMPONENTS
@@ -1071,7 +1190,62 @@ components:
           type: array
           items:
             type: string
+    
+    getToolFilesRequest:
+      type: object
+      properties:
+        toolType:
+          type: string
+          description: Must be "drawing" or "analysis"
+        toolId:
+          type: string
+    
+    getToolFilesResponse:
+      type: object
+      properties:
+        toolSourceCode:
+          $ref: '#/components/schemas/fileDownload'
+        model:
+          $ref: '#/components/schemas/fileDownload'
+          description: Will be null if request type was drawing
 
+    #==========================================================
+    #     DOWNLOADS COMPONENTS
+    #==========================================================
+
+    fileDownload:
+      type: object
+      properties:
+        fileUrl:
+          type: string
+          description: a download link to the file
+    
+    downloadSdkFilesResponse:
+      type: object
+      properties:
+        boxCoordinatesClass:
+          $ref: '#/components/schemas/fileDownload'
+        toolInterface:
+          $ref: '#/components/schemas/fileDownload'
+        analysisToolAbstractClass:
+          $ref: '#/components/schemas/fileDownload'
+        drawingToolAbstractClass:
+          $ref: '#/components/schemas/fileDownload'
+        metaDataClass:
+          $ref: '#/components/schemas/fileDownload'
+        dataClass:
+          $ref: '#/components/schemas/fileDownload'
+
+    #==========================================================
+    #     DOWNLOADS COMPONENTS
+    #==========================================================
+    
+    createStreamingUrlResponse:
+      type: object
+      properties:
+        streamingUrl:
+          type: string
+    
     #==========================================================
     #     GENERIC COMPONENTS
     #==========================================================

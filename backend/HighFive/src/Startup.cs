@@ -18,6 +18,8 @@ using src.AnalysisTools.VideoDecoder;
 using src.Storage;
 using src.Subsystems.Admin;
 using src.Subsystems.Analysis;
+using src.Subsystems.FileDownloads;
+using src.Subsystems.Livestreaming;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
 using src.Subsystems.Tools;
@@ -38,6 +40,7 @@ namespace src
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
             services.AddControllers();
             services.AddSwaggerGen();
             services.AddCors(c =>
@@ -57,6 +60,8 @@ namespace src
             services.AddScoped<IAnalysisService, AnalysisService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IToolService, ToolService>();
+            services.AddScoped<IDownloadsService, DownloadsService>();
+            services.AddScoped<ILivestreamingService, LivestreamingService>();
 
 
             // Configuring of Azure AD B2C Authentication
