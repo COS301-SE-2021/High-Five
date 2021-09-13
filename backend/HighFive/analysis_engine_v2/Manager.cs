@@ -18,9 +18,11 @@ namespace analysis_engine
         private string _outputUrl;
         private FrameEncoder _frameEncoder=null;
         private string _mediaType;
-        public Manager()
+        private AnalysisObserver _analysisObserver;
+        public Manager(AnalysisObserver analysisObserver)
         {
             _frameCount = 0;
+            _analysisObserver=analysisObserver;
         }
 
         public void CreatePipeline(string type, string pipelineString)
@@ -129,7 +131,7 @@ namespace analysis_engine
                     ReturnAnalyzedFrame(data);
                     data = _pipeline.Drain.Pop();
                 }
-                
+                _analysisObserver.AnalysisFinished();
             });
         }
     }

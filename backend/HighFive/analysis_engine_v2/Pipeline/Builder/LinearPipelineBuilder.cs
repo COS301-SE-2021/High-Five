@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace analysis_engine
 {
     public class LinearPipelineBuilder : PipelineBuilder
@@ -27,7 +29,7 @@ namespace analysis_engine
         public override void BuildFilters(string filterString)
         {
             string[] filterStrings = filterString.Split(',');
-            Filter[] temp = new Filter[filterStrings.Length];
+            List<Filter> temp = new List<Filter>();
             int count = 0;
             foreach (var s in filterStrings)
             {
@@ -50,9 +52,11 @@ namespace analysis_engine
                     _filterBuilder.AddOutput(_pipeFactories[0].GetPipe());
                 }
                 _filterBuilder.BuildToolContainer(s, filterStrings.Length==(count-1));
-                temp[count] = _filterBuilder.GetFilter();
+                temp.Add(_filterBuilder.GetFilter());
                 count++;
             }
+
+            Pipeline.Filters = temp;
         }
 
         public override Pipeline GetPipeline()
