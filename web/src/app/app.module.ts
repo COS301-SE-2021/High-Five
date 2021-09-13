@@ -14,6 +14,7 @@ import {MediaStorageService} from './apis/mediaStorage.service';
 import {AnalysisService} from './apis/analysis.service';
 import {UserService} from './apis/user.service';
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
+import {UserToolsService} from './services/user-tools/user-tools.service';
 
 
 @NgModule({
@@ -37,12 +38,12 @@ import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
       authRequest: {
         scopes: ['user.read']
       },
-      loginFailedRoute: ''
+      loginFailedRoute: environment.postLogoutRedirectUri
     }, null)],
   providers: [{
     provide: RouteReuseStrategy,
     useClass: IonicRouteStrategy
-  }, VideoPlayer, PipelinesService, MsalGuard, MediaStorageService, AnalysisService, UserService, {
+  }, VideoPlayer, PipelinesService, MsalGuard, MediaStorageService, AnalysisService, UserService, UserToolsService, {
     provide: 'SnotifyToastConfig', useValue: ToastDefaults,
   },
     SnotifyService],

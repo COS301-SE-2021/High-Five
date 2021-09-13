@@ -3,6 +3,8 @@ import {ModalController} from '@ionic/angular';
 import {MsalService} from '@azure/msal-angular';
 import {UsersService} from '../../services/users/users.service';
 import {User} from '../../models/user';
+import {UserToolsService} from '../../services/user-tools/user-tools.service';
+import {CreateToolComponent} from '../create-tool/create-tool.component';
 
 @Component({
   selector: 'app-account',
@@ -13,13 +15,18 @@ export class AccountComponent implements OnInit {
   public option: string;
 
 
-  constructor(private modalController: ModalController, public msalService: MsalService, public usersService: UsersService) {
+  constructor(private modalController: ModalController, public msalService: MsalService,
+              public usersService: UsersService, public userToolsService: UserToolsService) {
+
     this.option = 'details';
   }
 
+  public userToolsTrackFn = (t, userTool) => userTool.id;
+
   public usersTrackFn = (u, user) => user.id;
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
 
   public async close() {
@@ -49,5 +56,17 @@ export class AccountComponent implements OnInit {
 
   public async purgeOwnMedia() {
     await this.usersService.purgeOwnMedia();
+  }
+
+  public async addUserTool() {
+    this.modalController.dismiss({dismissed: true}).then(() => this.modalController.create({
+      component: CreateToolComponent,
+      cssClass: 'accountPreferencesModal',
+      showBackdrop: false,
+      animated: true,
+      backdropDismiss: true
+    }).then((c) => {
+      c.present();
+    }));
   }
 }

@@ -1,0 +1,43 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Create Tool</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-grid class="ion-align-items-center ion-text-center ion-justify-content-center">
+      <ion-row class="ion-align-items-center ion-text-center ion-justify-content-center">
+        <ion-col>
+          <ion-item class="ion-align-items-center  ion-justify-content-center">
+            <ion-label position="floating">Tool Name</ion-label>
+            <ion-input [(ngModel)]="toolName"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <br>
+      <ion-row class="ion-align-items-center ion-justify-content-center">
+        <ion-col class="ion-align-items-center ion-justify-content-center">
+          <ion-item>
+            <ion-label>Tool Type</ion-label>
+            <ion-select [(ngModel)]="toolType" placeholder="Select Type">
+              <ion-select-option value="analysis">Analysis</ion-select-option>
+              <ion-select-option value="drawing">Drawing</ion-select-option>
+              <ion-select-option value="drone">Drone</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-align-items-center ion-justify-content-center">
+        <ion-col class="ion-align-items-center ion-justify-content-center">
+          <ion-item>
+            <ion-label>Meta Data</ion-label>
+            <ion-select [(ngModel)]="metaData" placeholder="Select Metadata">
+              <ion-select-option value="analysis">Analysis</ion-select-option>
+              <ion-select-option value="drawing">Drawing</ion-select-option>
+              <ion-select-option value="drone">Drone</ion-select-option>
+              <ion-select-option value="create-one-now">Create One Now</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+</ion-card>
