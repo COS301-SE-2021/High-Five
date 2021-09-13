@@ -758,7 +758,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/getToolFilesRequest'
+              $ref: '#/components/schemas/createOneTimeTokenRequest'
       responses:
         "200":
           description: Returns random one time token
@@ -780,20 +780,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
-
-  /livestream/createStreamingUrl:
-    get:
-      tags:
-        - "Livestream"
-      description: Endpoint for Create Streaming Url use case
-      operationId: CreateStreamingUrl
-      responses:
-        "200":
-          description: Returns streaming url
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/downloadSdkFilesResponse'
   
   #==========================================================
   #     SCHEMAS
@@ -1237,13 +1223,13 @@ components:
           $ref: '#/components/schemas/fileDownload'
 
     #==========================================================
-    #     DOWNLOADS COMPONENTS
+    #     STREAMING COMPONENTS
     #==========================================================
     
-    createStreamingUrlResponse:
+    createOneTimeTokenRequest:
       type: object
       properties:
-        streamingUrl:
+        streamingId:
           type: string
     
     #==========================================================

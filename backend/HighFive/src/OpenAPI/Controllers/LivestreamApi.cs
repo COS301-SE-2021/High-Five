@@ -29,25 +29,14 @@ namespace Org.OpenAPITools.Controllers
         /// 
         /// </summary>
         /// <remarks>Endpoint for Create One Time Token use case</remarks>
-        /// <param name="getToolFilesRequest"></param>
+        /// <param name="createOneTimeTokenRequest"></param>
         /// <response code="200">Returns random one time token</response>
         [HttpPost]
         [Route("/livestream/createOneTimeToken")]
         [Consumes("application/json")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
-        public abstract IActionResult CreateOneTimeToken([FromBody]GetToolFilesRequest getToolFilesRequest);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <remarks>Endpoint for Create Streaming Url use case</remarks>
-        /// <response code="200">Returns streaming url</response>
-        [HttpGet]
-        [Route("/livestream/createStreamingUrl")]
-        [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(DownloadSdkFilesResponse))]
-        public abstract IActionResult CreateStreamingUrl();
+        public abstract IActionResult CreateOneTimeToken([FromBody]CreateOneTimeTokenRequest createOneTimeTokenRequest);
 
         /// <summary>
         /// 

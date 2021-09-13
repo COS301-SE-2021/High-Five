@@ -1,21 +1,15 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using AzureFunctionsToolkit.Portable.Extensions;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using Org.OpenAPITools.Models;
 using src.Subsystems.Analysis;
 
 namespace src.Websockets
@@ -25,6 +19,7 @@ namespace src.Websockets
         private readonly IAnalysisService _analysisService;
         private readonly IConfiguration _configuration;
         private bool _baseContainerSet;
+        private string _userId;
 
         public WebsocketController(IAnalysisService analysisService, IConfiguration configuration)
         {
@@ -43,9 +38,9 @@ namespace src.Websockets
                 ListenForBrokerMessage(webSocket);
                 while (webSocket.State == WebSocketState.Open)
                 {
-                    string responseTitle;
-                    string responseBody;
-                    string responseType;
+                    var responseTitle = string.Empty;
+                    var responseBody = string.Empty;
+                    var responseType= string.Empty;
                     try
                     {
                         var request = ReceiveMessage(webSocket).Result;
@@ -89,7 +84,11 @@ namespace src.Websockets
                                     responseBody = JsonConvert.SerializeObject(analyzedVideo);
                                     responseType = "success";
                                 }
-                                
+                                break;
+                            case "StartLiveAnalysis":   //This use case must be called by the application
+                                var streamingLinks = _analysisService.StartLiveStream(_userId).Result;
+                                await SendMessage("Livestream Started",streamingLinks.PlayLink , "info",
+                                    webSocket);
                                 break;
                             case "Exit":
                                 await SendMessage("Socket Closed", "Connection to the socket was closed.", "info",
@@ -195,6 +194,7 @@ namespace src.Websockets
         private async Task<bool> IsJwtValid(JwtSecurityTokenHandler handler, string tokenString)
         {
             var token = handler.ReadJwtToken(tokenString);
+            _userId = token.Subject;
             var iss = token.Issuer;
             var tfp = token.Payload["tfp"].ToString(); // Sign-in policy name
             var metadataEndpoint = $"{iss}.well-known/openid-configuration?p={tfp}";

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Org.OpenAPITools.Models;
 
 namespace src.Subsystems.Livestreaming
@@ -84,20 +85,24 @@ namespace src.Subsystems.Livestreaming
             if (response.IsSuccessStatusCode)
             {
                 var responseString = await response.Content.ReadAsStringAsync();
+                var responseObj = JObject.Parse(responseString);
+                return (string)responseObj.GetValue("streamId");
             }
             return "";
         }
 
-        public async Task<string> CreateOneTimeToken(string id, string type)
+        public async Task<string> CreateOneTimeToken(string appName, string id, string type)
         {
             var expireDate = "1633597507";//DateTime.Now.AddHours(1);
-            var requestUri = "/rest/v2/broadcasts/" + id + "/token?id=" + id + "&expireDate=" + expireDate + "&type=" + type;
+            var requestUri = appName + "/rest/v2/broadcasts/" + id + "/token?id=" + id + "&expireDate=" + expireDate + "&type=" + type;
             var response = await _httpClient.GetAsync(requestUri);
             if (response.IsSuccessStatusCode)
             {
                 var responseString = await response.Content.ReadAsStringAsync();
+                var responseObj = JObject.Parse(responseString);
+                return (string)responseObj.GetValue("tokenId");
             }
-            throw new System.NotImplementedException();
+            return "";
         }
 
         public async Task<string> ReturnAllLiveStreams(string appName)
@@ -107,8 +112,10 @@ namespace src.Subsystems.Livestreaming
             if (response.IsSuccessStatusCode)
             {
                 var responseString = await response.Content.ReadAsStringAsync();
+                return responseString;
             }
-            throw new System.NotImplementedException();
+
+            return null;
         }
 
         private string GenerateJwt()
