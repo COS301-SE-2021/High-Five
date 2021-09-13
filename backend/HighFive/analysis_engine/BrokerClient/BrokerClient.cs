@@ -11,8 +11,14 @@ namespace analysis_engine.BrokerClient
     {
         private ICommand _commander;
         private IResourceUsageCollector _usageCollector;
+        
+        /// <summary>
+        /// Run the BrokerClient. This function registers the AnalysisEngine to the Broker
+        /// and creates and runs the ResourceCollector and CommandHandler classes.
+        /// </summary>
         public void Run()
         {
+            //Open a SSH tunnel to the remote server. This authenticates the BrokerClient.
             PrivateKeyFile file = new PrivateKeyFile(@"/home/kyle-pc/.ssh/id_rsa");
             using (var client = new SshClient("newideassolutions.com", "root", file))
             {
@@ -40,6 +46,7 @@ namespace analysis_engine.BrokerClient
                 msg.Value = registrationString;
                 producer.Produce(partition, msg);
                 
+                //Give Broker enough time to register the AnalysisEngine
                 Thread.Sleep(30000);
 
                 _commander = new Command();

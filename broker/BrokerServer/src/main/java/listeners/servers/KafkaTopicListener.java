@@ -141,7 +141,7 @@ public class KafkaTopicListener extends ConnectionListener<String> {
         try {
             JsonObject serviceInfo = new Gson().fromJson(writer.toString(), JsonObject.class).getAsJsonObject();
             serviceInfo.add("offset", new JsonPrimitive(offset));
-            serviceInfo.get("registered_servers").getAsJsonArray().add(server.toString());
+            serviceInfo.get("registered_servers").getAsJsonArray().add(server.getServerId());
             TopicManager.updateResource("server_information.json", serviceInfo);
         } catch (Exception e) {
             EventLogger.getLogger().logException(e);
