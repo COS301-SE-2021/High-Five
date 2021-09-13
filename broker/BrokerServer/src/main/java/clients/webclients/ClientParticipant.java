@@ -7,15 +7,10 @@ import com.google.gson.*;
 import dataclasses.clientrequest.AnalysisRequest;
 import dataclasses.clientrequest.codecs.RequestDecoder;
 import dataclasses.serverinfo.*;
-import dataclasses.telemetry.Telemetry;
-import dataclasses.telemetry.builder.TelemetryBuilder;
-import dataclasses.telemetry.builder.TelemetryCollector;
 import logger.EventLogger;
 
 import java.io.*;
 import java.net.SocketException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Client participant class that fetches server information (the server with the least usage),
@@ -27,6 +22,7 @@ public class ClientParticipant extends WebClient{
     private final Connection connection;
     private final ConnectionHandler connectionHandler;
     private final ServerInformationHolder informationHolder;
+    private static final String CLOSECONNECTION = "closeconnection";
 
     public ClientParticipant(Connection connection, ConnectionHandler handler, ServerInformationHolder informationHolder) {
         EventLogger.getLogger().info("Starting ClientParticipant session");
@@ -46,16 +42,27 @@ public class ClientParticipant extends WebClient{
     @Override
     public void listen() throws InterruptedException {
         while (true) {
-            if (!connection.isConnected()) {
-                EventLogger.getLogger().info("Client has disconnected");
-                return;
-            }
             try {
+                if (connection.isClosed()) {
+                    EventLogger.getLogger().info("Client has disconnected");
+                    connection.close();
+                    return;
+                }
                 //Fetch the request from the client
                 BufferedReader reader = connection.getReader();
                 String requestData = reader.readLine();
 
-                EventLogger.getLogger().info("REQUEST DATA: " + requestData);
+                if (requestData == null) {
+                    continue;
+                }
+
+                if (requestData.length() >= CLOSECONNECTION.length() &&
+                        requestData.substring(0, CLOSECONNECTION.length()).contains(CLOSECONNECTION)) {
+                    EventLogger.getLogger().info("Client has disconnected");
+                    connection.close();
+                    connectionHandler.removeConnection(connection.getConnectionId());
+                    return;
+                }
 
                 //Response object for sending a response to the client
                 BufferedWriter out = connection.getWriter();
@@ -66,7 +73,7 @@ public class ClientParticipant extends WebClient{
                     AnalysisRequest request;
                     JsonElement element = new Gson().fromJson(requestData, JsonElement.class);
                     if (element == null) {
-                        if (!connection.isConnected()) {
+                        if (connection.isClosed()) {
                             EventLogger.getLogger().info("Client has disconnected");
                             connection.close();
                         }

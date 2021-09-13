@@ -61,10 +61,10 @@ public class SocketConnection implements Connection{
     }
 
     @Override
-    public boolean isConnected() {
+    public boolean isClosed() {
         lock.lock();
         try {
-            return connection.isConnected();
+            return connection.isClosed();
         } finally {
             lock.unlock();
         }

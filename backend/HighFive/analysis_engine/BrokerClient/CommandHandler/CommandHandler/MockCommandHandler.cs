@@ -1,8 +1,11 @@
 using System;
 using System.Threading;
 using analysis_engine.BrokerClient.CommandHandler.Models;
+using analysis_engine.BrokerClient.CommandHandler.Models.commandbody;
 using broker_analysis_client.Client.Models;
 using Confluent.Kafka;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
 {
@@ -41,6 +44,8 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
 
             if (command.CommandType == "AnalyzeVideo")
             {
+                StoredMediaCommandBody body =
+                    JsonConvert.DeserializeObject<StoredMediaCommandBody>(JsonConvert.SerializeObject(command.Body));
                 var metaData = new AnalyzedVideoMetaData
                 {
                     DateAnalyzed = new DateTime(2021, 01, 01, 12, 59, 05),
@@ -60,6 +65,8 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
             }
             else if (command.CommandType == "AnalyzeImage")
             {
+                StoredMediaCommandBody body =
+                    JsonConvert.DeserializeObject<StoredMediaCommandBody>(JsonConvert.SerializeObject(command.Body));
                 var metaData = new AnalyzedImageMetaData
                 {
                     DateAnalyzed = new DateTime(2021, 01, 01, 12, 59, 05),

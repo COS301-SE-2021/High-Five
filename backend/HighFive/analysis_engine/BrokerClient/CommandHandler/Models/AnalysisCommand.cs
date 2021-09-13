@@ -1,6 +1,7 @@
 using System.Text;
 using analysis_engine.BrokerClient.CommandHandler.Models.commandbody;
 using analysis_engine.BrokerClient.ResourceUsageCollector.Models;
+using Newtonsoft.Json.Linq;
 
 namespace analysis_engine.BrokerClient.CommandHandler.Models
 {
@@ -24,7 +25,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models
         /// <summary>
         /// Gets or Sets Body
         /// </summary>
-        public CommandBody Body { get; set; }
+        public JObject Body { get; set; }
         
         /// <summary>
         /// Returns the string presentation of the object

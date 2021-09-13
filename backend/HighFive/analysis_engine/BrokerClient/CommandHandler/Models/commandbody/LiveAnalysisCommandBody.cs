@@ -2,7 +2,7 @@ using System.Text;
 
 namespace analysis_engine.BrokerClient.CommandHandler.Models.commandbody
 {
-    public class LiveAnalysisCommandBody
+    public class LiveAnalysisCommandBody : CommandBody
     {
         /// <summary>
         /// Gets or Sets StreamId
@@ -32,7 +32,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models.commandbody
         /// Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
-        public string ToJson()
+        public override string ToJson()
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
         }

@@ -27,7 +27,7 @@ public interface Connection {
      */
     void close() throws IOException;
 
-    boolean isConnected();
+    boolean isClosed();
 
     String getConnectionId();
 

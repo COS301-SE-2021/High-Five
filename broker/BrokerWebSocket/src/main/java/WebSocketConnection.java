@@ -2,6 +2,7 @@ import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * WebSocket class that is loaded into an embedded Tomcat server. This class acts as a middleman
@@ -10,15 +11,38 @@ import java.net.Socket;
 @ServerEndpoint(value="/broker")
 public class WebSocketConnection {
 
-    private int state = 0; //Server gets Client ID first, therefore state is necessary to not close connection on first message
     private BufferedReader bufferedReader;
     private BufferedWriter serverInfoRequest;
     private Socket connection;
+    private Thread responseThread;
+    private boolean isRunning = true;
+    private static final String CLOSECONNECTION = "closeconnection";
 
    @OnOpen
     public void onOpen(Session session) throws IOException {
+       int port = Integer.parseInt(System.getenv("BROKER_CLIENT_PORT"));
+       connection = new Socket("localhost", port);
 
-
+       responseThread = new Thread(() -> {
+           //Read response from broker
+           while (isRunning) {
+               try {
+                   if (bufferedReader == null) {
+                       bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                   }
+                   String infoData = bufferedReader.readLine();
+                   //Send response to web client
+                   if (infoData != null) {
+                       session.getBasicRemote().sendText(infoData);
+                   }
+               } catch (Exception ignored) {
+                   return;
+               }
+           }
+       });
+       responseThread.start();
+       serverInfoRequest = new BufferedWriter(new OutputStreamWriter(
+               connection.getOutputStream()));
     }
 
     /**
@@ -31,44 +55,35 @@ public class WebSocketConnection {
     @OnMessage
     public void onMessage(Session session, String message) throws IOException {
         //Send request to broker
-        int port = Integer.parseInt(System.getenv("BROKER_CLIENT_PORT"));
-
-        if (state == 0) {
-            connection = new Socket("localhost", port);
-        }
-
-        if (serverInfoRequest == null) {
-
-            serverInfoRequest = new BufferedWriter(new OutputStreamWriter(
-                    connection.getOutputStream()));
-        }
-
         serverInfoRequest.append(message).append("\n").flush();
-
-        //Read response from broker
-        if (bufferedReader == null) {
-            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        }
-        String infoData = bufferedReader.readLine();
-
-        //Send response to web client
-        session.getBasicRemote().sendText(infoData);
-
-        if (state == 1) {
-            connection.close();
-            connection = null;
-            bufferedReader = null;
-            serverInfoRequest = null;
-            state = 0;
-        } else {
-            state++;
-        }
     }
 
     @OnClose
-    public void onClose(Session session) throws IOException {}
+    public void onClose(Session session) throws IOException {
+        serverInfoRequest.append(CLOSECONNECTION).append("\n").flush();
+        try {
+            connection.close();
+        } catch (Exception ignored){}
+        isRunning = false;
+        try {
+            responseThread.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 
 
     @OnError
-    public void onError(Session session, Throwable throwable) {}
+    public void onError(Session session, Throwable throwable) throws IOException {
+        serverInfoRequest.append(CLOSECONNECTION).append("\n").flush();
+        try {
+            connection.close();
+        } catch (Exception ignored){}
+        isRunning = false;
+        try {
+            responseThread.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }

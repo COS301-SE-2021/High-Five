@@ -1,7 +1,7 @@
 namespace analysis_engine.BrokerClient.CommandHandler.Models.commandbody
 {
-    public interface CommandBody
+    public abstract class CommandBody
     {
-        public string ToJson();
+        public abstract string ToJson();
     }
 }

@@ -25,15 +25,22 @@ public class ConnectionHandler implements Observer<ResponseObject> {
     public void onNext(@NonNull ResponseObject responseObject) {
         lock.lock();
         try{
-
             var predicate = new Predicate<Connection>() {
                 @Override
                 public boolean test(Connection connection) {
+                    boolean isRight;
                     if (responseObject.requestType.equals("StartLiveAnalysis")) {
-                        return connection.getUserId().equals(responseObject.userId);
+                        isRight = connection.getUserId().contains(responseObject.userId);
+                        if (isRight) {
+                            EventLogger.getLogger().info("Broadcasting server information to connections with client id" + responseObject.userId);
+                        }
                     } else {
-                        return connection.getConnectionId().equals(responseObject.connectionId);
+                        isRight = connection.getConnectionId().contains(responseObject.connectionId);
+                        if (isRight) {
+                            EventLogger.getLogger().info("Broadcasting server information to connections with connection id" + responseObject.connectionId);
+                        }
                     }
+                    return isRight;
                 }
             };
 
@@ -66,6 +73,16 @@ public class ConnectionHandler implements Observer<ResponseObject> {
         lock.lock();
         try {
             connections.add(connection);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void removeConnection(String connectionId) {
+        lock.lock();
+        try {
+            EventLogger.getLogger().info("Removing connection " + connectionId + " from ConnectionHandler");
+            connections.removeIf(item -> item.getConnectionId().contains(connectionId));
         } finally {
             lock.unlock();
         }
