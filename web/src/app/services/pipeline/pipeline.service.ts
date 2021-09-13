@@ -77,12 +77,12 @@ export class PipelineService {
           if (res.ok) {
             this.snotifyService.success('Successfully deleted pipeline : ' + pipeline.name, 'Pipeline Deletion');
           } else {
-            this.snotifyService.error('Could not delete pipeline : ' + pipeline.name + ' please contact and admin', 'Pipeline Deletion');
+            this.snotifyService.error('Could not delete pipeline : ' + pipeline.name + ' please contact an admin', 'Pipeline Deletion');
             this.pipelines = [...this.pipelines, pipeline];
           }
         });
       } catch (e) {
-        this.snotifyService.error('Could not delete pipeline : ' + pipeline.name + ' please contact and admin', 'Pipeline Deletion');
+        this.snotifyService.error('Could not delete pipeline : ' + pipeline.name + ' please contact an admin', 'Pipeline Deletion');
         console.error(e);
         this.pipelines = [...this.pipelines, pipeline];
       }
@@ -105,7 +105,7 @@ export class PipelineService {
           if (res.ok) {
             this.snotifyService.success('Successfully added tools : ' + tools, 'Tool Addition');
           } else {
-            this.snotifyService.error('Could not add tools : ' + tools + ' please contact and admin', 'Tool Addition');
+            this.snotifyService.error('Could not add tools : ' + tools + ' please contact an admin', 'Tool Addition');
             this.pipelines[index] = {
               ...pipeline,
               tools: pipeline.tools
@@ -113,7 +113,7 @@ export class PipelineService {
           }
         });
       } catch (e) {
-        this.snotifyService.error('Could not add tools : ' + tools + ' please contact and admin', 'Tool Addition');
+        this.snotifyService.error('Could not add tools : ' + tools + ' please contact an admin', 'Tool Addition');
         console.error(e);
         this.pipelines[index] = {
           ...pipeline,
@@ -138,7 +138,7 @@ export class PipelineService {
           if (res.ok) {
             this.snotifyService.success('Successfully removed tools : ' + tools, 'Tool Removal');
           } else {
-            this.snotifyService.error('Could not remove tools : ' + tools + ' please contact and admin', 'Tool Removal');
+            this.snotifyService.error('Could not remove tools : ' + tools + ' please contact an admin', 'Tool Removal');
             this.pipelines[index] = {
               ...pipeline,
               tools: pipeline.tools
@@ -146,7 +146,7 @@ export class PipelineService {
           }
         });
       } catch (e) {
-        this.snotifyService.error('Could not remove tools : ' + tools + ' please contact and admin', 'Tool Removal');
+        this.snotifyService.error('Could not remove tools : ' + tools + ' please contact an admin', 'Tool Removal');
         console.error(e);
         this.pipelines[index] = {
           ...pipeline,

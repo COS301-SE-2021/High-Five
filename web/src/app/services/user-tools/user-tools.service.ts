@@ -1,52 +1,90 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {UserTool} from '../../models/userTool';
-import {MetaData} from '../../models/metaData';
+import {Tool} from '../../models/tool';
+import {ToolsService} from '../../apis/tools.service';
+import {SnotifyService} from 'ng-snotify';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserToolsService {
-  private readonly _userTools = new BehaviorSubject<UserTool[]>([]);
+export class UserToolsService{
+  private readonly _userTools = new BehaviorSubject<Tool[]>([]);
   // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly userTools$ = this._userTools.asObservable();
 
-  constructor() {
+  constructor(private toolsService: ToolsService, private snotifyService: SnotifyService) {
     this.fetchAllTools();
   }
 
 
-  get userTools(): UserTool[] {
+
+  get userTools(): Tool[] {
     // eslint-disable-next-line no-underscore-dangle
     return this._userTools.getValue();
   }
 
-  set userTools(val: UserTool[]) {
+  set userTools(val: Tool[]) {
     // eslint-disable-next-line no-underscore-dangle
     this._userTools.next(val);
   }
 
 
-  public async addUserTool(name: string, id: string, onnxModel: any, toolClassFile: any, metaDataType: MetaData, type: string) {
-    this.userTools = this.userTools.concat({id, name, toolClassFile, metaDataType, onnxModel, type});
+  public async addAnalysisTool(classFile: any, model: any, type: string = 'BoxCoordinates', name: string) {
+    try {
+      this.toolsService.uploadAnalysisToolForm(classFile, model ,type, name, 'response').subscribe((res) => {
+        if (res.ok) {
+          this.snotifyService.success('Successfully added analysis tool : ' + name, 'Tool Addition');
+        } else {
+          this.snotifyService.error('Could not add tool : ' + name + ' please contact an admin', 'Tool Addition');
+        }
+      });
+    } catch (e) {
+      this.snotifyService.error('Could not add tool : ' + name + ' please contact an admin', 'Tool Addition');
+    }
   }
 
 
-  public async removeUserTool(userToolId: string, serverRemove: boolean = true) {
-    this.userTools = this.userTools.filter(p => p.id !== userToolId);
+  public async addDrawingTool(classFile: any, type: string = 'BoxCoordinates', name: string) {
+    try {
+      this.toolsService.uploadDrawingToolForm(classFile, type, name, 'response').subscribe((res) => {
+        if (res.ok) {
+          this.snotifyService.success('Successfully added drawing tool tool : ' + name, 'Tool Addition');
+        } else {
+          this.snotifyService.error('Could not add tool : ' + name + ' please contact an admin', 'Tool Addition');
+        }
+      });
+    } catch (e) {
+      this.snotifyService.error('Could not add tool : ' + name + ' please contact an admin', 'Tool Addition');
+    }
+  }
 
+
+  public async removeTool(userToolId: string, type: string, serverRemove: boolean = true) {
+    const userTool = this.userTools.find(t => t.toolId === userToolId);
+    this.userTools = this.userTools.filter(p => p.toolId !== userToolId);
+    if (serverRemove) {
+      try {
+        this.toolsService.deleteTool({toolId: userToolId, toolType: type}, 'response').subscribe((res) => {
+          if (res.ok) {
+            this.snotifyService.success('Successfully deleted tool : ' + userTool.toolName, 'Tool Deletion');
+          } else {
+            this.snotifyService.error('Could not delete : ' + userTool.toolName + ' please contact an admin', 'Tool Deletion');
+            this.userTools = [...this.userTools, userTool];
+          }
+        });
+      } catch (e) {
+        this.snotifyService.error('Could not delete : ' + userTool.toolName + ' please contact an admin', 'Tool Deletion');
+        console.log(e);
+        this.userTools = [...this.userTools, userTool];
+      }
+    }
   }
 
 
   public async fetchAllTools() {
-    //this.tools = await this.pipelinesService.getAllTools().toPromise();
-    this.userTools = [{
-      id: 'x',
-      toolClassFile: 'some',
-      name: 'Tool1',
-      onnxModel: 'xd',
-      metaDataType: {id: 'xd2meta', name: 'boxbox'},
-      type: 'analysis'
-    }];
+    this.toolsService.getTools().subscribe((res) => {
+      this.userTools = res.tools;
+    });
   }
 }
