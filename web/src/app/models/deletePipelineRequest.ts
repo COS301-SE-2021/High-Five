@@ -11,5 +11,5 @@
  */
 
 export interface DeletePipelineRequest {
-    pipelineId?: string;
+  pipelineId?: string;
 }

@@ -11,5 +11,5 @@
  */
 
 export interface StoreImageRequest {
-    file?: Blob;
+  file?: Blob;
 }

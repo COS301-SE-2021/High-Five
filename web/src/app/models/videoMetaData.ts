@@ -11,12 +11,12 @@
  */
 
 export interface VideoMetaData {
-    id?: string;
-    name?: string;
-    /**
-     * The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Z
-     */
-    dateStored?: Date;
-    url?: string;
-    thumbnail?: string;
+  id?: string;
+  name?: string;
+  /**
+   * The date-time notation as defined by RFC 3339, section 5.6. e.g. 2017-07-21T17:32:28Z
+   */
+  dateStored?: Date;
+  url?: string;
+  thumbnail?: string;
 }

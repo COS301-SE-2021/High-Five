@@ -10,12 +10,12 @@
  * Do not edit the class manually.
  */
 
-export interface Pipeline {
-  name?: string;
-  /**
-   * Unique id associated with the pipeline
-   */
-  id?: string;
-  metadataType?: string;
-  tools?: Array<string>;
+export interface Tool {
+    toolId?: string;
+    toolName?: string;
+    /**
+     * Analysis or drawing
+     */
+    toolType?: string;
+    toolMetadataType?: string;
 }

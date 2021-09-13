@@ -11,8 +11,8 @@
  */
 
 export interface UserRequest {
-    /**
-     * user id
-     */
-    id?: string;
+  /**
+   * user id
+   */
+  id?: string;
 }

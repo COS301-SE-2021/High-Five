@@ -9,8 +9,8 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { AnalyzedVideoMetaData } from './analyzedVideoMetaData';
+import {AnalyzedVideoMetaData} from './analyzedVideoMetaData';
 
 export interface GetAnalyzedVideosResponse {
-    videos?: Array<AnalyzedVideoMetaData>;
+  videos?: Array<AnalyzedVideoMetaData>;
 }

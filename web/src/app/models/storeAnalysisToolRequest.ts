@@ -10,12 +10,9 @@
  * Do not edit the class manually.
  */
 
-export interface Pipeline {
-  name?: string;
-  /**
-   * Unique id associated with the pipeline
-   */
-  id?: string;
+export interface StoreAnalysisToolRequest {
+  sourceCode?: Blob;
+  model?: Blob;
   metadataType?: string;
-  tools?: Array<string>;
+  toolName?: string;
 }

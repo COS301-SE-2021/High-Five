@@ -11,6 +11,7 @@
  */
 
 export interface NewPipeline {
-    name?: string;
-    tools?: Array<string>;
+  name?: string;
+  metadataType?: string;
+  tools?: Array<string>;
 }

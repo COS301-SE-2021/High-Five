@@ -10,12 +10,10 @@
  * Do not edit the class manually.
  */
 
-export interface Pipeline {
-  name?: string;
+export interface GetToolFilesRequest {
   /**
-   * Unique id associated with the pipeline
+   * Must be \"drawing\" or \"analysis\"
    */
-  id?: string;
-  metadataType?: string;
-  tools?: Array<string>;
+  toolType?: string;
+  toolId?: string;
 }

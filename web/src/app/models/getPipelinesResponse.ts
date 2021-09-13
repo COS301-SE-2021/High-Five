@@ -9,8 +9,8 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { Pipeline } from './pipeline';
+import {Pipeline} from './pipeline';
 
 export interface GetPipelinesResponse {
-    pipelines?: Array<Pipeline>;
+  pipelines?: Array<Pipeline>;
 }

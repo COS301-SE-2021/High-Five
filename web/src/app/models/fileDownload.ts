@@ -10,12 +10,9 @@
  * Do not edit the class manually.
  */
 
-export interface Pipeline {
-  name?: string;
+export interface FileDownload {
   /**
-   * Unique id associated with the pipeline
+   * a download link to the file
    */
-  id?: string;
-  metadataType?: string;
-  tools?: Array<string>;
+  fileUrl?: string;
 }

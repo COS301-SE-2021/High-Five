@@ -11,6 +11,6 @@
  */
 
 export interface AnalyzeImageRequest {
-    imageId?: string;
-    pipelineId?: string;
+  imageId?: string;
+  pipelineId?: string;
 }

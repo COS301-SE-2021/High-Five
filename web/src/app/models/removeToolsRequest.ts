@@ -11,6 +11,6 @@
  */
 
 export interface RemoveToolsRequest {
-    pipelineId?: string;
-    tools?: Array<string>;
+  pipelineId?: string;
+  tools?: Array<string>;
 }

@@ -9,13 +9,8 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import {Tool} from './tool';
 
-export interface Pipeline {
-  name?: string;
-  /**
-   * Unique id associated with the pipeline
-   */
-  id?: string;
-  metadataType?: string;
-  tools?: Array<string>;
+export interface GetAllToolsResponse {
+  tools?: Array<Tool>;
 }

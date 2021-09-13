@@ -11,5 +11,5 @@
  */
 
 export interface GetLiveAnalysisTokenResponse {
-    token?: string;
+  token?: string;
 }

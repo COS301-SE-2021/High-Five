@@ -11,5 +11,5 @@
  */
 
 export interface GetPipelineIdsResponse {
-    pipelineIds?: Array<string>;
+  pipelineIds?: Array<string>;
 }

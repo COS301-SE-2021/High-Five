@@ -9,8 +9,8 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { User } from './user';
+import {User} from './user';
 
 export interface GetAllUsersResponse {
-    users?: Array<User>;
+  users?: Array<User>;
 }

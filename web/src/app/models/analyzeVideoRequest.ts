@@ -11,6 +11,6 @@
  */
 
 export interface AnalyzeVideoRequest {
-    videoId?: string;
-    pipelineId?: string;
+  videoId?: string;
+  pipelineId?: string;
 }

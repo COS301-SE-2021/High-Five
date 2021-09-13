@@ -11,5 +11,5 @@
  */
 
 export interface EchoRequest {
-    message?: string;
+  message?: string;
 }

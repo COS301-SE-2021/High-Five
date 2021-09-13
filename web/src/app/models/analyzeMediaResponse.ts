@@ -11,5 +11,5 @@
  */
 
 export interface AnalyzeMediaResponse {
-    url?: string;
+  url?: string;
 }

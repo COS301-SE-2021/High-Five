@@ -11,8 +11,8 @@
  */
 
 export interface DeleteVideoRequest {
-    /**
-     * unique id assossciated with a certain video stored on the blob storage
-     */
-    id?: string;
+  /**
+   * unique id assossciated with a certain video stored on the blob storage
+   */
+  id?: string;
 }

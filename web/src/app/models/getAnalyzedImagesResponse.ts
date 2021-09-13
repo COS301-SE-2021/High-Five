@@ -9,8 +9,8 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { AnalyzedImageMetaData } from './analyzedImageMetaData';
+import {AnalyzedImageMetaData} from './analyzedImageMetaData';
 
 export interface GetAnalyzedImagesResponse {
-    images?: Array<AnalyzedImageMetaData>;
+  images?: Array<AnalyzedImageMetaData>;
 }

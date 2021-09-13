@@ -10,12 +10,10 @@
  * Do not edit the class manually.
  */
 
-export interface Pipeline {
-  name?: string;
+export interface DeleteToolRequest {
   /**
-   * Unique id associated with the pipeline
+   * Analysis or Drawing
    */
-  id?: string;
-  metadataType?: string;
-  tools?: Array<string>;
+  toolType?: string;
+  toolId?: string;
 }

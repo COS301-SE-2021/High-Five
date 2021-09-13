@@ -10,12 +10,7 @@
  * Do not edit the class manually.
  */
 
-export interface Pipeline {
+export interface CreateToolMetaDataTypeRequest {
   name?: string;
-  /**
-   * Unique id associated with the pipeline
-   */
-  id?: string;
-  metadataType?: string;
-  tools?: Array<string>;
+  file?: Blob;
 }

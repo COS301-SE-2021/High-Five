@@ -11,8 +11,8 @@
  */
 
 export interface DeleteImageRequest {
-    /**
-     * unique id assossciated with a certain image stored on the blob storage
-     */
-    id?: string;
+  /**
+   * unique id assossciated with a certain image stored on the blob storage
+   */
+  id?: string;
 }

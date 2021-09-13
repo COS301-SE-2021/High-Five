@@ -11,5 +11,5 @@
  */
 
 export interface StoreVideoRequest {
-    file?: Blob;
+  file?: Blob;
 }

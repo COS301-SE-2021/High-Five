@@ -11,5 +11,5 @@
  */
 
 export interface GetPipelineRequest {
-    pipelineId?: string;
+  pipelineId?: string;
 }
