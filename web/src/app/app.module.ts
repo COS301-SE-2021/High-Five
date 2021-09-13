@@ -14,7 +14,7 @@ import {MediaStorageService} from './apis/mediaStorage.service';
 import {AnalysisService} from './apis/analysis.service';
 import {UserService} from './apis/user.service';
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
-import {UserToolsService} from './services/user-tools/user-tools.service';
+import {ToolsService} from './apis/tools.service';
 
 
 @NgModule({
@@ -43,7 +43,7 @@ import {UserToolsService} from './services/user-tools/user-tools.service';
   providers: [{
     provide: RouteReuseStrategy,
     useClass: IonicRouteStrategy
-  }, VideoPlayer, PipelinesService, MsalGuard, MediaStorageService, AnalysisService, UserService, UserToolsService, {
+  }, VideoPlayer, PipelinesService, MsalGuard, MediaStorageService, AnalysisService, UserService, ToolsService, {
     provide: 'SnotifyToastConfig', useValue: ToastDefaults,
   },
     SnotifyService],

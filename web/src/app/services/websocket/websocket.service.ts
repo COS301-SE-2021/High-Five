@@ -33,18 +33,16 @@ export class WebsocketService {
   }
 
   private handleMessage(msg: JsonObject) {
-    if (msg.responseType === 'notification') {
-      if (msg.type === 'info') {
-        // @ts-ignore
-        this.ngSnotify.info(msg.message, msg.title);
-      } else if (msg.type === 'error') {
-        // @ts-ignore
-        this.ngSnotify.error(msg.message, msg.title);
+    if (msg.type === 'info') {
+      // @ts-ignore
+      this.ngSnotify.info(msg.message, msg.title);
+    } else if (msg.type === 'error') {
+      // @ts-ignore
+      this.ngSnotify.error(msg.message, msg.title);
 
-      } else if (msg.type === 'success') {
-        // @ts-ignore
-        this.ngSnotify.success(msg.message, msg.title);
-      }
+    } else if (msg.type === 'success') {
+      // @ts-ignore
+      this.ngSnotify.success(msg.message, msg.title);
     }
   }
 

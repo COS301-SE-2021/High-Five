@@ -26,6 +26,7 @@ import {GetToolFilesRequest} from '../models/getToolFilesRequest';
 import {GetToolFilesResponse} from '../models/getToolFilesResponse';
 import {GetToolMetaDataTypes} from '../models/getToolMetaDataTypes';
 import {GetToolTypesResponse} from '../models/getToolTypesResponse';
+import {Tool} from '../models/tool';
 
 import {BASE_PATH, COLLECTION_FORMATS} from '../variables';
 import {Configuration} from '../configuration';
@@ -349,9 +350,9 @@ export class ToolsService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public uploadAnalysisToolForm(sourceCode: Blob, model: Blob, metadataType: string, toolName: string, observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
-  public uploadAnalysisToolForm(sourceCode: Blob, model: Blob, metadataType: string, toolName: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
-  public uploadAnalysisToolForm(sourceCode: Blob, model: Blob, metadataType: string, toolName: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
+  public uploadAnalysisToolForm(sourceCode: Blob, model: Blob, metadataType: string, toolName: string, observe?: 'body', reportProgress?: boolean): Observable<Tool>;
+  public uploadAnalysisToolForm(sourceCode: Blob, model: Blob, metadataType: string, toolName: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Tool>>;
+  public uploadAnalysisToolForm(sourceCode: Blob, model: Blob, metadataType: string, toolName: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Tool>>;
   public uploadAnalysisToolForm(sourceCode: Blob, model: Blob, metadataType: string, toolName: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     if (sourceCode === null || sourceCode === undefined) {
@@ -416,7 +417,7 @@ export class ToolsService {
       formParams = formParams.append('toolName', <any>toolName) as any || formParams;
     }
 
-    return this.httpClient.request<EmptyObject>('post', `${this.basePath}/tools/uploadAnalysisTool`,
+    return this.httpClient.request<Tool>('post', `${this.basePath}/tools/uploadAnalysisTool`,
       {
         body: convertFormParamsToString ? formParams.toString() : formParams,
         withCredentials: this.configuration.withCredentials,
@@ -437,9 +438,9 @@ export class ToolsService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public uploadDrawingToolForm(sourceCode: Blob, metadataType: string, toolName: string, observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
-  public uploadDrawingToolForm(sourceCode: Blob, metadataType: string, toolName: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
-  public uploadDrawingToolForm(sourceCode: Blob, metadataType: string, toolName: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
+  public uploadDrawingToolForm(sourceCode: Blob, metadataType: string, toolName: string, observe?: 'body', reportProgress?: boolean): Observable<Tool>;
+  public uploadDrawingToolForm(sourceCode: Blob, metadataType: string, toolName: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Tool>>;
+  public uploadDrawingToolForm(sourceCode: Blob, metadataType: string, toolName: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Tool>>;
   public uploadDrawingToolForm(sourceCode: Blob, metadataType: string, toolName: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     if (sourceCode === null || sourceCode === undefined) {
@@ -494,7 +495,7 @@ export class ToolsService {
       formParams = formParams.append('toolName', <any>toolName) as any || formParams;
     }
 
-    return this.httpClient.request<EmptyObject>('post', `${this.basePath}/tools/uploadDrawingTool`,
+    return this.httpClient.request<Tool>('post', `${this.basePath}/tools/uploadDrawingTool`,
       {
         body: convertFormParamsToString ? formParams.toString() : formParams,
         withCredentials: this.configuration.withCredentials,
