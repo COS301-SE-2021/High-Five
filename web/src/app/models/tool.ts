@@ -11,11 +11,11 @@
  */
 
 export interface Tool {
-    toolId?: string;
-    toolName?: string;
-    /**
-     * Analysis or drawing
-     */
-    toolType?: string;
-    toolMetadataType?: string;
+  toolId?: string;
+  toolName?: string;
+  /**
+   * Analysis or drawing
+   */
+  toolType?: string;
+  toolMetadataType?: string;
 }

@@ -10,6 +10,6 @@
  * Do not edit the class manually.
  */
 
-export interface CreateStreamingUrlResponse {
-  streamingUrl?: string;
+export interface CreateOneTimeTokenRequest {
+  streamingId?: string;
 }
