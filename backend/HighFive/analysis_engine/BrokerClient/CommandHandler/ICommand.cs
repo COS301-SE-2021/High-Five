@@ -1,6 +1,6 @@
 namespace analysis_engine.BrokerClient.CommandHandler
 {
-    public interface ICommandHandler
+    public interface ICommand
     {
         public void Run();
     }

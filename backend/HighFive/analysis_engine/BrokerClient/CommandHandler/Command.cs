@@ -1,6 +1,6 @@
-namespace analysis_engine.BrokerClient.CommandHandler.Commands
+namespace analysis_engine.BrokerClient.CommandHandler
 {
-    public class MockCommand : ICommand
+    public class Command : ICommand
     {
         public void Run()
         {
