@@ -27,7 +27,6 @@ namespace analysis_engine.BrokerClient.CommandHandler
             while (true)
             {
                 var command = consumer.Consume();
-                Console.WriteLine(command.Message.Value);
                 new MockCommandHandler().HandleCommand(JsonConvert.DeserializeObject<AnalysisCommand>(command.Message.Value));
             }
         }

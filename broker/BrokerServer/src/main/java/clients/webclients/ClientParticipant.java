@@ -55,6 +55,8 @@ public class ClientParticipant extends WebClient{
                 BufferedReader reader = connection.getReader();
                 String requestData = reader.readLine();
 
+                EventLogger.getLogger().info("REQUEST DATA: " + requestData);
+
                 //Response object for sending a response to the client
                 BufferedWriter out = connection.getWriter();
 

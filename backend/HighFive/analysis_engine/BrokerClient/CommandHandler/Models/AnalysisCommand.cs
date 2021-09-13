@@ -1,4 +1,5 @@
 using System.Text;
+using analysis_engine.BrokerClient.CommandHandler.Models.commandbody;
 using analysis_engine.BrokerClient.ResourceUsageCollector.Models;
 
 namespace analysis_engine.BrokerClient.CommandHandler.Models
@@ -13,22 +14,17 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models
         /// <summary>
         /// Gets or Sets MediaType
         /// </summary>
-        public string MediaType { get; set; }
-        
-        /// <summary>
-        /// Gets or Sets MediaId
-        /// </summary>
-        public string MediaId { get; set; }
-        
-        /// <summary>
-        /// Gets or Sets PipelineId
-        /// </summary>
-        public string PipelineId { get; set; }
-        
+        public string CommandType { get; set; }
+
         /// <summary>
         /// Gets or Sets UserId
         /// </summary>
         public string UserId { get; set; }
+        
+        /// <summary>
+        /// Gets or Sets Body
+        /// </summary>
+        public CommandBody Body { get; set; }
         
         /// <summary>
         /// Returns the string presentation of the object
@@ -39,9 +35,8 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models
             var sb = new StringBuilder();
             sb.Append("class AnalysisCommand {\n");
             sb.Append("  CommandId: ").Append(CommandId).Append("\n");
-            sb.Append("  MediaType: ").Append(MediaType).Append("\n");
-            sb.Append("  MediaId: ").Append(MediaId).Append("\n");
-            sb.Append("  PipelineId: ").Append(PipelineId).Append("\n");
+            sb.Append("  CommandType: ").Append(CommandType).Append("\n");
+            sb.Append("  Body: ").Append(Body).Append("\n");
             sb.Append("  UserId: ").Append(UserId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -65,7 +60,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((PerformanceInfo)obj);
+            return obj.GetType() == GetType() && Equals((AnalysisCommand)obj);
         }
 
         /// <summary>
@@ -85,24 +80,19 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models
                     CommandId.Equals(other.CommandId)
                 ) &&
                 (
-                    MediaType == other.MediaType ||
-                    MediaType != null &&
-                    MediaType.Equals(other.MediaType)
+                    CommandType == other.CommandType ||
+                    CommandType != null &&
+                    CommandType.Equals(other.CommandType)
                 ) &&
                 (
-                    MediaId == other.MediaId ||
-                    MediaId != null &&
-                    MediaId.Equals(other.MediaId)
+                    Body == other.Body ||
+                    Body != null &&
+                    Body.Equals(other.Body)
                 ) &&
                 (
                     UserId == other.UserId ||
                     UserId != null &&
                     UserId.Equals(other.UserId)
-                ) &&
-                (
-                    PipelineId == other.PipelineId ||
-                    PipelineId != null &&
-                    PipelineId.Equals(other.PipelineId)
                 );
         }
 
@@ -118,12 +108,10 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models
                 // Suitable nullity checks etc, of course :)
                     if (CommandId != null)
                     hashCode = hashCode * 59 + CommandId.GetHashCode();
-                    if (MediaType != null)
-                    hashCode = hashCode * 59 + MediaType.GetHashCode();
-                    if (MediaId != null)
-                    hashCode = hashCode * 59 + MediaId.GetHashCode();
-                    if (PipelineId != null)
-                    hashCode = hashCode * 59 + PipelineId.GetHashCode();
+                    if (CommandType != null)
+                    hashCode = hashCode * 59 + CommandType.GetHashCode();
+                    if (Body != null) 
+                    hashCode = hashCode * 59 + Body.GetHashCode();
                     if (UserId != null) 
                     hashCode = hashCode * 59 + UserId.GetHashCode();
                 return hashCode;

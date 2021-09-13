@@ -39,7 +39,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
 
             Message<string, string> msg2;
 
-            if (command.MediaType == "AnalyzeVideo")
+            if (command.CommandType == "AnalyzeVideo")
             {
                 var metaData = new AnalyzedVideoMetaData
                 {
@@ -55,8 +55,10 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                     Key = Guid.NewGuid().ToString(),
                     Value = metaData.ToJson().Replace("\r", "").Replace("\n", "")
                 };
+                 Console.WriteLine(msg2.Value);
+                 producer.Produce(partition, msg2);
             }
-            else
+            else if (command.CommandType == "AnalyzeImage")
             {
                 var metaData = new AnalyzedImageMetaData
                 {
@@ -71,10 +73,9 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                     Key = Guid.NewGuid().ToString(),
                     Value = metaData.ToJson().Replace("\r", "").Replace("\n", "")
                 };
+                Console.WriteLine(msg2.Value);
+                producer.Produce(partition, msg2);
             }
-
-            Console.WriteLine(msg2.Value);
-            producer.Produce(partition, msg2);
         }
     }
 }

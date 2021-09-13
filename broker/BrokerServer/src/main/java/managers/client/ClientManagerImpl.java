@@ -14,6 +14,7 @@ import servicelocator.wrappers.ClientListenerWrapper;
 import servicelocator.wrappers.WebClientWrapper;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
@@ -24,7 +25,7 @@ import java.util.UUID;
  * and adds these new connections to a pool of participants.
  */
 public class ClientManagerImpl extends Manager {
-    private ConnectionHandler connectionHandler = new ConnectionHandler();
+    private final ConnectionHandler connectionHandler = new ConnectionHandler();
     public ClientManagerImpl(ServerInformationHolder holder) {
         super(holder, 8);
     }
@@ -50,8 +51,10 @@ public class ClientManagerImpl extends Manager {
                     BufferedReader reader = webConnection.getReader();
                     String userId = reader.readLine();
                     webConnection.setUserId(userId);
+                    BufferedWriter writer = webConnection.getWriter();
+                    writer.append("ACK\n").flush();
                     connectionHandler.addConnection(webConnection);
-                    WebClient client = WebClientWrapper.get(webConnection, serverInformationHolder);
+                    WebClient client = WebClientWrapper.get(webConnection, connectionHandler, serverInformationHolder);
                     participants.execute(client);
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException | IOException e) {
                     EventLogger.getLogger().logException(e);

@@ -10,6 +10,11 @@ import java.net.Socket;
 @ServerEndpoint(value="/broker")
 public class WebSocketConnection {
 
+    private int state = 0; //Server gets Client ID first, therefore state is necessary to not close connection on first message
+    private BufferedReader bufferedReader;
+    private BufferedWriter serverInfoRequest;
+    private Socket connection;
+
    @OnOpen
     public void onOpen(Session session) throws IOException {
 
@@ -27,20 +32,37 @@ public class WebSocketConnection {
     public void onMessage(Session session, String message) throws IOException {
         //Send request to broker
         int port = Integer.parseInt(System.getenv("BROKER_CLIENT_PORT"));
-        Socket connection = new Socket("localhost", port);
 
-        Writer serverInfoRequest = new BufferedWriter(new OutputStreamWriter(
-                connection.getOutputStream()));
+        if (state == 0) {
+            connection = new Socket("localhost", port);
+        }
+
+        if (serverInfoRequest == null) {
+
+            serverInfoRequest = new BufferedWriter(new OutputStreamWriter(
+                    connection.getOutputStream()));
+        }
 
         serverInfoRequest.append(message).append("\n").flush();
 
         //Read response from broker
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        if (bufferedReader == null) {
+            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        }
         String infoData = bufferedReader.readLine();
 
         //Send response to web client
         session.getBasicRemote().sendText(infoData);
-        connection.close();
+
+        if (state == 1) {
+            connection.close();
+            connection = null;
+            bufferedReader = null;
+            serverInfoRequest = null;
+            state = 0;
+        } else {
+            state++;
+        }
     }
 
     @OnClose
