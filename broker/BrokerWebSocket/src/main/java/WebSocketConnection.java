@@ -53,15 +53,27 @@ public class WebSocketConnection {
      * @param message The message from the web client
      */
     @OnMessage
-    public void onMessage(Session session, String message) throws IOException {
+    public void onMessage(Session session, String message) {
         //Send request to broker
-        serverInfoRequest.append(message).append("\n").flush();
+        try {
+            serverInfoRequest.append(message).append("\n").flush();
+        } catch (Exception ignored) {
+            isRunning = false;
+            try {
+                connection.close();
+            } catch (IOException ignored1) {}
+            try {
+                responseThread.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
     @OnClose
-    public void onClose(Session session) throws IOException {
-        serverInfoRequest.append(CLOSECONNECTION).append("\n").flush();
+    public void onClose(Session session) {
         try {
+            serverInfoRequest.append(CLOSECONNECTION).append("\n").flush();
             connection.close();
         } catch (Exception ignored){}
         isRunning = false;
@@ -74,9 +86,9 @@ public class WebSocketConnection {
 
 
     @OnError
-    public void onError(Session session, Throwable throwable) throws IOException {
-        serverInfoRequest.append(CLOSECONNECTION).append("\n").flush();
+    public void onError(Session session, Throwable throwable) {
         try {
+            serverInfoRequest.append(CLOSECONNECTION).append("\n").flush();
             connection.close();
         } catch (Exception ignored){}
         isRunning = false;
