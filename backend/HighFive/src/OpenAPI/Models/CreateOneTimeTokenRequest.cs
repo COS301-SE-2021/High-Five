@@ -24,13 +24,13 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class CreateStreamingUrlResponse : IEquatable<CreateStreamingUrlResponse>
+    public class CreateOneTimeTokenRequest : IEquatable<CreateOneTimeTokenRequest>
     {
         /// <summary>
-        /// Gets or Sets StreamingUrl
+        /// Gets or Sets StreamingId
         /// </summary>
-        [DataMember(Name="streamingUrl", EmitDefaultValue=false)]
-        public string StreamingUrl { get; set; }
+        [DataMember(Name="streamingId", EmitDefaultValue=false)]
+        public string StreamingId { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -39,8 +39,8 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class CreateStreamingUrlResponse {\n");
-            sb.Append("  StreamingUrl: ").Append(StreamingUrl).Append("\n");
+            sb.Append("class CreateOneTimeTokenRequest {\n");
+            sb.Append("  StreamingId: ").Append(StreamingId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -63,24 +63,24 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((CreateStreamingUrlResponse)obj);
+            return obj.GetType() == GetType() && Equals((CreateOneTimeTokenRequest)obj);
         }
 
         /// <summary>
-        /// Returns true if CreateStreamingUrlResponse instances are equal
+        /// Returns true if CreateOneTimeTokenRequest instances are equal
         /// </summary>
-        /// <param name="other">Instance of CreateStreamingUrlResponse to be compared</param>
+        /// <param name="other">Instance of CreateOneTimeTokenRequest to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(CreateStreamingUrlResponse other)
+        public bool Equals(CreateOneTimeTokenRequest other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    StreamingUrl == other.StreamingUrl ||
-                    StreamingUrl != null &&
-                    StreamingUrl.Equals(other.StreamingUrl)
+                    StreamingId == other.StreamingId ||
+                    StreamingId != null &&
+                    StreamingId.Equals(other.StreamingId)
                 );
         }
 
@@ -94,8 +94,8 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (StreamingUrl != null)
-                    hashCode = hashCode * 59 + StreamingUrl.GetHashCode();
+                    if (StreamingId != null)
+                    hashCode = hashCode * 59 + StreamingId.GetHashCode();
                 return hashCode;
             }
         }
@@ -103,12 +103,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(CreateStreamingUrlResponse left, CreateStreamingUrlResponse right)
+        public static bool operator ==(CreateOneTimeTokenRequest left, CreateOneTimeTokenRequest right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(CreateStreamingUrlResponse left, CreateStreamingUrlResponse right)
+        public static bool operator !=(CreateOneTimeTokenRequest left, CreateOneTimeTokenRequest right)
         {
             return !Equals(left, right);
         }
