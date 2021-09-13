@@ -41,6 +41,7 @@ namespace src.Subsystems.Analysis
         private readonly ILivestreamingService _livestreamingService;
         private string _brokerToken;
         private string _userId;
+        private bool _brokerConnection;
 
         public AnalysisService(IStorageManager storageManager, IMediaStorageService mediaStorageService,
             IPipelineService pipelineService, IConfiguration configuration, ILivestreamingService livestreamingService)
@@ -51,7 +52,7 @@ namespace src.Subsystems.Analysis
             _pipelineService = pipelineService;
             _configuration = configuration;
             _analysisSocket = new WebSocketClient();
-            _analysisSocket.Connect(_configuration["BrokerUri"]);
+            _brokerConnection = false;
         }
 
         public async Task<AnalyzedImageMetaData> AnalyzeImage(SocketRequest fullRequest)
@@ -192,6 +193,7 @@ namespace src.Subsystems.Analysis
         public void SetBrokerToken(string userId)
         {
             _userId = userId;
+            ConnectToBroker();
             var key = _configuration["BrokerJWTSecret"];
             const string issuer = "https://high5api.azurewebsites.net";
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));    
@@ -210,12 +212,13 @@ namespace src.Subsystems.Analysis
             _brokerToken = new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public string ListenForMessage()
+        public void CloseBrokerSocket()
         {
-            return _analysisSocket.Receive().Result;
+            _analysisSocket.Close();
         }
 
-        public async Task<string> StartLiveStream(string userId)
+        public async Task StartLiveStream(string userId)
+
         {
             await _livestreamingService.AuthenticateUser();
             var appName = _livestreamingService.CreateApplication(userId).Result;
@@ -238,11 +241,20 @@ namespace src.Subsystems.Analysis
                 Authorization = _brokerToken,
                 UserId = _userId,
                 Request = "StartLiveAnalysis",
-                Body = JsonConvert.SerializeObject(response)
+                Body = response
             };
-            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest).TrimStart('\"').TrimEnd('\"'));
-            var responseString = await _analysisSocket.Receive();
-            return responseString;
+            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
+            var socketResponse = _analysisSocket.Receive().Result;
+        }
+
+        private void ConnectToBroker()
+        {
+            if (!_brokerConnection)
+            {
+                _analysisSocket.Connect(_configuration["BrokerUri"], _userId);
+                _brokerConnection = true;
+            }
+
         }
         
     }
