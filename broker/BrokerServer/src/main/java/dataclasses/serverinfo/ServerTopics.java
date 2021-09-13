@@ -31,10 +31,20 @@ public class ServerTopics {
     }
 
     public void deleteTopic(String topic) {
-        topics.removeIf(s -> s.equals(topic));
+        lock.lock();
+        try {
+            topics.removeIf(s -> s.equals(topic));
+        } finally {
+            lock.unlock();
+        }
     }
 
     public boolean contains(String topic) {
-        return topics.contains(topic);
+        lock.lock();
+        try {
+            return topics.contains(topic);
+        } finally {
+            lock.unlock();
+        }
     }
 }

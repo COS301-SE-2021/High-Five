@@ -67,19 +67,20 @@ public class KafkaTopicListener extends ConnectionListener<String> {
 
 
             for (ConsumerRecord<String, String> registration : registrationList) {
-                //Ensures that the topic does not already exist
-                if (!topics.contains(registration.value()) && registration.value().length() > 0) {
 
-                    //Deserialize the value
-                    ServerRegistrationInfo registrationInfo;
-                    try {
-                        JsonElement element = new Gson().fromJson(registration.value(), JsonObject.class);
-                        registrationInfo = new ServerRegistrationInfoDecoder().deserialize(element, null, null);
-                    } catch (JsonParseException exception) {
-                        //skip this value.
-                        offset++;
-                        continue;
-                    }
+                //Deserialize the value
+                ServerRegistrationInfo registrationInfo;
+                try {
+                    JsonElement element = new Gson().fromJson(registration.value(), JsonObject.class);
+                    registrationInfo = new ServerRegistrationInfoDecoder().deserialize(element, null, null);
+                } catch (JsonParseException exception) {
+                    //skip this value.
+                    offset++;
+                    continue;
+                }
+
+                //Ensures that the topic does not already exist
+                if (!topics.contains(registrationInfo.getServerId()) && registration.value().length() > 0) {
 
                     //Check if the server has recently registered.
                     //We don't want to register old servers.
