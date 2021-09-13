@@ -6,7 +6,7 @@ using Confluent.Kafka;
 
 namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
 {
-    public class MockCommand : ICommandHandler
+    public class MockCommandHandler : ICommandHandler
     {
         /// <summary>
         /// Mocks the command handler interface by waiting 30 seconds and returning a fake result

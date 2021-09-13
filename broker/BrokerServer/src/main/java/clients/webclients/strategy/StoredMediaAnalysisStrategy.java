@@ -42,7 +42,7 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
         ServerInformation info = information.get(builder);
 
         //Create new command
-        AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getMediaId(), request.getPipelineId());
+        AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getMediaId(), request.getPipelineId(), request.getUserId());
         EventLogger.getLogger().info("Sending command to server " + info.getServerId());
 
         //Send command to server
@@ -89,7 +89,6 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
                 consumer.seekToEnd(List.of(partition));
 
                 long position = consumer.position(partition);
-                System.out.println(position);
                 if (position > 0) {
                     position--;
                 }

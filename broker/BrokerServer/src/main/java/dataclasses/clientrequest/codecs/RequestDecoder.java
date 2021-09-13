@@ -19,7 +19,8 @@ public class RequestDecoder implements JsonDeserializer<AnalysisRequest> {
         JsonObject body = json.getAsJsonObject().get("Body").getAsJsonObject();
         String pipelineId = body.get("imageId").getAsString();
         String mediaId = body.get("pipelineId").getAsString();
+        String userId = json.getAsJsonObject().get("UserId").getAsString();
 
-        return new AnalysisRequest(auth, type, mediaId, pipelineId);
+        return new AnalysisRequest(auth, type, mediaId, pipelineId, userId);
     }
 }

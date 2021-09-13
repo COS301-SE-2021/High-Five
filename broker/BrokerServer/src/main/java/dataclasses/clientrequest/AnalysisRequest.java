@@ -6,12 +6,14 @@ public class AnalysisRequest {
     private final String requestType;
     private final String mediaId;
     private final String pipelineId;
+    private final String userId;
 
-    public AnalysisRequest(String authorization, String requestType, String mediaId, String pipelineId) {
+    public AnalysisRequest(String authorization, String requestType, String mediaId, String pipelineId, String userId) {
         this.authorization = authorization;
         this.requestType = requestType;
         this.mediaId = mediaId;
         this.pipelineId = pipelineId;
+        this.userId = userId;
     }
 
     public String getAuthorization() {
@@ -28,5 +30,9 @@ public class AnalysisRequest {
 
     public String getPipelineId() {
         return pipelineId;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }
