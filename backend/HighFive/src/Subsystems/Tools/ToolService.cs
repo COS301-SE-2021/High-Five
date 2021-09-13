@@ -25,7 +25,7 @@ namespace src.Subsystems.Tools
             _storageManager = storageManager;
         }
         
-        public async Task<bool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataType, string toolName)
+        public async Task<Tool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataType, string toolName)
         {
             var generatedToolName = _storageManager.HashMd5(toolName);
 
@@ -33,7 +33,7 @@ namespace src.Subsystems.Tools
             var sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".cs", ContainerName+ "/analysis/" + generatedToolName).Result;
             if (sourceCodeFile == null)
             {
-                return false;
+                return null;
             }
             sourceCodeFile.AddMetadata("toolName",toolName);
             sourceCodeFile.AddMetadata("metadataType", metadataType);
@@ -48,24 +48,36 @@ namespace src.Subsystems.Tools
             await modelFile.UploadFile(model);
 
             AddToToolsFile(generatedToolName, "analysis", metadataType);
-            return true;
+            return new Tool
+            {
+                ToolId = generatedToolName,
+                ToolName = toolName,
+                ToolType = "analysis",
+                ToolMetadataType = metadataType
+            };
         }
 
-        public async Task<bool> UploadDrawingTool(IFormFile sourceCode, string metadataType, string toolName)
+        public async Task<Tool> UploadDrawingTool(IFormFile sourceCode, string metadataType, string toolName)
         {
             var generatedToolName = _storageManager.HashMd5(toolName);
             var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
             var sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".cs", ContainerName+ "/drawing/" + generatedToolName).Result;
             if (sourceCodeFile == null)
             {
-                return false;
+                return null;
             }
             sourceCodeFile.AddMetadata("toolName",toolName);
             sourceCodeFile.AddMetadata("metadataType", metadataType);
             await sourceCodeFile.UploadFile(sourceCode);
 
             AddToToolsFile(generatedToolName, "drawing", metadataType);
-            return true;
+            return new Tool
+            {
+                ToolId = generatedToolName,
+                ToolName = toolName,
+                ToolType = "analysis",
+                ToolMetadataType = metadataType
+            };
         }
 
         public async Task<bool> DeleteTool(DeleteToolRequest request)

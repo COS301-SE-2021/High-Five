@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace src.Websockets
+﻿namespace src.Websockets
 {
     public class SocketRequest
     {
