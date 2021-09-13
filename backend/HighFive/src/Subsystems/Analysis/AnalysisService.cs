@@ -4,7 +4,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Accord.Math;
 using AzureFunctionsToolkit.Portable.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -41,6 +40,7 @@ namespace src.Subsystems.Analysis
         private readonly ILivestreamingService _livestreamingService;
         private string _brokerToken;
         private string _userId;
+        private bool _brokerConnection;
 
         public AnalysisService(IStorageManager storageManager, IMediaStorageService mediaStorageService,
             IPipelineService pipelineService, IConfiguration configuration, ILivestreamingService livestreamingService)
@@ -51,7 +51,7 @@ namespace src.Subsystems.Analysis
             _pipelineService = pipelineService;
             _configuration = configuration;
             _analysisSocket = new WebSocketClient();
-            _analysisSocket.Connect(_configuration["BrokerUri"]);
+            _brokerConnection = false;
         }
 
         public async Task<AnalyzedImageMetaData> AnalyzeImage(SocketRequest fullRequest)
@@ -243,6 +243,15 @@ namespace src.Subsystems.Analysis
             await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest).TrimStart('\"').TrimEnd('\"'));
             var responseString = await _analysisSocket.Receive();
             return responseString;
+        }
+
+        private void ConnectToBroker()
+        {
+            if (!_brokerConnection)
+            {
+                _analysisSocket.Connect(_configuration["BrokerUri"], _userId);
+                _brokerConnection = true;
+            }
         }
         
     }

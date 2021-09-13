@@ -12,12 +12,13 @@ namespace src.Websockets
     {
         private ClientWebSocket _socket = null;
 
-        public async Task Connect(string uri)
+        public async Task Connect(string uri, string userId)
         {
             if (_socket == null)
             {
                 _socket = new ClientWebSocket();
                 await _socket.ConnectAsync(new Uri(uri), CancellationToken.None);
+                await Send(userId);
             }
         }
 
