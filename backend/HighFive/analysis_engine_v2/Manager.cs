@@ -114,20 +114,9 @@ namespace analysis_engine
             Task.Factory.StartNew(() =>
             {
                 var data = GetNextFrame();
-                _pipeline.Source.Push(data);
                 while (data!=null){
-                    if (_frameCount % 3 == 0)
-                    {
-                        data = GetNextFrame();
-                        _pipeline.Source.Push(data);
-                    }
-                    else
-                    {
-                        var temp = data.Meta;
-                        data = GetNextFrame();
-                        data.Meta = temp;
-                        drawFilter.Input.Push(data);
-                    }
+                    _pipeline.Source.Push(data);
+                    data = GetNextFrame();
                 }
             });
 
