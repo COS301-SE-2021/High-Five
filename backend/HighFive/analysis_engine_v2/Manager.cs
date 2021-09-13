@@ -80,6 +80,8 @@ namespace analysis_engine
         private void ReturnAnalyzedFrame(Data data)
         {
             _dataPool.ReleaseData(data);
+            
+            
         }
 /*
  * This function calls the pipeline Init function to start all the Tool threads.
@@ -92,33 +94,32 @@ namespace analysis_engine
             Task.Factory.StartNew(() =>
             {
                 var data = GetNextFrame();
-                var skipdata = data;
+                _pipeline.Source.Push(data);
                 while (data!=null){
-                    if (_frameCount % 3 == 1)
+                    if (_frameCount % 3 == 0)
                     {
+                        data = GetNextFrame();
                         _pipeline.Source.Push(data);
-                        skipdata = data;
                     }
                     else
                     {
+                        var temp = data.Meta;
+                        data = GetNextFrame();
+                        data.Meta = temp;
                         drawFilter.Input.Push(data);
-                    }
-                    
-                    data = GetNextFrame();
-                    if (_frameCount % 3 != 1)
-                    {
-                        data.Meta = skipdata.Meta;
                     }
                 }
             });
 
             Task.Factory.StartNew(() =>
             {
-                Data temp = _pipeline.Drain.Pop();
-                if (temp != null)
+                var data = _pipeline.Drain.Pop();
+                while (data != null)
                 {
-                    ReturnAnalyzedFrame(temp);
+                    ReturnAnalyzedFrame(data);
+                    data = _pipeline.Drain.Pop();
                 }
+                //TODO Finish encoding
             });
         }
     }
