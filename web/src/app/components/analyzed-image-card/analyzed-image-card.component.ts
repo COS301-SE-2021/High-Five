@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {AnalyzedImageMetaData} from '../../models/analyzedImageMetaData';
+import {AnalyzedImagesService} from '../../services/analyzed-images/analyzed-images.service';
 
 @Component({
   selector: 'app-analyzed-image-card',
@@ -13,7 +14,7 @@ export class AnalyzedImageCardComponent implements OnInit {
    */
   @Input() analyzedImage: AnalyzedImageMetaData;
 
-  constructor() {
+  constructor(private analyzedImagesService: AnalyzedImagesService) {
   }
 
   ngOnInit() {
@@ -25,5 +26,9 @@ export class AnalyzedImageCardComponent implements OnInit {
   public async viewImageFullScreen() {
     const newWindow = window.open(this.analyzedImage.url, '_system');
     newWindow.focus();
+  }
+
+  public async onDeleteAnalyzedImage() {
+    await this.analyzedImagesService.deleteAnalyzedImage(this.analyzedImage.id);
   }
 }

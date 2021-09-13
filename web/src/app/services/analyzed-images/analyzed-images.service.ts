@@ -4,6 +4,7 @@ import {MediaStorageService} from '../../apis/mediaStorage.service';
 import {AnalyzedImageMetaData} from '../../models/analyzedImageMetaData';
 import {AnalysisService} from '../../apis/analysis.service';
 import {WebsocketService} from '../websocket/websocket.service';
+import {SnotifyService} from 'ng-snotify';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AnalyzedImagesService {
   readonly analyzedImages$ = this._analyzedImages.asObservable();
 
   constructor(private mediaStorageService: MediaStorageService, private analysisService: AnalysisService,
-              private websocketService: WebsocketService) {
+              private websocketService: WebsocketService, private snotifyService: SnotifyService) {
     this.fetchAll();
   }
 
@@ -63,5 +64,27 @@ export class AnalyzedImagesService {
     await this.mediaStorageService.getAnalyzedImages().subscribe((res) => {
       this.analyzedImages = res.images;
     });
+  }
+
+  public async deleteAnalyzedImage(imageId: string, serverRemove: boolean = true) {
+    const analyzedImage = this.analyzedImages.find(i => i.id === imageId);
+    this.analyzedImages = this.analyzedImages.filter(i => i.id !== imageId);
+
+    if (serverRemove) {
+      try {
+        this.mediaStorageService.deleteAnalyzedImage({id: imageId}, 'response').subscribe((res) => {
+          if (res.ok) {
+            this.snotifyService.success('Successfully removed analyzed image', 'Analyzed Image Removal');
+          } else {
+            this.snotifyService.error('Error occurred while removing image, please contact an admin', 'Analyzed Image Removal');
+            this.analyzedImages = [...this.analyzedImages, analyzedImage];
+          }
+        });
+      } catch (e) {
+        this.snotifyService.error('Error occurred while removing analyzed image, please contact an admin', 'Analyzed Image Removal');
+        console.error(e);
+        this.analyzedImages = [...this.analyzedImages, analyzedImage];
+      }
+    }
   }
 }
