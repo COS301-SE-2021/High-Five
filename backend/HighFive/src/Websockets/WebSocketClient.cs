@@ -12,12 +12,14 @@ namespace src.Websockets
     {
         private ClientWebSocket _socket = null;
 
-        public async Task Connect(string uri)
+        public async Task Connect(string uri, string userId)
         {
             if (_socket == null)
             {
                 _socket = new ClientWebSocket();
                 await _socket.ConnectAsync(new Uri(uri), CancellationToken.None);
+                await Send(userId);
+                var ack = await Receive();//waits for acknowledgement
             }
         }
 
@@ -28,6 +30,10 @@ namespace src.Websockets
 
         public async Task<string> Receive()
         {
+            while (_socket == null)
+            {
+            }
+
             var buffer = new ArraySegment<byte>(new byte[2048]);
             var received = string.Empty;
             while (received == string.Empty)
@@ -53,7 +59,7 @@ namespace src.Websockets
 
         public void Close()
         {
-            _socket.CloseAsync(WebSocketCloseStatus.Empty, "Websocket closed.", CancellationToken.None);
+            _socket.CloseAsync(WebSocketCloseStatus.Empty, null, CancellationToken.None);
         }
     }
 }
