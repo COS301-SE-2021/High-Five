@@ -29,7 +29,7 @@ namespace analysis_engine
             //
             // var result1 = data1;
             
-            new ResourceUsageCollector().Run();
+            new BrokerClient.BrokerClient().Run();
             
             // Task.Run(() =>
             // {

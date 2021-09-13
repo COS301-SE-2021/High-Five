@@ -1,7 +1,7 @@
 namespace analysis_engine.BrokerClient.ResourceUsageCollector
 {
-    public class IResourceUsageCollector
+    public interface IResourceUsageCollector
     {
-        
+        public void Run();
     }
 }

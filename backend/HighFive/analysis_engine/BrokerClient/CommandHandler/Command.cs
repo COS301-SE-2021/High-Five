@@ -1,10 +1,15 @@
+using System.Threading;
+
 namespace analysis_engine.BrokerClient.CommandHandler
 {
     public class Command : ICommand
     {
         public void Run()
         {
-            throw new System.NotImplementedException();
+            while (true)
+            {
+                Thread.Sleep(1000);
+            }
         }
     }
 }

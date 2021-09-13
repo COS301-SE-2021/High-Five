@@ -1,7 +1,9 @@
 package listeners.servers;
 
 import com.google.gson.*;
+import dataclasses.serverinfo.ServerRegistrationInfo;
 import dataclasses.serverinfo.ServerTopics;
+import dataclasses.serverinfo.codecs.ServerRegistrationInfoDecoder;
 import io.reactivex.rxjava3.core.Observer;
 import listeners.ConnectionListener;
 import logger.EventLogger;
@@ -67,10 +69,26 @@ public class KafkaTopicListener extends ConnectionListener<String> {
             for (ConsumerRecord<String, String> registration : registrationList) {
                 //Ensures that the topic does not already exist
                 if (!topics.contains(registration.value()) && registration.value().length() > 0) {
-                    EventLogger.getLogger().info("New topic found: " + registration.value());
-                    addNewServer(++offset, registration.value());
-                    TopicManager.getInstance().addTopic(registration.value());
-                    notify(registration.value());
+
+                    //Deserialize the value
+                    ServerRegistrationInfo registrationInfo;
+                    try {
+                        JsonElement element = new Gson().fromJson(registration.value(), JsonObject.class);
+                        registrationInfo = new ServerRegistrationInfoDecoder().deserialize(element, null, null);
+                    } catch (JsonParseException exception) {
+                        //skip this value.
+                        offset++;
+                        continue;
+                    }
+
+                    //Check if the server has recently registered.
+                    //We don't want to register old servers.
+                    if ((System.currentTimeMillis()/1000L) - registrationInfo.getTimestamp() < 45) {
+                        EventLogger.getLogger().info("New topic found: " + registrationInfo.getServerId());
+                        addNewServer(++offset, registrationInfo);
+                        TopicManager.getInstance().addTopic(registrationInfo.getServerId());
+                        notify(registrationInfo.getServerId());
+                    }
                 }
             }
 
@@ -117,13 +135,13 @@ public class KafkaTopicListener extends ConnectionListener<String> {
      * @param server name of server
      * @throws IOException
      */
-    private void addNewServer(long offset, String server) throws IOException {
+    private void addNewServer(long offset, ServerRegistrationInfo server) throws IOException {
         StringWriter writer = TopicManager.openResource("server_information.json");
 
         try {
             JsonObject serviceInfo = new Gson().fromJson(writer.toString(), JsonObject.class).getAsJsonObject();
             serviceInfo.add("offset", new JsonPrimitive(offset));
-            serviceInfo.get("registered_servers").getAsJsonArray().add(server);
+            serviceInfo.get("registered_servers").getAsJsonArray().add(server.toString());
             TopicManager.updateResource("server_information.json", serviceInfo);
         } catch (Exception e) {
             EventLogger.getLogger().logException(e);

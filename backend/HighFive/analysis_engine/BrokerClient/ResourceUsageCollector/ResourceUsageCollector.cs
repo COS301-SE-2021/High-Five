@@ -8,7 +8,7 @@ using Confluent.Kafka;
 
 namespace analysis_engine.BrokerClient.ResourceUsageCollector
 {
-    public class ResourceUsageCollector
+    public class ResourceUsageCollector : IResourceUsageCollector
     {
         public void Run()
         {
@@ -43,6 +43,7 @@ namespace analysis_engine.BrokerClient.ResourceUsageCollector
                 //Send information to Broker
                 Message<Null, string> msg = new Message<Null, string>();
                 msg.Value = info.ToJson();
+                Console.WriteLine(msg.Value);
                 producer.Produce(partition, msg);
                 Thread.Sleep(10000);
             }
