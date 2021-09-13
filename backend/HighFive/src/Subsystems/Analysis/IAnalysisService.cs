@@ -12,6 +12,6 @@ namespace src.Subsystems.Analysis
         public void SetBaseContainer(string containerName);
         public void SetBrokerToken(string userId);
         public string ListenForMessage();
-        public LiveStreamingLinks StartLiveStream(string userId);
+        public Task<LiveStreamingLinks> StartLiveStream(string userId);
     }
 }

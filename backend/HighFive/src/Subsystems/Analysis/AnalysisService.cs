@@ -213,14 +213,14 @@ namespace src.Subsystems.Analysis
             return _analysisSocket.Receive().Result;
         }
 
-        public LiveStreamingLinks StartLiveStream(string userId)
+        public async Task<LiveStreamingLinks> StartLiveStream(string userId)
         {
-            _livestreamingService.AuthenticateUser();
+            await _livestreamingService.AuthenticateUser();
             var appName = _livestreamingService.CreateApplication(userId).Result;
-            _livestreamingService.UpdateApplicationSettings(appName);
+            await _livestreamingService.UpdateApplicationSettings(appName);
             var streamingId = _livestreamingService.CreateStreamingUrl(appName).Result;
-            var publishToken = _livestreamingService.CreateOneTimeToken(streamingId, "publish").Result;
-            var playingToken = _livestreamingService.CreateOneTimeToken(streamingId, "play").Result;
+            var publishToken = _livestreamingService.CreateOneTimeToken(appName, streamingId, "publish").Result;
+            var playingToken = _livestreamingService.CreateOneTimeToken(appName, streamingId, "play").Result;
 
             var response = new LiveStreamingLinks
             {
@@ -229,6 +229,15 @@ namespace src.Subsystems.Analysis
                 PlayLink = _configuration["LivestreamUri"] + ":5443/" + appName + "/play.html?name=" +
                            streamingId + "&token=" + playingToken
             };
+            
+            var brokerRequest = new BrokerSocketRequest
+            {
+                Authorization = _brokerToken,
+                UserId = _userId,
+                Request = "StartLiveAnalysis",
+                Body = JsonConvert.SerializeObject(response)
+            };
+            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
             return response;
         }
     }
