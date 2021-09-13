@@ -42,7 +42,13 @@ namespace src.Subsystems.Livestreaming
             {
                 var created = CreateUserStreamingApplication().Result;
             }
-            throw new System.NotImplementedException();
+            
+            var response = new EmptyObject
+            {
+                Success = true,
+                Message = _livestreamingService.ReturnAllLiveStreams(_appName).Result
+            };
+            return StatusCode(200, response);
         }
 
         private async Task<bool> CreateUserStreamingApplication()

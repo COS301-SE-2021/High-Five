@@ -112,8 +112,10 @@ namespace src.Subsystems.Livestreaming
             if (response.IsSuccessStatusCode)
             {
                 var responseString = await response.Content.ReadAsStringAsync();
+                return responseString;
             }
-            throw new System.NotImplementedException();
+
+            return null;
         }
 
         private string GenerateJwt()
