@@ -3,6 +3,7 @@ import {BehaviorSubject} from 'rxjs';
 import {MediaStorageService} from '../../apis/mediaStorage.service';
 import {AnalyzedImageMetaData} from '../../models/analyzedImageMetaData';
 import {AnalysisService} from '../../apis/analysis.service';
+import {WebsocketService} from '../websocket/websocket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ export class AnalyzedImagesService {
   // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly analyzedImages$ = this._analyzedImages.asObservable();
 
-  constructor(private mediaStorageService: MediaStorageService, private analysisService: AnalysisService) {
+  constructor(private mediaStorageService: MediaStorageService, private analysisService: AnalysisService,
+              private websocketService: WebsocketService) {
     this.fetchAll();
   }
 
@@ -43,8 +45,15 @@ export class AnalyzedImagesService {
    * @param mediaType the media type, video or image
    */
   public async analyzeImage(mediaId: string, pipelineId: string, mediaType: string = 'image') {
-    // await this.analysisService.analyzeMedia({mediaId, pipelineId, mediaType}).toPromise();
-    // await this.fetchAll();
+    this.websocketService.sendMessage({
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      Request: 'AnalyzeImage',
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      Body: {
+        imageId: mediaId,
+        piplineId: pipelineId,
+      },
+    });
   }
 
   /**
