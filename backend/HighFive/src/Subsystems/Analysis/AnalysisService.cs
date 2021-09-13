@@ -192,6 +192,7 @@ namespace src.Subsystems.Analysis
         public void SetBrokerToken(string userId)
         {
             _userId = userId;
+            ConnectToBroker();
             var key = _configuration["BrokerJWTSecret"];
             const string issuer = "https://high5api.azurewebsites.net";
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));    
@@ -215,7 +216,7 @@ namespace src.Subsystems.Analysis
             return _analysisSocket.Receive().Result;
         }
 
-        public async Task<string> StartLiveStream(string userId)
+        public async Task StartLiveStream(string userId)
         {
             await _livestreamingService.AuthenticateUser();
             var appName = _livestreamingService.CreateApplication(userId).Result;
@@ -241,8 +242,6 @@ namespace src.Subsystems.Analysis
                 Body = JsonConvert.SerializeObject(response)
             };
             await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest).TrimStart('\"').TrimEnd('\"'));
-            var responseString = await _analysisSocket.Receive();
-            return responseString;
         }
 
         private void ConnectToBroker()
