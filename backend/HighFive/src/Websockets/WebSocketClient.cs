@@ -30,6 +30,10 @@ namespace src.Websockets
 
         public async Task<string> Receive()
         {
+            while (_socket == null)
+            {
+            }
+
             var buffer = new ArraySegment<byte>(new byte[2048]);
             var received = string.Empty;
             while (received == string.Empty)
@@ -55,7 +59,7 @@ namespace src.Websockets
 
         public void Close()
         {
-            _socket.CloseAsync(WebSocketCloseStatus.Empty, "Websocket closed.", CancellationToken.None);
+            _socket.CloseAsync(WebSocketCloseStatus.Empty, null, CancellationToken.None);
         }
     }
 }

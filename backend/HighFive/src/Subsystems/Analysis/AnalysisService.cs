@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Accord.Math;
 using AzureFunctionsToolkit.Portable.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -211,9 +212,9 @@ namespace src.Subsystems.Analysis
             _brokerToken = new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public string ListenForMessage()
+        public void CloseBrokerSocket()
         {
-            return _analysisSocket.Receive().Result;
+            _analysisSocket.Close();
         }
 
         public async Task StartLiveStream(string userId)
@@ -242,6 +243,7 @@ namespace src.Subsystems.Analysis
                 Body = response
             };
             await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
+            var socketResponse = _analysisSocket.Receive().Result;
         }
 
         private void ConnectToBroker()
