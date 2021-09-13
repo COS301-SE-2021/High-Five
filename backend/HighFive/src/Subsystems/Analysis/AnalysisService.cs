@@ -213,5 +213,10 @@ namespace src.Subsystems.Analysis
         {
             return _analysisSocket.Receive().Result;
         }
+
+        public string StartLiveStream()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

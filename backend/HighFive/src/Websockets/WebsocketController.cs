@@ -43,9 +43,9 @@ namespace src.Websockets
                 ListenForBrokerMessage(webSocket);
                 while (webSocket.State == WebSocketState.Open)
                 {
-                    string responseTitle;
-                    string responseBody;
-                    string responseType;
+                    var responseTitle = string.Empty;
+                    var responseBody = string.Empty;
+                    var responseType= string.Empty;
                     try
                     {
                         var request = ReceiveMessage(webSocket).Result;
@@ -89,7 +89,9 @@ namespace src.Websockets
                                     responseBody = JsonConvert.SerializeObject(analyzedVideo);
                                     responseType = "success";
                                 }
-                                
+                                break;
+                            case "StartLiveAnalysis":   //This use case must be called by the application
+                                var rtmpUri = _analysisService.StartLiveStream();
                                 break;
                             case "Exit":
                                 await SendMessage("Socket Closed", "Connection to the socket was closed.", "info",

@@ -30,6 +30,6 @@ namespace src.Subsystems.Test
 
             return StatusCode(200, response);
         }
-        
+
     }
 }
