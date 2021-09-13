@@ -4,5 +4,6 @@
     {
         public string PublishLink { get; set; }
         public string PlayLink { get; set; }
+        public string StreamId { get; set; }
     }
 }

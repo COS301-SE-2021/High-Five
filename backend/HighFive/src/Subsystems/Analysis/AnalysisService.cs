@@ -227,7 +227,8 @@ namespace src.Subsystems.Analysis
                 PublishLink = _configuration["LivestreamUri"].Replace("https", "rtmp") +
                               "/" + appName + "/" + streamingId + "?token=" + publishToken,
                 PlayLink = _configuration["LivestreamUri"] + ":5443/" + appName + "/play.html?name=" +
-                           streamingId + "&token=" + playingToken
+                           streamingId + "&token=" + playingToken,
+                StreamId = streamingId
             };
             
             var brokerRequest = new BrokerSocketRequest
@@ -240,5 +241,6 @@ namespace src.Subsystems.Analysis
             await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
             return response;
         }
+        
     }
 }
