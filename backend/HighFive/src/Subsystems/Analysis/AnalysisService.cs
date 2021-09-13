@@ -239,9 +239,9 @@ namespace src.Subsystems.Analysis
                 Authorization = _brokerToken,
                 UserId = _userId,
                 Request = "StartLiveAnalysis",
-                Body = JsonConvert.SerializeObject(response)
+                Body = response
             };
-            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest).TrimStart('\"').TrimEnd('\"'));
+            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
         }
 
         private void ConnectToBroker()

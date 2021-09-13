@@ -19,6 +19,7 @@ namespace src.Websockets
                 _socket = new ClientWebSocket();
                 await _socket.ConnectAsync(new Uri(uri), CancellationToken.None);
                 await Send(userId);
+                var ack = await Receive();//waits for acknowledgement
             }
         }
 
