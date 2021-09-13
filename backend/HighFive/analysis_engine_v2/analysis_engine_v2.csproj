@@ -221,6 +221,9 @@
       <PackageReference Include="System.Xml.XPath.XDocument" Version="4.0.1" />
       <PackageReference Include="WindowsAzure.Storage" Version="7.2.1" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Models" />
+    </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
