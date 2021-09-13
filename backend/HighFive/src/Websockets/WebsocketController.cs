@@ -86,10 +86,10 @@ namespace src.Websockets
                                 }
                                 break;
                             case "StartLiveAnalysis":   //This use case must be called by the application
-                                var streamingLinks = _analysisService.StartLiveStream(_userId).Result;
-                                await SendMessage("Livestream Started",streamingLinks.PlayLink , "info",
+                                var streamUri = _analysisService.StartLiveStream(_userId).Result;
+                                await SendMessage("Livestream Initiated",streamUri , "info",
                                     webSocket);
-                                break;
+                                continue;
                             case "Exit":
                                 await SendMessage("Socket Closed", "Connection to the socket was closed.", "info",
                                     webSocket);
@@ -129,7 +129,7 @@ namespace src.Websockets
         
         private static async Task SendMessage(string title, string message, string type, WebSocket webSocket)
         {
-            var payload = "{\"title\": \"" + title + "\",\"message\": \"" + message + "\",\"type\": \"" + type + "\"}";
+            var payload = "{\"title\": \"" + title + "\",\"message\": \"" + message.TrimStart('\"').TrimEnd('\"') + "\",\"type\": \"" + type + "\"}";
             var buffer = Encoding.Default.GetBytes(payload);
             await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
         }
@@ -164,7 +164,7 @@ namespace src.Websockets
                 {
                     continue;
                 }
-                var infoObject = JsonConvert.DeserializeObject<SocketResponse>(message);
+                var infoObject = JsonConvert.DeserializeObject<SocketResponseBody>(message);
                 await SendMessage("Livestream Started", infoObject.message, "info", socket);
             }
         }
