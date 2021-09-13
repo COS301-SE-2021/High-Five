@@ -119,13 +119,12 @@ namespace src.Subsystems.Tools
             {
                 ConfigureStorageManager();
             }
-            var status =_toolService.UploadAnalysisTool(sourceCode, model, metadataType, toolName).Result;
-            var response = new EmptyObject {Success = status};
-            if (!status)
+            var tool =_toolService.UploadAnalysisTool(sourceCode, model, metadataType, toolName).Result;
+            if (tool == null)
             {
-                response.Message = "A tool with that name already exists.";
+                return StatusCode(400, null);
             }
-            return StatusCode(200, response);
+            return StatusCode(200, tool);
         }
 
         public override IActionResult UploadDrawingTool(IFormFile sourceCode, string metadataType, string toolName)
@@ -134,13 +133,12 @@ namespace src.Subsystems.Tools
             {
                 ConfigureStorageManager();
             }
-            var status =_toolService.UploadDrawingTool(sourceCode, metadataType, toolName).Result;
-            var response = new EmptyObject {Success = status};
-            if (!status)
+            var tool =_toolService.UploadDrawingTool(sourceCode, metadataType, toolName).Result;
+            if (tool == null)
             {
-                response.Message = "A tool with that name already exists.";
+                return StatusCode(400, null);
             }
-            return StatusCode(200, response);
+            return StatusCode(200, tool);
         }
         
         private void ConfigureStorageManager()
