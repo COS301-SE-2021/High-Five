@@ -21,7 +21,7 @@ import {Observable} from 'rxjs';
 
 import {EmptyObject} from '../models/emptyObject';
 import {GetAllUsersResponse} from '../models/getAllUsersResponse';
-import {IsAdminResposne} from '../models/isAdminResposne';
+import {IsAdminResponse} from '../models/isAdminResponse';
 import {UserRequest} from '../models/userRequest';
 
 import {BASE_PATH, COLLECTION_FORMATS} from '../variables';
@@ -35,6 +35,7 @@ export class UserService {
   protected basePath = environment.apiEndpoint;
   public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(sessionStorage.getItem(sessionStorage.key(0))).secret);
   public configuration = new Configuration();
+
 
   constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
     if (basePath) {
@@ -188,9 +189,9 @@ export class UserService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public isAdmin(observe?: 'body', reportProgress?: boolean): Observable<IsAdminResposne>;
-  public isAdmin(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<IsAdminResposne>>;
-  public isAdmin(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<IsAdminResposne>>;
+  public isAdmin(observe?: 'body', reportProgress?: boolean): Observable<IsAdminResponse>;
+  public isAdmin(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<IsAdminResponse>>;
+  public isAdmin(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<IsAdminResponse>>;
   public isAdmin(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     let headers = this.defaultHeaders;
@@ -207,7 +208,7 @@ export class UserService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<IsAdminResposne>('get', `${this.basePath}/users/isAdmin`,
+    return this.httpClient.request<IsAdminResponse>('get', `${this.basePath}/users/isAdmin`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
@@ -225,9 +226,9 @@ export class UserService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public revokeAdmin(body: UserRequest, observe?: 'body', reportProgress?: boolean): Observable<IsAdminResposne>;
-  public revokeAdmin(body: UserRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<IsAdminResposne>>;
-  public revokeAdmin(body: UserRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<IsAdminResposne>>;
+  public revokeAdmin(body: UserRequest, observe?: 'body', reportProgress?: boolean): Observable<IsAdminResponse>;
+  public revokeAdmin(body: UserRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<IsAdminResponse>>;
+  public revokeAdmin(body: UserRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<IsAdminResponse>>;
   public revokeAdmin(body: UserRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     if (body === null || body === undefined) {
@@ -254,7 +255,7 @@ export class UserService {
       headers = headers.set('Content-Type', httpContentTypeSelected);
     }
 
-    return this.httpClient.request<IsAdminResposne>('post', `${this.basePath}/users/revokeAdmin`,
+    return this.httpClient.request<IsAdminResponse>('post', `${this.basePath}/users/revokeAdmin`,
       {
         body,
         withCredentials: this.configuration.withCredentials,

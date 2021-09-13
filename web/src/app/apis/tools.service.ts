@@ -19,15 +19,13 @@ import {CustomHttpUrlEncodingCodec} from '../encoder';
 
 import {Observable} from 'rxjs';
 
-import {DeleteImageRequest} from '../models/deleteImageRequest';
-import {DeleteVideoRequest} from '../models/deleteVideoRequest';
+import {DeleteToolRequest} from '../models/deleteToolRequest';
 import {EmptyObject} from '../models/emptyObject';
-import {GetAllImagesResponse} from '../models/getAllImagesResponse';
-import {GetAllVideosResponse} from '../models/getAllVideosResponse';
-import {GetAnalyzedImagesResponse} from '../models/getAnalyzedImagesResponse';
-import {GetAnalyzedVideosResponse} from '../models/getAnalyzedVideosResponse';
-import {ImageMetaData} from '../models/imageMetaData';
-import {VideoMetaData} from '../models/videoMetaData';
+import {GetAllToolsResponse} from '../models/getAllToolsResponse';
+import {GetToolFilesRequest} from '../models/getToolFilesRequest';
+import {GetToolFilesResponse} from '../models/getToolFilesResponse';
+import {GetToolMetaDataTypes} from '../models/getToolMetaDataTypes';
+import {GetToolTypesResponse} from '../models/getToolTypesResponse';
 
 import {BASE_PATH, COLLECTION_FORMATS} from '../variables';
 import {Configuration} from '../configuration';
@@ -35,7 +33,7 @@ import {environment} from '../../environments/environment';
 
 
 @Injectable()
-export class MediaStorageService {
+export class ToolsService {
 
   protected basePath = environment.apiEndpoint;
   public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(sessionStorage.getItem(sessionStorage.key(0))).secret);
@@ -69,355 +67,24 @@ export class MediaStorageService {
 
   /**
    *
-   * Endpoint for Delete Analyzed Image use case
+   * Endpoint for Create Meta Data Type use case
    *
-   * @param body
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public deleteAnalyzedImage(body: DeleteImageRequest, observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
-  public deleteAnalyzedImage(body: DeleteImageRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
-  public deleteAnalyzedImage(body: DeleteImageRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
-  public deleteAnalyzedImage(body: DeleteImageRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-    if (body === null || body === undefined) {
-      throw new Error('Required parameter body was null or undefined when calling deleteAnalyzedImage.');
-    }
-
-    let headers = this.defaultHeaders;
-
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'application/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [
-      'application/json'
-    ];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected != undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    return this.httpClient.request<EmptyObject>('post', `${this.basePath}/media/deleteAnalyzedImage`,
-      {
-        body,
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress
-      }
-    );
-  }
-
-  /**
-   *
-   * Endpoint for Delete Analyzed Video use case
-   *
-   * @param body
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public deleteAnalyzedVideo(body: DeleteVideoRequest, observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
-  public deleteAnalyzedVideo(body: DeleteVideoRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
-  public deleteAnalyzedVideo(body: DeleteVideoRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
-  public deleteAnalyzedVideo(body: DeleteVideoRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-    if (body === null || body === undefined) {
-      throw new Error('Required parameter body was null or undefined when calling deleteAnalyzedVideo.');
-    }
-
-    let headers = this.defaultHeaders;
-
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'application/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [
-      'application/json'
-    ];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected != undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    return this.httpClient.request<EmptyObject>('post', `${this.basePath}/media/deleteAnalyzedVideo`,
-      {
-        body,
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress
-      }
-    );
-  }
-
-  /**
-   *
-   * Endpoint for Delete Image use case
-   *
-   * @param body
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public deleteImage(body: DeleteImageRequest, observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
-  public deleteImage(body: DeleteImageRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
-  public deleteImage(body: DeleteImageRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
-  public deleteImage(body: DeleteImageRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-    if (body === null || body === undefined) {
-      throw new Error('Required parameter body was null or undefined when calling deleteImage.');
-    }
-
-    let headers = this.defaultHeaders;
-
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'application/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [
-      'application/json'
-    ];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected != undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    return this.httpClient.request<EmptyObject>('post', `${this.basePath}/media/deleteImage`,
-      {
-        body,
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress
-      }
-    );
-  }
-
-  /**
-   *
-   * Endpoint for Delete Video use case
-   *
-   * @param body
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public deleteVideo(body: DeleteVideoRequest, observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
-  public deleteVideo(body: DeleteVideoRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
-  public deleteVideo(body: DeleteVideoRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
-  public deleteVideo(body: DeleteVideoRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-    if (body === null || body === undefined) {
-      throw new Error('Required parameter body was null or undefined when calling deleteVideo.');
-    }
-
-    let headers = this.defaultHeaders;
-
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'application/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [
-      'application/json'
-    ];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected != undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    return this.httpClient.request<EmptyObject>('post', `${this.basePath}/media/deleteVideo`,
-      {
-        body,
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress
-      }
-    );
-  }
-
-  /**
-   *
-   * Endpoint for Get All Images use case
-   *
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getAllImages(observe?: 'body', reportProgress?: boolean): Observable<GetAllImagesResponse>;
-  public getAllImages(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GetAllImagesResponse>>;
-  public getAllImages(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GetAllImagesResponse>>;
-  public getAllImages(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-    let headers = this.defaultHeaders;
-
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'application/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [];
-
-    return this.httpClient.request<GetAllImagesResponse>('get', `${this.basePath}/media/getAllImages`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress
-      }
-    );
-  }
-
-  /**
-   *
-   * Endpoint for Get All Videos use case
-   *
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getAllVideos(observe?: 'body', reportProgress?: boolean): Observable<GetAllVideosResponse>;
-  public getAllVideos(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GetAllVideosResponse>>;
-  public getAllVideos(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GetAllVideosResponse>>;
-  public getAllVideos(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-    let headers = this.defaultHeaders;
-
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'application/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [];
-
-    return this.httpClient.request<GetAllVideosResponse>('get', `${this.basePath}/media/getAllVideos`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress
-      }
-    );
-  }
-
-  /**
-   *
-   * Endpoint for Get Analyzed Images use case
-   *
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getAnalyzedImages(observe?: 'body', reportProgress?: boolean): Observable<GetAnalyzedImagesResponse>;
-  public getAnalyzedImages(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GetAnalyzedImagesResponse>>;
-  public getAnalyzedImages(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GetAnalyzedImagesResponse>>;
-  public getAnalyzedImages(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-    let headers = this.defaultHeaders;
-
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'application/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [];
-
-    return this.httpClient.request<GetAnalyzedImagesResponse>('get', `${this.basePath}/media/getAnalyzedImages`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress
-      }
-    );
-  }
-
-  /**
-   *
-   * Endpoint for Get Analyzed Videos use case
-   *
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getAnalyzedVideos(observe?: 'body', reportProgress?: boolean): Observable<GetAnalyzedVideosResponse>;
-  public getAnalyzedVideos(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GetAnalyzedVideosResponse>>;
-  public getAnalyzedVideos(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GetAnalyzedVideosResponse>>;
-  public getAnalyzedVideos(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-    let headers = this.defaultHeaders;
-
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'application/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [];
-
-    return this.httpClient.request<GetAnalyzedVideosResponse>('get', `${this.basePath}/media/getAnalyzedVideos`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress
-      }
-    );
-  }
-
-  /**
-   *
-   * Endpoint for Store Image use case
-   *
+   * @param name
    * @param file
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public storeImageForm(file: Blob, observe?: 'body', reportProgress?: boolean): Observable<ImageMetaData>;
-  public storeImageForm(file: Blob, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ImageMetaData>>;
-  public storeImageForm(file: Blob, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ImageMetaData>>;
-  public storeImageForm(file: Blob, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public createMetaDataTypeForm(name: string, file: Blob, observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
+  public createMetaDataTypeForm(name: string, file: Blob, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
+  public createMetaDataTypeForm(name: string, file: Blob, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
+  public createMetaDataTypeForm(name: string, file: Blob, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    if (name === null || name === undefined) {
+      throw new Error('Required parameter name was null or undefined when calling createMetaDataType.');
+    }
 
     if (file === null || file === undefined) {
-      throw new Error('Required parameter file was null or undefined when calling storeImage.');
+      throw new Error('Required parameter file was null or undefined when calling createMetaDataType.');
     }
 
     let headers = this.defaultHeaders;
@@ -450,11 +117,14 @@ export class MediaStorageService {
       formParams = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
     }
 
+    if (name !== undefined) {
+      formParams = formParams.append('name', <any>name) as any || formParams;
+    }
     if (file !== undefined) {
       formParams = formParams.append('file', <any>file) as any || formParams;
     }
 
-    return this.httpClient.request<ImageMetaData>('post', `${this.basePath}/media/storeImage`,
+    return this.httpClient.request<EmptyObject>('post', `${this.basePath}/tools/createMetaDataType`,
       {
         body: convertFormParamsToString ? formParams.toString() : formParams,
         withCredentials: this.configuration.withCredentials,
@@ -467,19 +137,322 @@ export class MediaStorageService {
 
   /**
    *
-   * Endpoint for Store Video use case
+   * Endpoint for Delete Tool use case
    *
-   * @param file
+   * @param body
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public storeVideoForm(file: Blob, observe?: 'body', reportProgress?: boolean): Observable<VideoMetaData>;
-  public storeVideoForm(file: Blob, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<VideoMetaData>>;
-  public storeVideoForm(file: Blob, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<VideoMetaData>>;
-  public storeVideoForm(file: Blob, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public deleteTool(body: DeleteToolRequest, observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
+  public deleteTool(body: DeleteToolRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
+  public deleteTool(body: DeleteToolRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
+  public deleteTool(body: DeleteToolRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-    if (file === null || file === undefined) {
-      throw new Error('Required parameter file was null or undefined when calling storeVideo.');
+    if (body === null || body === undefined) {
+      throw new Error('Required parameter body was null or undefined when calling deleteTool.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+      'application/json'
+    ];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected != undefined) {
+      headers = headers.set('Content-Type', httpContentTypeSelected);
+    }
+
+    return this.httpClient.request<EmptyObject>('post', `${this.basePath}/tools/deleteTool`,
+      {
+        body,
+        withCredentials: this.configuration.withCredentials,
+        headers,
+        observe,
+        reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   * Endpoint for Get Meta Data Types use case
+   *
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getMetaDataTypes(observe?: 'body', reportProgress?: boolean): Observable<GetToolMetaDataTypes>;
+  public getMetaDataTypes(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GetToolMetaDataTypes>>;
+  public getMetaDataTypes(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GetToolMetaDataTypes>>;
+  public getMetaDataTypes(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    let headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [];
+
+    return this.httpClient.request<GetToolMetaDataTypes>('get', `${this.basePath}/tools/getMetaDataTypes`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers,
+        observe,
+        reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   * Endpoint for Get Tool Files use case
+   *
+   * @param body
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getToolFiles(body: GetToolFilesRequest, observe?: 'body', reportProgress?: boolean): Observable<GetToolFilesResponse>;
+  public getToolFiles(body: GetToolFilesRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GetToolFilesResponse>>;
+  public getToolFiles(body: GetToolFilesRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GetToolFilesResponse>>;
+  public getToolFiles(body: GetToolFilesRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    if (body === null || body === undefined) {
+      throw new Error('Required parameter body was null or undefined when calling getToolFiles.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+      'application/json'
+    ];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected != undefined) {
+      headers = headers.set('Content-Type', httpContentTypeSelected);
+    }
+
+    return this.httpClient.request<GetToolFilesResponse>('post', `${this.basePath}/tools/getToolFiles`,
+      {
+        body,
+        withCredentials: this.configuration.withCredentials,
+        headers,
+        observe,
+        reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   * Endpoint for Get Tool Types use case
+   *
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getToolTypes(observe?: 'body', reportProgress?: boolean): Observable<GetToolTypesResponse>;
+  public getToolTypes(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GetToolTypesResponse>>;
+  public getToolTypes(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GetToolTypesResponse>>;
+  public getToolTypes(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    let headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [];
+
+    return this.httpClient.request<GetToolTypesResponse>('get', `${this.basePath}/tools/getToolTypes`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers,
+        observe,
+        reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   * Endpoint for Delete Tool use case
+   *
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getTools(observe?: 'body', reportProgress?: boolean): Observable<GetAllToolsResponse>;
+  public getTools(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GetAllToolsResponse>>;
+  public getTools(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GetAllToolsResponse>>;
+  public getTools(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    let headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [];
+
+    return this.httpClient.request<GetAllToolsResponse>('get', `${this.basePath}/tools/getAllTools`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers,
+        observe,
+        reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   * Endpoint for Upload Analysis Tool use case
+   *
+   * @param sourceCode
+   * @param model
+   * @param metadataType
+   * @param toolName
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public uploadAnalysisToolForm(sourceCode: Blob, model: Blob, metadataType: string, toolName: string, observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
+  public uploadAnalysisToolForm(sourceCode: Blob, model: Blob, metadataType: string, toolName: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
+  public uploadAnalysisToolForm(sourceCode: Blob, model: Blob, metadataType: string, toolName: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
+  public uploadAnalysisToolForm(sourceCode: Blob, model: Blob, metadataType: string, toolName: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    if (sourceCode === null || sourceCode === undefined) {
+      throw new Error('Required parameter sourceCode was null or undefined when calling uploadAnalysisTool.');
+    }
+
+    if (model === null || model === undefined) {
+      throw new Error('Required parameter model was null or undefined when calling uploadAnalysisTool.');
+    }
+
+    if (metadataType === null || metadataType === undefined) {
+      throw new Error('Required parameter metadataType was null or undefined when calling uploadAnalysisTool.');
+    }
+
+    if (toolName === null || toolName === undefined) {
+      throw new Error('Required parameter toolName was null or undefined when calling uploadAnalysisTool.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+      'multipart/form-data'
+    ];
+
+    const canConsumeForm = this.canConsumeForm(consumes);
+
+    let formParams: { append(param: string, value: any): void };
+    let useForm = false;
+    const convertFormParamsToString = false;
+    // use FormData to transmit files using content-type "multipart/form-data"
+    // see https://stackoverflow.com/questions/4007969/application-x-www-form-urlencoded-or-multipart-form-data
+    useForm = canConsumeForm;
+    // use FormData to transmit files using content-type "multipart/form-data"
+    // see https://stackoverflow.com/questions/4007969/application-x-www-form-urlencoded-or-multipart-form-data
+    useForm = canConsumeForm;
+    if (useForm) {
+      formParams = new FormData();
+    } else {
+      formParams = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+    }
+
+    if (sourceCode !== undefined) {
+      formParams = formParams.append('sourceCode', <any>sourceCode) as any || formParams;
+    }
+    if (model !== undefined) {
+      formParams = formParams.append('model', <any>model) as any || formParams;
+    }
+    if (metadataType !== undefined) {
+      formParams = formParams.append('metadataType', <any>metadataType) as any || formParams;
+    }
+    if (toolName !== undefined) {
+      formParams = formParams.append('toolName', <any>toolName) as any || formParams;
+    }
+
+    return this.httpClient.request<EmptyObject>('post', `${this.basePath}/tools/uploadAnalysisTool`,
+      {
+        body: convertFormParamsToString ? formParams.toString() : formParams,
+        withCredentials: this.configuration.withCredentials,
+        headers,
+        observe,
+        reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   * Endpoint for Upload Drawing Tool use case
+   *
+   * @param sourceCode
+   * @param metadataType
+   * @param toolName
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public uploadDrawingToolForm(sourceCode: Blob, metadataType: string, toolName: string, observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
+  public uploadDrawingToolForm(sourceCode: Blob, metadataType: string, toolName: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
+  public uploadDrawingToolForm(sourceCode: Blob, metadataType: string, toolName: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
+  public uploadDrawingToolForm(sourceCode: Blob, metadataType: string, toolName: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    if (sourceCode === null || sourceCode === undefined) {
+      throw new Error('Required parameter sourceCode was null or undefined when calling uploadDrawingTool.');
+    }
+
+    if (metadataType === null || metadataType === undefined) {
+      throw new Error('Required parameter metadataType was null or undefined when calling uploadDrawingTool.');
+    }
+
+    if (toolName === null || toolName === undefined) {
+      throw new Error('Required parameter toolName was null or undefined when calling uploadDrawingTool.');
     }
 
     let headers = this.defaultHeaders;
@@ -512,11 +485,17 @@ export class MediaStorageService {
       formParams = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
     }
 
-    if (file !== undefined) {
-      formParams = formParams.append('file', <any>file) as any || formParams;
+    if (sourceCode !== undefined) {
+      formParams = formParams.append('sourceCode', <any>sourceCode) as any || formParams;
+    }
+    if (metadataType !== undefined) {
+      formParams = formParams.append('metadataType', <any>metadataType) as any || formParams;
+    }
+    if (toolName !== undefined) {
+      formParams = formParams.append('toolName', <any>toolName) as any || formParams;
     }
 
-    return this.httpClient.request<VideoMetaData>('post', `${this.basePath}/media/storeVideo`,
+    return this.httpClient.request<EmptyObject>('post', `${this.basePath}/tools/uploadDrawingTool`,
       {
         body: convertFormParamsToString ? formParams.toString() : formParams,
         withCredentials: this.configuration.withCredentials,

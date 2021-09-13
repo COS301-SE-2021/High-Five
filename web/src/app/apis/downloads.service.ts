@@ -19,8 +19,8 @@ import {CustomHttpUrlEncodingCodec} from '../encoder';
 
 import {Observable} from 'rxjs';
 
-import {EchoRequest} from '../models/echoRequest';
-import {PingResponse} from '../models/pingResponse';
+import {DownloadSdkFilesResponse} from '../models/downloadSdkFilesResponse';
+import {FileDownload} from '../models/fileDownload';
 
 import {BASE_PATH, COLLECTION_FORMATS} from '../variables';
 import {Configuration} from '../configuration';
@@ -28,7 +28,7 @@ import {environment} from '../../environments/environment';
 
 
 @Injectable()
-export class TestService {
+export class DownloadsService {
 
   protected basePath = environment.apiEndpoint;
   public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(sessionStorage.getItem(sessionStorage.key(0))).secret);
@@ -62,63 +62,15 @@ export class TestService {
 
   /**
    *
-   * Test if the server is online
-   *
-   * @param body
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public echo(body: EchoRequest, observe?: 'body', reportProgress?: boolean): Observable<PingResponse>;
-  public echo(body: EchoRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<PingResponse>>;
-  public echo(body: EchoRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<PingResponse>>;
-  public echo(body: EchoRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-    if (body === null || body === undefined) {
-      throw new Error('Required parameter body was null or undefined when calling echo.');
-    }
-
-    let headers = this.defaultHeaders;
-
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'application/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [
-      'application/json'
-    ];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected != undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    return this.httpClient.request<PingResponse>('post', `${this.basePath}/test/echo`,
-      {
-        body,
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress
-      }
-    );
-  }
-
-  /**
-   *
-   * Test if the server is online
+   * Endpoint to download the mobile app&#x27;s apk
    *
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public ping(observe?: 'body', reportProgress?: boolean): Observable<PingResponse>;
-  public ping(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<PingResponse>>;
-  public ping(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<PingResponse>>;
-  public ping(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public downloadApk(observe?: 'body', reportProgress?: boolean): Observable<FileDownload>;
+  public downloadApk(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<FileDownload>>;
+  public downloadApk(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<FileDownload>>;
+  public downloadApk(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     let headers = this.defaultHeaders;
 
@@ -134,7 +86,79 @@ export class TestService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<PingResponse>('post', `${this.basePath}/test/ping`,
+    return this.httpClient.request<FileDownload>('get', `${this.basePath}/tools/downloadApk`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers,
+        observe,
+        reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   * Endpoint to download the sdk&#x27;s required files
+   *
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public downloadSdkFiles(observe?: 'body', reportProgress?: boolean): Observable<DownloadSdkFilesResponse>;
+  public downloadSdkFiles(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<DownloadSdkFilesResponse>>;
+  public downloadSdkFiles(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<DownloadSdkFilesResponse>>;
+  public downloadSdkFiles(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    let headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [];
+
+    return this.httpClient.request<DownloadSdkFilesResponse>('get', `${this.basePath}/tools/downloadSdkFiles`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers,
+        observe,
+        reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   * Endpoint to download the sdk&#x27;s user manual
+   *
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public downloadSdkManual(observe?: 'body', reportProgress?: boolean): Observable<FileDownload>;
+  public downloadSdkManual(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<FileDownload>>;
+  public downloadSdkManual(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<FileDownload>>;
+  public downloadSdkManual(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    let headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [];
+
+    return this.httpClient.request<FileDownload>('get', `${this.basePath}/tools/downloadSdkManual`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
