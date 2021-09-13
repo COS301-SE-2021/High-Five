@@ -57,32 +57,24 @@ namespace analysis_engine_v2.BrokerClient.Storage
             return response;
         }
 
-        public async Task<byte[]> GetVideo(string videoId)
+        public string GetVideo(string videoId)
         {
             /*
              * Returns video as byte array
              */
             var video = _storageManager.GetFile(videoId + ".mp4", "video").Result;
-            if (video == null)
-            {
-                return null;
-            }
 
-            return await video.ToByteArray();
+            return video?.GetUrl();
         }
 
-        public async Task<byte[]> GetImage(string imageId)
+        public string GetImage(string imageId)
         {
             /*
              * Returns image as byte array
              */
             var image = _storageManager.GetFile(imageId + ".mp4", "image").Result;
-            if (image == null)
-            {
-                return null;
-            }
 
-            return await image.ToByteArray();
+            return image?.GetUrl();
         }
 
         public AnalysisToolComposite GetAnalysisTool(string toolId)
