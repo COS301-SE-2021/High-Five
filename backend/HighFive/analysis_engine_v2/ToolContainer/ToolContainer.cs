@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace analysis_engine
 {
@@ -9,6 +10,8 @@ namespace analysis_engine
         public Pipe Input { get; set; }
         public Pipe Output { get; set; }
 
+        public const int FrameSkipper = 3;
+        
         public bool Last;
         public FilterManager Manager { get; set; }
         
@@ -28,12 +31,41 @@ namespace analysis_engine
             _running = true;
             Task.Factory.StartNew(() =>
             {
-                while (_running)
+                if (Last)
                 {
-                    Data temp = Input.Pop();
-                    if (temp != null)
+                    while (_running)
                     {
-                        Output.Push(Tool.Process(temp));
+                        var temp = Input.Pop();
+                        if (temp != null)
+                        {
+                            Output.Push(Tool.Process(temp));
+                        }
+                    }
+                }
+                else
+                {
+                    var count = 0;
+                    Data data = null;
+                    List<MetaData> meta = null;
+                    while (_running)
+                    {
+                        if (count % 3 == 0)
+                        {
+                            data = Tool.Process(Input.Pop());
+                            meta = data.Meta;
+                            if (data != null)
+                            {
+                                Output.Push(data);
+                            }
+                        }
+                        else
+                        {
+                            data = Input.Pop();
+                            data.Meta = meta;
+                            Output.Push(data);
+                        }
+
+                        count++;
                     }
                 }
             });
