@@ -36,7 +36,6 @@ export class UserService {
   public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(sessionStorage.getItem(sessionStorage.key(0))).secret);
   public configuration = new Configuration();
 
-
   constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
     if (basePath) {
       this.basePath = basePath;

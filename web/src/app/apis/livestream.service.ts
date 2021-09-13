@@ -19,15 +19,16 @@ import {CustomHttpUrlEncodingCodec} from '../encoder';
 
 import {Observable} from 'rxjs';
 
-import {EchoRequest} from '../models/echoRequest';
-import {PingResponse} from '../models/pingResponse';
+import {CreateOneTimeTokenRequest} from '../models/createOneTimeTokenRequest';
+import {EmptyObject} from '../models/emptyObject';
 
 import {BASE_PATH, COLLECTION_FORMATS} from '../variables';
 import {Configuration} from '../configuration';
+import {environment} from '../../environments/environment';
 
 
 @Injectable()
-export class TestService {
+export class LivestreamService {
 
   protected basePath = environment.apiEndpoint;
   public defaultHeaders = new HttpHeaders().set('Authorization', 'Bearer ' + JSON.parse(sessionStorage.getItem(sessionStorage.key(0))).secret);
@@ -60,19 +61,19 @@ export class TestService {
 
   /**
    *
-   * Test if the server is online
+   * Endpoint for Create One Time Token use case
    *
    * @param body
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public echo(body: EchoRequest, observe?: 'body', reportProgress?: boolean): Observable<PingResponse>;
-  public echo(body: EchoRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<PingResponse>>;
-  public echo(body: EchoRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<PingResponse>>;
-  public echo(body: EchoRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public createOneTimeToken(body: CreateOneTimeTokenRequest, observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
+  public createOneTimeToken(body: CreateOneTimeTokenRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
+  public createOneTimeToken(body: CreateOneTimeTokenRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
+  public createOneTimeToken(body: CreateOneTimeTokenRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     if (body === null || body === undefined) {
-      throw new Error('Required parameter body was null or undefined when calling echo.');
+      throw new Error('Required parameter body was null or undefined when calling createOneTimeToken.');
     }
 
     let headers = this.defaultHeaders;
@@ -95,7 +96,7 @@ export class TestService {
       headers = headers.set('Content-Type', httpContentTypeSelected);
     }
 
-    return this.httpClient.request<PingResponse>('post', `${this.basePath}/test/echo`,
+    return this.httpClient.request<EmptyObject>('post', `${this.basePath}/livestream/createOneTimeToken`,
       {
         body,
         withCredentials: this.configuration.withCredentials,
@@ -108,15 +109,15 @@ export class TestService {
 
   /**
    *
-   * Test if the server is online
+   * Endpoint for Return All Livestreams use case
    *
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public ping(observe?: 'body', reportProgress?: boolean): Observable<PingResponse>;
-  public ping(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<PingResponse>>;
-  public ping(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<PingResponse>>;
-  public ping(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public returnAllLiveStreams(observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
+  public returnAllLiveStreams(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
+  public returnAllLiveStreams(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
+  public returnAllLiveStreams(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     let headers = this.defaultHeaders;
 
@@ -132,7 +133,7 @@ export class TestService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<PingResponse>('post', `${this.basePath}/test/ping`,
+    return this.httpClient.request<EmptyObject>('get', `${this.basePath}/livestream/returnAllLivestreams`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
