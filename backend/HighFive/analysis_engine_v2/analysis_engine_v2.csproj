@@ -125,6 +125,7 @@
         <Compile Include="Tools\Tool.cs" />
         <Compile Include="DynamicTools\DynamicTool.cs" />
         <Compile Include="DynamicTools\DynamicCompiler.cs" />
+        <Compile Include="Video\ConcreteFrameEncoder\ImageFrameEncoder.cs" />
         <Compile Include="Video\ConcreteFrameEncoder\StreamFrameEncoder.cs" />
         <Compile Include="Video\ConcreteFrameEncoder\VideoFrameEncoder.cs" />
         <Compile Include="Video\ConcreteFrameGrabber\ImageFrameGrabber.cs" />

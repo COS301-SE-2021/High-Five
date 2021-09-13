@@ -1,6 +1,6 @@
 namespace analysis_engine.Video.ConcreteFrameEncoder
 {
-    public class StreamFrameEncoder : FrameEncoder
+    public class ImageFrameEncoder : FrameEncoder
     {
         public override void AddFrame(Data data)
         {
