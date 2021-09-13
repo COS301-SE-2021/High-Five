@@ -572,7 +572,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/emptyObject'
+                $ref: '#/components/schemas/tool'
 
   /tools/uploadDrawingTool:
     post:
@@ -593,7 +593,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/emptyObject'
+                $ref: '#/components/schemas/tool'
 
   /tools/deleteTool:
     post:
