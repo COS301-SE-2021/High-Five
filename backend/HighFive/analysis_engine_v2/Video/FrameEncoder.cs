@@ -1,7 +1,9 @@
 namespace analysis_engine.Video
 {
-    public class FrameEncoder
+    public abstract class FrameEncoder
     {
-        
+        public abstract void AddFrame(Data data);
+
+        public abstract string GetVideo();
     }
 }
