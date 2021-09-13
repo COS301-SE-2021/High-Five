@@ -2,6 +2,10 @@
 {
     public class BrokerSocketRequest: SocketRequest
     {
+        public BrokerSocketRequest()
+        {
+            
+        }
         public BrokerSocketRequest(SocketRequest originalReq, string userId)
         {
             UserId = userId;

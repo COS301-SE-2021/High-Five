@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Org.OpenAPITools.Models;
-using src.AnalysisTools;
-using src.AnalysisTools.VideoDecoder;
 using src.Storage;
+using src.Subsystems.Livestreaming;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
 using src.Websockets;
@@ -40,14 +37,16 @@ namespace src.Subsystems.Analysis
         private readonly IPipelineService _pipelineService;
         private readonly IConfiguration _configuration;
         private readonly IWebSocketClient _analysisSocket;
+        private readonly ILivestreamingService _livestreamingService;
         private string _brokerToken;
         private string _userId;
 
         public AnalysisService(IStorageManager storageManager, IMediaStorageService mediaStorageService,
-            IPipelineService pipelineService, IConfiguration configuration)
+            IPipelineService pipelineService, IConfiguration configuration, ILivestreamingService livestreamingService)
         {
             _storageManager = storageManager;
             _mediaStorageService = mediaStorageService;
+            _livestreamingService = livestreamingService;
             _pipelineService = pipelineService;
             _configuration = configuration;
             _analysisSocket = new WebSocketClient();
@@ -213,5 +212,35 @@ namespace src.Subsystems.Analysis
         {
             return _analysisSocket.Receive().Result;
         }
+
+        public async Task<LiveStreamingLinks> StartLiveStream(string userId)
+        {
+            await _livestreamingService.AuthenticateUser();
+            var appName = _livestreamingService.CreateApplication(userId).Result;
+            await _livestreamingService.UpdateApplicationSettings(appName);
+            var streamingId = _livestreamingService.CreateStreamingUrl(appName).Result;
+            var publishToken = _livestreamingService.CreateOneTimeToken(appName, streamingId, "publish").Result;
+            var playingToken = _livestreamingService.CreateOneTimeToken(appName, streamingId, "play").Result;
+
+            var response = new LiveStreamingLinks
+            {
+                PublishLink = _configuration["LivestreamUri"].Replace("https", "rtmp") +
+                              "/" + appName + "/" + streamingId + "?token=" + publishToken,
+                PlayLink = _configuration["LivestreamUri"] + ":5443/" + appName + "/play.html?name=" +
+                           streamingId + "&token=" + playingToken,
+                StreamId = streamingId
+            };
+            
+            var brokerRequest = new BrokerSocketRequest
+            {
+                Authorization = _brokerToken,
+                UserId = _userId,
+                Request = "StartLiveAnalysis",
+                Body = JsonConvert.SerializeObject(response)
+            };
+            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
+            return response;
+        }
+        
     }
 }

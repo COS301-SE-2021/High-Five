@@ -9,7 +9,7 @@ namespace src.Subsystems.Livestreaming
         public Task UpdateApplicationSettings(string appName);
 
         public Task<string> CreateStreamingUrl(string appName);
-        public Task<string> CreateOneTimeToken(string id, string type);
+        public Task<string> CreateOneTimeToken(string appName, string id, string type);
         public Task<string> ReturnAllLiveStreams(string appName);
     }
 }

@@ -21,23 +21,19 @@ namespace src.Subsystems.Livestreaming
             _livestreamingService = livestreamingService;
         }
         
-        public override IActionResult CreateOneTimeToken(GetToolFilesRequest getToolFilesRequest)
+        public override IActionResult CreateOneTimeToken(CreateOneTimeTokenRequest request)
         {
             if (!_applicationCreated)
             {
                 var created = CreateUserStreamingApplication().Result;
             }
-            throw new System.NotImplementedException();
-        }
 
-        public override IActionResult CreateStreamingUrl()
-        {
-            if (!_applicationCreated)
+            var response = new EmptyObject
             {
-                var created = CreateUserStreamingApplication().Result;
-            }
-            _livestreamingService.CreateStreamingUrl(_appName);
-            throw new System.NotImplementedException();
+                Success = true,
+                Message = _livestreamingService.CreateOneTimeToken(_appName, request.StreamingId, "play").Result
+            };
+            return StatusCode(200, response);
         }
 
         public override IActionResult ReturnAllLiveStreams()
@@ -46,7 +42,13 @@ namespace src.Subsystems.Livestreaming
             {
                 var created = CreateUserStreamingApplication().Result;
             }
-            throw new System.NotImplementedException();
+            
+            var response = new EmptyObject
+            {
+                Success = true,
+                Message = _livestreamingService.ReturnAllLiveStreams(_appName).Result
+            };
+            return StatusCode(200, response);
         }
 
         private async Task<bool> CreateUserStreamingApplication()
