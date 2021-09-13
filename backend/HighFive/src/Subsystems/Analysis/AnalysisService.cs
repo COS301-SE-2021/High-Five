@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Accord.Math;
 using AzureFunctionsToolkit.Portable.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -133,6 +134,7 @@ namespace src.Subsystems.Analysis
             var brokerRequest = new BrokerSocketRequest(fullRequest, _userId) {Authorization = _brokerToken};
             await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
             var responseString = _analysisSocket.Receive().Result;
+            Console.WriteLine("Response string: " +responseString);
             response = JsonConvert.DeserializeObject<AnalyzedVideoMetaData>(responseString);
             
             return response;
@@ -213,7 +215,7 @@ namespace src.Subsystems.Analysis
             return _analysisSocket.Receive().Result;
         }
 
-        public async Task<LiveStreamingLinks> StartLiveStream(string userId)
+        public async Task<string> StartLiveStream(string userId)
         {
             await _livestreamingService.AuthenticateUser();
             var appName = _livestreamingService.CreateApplication(userId).Result;
@@ -238,8 +240,9 @@ namespace src.Subsystems.Analysis
                 Request = "StartLiveAnalysis",
                 Body = JsonConvert.SerializeObject(response)
             };
-            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
-            return response;
+            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest).TrimStart('\"').TrimEnd('\"'));
+            var responseString = await _analysisSocket.Receive();
+            return responseString;
         }
         
     }
