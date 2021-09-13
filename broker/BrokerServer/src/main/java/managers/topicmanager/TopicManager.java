@@ -75,6 +75,7 @@ public class TopicManager {
         lock.lock();
         try {
             actionExecutor.execute(() -> {
+                EventLogger.getLogger().info("Creating topic " + topic);
                 ProcessBuilder builder = new ProcessBuilder(System.getenv("KAFKA_CREATE_TOPIC").
                         replace("{topic}", topic).split(" "));
                 try {
