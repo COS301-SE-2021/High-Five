@@ -10,7 +10,7 @@ namespace analysis_engine
             return _filter;
         }
 
-        public void BuildToolContainer(string toolContainer)
+        public void BuildToolContainer(string toolContainer, bool last)
         {
             ToolContainerBuilder _toolContainerBuilder;
             PipeFactory mergerPipeFactory = new ConcurrentInputMergerPipeFactory();
@@ -38,7 +38,7 @@ namespace analysis_engine
             ConcurrentInputMergerPipe temp = (ConcurrentInputMergerPipe) _filter.ConcurrentInputMerger;
             temp.SetOutput(_filter.Output);
             
-            _toolContainerBuilder.buildContainer();
+            _toolContainerBuilder.buildContainer(last);
             _toolContainerBuilder.addInput(_filter.Input);
             _toolContainerBuilder.addOutput(_filter.ConcurrentInputMerger);
             _toolContainerBuilder.addTool(containerInfo[1]);

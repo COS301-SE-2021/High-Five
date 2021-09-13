@@ -4,9 +4,10 @@ namespace analysis_engine
 {
     public class AnalysisToolContainerBuilder : ToolContainerBuilder
     {
-        public override void buildContainer()
+        public override void buildContainer(bool last)
         {
             this._toolContainer = new AnalysisToolContainer();
+            _toolContainer.Last = last;
         }
 
         public override void addInput(Pipe input)

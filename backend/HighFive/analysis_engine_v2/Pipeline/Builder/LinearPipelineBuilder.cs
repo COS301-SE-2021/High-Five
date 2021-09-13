@@ -49,8 +49,7 @@ namespace analysis_engine
                     _filterBuilder.AddInput(temp[count-1].Output);
                     _filterBuilder.AddOutput(_pipeFactories[0].GetPipe());
                 }
-                
-                _filterBuilder.BuildToolContainer(s);
+                _filterBuilder.BuildToolContainer(s, filterStrings.Length==(count-1));
                 temp[count] = _filterBuilder.GetFilter();
                 count++;
             }

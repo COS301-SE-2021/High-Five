@@ -8,10 +8,11 @@ namespace analysis_engine
         public Tool Tool { get; set; }
         public Pipe Input { get; set; }
         public Pipe Output { get; set; }
-        
+
+        public bool Last;
         public FilterManager Manager { get; set; }
         
-        public ToolContainer(Tool tool, Pipe input, Pipe output, FilterManager manager)
+        public ToolContainer(Tool tool, Pipe input, Pipe output, FilterManager manager, bool last)
         {
             Tool = tool; 
             Input = input;

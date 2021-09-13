@@ -9,11 +9,11 @@ namespace analysis_engine.Video.ConcreteFrameEncoder
         private readonly VideoWriter _videoWriter;
         private readonly string _url;
 
-        public VideoFrameEncoder(string url, int width, int height)
+        public VideoFrameEncoder(string url, Size size)
         {
             _url = url;
             _videoWriter = new VideoWriter(_url, VideoWriter.Fourcc('M', 'P', '4', 'V'), 30,
-                new Size(width, height), true);
+                size, true);
         }
 
         public override void AddFrame(Data data)

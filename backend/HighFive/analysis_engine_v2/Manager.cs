@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using analysis_engine.Video;
+using analysis_engine.Video.ConcreteFrameEncoder;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -14,7 +15,8 @@ namespace analysis_engine
         private int _frameCount;
         private FrameGrabber _frameGrabber;
         private string _outputUrl;
-        private bool _isStream;
+        private FrameEncoder _frameEncoder=null;
+        private string _mediaType;
         public Manager()
         {
             _frameCount = 0;
@@ -36,27 +38,24 @@ namespace analysis_engine
 
         public void GiveLinkToFootage(string mediaType, string url, string outputUrl="")
         {
+            _mediaType = mediaType;
             switch (mediaType)
             {
                 case "video":
                     _frameGrabber = new VideoFrameGrabber();
                     _frameGrabber.Init(url);
-                    _isStream = false;
                     break;
                 case "stream":
                     _frameGrabber = new StreamFrameGrabber();
                     _frameGrabber.Init(url);
-                    _isStream = true;
                     break;
                 case "image":
                     _frameGrabber = new ImageFrameGrabber();
                     _frameGrabber.Init(url);
-                    _isStream = false;
                     break;
                 default:
                     _frameGrabber = new VideoFrameGrabber();
                     _frameGrabber.Init(url);
-                    _isStream = false;
                     break;
             }
             
@@ -80,8 +79,29 @@ namespace analysis_engine
         private void ReturnAnalyzedFrame(Data data)
         {
             _dataPool.ReleaseData(data);
-            
-            
+
+            if (_frameEncoder == null)
+            {
+                switch (_mediaType)
+                {
+                    case "video":
+                        _frameEncoder =
+                            new VideoFrameEncoder(@"C:\Users\hanne\RiderProjects\output.mp4", data.Frame.Image.Size);
+                        break;
+                    case "stream":
+                        //TODO encoding stream start
+                        break;
+                    case "image":
+                        //TODO encoding image start
+                        break;
+                    default:
+                        _frameEncoder =
+                            new VideoFrameEncoder(@"C:\Users\hanne\RiderProjects\output.mp4", data.Frame.Image.Size);
+                        break;
+                }
+            }
+            _frameEncoder.AddFrame(data);
+
         }
 /*
  * This function calls the pipeline Init function to start all the Tool threads.
