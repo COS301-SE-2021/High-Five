@@ -218,6 +218,7 @@ namespace src.Subsystems.Analysis
         }
 
         public async Task StartLiveStream(string userId)
+
         {
             await _livestreamingService.AuthenticateUser();
             var appName = _livestreamingService.CreateApplication(userId).Result;
@@ -253,6 +254,7 @@ namespace src.Subsystems.Analysis
                 _analysisSocket.Connect(_configuration["BrokerUri"], _userId);
                 _brokerConnection = true;
             }
+
         }
         
     }
