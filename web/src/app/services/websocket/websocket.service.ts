@@ -23,7 +23,12 @@ export class WebsocketService {
       }
     });
     this.socket.subscribe((msg) => {
+      console.log(msg);
       this.handleMessage(msg);
+    });
+    this.sendMessage({
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      Request: 'Synchronize'
     });
   }
 
