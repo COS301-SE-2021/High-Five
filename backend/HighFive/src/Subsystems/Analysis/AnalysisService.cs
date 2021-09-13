@@ -133,6 +133,7 @@ namespace src.Subsystems.Analysis
             var brokerRequest = new BrokerSocketRequest(fullRequest, _userId) {Authorization = _brokerToken};
             await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
             var responseString = _analysisSocket.Receive().Result;
+            Console.WriteLine("Response string: " +responseString);
             response = JsonConvert.DeserializeObject<AnalyzedVideoMetaData>(responseString);
             
             return response;
@@ -238,7 +239,7 @@ namespace src.Subsystems.Analysis
                 Request = "StartLiveAnalysis",
                 Body = JsonConvert.SerializeObject(response)
             };
-            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
+            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest).TrimStart('\"').TrimEnd('\"'));
             return response;
         }
         
