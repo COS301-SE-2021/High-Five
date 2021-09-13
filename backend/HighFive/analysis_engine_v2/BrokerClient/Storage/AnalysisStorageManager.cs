@@ -184,7 +184,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
                 "D0" => "analysis:people",
                 "D1" => "analysis:animal",
                 "D2" => "analysis:vehicles",
-                "D3" => "analysis:vehicles-1",
+                "D3" => "analysis:fastvehicles",
                 "D4" => "drawing:boxes",
                 _ => "dynamic:" + toolId
             };
