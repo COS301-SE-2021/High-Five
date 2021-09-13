@@ -285,5 +285,10 @@ namespace src.Subsystems.Pipelines
         {
             _storageManager.StoreUserInfo(id, displayName, email);
         }
+
+        /*private string ToolNameToId(string toolName)
+        {
+            
+        }*/
     }
 }

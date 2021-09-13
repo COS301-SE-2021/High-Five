@@ -11,7 +11,7 @@ namespace src.Subsystems.Analysis
         public Task<AnalyzedVideoMetaData> AnalyzeVideo(SocketRequest fullRequest);
         public void SetBaseContainer(string containerName);
         public void SetBrokerToken(string userId);
-        public string ListenForMessage();
-        public Task<string> StartLiveStream(string userId);
+        public void CloseBrokerSocket();
+        public Task StartLiveStream(string userId);
     }
 }
