@@ -50,7 +50,6 @@ namespace src
             
             // Singletons
             services.Add(new ServiceDescriptor(typeof(IConfiguration), Configuration));
-            services.Add(new ServiceDescriptor(typeof(IAnalysisModels), new AnalysisModels()));
             // Dependency Injections
             services.AddScoped<IStorageManager, StorageManager>();
             services.AddScoped<IVideoDecoder, VideoDecoder>();
