@@ -1,6 +1,10 @@
 package clients.webclients.strategy;
 
+import clients.webclients.connectionhandler.ConnectionHandler;
+import clients.webclients.connectionhandler.ResponseObject;
 import dataclasses.analysiscommand.AnalysisCommand;
+import dataclasses.analysiscommand.commandbody.StoredMediaCommandBody;
+import dataclasses.clientrequest.requestbody.StoredMediaRequestBody;
 import dataclasses.serverinfo.ServerInformation;
 import dataclasses.clientrequest.AnalysisRequest;
 import dataclasses.serverinfo.ServerInformationHolder;
@@ -27,10 +31,11 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
      *
      * @param request Analysis request for media to be analysed
      * @param information Information about the server to perform analysis.
-     * @param writer Writer to inform web client that media is going to be analysed
+     * @param handler Connection handler to send response to
+     * @param connectionId Connection id
      */
     @Override
-    public void processRequest(AnalysisRequest request, ServerInformationHolder information, BufferedWriter writer) throws IOException {
+    public void processRequest(AnalysisRequest request, ServerInformationHolder information, ConnectionHandler handler, String connectionId) throws IOException {
 
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");
@@ -42,7 +47,9 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
         ServerInformation info = information.get(builder);
 
         //Create new command
-        AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getMediaId(), request.getPipelineId(), request.getUserId());
+        StoredMediaRequestBody body = (StoredMediaRequestBody) request.getBody();
+        StoredMediaCommandBody commandBody = new StoredMediaCommandBody(body.getMediaId(), body.getPipelineId());
+        AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getUserId(), commandBody);
         EventLogger.getLogger().info("Sending command to server " + info.getServerId());
 
         //Send command to server
@@ -53,9 +60,11 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
 
         //Get response from server
         String response = readResponse(info.getServerId());
+        EventLogger.getLogger().info(response);
 
         //Send response to client
-        writer.append(response).append("\n").flush();
+        ResponseObject responseObject = new ResponseObject(request.getRequestType(), null, response, connectionId);
+        handler.onNext(responseObject);
     }
 
     /**
@@ -66,6 +75,7 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
     private String readResponse(String topic) throws IOException {
         EventLogger.getLogger().info("Reading response from topic " + topic);
         ConsumerRecord<String, String> message;
+        String retMsg;
 
         //loop until we get a valid message
         while(true) {
@@ -124,13 +134,14 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
             }
 
             message = messageList.get(0);
+            retMsg = message.value();
 
             /*
             "heartbeat" may be contained in a valid message. A real heartbeat
             message will just have the word "heartbeat", so we just extract the first
             9 characters.
              */
-            String possibleBeat = message.value().substring(0, 9);
+            String possibleBeat = retMsg.substring(0, 9);
 
             /*
             Heartbeat messages mean that the AnalysisEngine is still analysing the
@@ -142,6 +153,6 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
             }
         }
 
-        return message.value();
+        return retMsg;
     }
 }

@@ -1,19 +1,19 @@
 package dataclasses.clientrequest;
 
 
+import dataclasses.clientrequest.requestbody.RequestBody;
+
 public class AnalysisRequest {
     private final String authorization;
     private final String requestType;
-    private final String mediaId;
-    private final String pipelineId;
+    private final RequestBody body;
     private final String userId;
 
-    public AnalysisRequest(String authorization, String requestType, String mediaId, String pipelineId, String userId) {
+    public AnalysisRequest(String authorization, String requestType, String userId, RequestBody body) {
         this.authorization = authorization;
         this.requestType = requestType;
-        this.mediaId = mediaId;
-        this.pipelineId = pipelineId;
         this.userId = userId;
+        this.body = body;
     }
 
     public String getAuthorization() {
@@ -24,15 +24,11 @@ public class AnalysisRequest {
         return requestType;
     }
 
-    public String getMediaId() {
-        return mediaId;
-    }
-
-    public String getPipelineId() {
-        return pipelineId;
-    }
-
     public String getUserId() {
         return userId;
+    }
+
+    public RequestBody getBody() {
+        return body;
     }
 }

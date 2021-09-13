@@ -23,28 +23,57 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                 BootstrapServers = "localhost:9092",
             };
             TopicPartition partition = new TopicPartition(clientId, 2);
-            var producer = new ProducerBuilder<Null, string>(config).Build();
+            var producer = new ProducerBuilder<string, string>(config).Build();
             for (var i = 0; i < 3; i++)
             {
                 Thread.Sleep(1000);
 
                 //Send information to Broker
-                Message<Null, string> msg = new Message<Null, string>();
-                msg.Value = "heartbeat";
+                Message<string, string> msg = new Message<string, string>
+                {
+                    Key = Guid.NewGuid().ToString(),
+                    Value = "heartbeat"
+                };
                 producer.Produce(partition, msg);
             }
 
-            var metaData = new AnalyzedVideoMetaData
+            Message<string, string> msg2;
+
+            if (command.MediaType == "AnalyzeVideo")
             {
-                DateAnalyzed = new DateTime(2021, 01, 01),
-                Id = "12345678",
-                PipelineId = "87654321",
-                Thumbnail = "Thumbnail",
-                Url = "http://localhost",
-                VideoId = "vidid"
-            };
-            Message<Null, string> msg2 = new Message<Null, string>();
-            msg2.Value = metaData.ToJson();
+                var metaData = new AnalyzedVideoMetaData
+                {
+                    DateAnalyzed = new DateTime(2021, 01, 01, 12, 59, 05),
+                    Id = "12345678",
+                    PipelineId = "87654321",
+                    Thumbnail = "Thumbnail",
+                    Url = "http://localhost",
+                    VideoId = "vidid"
+                };
+                 msg2 = new Message<string, string>
+                {
+                    Key = Guid.NewGuid().ToString(),
+                    Value = metaData.ToJson().Replace("\r", "").Replace("\n", "")
+                };
+            }
+            else
+            {
+                var metaData = new AnalyzedImageMetaData
+                {
+                    DateAnalyzed = new DateTime(2021, 01, 01, 12, 59, 05),
+                    Id = "12345678",
+                    PipelineId = "87654321",
+                    Url = "http://localhost",
+                    ImageId = "imgid"
+                };
+                msg2 = new Message<string, string>
+                {
+                    Key = Guid.NewGuid().ToString(),
+                    Value = metaData.ToJson().Replace("\r", "").Replace("\n", "")
+                };
+            }
+
+            Console.WriteLine(msg2.Value);
             producer.Produce(partition, msg2);
         }
     }

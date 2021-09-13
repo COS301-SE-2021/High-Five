@@ -28,4 +28,12 @@ public interface Connection {
     void close() throws IOException;
 
     boolean isConnected();
+
+    String getConnectionId();
+
+    void setConnectionId(String connectionId);
+
+    String getUserId();
+
+    void setUserId(String userId);
 }

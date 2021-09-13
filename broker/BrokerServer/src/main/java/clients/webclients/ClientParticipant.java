@@ -1,6 +1,7 @@
 package clients.webclients;
 
 import clients.webclients.connection.Connection;
+import clients.webclients.connectionhandler.ConnectionHandler;
 import clients.webclients.strategy.*;
 import com.google.gson.*;
 import dataclasses.clientrequest.AnalysisRequest;
@@ -23,13 +24,15 @@ import java.util.Map;
  */
 public class ClientParticipant extends WebClient{
 
-    private Connection connection;
+    private final Connection connection;
+    private final ConnectionHandler connectionHandler;
     private final ServerInformationHolder informationHolder;
 
-    public ClientParticipant(Connection connection, ServerInformationHolder informationHolder) {
+    public ClientParticipant(Connection connection, ConnectionHandler handler, ServerInformationHolder informationHolder) {
         EventLogger.getLogger().info("Starting ClientParticipant session");
         this.informationHolder = informationHolder;
         this.connection = connection;
+        this.connectionHandler = handler;
     }
 
     @Override
@@ -73,10 +76,10 @@ public class ClientParticipant extends WebClient{
                     if (request.getRequestType().contains("Analyze")) {
                         EventLogger.getLogger().info("Performing analysis on uploaded media");
 
-                        new StoredMediaAnalysisStrategy().processRequest(request, informationHolder, out);
+                        new StoredMediaAnalysisStrategy().processRequest(request, informationHolder, connectionHandler, connection.getConnectionId());
                     } else {
                         EventLogger.getLogger().info("Performing live analysis request");
-                        new LiveAnalysisStrategy().processRequest(request, informationHolder, out);
+                        new LiveAnalysisStrategy().processRequest(request, informationHolder, connectionHandler, connection.getUserId());
                     }
                 } catch (Exception e) {
                     EventLogger.getLogger().logException(e);

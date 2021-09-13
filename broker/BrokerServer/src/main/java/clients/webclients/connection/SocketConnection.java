@@ -13,6 +13,8 @@ import java.net.Socket;
 public class SocketConnection implements Connection{
 
     private final Socket connection;
+    private String connectionId;
+    private String userId;
 
     public SocketConnection(Socket connection) {
         this.connection = connection;
@@ -37,5 +39,25 @@ public class SocketConnection implements Connection{
     @Override
     public boolean isConnected() {
         return connection.isConnected();
+    }
+
+    @Override
+    public String getConnectionId() {
+        return connectionId;
+    }
+
+    @Override
+    public void setConnectionId(String connectionId) {
+        this.connectionId = connectionId;
+    }
+
+    @Override
+    public String getUserId() {
+        return userId;
+    }
+
+    @Override
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

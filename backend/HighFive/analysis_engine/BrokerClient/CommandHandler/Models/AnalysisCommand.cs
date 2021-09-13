@@ -6,24 +6,29 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models
     public class AnalysisCommand
     {
         /// <summary>
-        /// Gets or Sets CpuUsage
+        /// Gets or Sets CommandId
         /// </summary>
         public string CommandId { get; set; }
 
         /// <summary>
-        /// Gets or Sets CpuUsage
+        /// Gets or Sets MediaType
         /// </summary>
         public string MediaType { get; set; }
         
         /// <summary>
-        /// Gets or Sets CpuUsage
+        /// Gets or Sets MediaId
         /// </summary>
         public string MediaId { get; set; }
         
         /// <summary>
-        /// Gets or Sets CpuUsage
+        /// Gets or Sets PipelineId
         /// </summary>
         public string PipelineId { get; set; }
+        
+        /// <summary>
+        /// Gets or Sets UserId
+        /// </summary>
+        public string UserId { get; set; }
         
         /// <summary>
         /// Returns the string presentation of the object
@@ -37,6 +42,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models
             sb.Append("  MediaType: ").Append(MediaType).Append("\n");
             sb.Append("  MediaId: ").Append(MediaId).Append("\n");
             sb.Append("  PipelineId: ").Append(PipelineId).Append("\n");
+            sb.Append("  UserId: ").Append(UserId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -89,6 +95,11 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models
                     MediaId.Equals(other.MediaId)
                 ) &&
                 (
+                    UserId == other.UserId ||
+                    UserId != null &&
+                    UserId.Equals(other.UserId)
+                ) &&
+                (
                     PipelineId == other.PipelineId ||
                     PipelineId != null &&
                     PipelineId.Equals(other.PipelineId)
@@ -113,6 +124,8 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models
                     hashCode = hashCode * 59 + MediaId.GetHashCode();
                     if (PipelineId != null)
                     hashCode = hashCode * 59 + PipelineId.GetHashCode();
+                    if (UserId != null) 
+                    hashCode = hashCode * 59 + UserId.GetHashCode();
                 return hashCode;
             }
         }

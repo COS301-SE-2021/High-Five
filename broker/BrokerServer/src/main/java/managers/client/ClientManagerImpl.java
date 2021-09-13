@@ -2,6 +2,7 @@ package managers.client;
 
 import clients.webclients.WebClient;
 import clients.webclients.connection.Connection;
+import clients.webclients.connectionhandler.ConnectionHandler;
 import dataclasses.serverinfo.ServerInformationHolder;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
@@ -12,14 +13,18 @@ import servicelocator.wrappers.ClientConnectionWrapper;
 import servicelocator.wrappers.ClientListenerWrapper;
 import servicelocator.wrappers.WebClientWrapper;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
+import java.util.UUID;
 
 /**
  * This class manages a ClientListener, which listens out for new connections,
  * and adds these new connections to a pool of participants.
  */
 public class ClientManagerImpl extends Manager {
+    private ConnectionHandler connectionHandler = new ConnectionHandler();
     public ClientManagerImpl(ServerInformationHolder holder) {
         super(holder, 8);
     }
@@ -41,9 +46,14 @@ public class ClientManagerImpl extends Manager {
                 try {
                     EventLogger.getLogger().info("Creating new client connection");
                     Connection webConnection = ClientConnectionWrapper.get(connection);
+                    webConnection.setConnectionId(UUID.randomUUID().toString());
+                    BufferedReader reader = webConnection.getReader();
+                    String userId = reader.readLine();
+                    webConnection.setUserId(userId);
+                    connectionHandler.addConnection(webConnection);
                     WebClient client = WebClientWrapper.get(webConnection, serverInformationHolder);
                     participants.execute(client);
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | IOException e) {
                     EventLogger.getLogger().logException(e);
                 }
             }
