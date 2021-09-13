@@ -86,10 +86,10 @@ namespace src.Websockets
                                 }
                                 break;
                             case "StartLiveAnalysis":   //This use case must be called by the application
-                                var streamingLinks = _analysisService.StartLiveStream(_userId).Result;
-                                await SendMessage("Livestream Started",streamingLinks.PlayLink , "info",
+                                var streamUri = _analysisService.StartLiveStream(_userId).Result;
+                                await SendMessage("Livestream Initiated",streamUri , "info",
                                     webSocket);
-                                break;
+                                continue;
                             case "Exit":
                                 await SendMessage("Socket Closed", "Connection to the socket was closed.", "info",
                                     webSocket);
