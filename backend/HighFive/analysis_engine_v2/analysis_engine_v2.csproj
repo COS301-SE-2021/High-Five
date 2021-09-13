@@ -254,6 +254,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="AnalysisObserver.cs" />
         <Compile Include="BrokerClient\Service\AnalysisClientService.cs" />
         <Compile Include="BrokerClient\Service\IAnalysisClientService.cs" />
         <Compile Include="BrokerClient\Service\Models\AnalysisToolComposite.cs" />

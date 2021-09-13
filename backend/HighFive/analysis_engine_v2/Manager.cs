@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using analysis_engine.Video;
 using analysis_engine.Video.ConcreteFrameEncoder;
 using Emgu.CV;
@@ -128,7 +129,7 @@ namespace analysis_engine
                     ReturnAnalyzedFrame(data);
                     data = _pipeline.Drain.Pop();
                 }
-                //TODO Finish encoding
+                
             });
         }
     }
