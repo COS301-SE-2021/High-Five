@@ -80,7 +80,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About
 
-High Five is a real-time image analysis platform for images and videos taken by drone cameras. Users can add and customize the platform with the type of analysis that must be performed. Examples include counting cars in a parking lot, property surveillance or mapping, and color depth analysis for agricultural purposes - to name a few.
+High Five is a real-time image analysis platform for images and videos taken by drone cameras. Users can add and customize the platform with the type of analysis that must be performed. Examples include counting cars in a parking lot, property surveillance or mapping. The platform allows users to write and upload their own analysis tools. A livestream feed from a drone camera can also be analysed through either the system's default tools, or user's custom tools.
 
 ### Project Links
 * []()[GitHub Project Board](https://github.com/COS301-SE-2021/High-Five/projects/1)
