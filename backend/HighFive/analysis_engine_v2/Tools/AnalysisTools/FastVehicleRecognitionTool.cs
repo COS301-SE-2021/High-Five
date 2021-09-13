@@ -44,7 +44,7 @@ namespace analysis_engine
         public override Data Process(Data data)
         {
             var image = data.Frame.Image;
-            var input = np.array(image.Data);
+            var input = np.array(image.Bytes);
 
             int[] dimensions = { 1, image.Height, image.Width, 3 };
             var inputTensor = new DenseTensor<byte>(input.reshape(image.Height*image.Width*3).ToArray<byte>(),dimensions);

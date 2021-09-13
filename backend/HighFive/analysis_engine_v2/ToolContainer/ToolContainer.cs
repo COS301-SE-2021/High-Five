@@ -51,16 +51,25 @@ namespace analysis_engine
                     {
                         if (count % 3 == 0)
                         {
-                            data = Tool.Process(Input.Pop());
-                            meta = data.Meta;
-                            if (data != null)
+                            var temp = Input.Pop();
+                            if (temp == null)
                             {
-                                Output.Push(data);
+                                Output.Push(null);
+                                break;
                             }
+                            data = Tool.Process(temp);
+                            meta = data.Meta;
+                            Output.Push(data);
                         }
                         else
                         {
-                            data = Input.Pop();
+                            var temp = Input.Pop();
+                            if (temp == null)
+                            {
+                                Output.Push(null);
+                                break;
+                            }
+                            data = temp;
                             data.Meta = meta;
                             Output.Push(data);
                         }

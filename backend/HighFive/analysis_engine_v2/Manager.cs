@@ -67,12 +67,12 @@ namespace analysis_engine
 
         private Data GetNextFrame()
         {
-            Data temp = _dataPool.GetData();
             var image = _frameGrabber.GetNextFrame();
             if (image == null)
             {
                 return null;
             }
+            Data temp = _dataPool.GetData();
             temp.Frame.Image = image;
             temp.Frame.FrameID = _frameCount;
             _frameCount++;
@@ -121,6 +121,7 @@ namespace analysis_engine
                     _pipeline.Source.Push(data);
                     data = GetNextFrame();
                 }
+                _pipeline.Source.Push(null);
             });
 
             Task.Factory.StartNew(() =>

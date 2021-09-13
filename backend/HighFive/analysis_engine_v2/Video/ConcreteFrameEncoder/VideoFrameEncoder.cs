@@ -12,7 +12,7 @@ namespace analysis_engine.Video.ConcreteFrameEncoder
         public VideoFrameEncoder(string url, Size size)
         {
             _url = url;
-            _videoWriter = new VideoWriter(_url, VideoWriter.Fourcc('M', 'P', '4', 'V'), 30,
+            _videoWriter = new VideoWriter(_url, VideoWriter.Fourcc('m', 'p', '4', 'v'), 30,
                 size, true);
         }
 

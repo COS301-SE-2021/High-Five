@@ -1,3 +1,4 @@
+using System;
 using Emgu.CV;
 using Emgu.CV.Structure;
 
@@ -12,7 +13,8 @@ namespace analysis_engine.Video
 
         public override Image<Rgb, byte> GetNextFrame()
         {
-            return Capture.QueryFrame().ToImage<Rgb, byte>();
+            var frame = Capture.QueryFrame();
+            return frame?.ToImage<Rgb, byte>();
         }
     }
 }
