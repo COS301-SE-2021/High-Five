@@ -20,6 +20,7 @@ namespace src.Websockets
         private readonly IConfiguration _configuration;
         private bool _baseContainerSet;
         private string _userId;
+        private bool _listeningForBroadcast;
 
         public WebsocketController(IAnalysisService analysisService, IConfiguration configuration)
         {
@@ -35,7 +36,6 @@ namespace src.Websockets
                 using var webSocket = await 
                     HttpContext.WebSockets.AcceptWebSocketAsync();
                 await SendMessage("Connected", "You have connected to the socket server.", "info", webSocket);
-                ListenForBrokerMessage(webSocket);
                 while (webSocket.State == WebSocketState.Open)
                 {
                     var responseTitle = string.Empty;
@@ -45,6 +45,11 @@ namespace src.Websockets
                     {
                         var request = ReceiveMessage(webSocket).Result;
                         ConfigureStorageManager(request);
+                        if (!_listeningForBroadcast)
+                        {
+                            ListenForBrokerMessage(webSocket);
+                            _listeningForBroadcast = true;
+                        }
                         if (request == null)
                         {
                             await SendMessage("Invalid Format", "Request is not structured correctly.", "error",
@@ -54,6 +59,8 @@ namespace src.Websockets
 
                         switch (request.Request)
                         {
+                            case "Synchronize":
+                                continue;
                             case "AnalyzeImage":
                                 var analyzedImage = _analysisService.AnalyzeImage(request).Result;
                                 if (analyzedImage == null)
@@ -86,9 +93,8 @@ namespace src.Websockets
                                 }
                                 break;
                             case "StartLiveAnalysis":   //This use case must be called by the application
-                                var streamUri = _analysisService.StartLiveStream(_userId).Result;
-                                await SendMessage("Livestream Initiated",streamUri , "info",
-                                    webSocket);
+                                await _analysisService.StartLiveStream(_userId);
+                                
                                 continue;
                             case "Exit":
                                 await SendMessage("Socket Closed", "Connection to the socket was closed.", "info",
@@ -125,6 +131,7 @@ namespace src.Websockets
             {
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             }
+            _analysisService.CloseBrokerSocket();
         }
         
         private static async Task SendMessage(string title, string message, string type, WebSocket webSocket)
@@ -150,23 +157,24 @@ namespace src.Websockets
             }
         }
 
-        private async Task ListenForBrokerMessage(WebSocket socket)
+        private async Task ListenForBrokerMessage(WebSocket webClientSocket)
         {
             /*
              * Listens for messages from the Broker, will only send a message to the
              * front-end if a livestream started notification is pushed through.
              */
-            
-            while (socket.State != WebSocketState.Closed)
+            var socket = new WebSocketClient();
+            await socket.Connect(_configuration["BrokerUri"], _userId);
+            while (webClientSocket.State != WebSocketState.Closed)
             {
-                var message = _analysisService.ListenForMessage();
-                if (!message.Contains("Livestream Started"))
+                var message = socket.Receive().Result;
+                if (!message.Contains("playLink"))
                 {
                     continue;
                 }
-                var infoObject = JsonConvert.DeserializeObject<SocketResponseBody>(message);
-                await SendMessage("Livestream Started", infoObject.message, "info", socket);
+                await SendMessage("Livestream Started", message, "info", webClientSocket);
             }
+            socket.Close();
         }
         
         private void ConfigureStorageManager(SocketRequest request)
