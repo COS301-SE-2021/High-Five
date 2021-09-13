@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using analysis_engine_v2.BrokerClient.Service.Models;
-using broker_analysis_client.Client;
 using broker_analysis_client.Client.Models;
 using broker_analysis_client.Storage;
 using Newtonsoft.Json;
@@ -60,7 +59,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
         public string GetVideo(string videoId)
         {
             /*
-             * Returns video as byte array
+             * Returns video as url
              */
             var video = _storageManager.GetFile(videoId + ".mp4", "video").Result;
 
@@ -70,7 +69,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
         public string GetImage(string imageId)
         {
             /*
-             * Returns image as byte array
+             * Returns image as url
              */
             var image = _storageManager.GetFile(imageId + ".mp4", "image").Result;
 
@@ -185,7 +184,8 @@ namespace analysis_engine_v2.BrokerClient.Storage
                 "D0" => "analysis:people",
                 "D1" => "analysis:animal",
                 "D2" => "analysis:vehicles",
-                "D3" => "drawing:boxes",
+                "D3" => "analysis:vehicles-1",
+                "D4" => "drawing:boxes",
                 _ => "dynamic:" + toolId
             };
         }
