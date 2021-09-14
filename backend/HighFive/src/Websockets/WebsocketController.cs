@@ -26,11 +26,11 @@ namespace src.Websockets
         private string _userId;
         private bool _listeningForBroadcast;
 
-        public WebsocketController(IStorageManager storageManager, IMediaStorageService mediaStorageService,
-            IPipelineService pipelineService, IConfiguration configuration, ILivestreamingService livestreamingService)
+        public WebsocketController(IAnalysisService analysisService, IConfiguration configuration)
         {
-            _analysisService = new AnalysisService(storageManager, mediaStorageService, pipelineService, configuration, livestreamingService);
+            //_analysisService = new AnalysisService(storageManager, mediaStorageService, pipelineService, configuration, livestreamingService);
             _configuration = configuration;
+            _analysisService = analysisService;
             _baseContainerSet = false;
         }
         
@@ -54,22 +54,22 @@ namespace src.Websockets
                         {
                             await SendMessage("Invalid Format", "Request is null", "error",
                                 webSocket);
-                            continue;
+                            break;
                         }
                         
                         switch (request.Request)
                         {
                             case "Synchronize": //Should be called from client before any other function
-                                await SendMessage("Socket Synchronized", "Socket has been synchronized.", "info",
-                                    webSocket);
-                                continue;
+                                await _analysisService.Synchronise(request);
+                                await SendMessage("Synchronized", "Socket has been synchronized with broker.", "info", webSocket);
+                                break;
                             case "AnalyzeImage":
                                 var analyzedImage = _analysisService.AnalyzeImage(request).Result;
                                 if (analyzedImage == null)
                                 {
                                     responseTitle = "Image Analysis Error";
                                     responseBody = "Invalid pipeline- or media id provided.";
-                                    responseType = "error";
+                                    responseType = "syn";
                                 }
                                 break;
                             case "AnalyzeVideo":
@@ -83,7 +83,7 @@ namespace src.Websockets
                                 break;
                             case "StartLiveAnalysis":   //This use case must be called by the application
                                 await _analysisService.StartLiveStream(_userId);
-                                continue;
+                                break;
                             case "Exit":
                                 await SendMessage("Socket Closed", "Connection to the socket was closed.", "info",
                                     webSocket);
@@ -111,11 +111,11 @@ namespace src.Websockets
                         await SendMessage("Unauthorized", "Invalid jwt provided.", "error", webSocket);
                         continue;
                     }
-                    catch (Exception e)
+                    /*catch (Exception e)
                     {
-                        await SendMessage("Internal Error", e.StackTrace, "error", webSocket);
+                        await SendMessage("Internal Error", e.Message, "error", webSocket);
                         continue;
-                    }
+                    }*/
 
                     if (!responseTitle.Equals(string.Empty))// This means an error has occurred
                     {
@@ -166,11 +166,18 @@ namespace src.Websockets
             /*
              * Listens for messages from the Broker.
              */
+            
             try
             {
                 while (true)
                 {
                     var message = ((AnalysisService) _analysisService).AnalysisSocket.Receive().Result;
+                    if (message.Contains("ACK"))
+                    {
+                        await SendMessage("Socket Synchronized", "Socket has been synchronized with broker.", "info",
+                            webClientSocket);
+                        continue;
+                    }
                     if (message.Contains("VideoId"))
                     {
                         await SendMessage("Video Analysed", JsonConvert.DeserializeObject(message), "success",
@@ -212,7 +219,6 @@ namespace src.Websockets
             {
                 return;
             }
-
             _baseContainerSet = true;
             var tokenString = request.Authorization;
             if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
