@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace analysis_engine
 {
@@ -8,10 +9,13 @@ namespace analysis_engine
         public Tool Tool { get; set; }
         public Pipe Input { get; set; }
         public Pipe Output { get; set; }
+
+        public const int FrameSkipper = 5;
         
+        public bool Last;
         public FilterManager Manager { get; set; }
         
-        public ToolContainer(Tool tool, Pipe input, Pipe output, FilterManager manager)
+        public ToolContainer(Tool tool, Pipe input, Pipe output, FilterManager manager, bool last)
         {
             Tool = tool; 
             Input = input;
@@ -27,12 +31,55 @@ namespace analysis_engine
             _running = true;
             Task.Factory.StartNew(() =>
             {
-                while (_running)
+                if (Last)
                 {
-                    Data temp = Input.Pop();
-                    if (temp != null)
+                    while (_running)
                     {
-                        Output.Push(Tool.Process(temp));
+                        var temp = Input.Pop();
+                        if (temp != null)
+                        {
+                            Output.Push(Tool.Process(temp));
+                        }
+                        else
+                        {
+                            Output.Push(null);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    var count = 0;
+                    Data data = null;
+                    List<MetaData> meta = null;
+                    while (_running)
+                    {
+                        if (count % FrameSkipper == 0)
+                        {
+                            var temp = Input.Pop();
+                            if (temp == null)
+                            {
+                                Output.Push(null);
+                                break;
+                            }
+                            data = Tool.Process(temp);
+                            meta = data.Meta;
+                            Output.Push(data);
+                        }
+                        else
+                        {
+                            var temp = Input.Pop();
+                            if (temp == null)
+                            {
+                                Output.Push(null);
+                                break;
+                            }
+                            data = temp;
+                            data.Meta = meta;
+                            Output.Push(data);
+                        }
+
+                        count++;
                     }
                 }
             });

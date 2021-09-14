@@ -24,6 +24,12 @@
                 case "vehicles-1":
                     Tool = new SelfDrawingAnimalRecognitionTool();
                     break;
+                case "fastvehicles":
+                    Tool = new FastVehicleRecognitionTool();
+                    break;
+                case "fastpeople":
+                    Tool = null;
+                    break;
             }
         }
 

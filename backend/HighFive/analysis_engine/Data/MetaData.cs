@@ -1,6 +1,8 @@
+using System;
+
 namespace analysis_engine
 {
-    public abstract class MetaData
+    public abstract class MetaData: MarshalByRefObject
     {
         
     }

@@ -15,7 +15,6 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
         /// Mocks the command handler interface by waiting 30 seconds and returning a fake result
         /// </summary>
         /// <param name="command"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public void HandleCommand(AnalysisCommand command)
         {
             var clientId = Environment.GetEnvironmentVariable("ENGINE_CLIENT_ID");

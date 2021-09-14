@@ -1,12 +1,13 @@
-﻿using System;
+using System;
+using analysis_engine.BrokerClient;
 
 namespace analysis_engine
 {
-    public class AnalysisToolContainerBuilder : ToolContainerBuilder
+    public class DynamicToolContainerBuilder : ToolContainerBuilder
     {
         public override void buildContainer(bool last)
         {
-            this._toolContainer = new AnalysisToolContainer();
+            this._toolContainer = new DynamicToolContainer();
             _toolContainer.Last = last;
         }
 
@@ -22,7 +23,7 @@ namespace analysis_engine
 
         public override void addTool(String toolName)
         {
-            var toolBuilder = new AnalysisToolBuilder();
+            var toolBuilder = new DynamicToolBuilder();
             toolBuilder.BuildTool(toolName);
             _toolContainer.Tool = toolBuilder.GetTool();
         }

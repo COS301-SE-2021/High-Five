@@ -27,6 +27,7 @@ public class ClientParticipant extends WebClient{
     private final ConnectionHandler connectionHandler;
     private final ServerInformationHolder informationHolder;
     private static final String CLOSECONNECTION = "closeconnection";
+    private static final String SYN = "Syn";
 
     public ClientParticipant(Connection connection, ConnectionHandler handler, ServerInformationHolder informationHolder) {
         EventLogger.getLogger().info("Starting ClientParticipant session");
@@ -61,6 +62,15 @@ public class ClientParticipant extends WebClient{
                     continue;
                 }
 
+                //When a client asks to synchronise, then send and acknowledgement
+                if (requestData.substring(0, SYN.length()).contains(SYN)) {
+                    ResponseObject responseObject = new ResponseObject("none", null, "ACK", connection.getConnectionId());
+                    connectionHandler.onNext(responseObject);
+                    continue;
+                }
+
+                //If the client closes the connection, tell the connection handler
+                //to remove the connection and exit this function
                 if (requestData.length() >= CLOSECONNECTION.length() &&
                         requestData.substring(0, CLOSECONNECTION.length()).contains(CLOSECONNECTION)) {
                     EventLogger.getLogger().info("Client has disconnected");

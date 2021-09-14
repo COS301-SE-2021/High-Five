@@ -9,6 +9,7 @@
         <PackageReference Include="Confluent.Kafka" Version="1.7.0" />
         <PackageReference Include="Emgu.CV" Version="4.5.3.4721" />
         <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.0-3.final" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
         <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.8.1" />
         <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.8.1" />
@@ -21,5 +22,11 @@
 
     <ItemGroup>
       <Folder Include="BrokerClient" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="System.Security.Permissions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+        <HintPath>..\..\..\..\..\..\..\..\..\..\..\..\usr\share\dotnet\packs\Microsoft.AspNetCore.App.Ref\5.0.0\ref\net5.0\System.Security.Permissions.dll</HintPath>
+      </Reference>
     </ItemGroup>
 </Project>

@@ -13,7 +13,7 @@ namespace analysis_engine
 {
     public class FastVehicleRecognitionTool : AnalysisTool
     {
-        private const string ModelPath = @"C:/ssd_mobilenet_v1_10.onnx";
+        private const string ModelPath = @"../../Models/ssd_mobilenet_v1_10.onnx";
         private InferenceSession _model;
         private string _modelInputLayerName;
         private const double MinScore=0.50;
@@ -44,10 +44,11 @@ namespace analysis_engine
         public override Data Process(Data data)
         {
             var image = data.Frame.Image;
-            var input = np.array(image.Data);
+            var input = np.array(image.Bytes);
 
             int[] dimensions = { 1, image.Height, image.Width, 3 };
             var inputTensor = new DenseTensor<byte>(input.reshape(image.Height*image.Width*3).ToArray<byte>(),dimensions);
+            //var inputTensor = new DenseTensor<byte>(image.Bytes,dimensions);
             
             var modelInput = new List<NamedOnnxValue>
             {
@@ -78,14 +79,14 @@ namespace analysis_engine
                 if (scores[i] > MinScore && labels[i]>=MinClass && labels[i]<=MaxClass)
                 {
                     output.Classes.Add(_classes[Convert.ToInt32(labels[i]-1)]);
-                    output.Boxes.Add(boxes[i * 4] * width);
-                    output.Boxes.Add(boxes[i * 4 + 1] * height);
-                    output.Boxes.Add(boxes[i * 4 + 2] * width - boxes[i * 4] * width);
-                    output.Boxes.Add(boxes[i * 4 + 3] * height - boxes[i * 4 + 1] * height);
+                    output.Boxes.Add(boxes[i * 4 + 1] * width);
+                    output.Boxes.Add(boxes[i * 4] * height);
+                    output.Boxes.Add(boxes[i * 4 + 3] * width - boxes[i * 4 + 1] * width);
+                    output.Boxes.Add(boxes[i * 4 + 2] * height - boxes[i * 4] * height);
                 }
             }
-            
-            return DrawBoxes(data, output);
+            data.Meta.Add(output);
+            return data;//DrawBoxes(data, output);
         }
         
         private Data DrawBoxes(Data data, BoxCoordinateData output)
