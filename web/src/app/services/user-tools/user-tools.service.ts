@@ -48,6 +48,7 @@ export class UserToolsService {
     try {
       this.toolsService.uploadAnalysisToolForm(classFile, model, type, name, 'response').subscribe((res) => {
         if (res.ok) {
+          this.userTools = this.userTools.concat(res.body);
           this.snotifyService.success('Successfully added analysis tool : ' + name, 'Tool Addition');
         } else {
           this.snotifyService.error('Could not add tool : ' + name + ' please contact an admin', 'Tool Addition');
@@ -63,6 +64,7 @@ export class UserToolsService {
     try {
       this.toolsService.uploadDrawingToolForm(classFile, type, name, 'response').subscribe((res) => {
         if (res.ok) {
+          this.userTools = this.userTools.concat(res.body);
           this.snotifyService.success('Successfully added drawing tool tool : ' + name, 'Tool Addition');
         } else {
           this.snotifyService.error('Could not add tool : ' + name + ' please contact an admin', 'Tool Addition');
