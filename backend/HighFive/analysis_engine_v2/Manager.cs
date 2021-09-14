@@ -89,17 +89,18 @@ namespace analysis_engine
                 {
                     case "video":
                         _frameEncoder =
-                            new VideoFrameEncoder(@"C:\Users\hanne\RiderProjects\output.mp4", data.Frame.Image.Size);
+                            new VideoFrameEncoder(_outputUrl, data.Frame.Image.Size);
                         break;
                     case "stream":
-                        //TODO encoding stream start
+                        _frameEncoder =
+                            new VideoFrameEncoder(_outputUrl, data.Frame.Image.Size);
                         break;
                     case "image":
-                        _frameEncoder = new ImageFrameEncoder(@"C:\Users\hanne\RiderProjects\output.jpg");
+                        _frameEncoder = new ImageFrameEncoder(_outputUrl);
                         break;
                     default:
                         _frameEncoder =
-                            new VideoFrameEncoder(@"C:\Users\hanne\RiderProjects\output.mp4", data.Frame.Image.Size);
+                            new VideoFrameEncoder(_outputUrl, data.Frame.Image.Size);
                         break;
                 }
             }
