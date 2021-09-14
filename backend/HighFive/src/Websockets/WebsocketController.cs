@@ -45,18 +45,13 @@ namespace src.Websockets
                     {
                         var request = ReceiveMessage(webSocket).Result;
                         ConfigureStorageManager(request);
-                        if (!_listeningForBroadcast)
-                        {
-                            ListenForBrokerMessage(webSocket);
-                            _listeningForBroadcast = true;
-                        }
                         if (request == null)
                         {
                             await SendMessage("Invalid Format", "Request is null", "error",
                                 webSocket);
                             continue;
                         }
-
+                        
                         switch (request.Request)
                         {
                             case "Synchronize": //Should be called from client before any other function
@@ -92,6 +87,11 @@ namespace src.Websockets
                                 await SendMessage("Invalid Format", "Invalid request parameter set.", "error",
                                     webSocket);
                                 continue;
+                        }
+                        if (!_listeningForBroadcast)
+                        {
+                            Task.Run(() =>ListenForBrokerMessage(webSocket));
+                            _listeningForBroadcast = true;
                         }
                     }
                     catch (JsonSerializationException)
@@ -161,11 +161,11 @@ namespace src.Websockets
             while (webClientSocket.State != WebSocketState.Closed)
             {
                 var message = ((AnalysisService)_analysisService).AnalysisSocket.Receive().Result;
-                if (message.Contains("videoId"))
+                if (message.Contains("VideoId"))
                 {
                     await SendMessage("Video Analysed", JsonConvert.DeserializeObject(message) , "success", webClientSocket);
                 }
-                else if (message.Contains("imageId"))
+                else if (message.Contains("ImageId"))
                 {
                     await SendMessage("Image Analysed", JsonConvert.DeserializeObject(message) , "success", webClientSocket);
                 }
@@ -186,6 +186,11 @@ namespace src.Websockets
                 await SendMessage("Livestream Started", JsonConvert.DeserializeObject(message) , "info", webClientSocket);
             }
             socket.Close();*/
+        }
+
+        private async Task CheckMessageToSend(string message, WebSocket webClientSocket)
+        {
+
         }
         
         private void ConfigureStorageManager(SocketRequest request)

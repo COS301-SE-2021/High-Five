@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Org.OpenAPITools.Models;
+using src.Subsystems.Admin;
 
 namespace src.Storage
 {
@@ -30,9 +31,11 @@ namespace src.Storage
         private readonly Random _random;
         private const string Alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
         private string _baseContainer;
+        private readonly IAdminValidator _adminValidator;
         
-        public MockStorageManager()
+        public MockStorageManager(IAdminValidator adminValidator)
         {
+            _adminValidator = adminValidator;
             /*
              *      Description:
              * The default constructor of the class will instantiate a new mockContainer list that will
@@ -182,14 +185,37 @@ namespace src.Storage
             
         }
 
-        public Task<List<User>> GetAllUsers()
+        public async Task<List<User>> GetAllUsers()
         {
-            throw new NotImplementedException();
+            var mockUserList = new List<User>();
+            mockUserList.Add(new User
+            {
+                Email = "user1@email.com",
+                Id = "U0",
+                DisplayName = "User0",
+                IsAdmin = _adminValidator.IsAdmin("U0")
+            });
+            mockUserList.Add(new User
+            {
+                Email = "user1@email.com",
+                Id = "U1",
+                DisplayName = "User1",
+                IsAdmin = _adminValidator.IsAdmin("U1")
+            });
+            mockUserList.Add(new User
+            {
+                Email = "user2@email.com",
+                Id = "U2",
+                DisplayName = "User2",
+                IsAdmin = _adminValidator.IsAdmin("U3")
+            });
+
+            return mockUserList;
         }
 
-        public Task DeleteAllFilesInContainer(string container)
+        public async Task DeleteAllFilesInContainer(string container)
         {
-            return null;
+            _mockContainer.Clear();
         }
 
         public string RandomString(int length=5)
