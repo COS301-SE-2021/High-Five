@@ -32,12 +32,12 @@ public class ConnectionHandler implements Observer<ResponseObject> {
                     if (responseObject.requestType.equals("StartLiveAnalysis")) {
                         isRight = connection.getUserId().contains(responseObject.userId);
                         if (isRight) {
-                            EventLogger.getLogger().info("Broadcasting server information to connections with client id" + responseObject.userId);
+                            EventLogger.getLogger().info("Broadcasting server information to connections with client id " + responseObject.userId);
                         }
                     } else {
                         isRight = connection.getConnectionId().contains(responseObject.connectionId);
                         if (isRight) {
-                            EventLogger.getLogger().info("Broadcasting server information to connections with connection id" + responseObject.connectionId);
+                            EventLogger.getLogger().info("Broadcasting server information to connections with connection id " + responseObject.connectionId);
                         }
                     }
                     return isRight;

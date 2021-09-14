@@ -20,6 +20,7 @@ public class TopicManager {
     private final ReentrantLock lock = new ReentrantLock();
     private final ReentrantLock responseLock = new ReentrantLock();
     private final Executor actionExecutor = Executors.newFixedThreadPool(2);
+    private final ReentrantLock topicLock = new ReentrantLock();
     private Map<String, String> responseIds;
 
     private TopicManager() {
@@ -52,13 +53,17 @@ public class TopicManager {
         lock.lock();
         try {
             actionExecutor.execute(() -> {
+                topicLock.lock();
                 String exec = System.getenv("KAFKA_DELETE_TOPIC").replace("{topic}", topic);
                 try {
                     ProcessBuilder builder = new ProcessBuilder(exec.split(" "));
-                    builder.start();
+                    Process proc = builder.start();
                     deleteServer(topic);
-                } catch (IOException e) {
+                    proc.waitFor();
+                } catch (IOException | InterruptedException e) {
                     EventLogger.getLogger().error(e.getMessage());
+                } finally {
+                    topicLock.unlock();
                 }
             });
         }finally {
@@ -75,6 +80,7 @@ public class TopicManager {
         lock.lock();
         try {
             actionExecutor.execute(() -> {
+                topicLock.lock();
                 EventLogger.getLogger().info("Creating topic " + topic);
                 ProcessBuilder builder = new ProcessBuilder(System.getenv("KAFKA_CREATE_TOPIC").
                         replace("{topic}", topic).split(" "));
@@ -83,6 +89,8 @@ public class TopicManager {
                     proc.waitFor();
                 } catch (IOException | InterruptedException e) {
                     EventLogger.getLogger().logException(e);
+                } finally {
+                    topicLock.unlock();
                 }
             });
         }finally {
