@@ -122,5 +122,18 @@ namespace Org.OpenAPITools.Controllers
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
         public abstract IActionResult RemoveTools([FromBody]RemoveToolsRequest removeToolsRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Set Live Pipeline use case</remarks>
+        /// <param name="getPipelineRequest"></param>
+        /// <response code="200">Tools have been removed from pipeline</response>
+        [HttpPost]
+        [Route("/pipelines/setLivePipeline")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult SetLivePipeline([FromBody]GetPipelineRequest getPipelineRequest);
     }
 }
