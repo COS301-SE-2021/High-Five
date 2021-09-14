@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
 using analysis_engine_v2.BrokerClient.Storage;
+using broker_analysis_client.Client.Models;
 using Microsoft.CodeAnalysis;
 
 namespace analysis_engine.BrokerClient
@@ -37,7 +38,10 @@ namespace analysis_engine.BrokerClient
              * error within the user's uploaded code.
              */
 
-            var toolFiles = _analysisStorageManager.GetAnalysisTool(toolId);
+            var toolFiles = _analysisStorageManager.GetAnalysisTool(toolId) ?? new AnalysisToolComposite
+            {
+                SourceCode = _analysisStorageManager.GetDrawingTool(toolId)
+            };
 
             var assemblyBytes = DynamicCompiler.Compile(toolFiles.SourceCode);
             var dynamicTool = (DynamicTool) _restrictedDomain.CreateInstanceAndUnwrap(

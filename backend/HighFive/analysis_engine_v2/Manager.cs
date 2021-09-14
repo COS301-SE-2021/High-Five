@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using analysis_engine.Video;
+using analysis_engine.Video.ConcreteFrameEncoder;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -14,10 +16,13 @@ namespace analysis_engine
         private int _frameCount;
         private FrameGrabber _frameGrabber;
         private string _outputUrl;
-        private bool _isStream;
-        public Manager()
+        private FrameEncoder _frameEncoder=null;
+        private string _mediaType;
+        private AnalysisObserver _analysisObserver;
+        public Manager(AnalysisObserver analysisObserver)
         {
             _frameCount = 0;
+            _analysisObserver=analysisObserver;
         }
 
         public void CreatePipeline(string type, string pipelineString)
@@ -36,27 +41,24 @@ namespace analysis_engine
 
         public void GiveLinkToFootage(string mediaType, string url, string outputUrl="")
         {
+            _mediaType = mediaType;
             switch (mediaType)
             {
                 case "video":
                     _frameGrabber = new VideoFrameGrabber();
                     _frameGrabber.Init(url);
-                    _isStream = false;
                     break;
                 case "stream":
                     _frameGrabber = new StreamFrameGrabber();
                     _frameGrabber.Init(url);
-                    _isStream = true;
                     break;
                 case "image":
                     _frameGrabber = new ImageFrameGrabber();
                     _frameGrabber.Init(url);
-                    _isStream = false;
                     break;
                 default:
                     _frameGrabber = new VideoFrameGrabber();
                     _frameGrabber.Init(url);
-                    _isStream = false;
                     break;
             }
             
@@ -65,12 +67,12 @@ namespace analysis_engine
 
         private Data GetNextFrame()
         {
-            Data temp = _dataPool.GetData();
             var image = _frameGrabber.GetNextFrame();
             if (image == null)
             {
                 return null;
             }
+            Data temp = _dataPool.GetData();
             temp.Frame.Image = image;
             temp.Frame.FrameID = _frameCount;
             _frameCount++;
@@ -80,6 +82,30 @@ namespace analysis_engine
         private void ReturnAnalyzedFrame(Data data)
         {
             _dataPool.ReleaseData(data);
+
+            if (_frameEncoder == null)
+            {
+                switch (_mediaType)
+                {
+                    case "video":
+                        _frameEncoder =
+                            new VideoFrameEncoder(_outputUrl, data.Frame.Image.Size);
+                        break;
+                    case "stream":
+                        _frameEncoder =
+                            new VideoFrameEncoder(_outputUrl, data.Frame.Image.Size);
+                        break;
+                    case "image":
+                        _frameEncoder = new ImageFrameEncoder(_outputUrl);
+                        break;
+                    default:
+                        _frameEncoder =
+                            new VideoFrameEncoder(_outputUrl, data.Frame.Image.Size);
+                        break;
+                }
+            }
+            _frameEncoder.AddFrame(data);
+
         }
 /*
  * This function calls the pipeline Init function to start all the Tool threads.
@@ -92,33 +118,22 @@ namespace analysis_engine
             Task.Factory.StartNew(() =>
             {
                 var data = GetNextFrame();
-                var skipdata = data;
                 while (data!=null){
-                    if (_frameCount % 3 == 1)
-                    {
-                        _pipeline.Source.Push(data);
-                        skipdata = data;
-                    }
-                    else
-                    {
-                        drawFilter.Input.Push(data);
-                    }
-                    
+                    _pipeline.Source.Push(data);
                     data = GetNextFrame();
-                    if (_frameCount % 3 != 1)
-                    {
-                        data.Meta = skipdata.Meta;
-                    }
                 }
+                _pipeline.Source.Push(null);
             });
 
             Task.Factory.StartNew(() =>
             {
-                Data temp = _pipeline.Drain.Pop();
-                if (temp != null)
+                var data = _pipeline.Drain.Pop();
+                while (data != null)
                 {
-                    ReturnAnalyzedFrame(temp);
+                    ReturnAnalyzedFrame(data);
+                    data = _pipeline.Drain.Pop();
                 }
+                _analysisObserver.AnalysisFinished();
             });
         }
     }
