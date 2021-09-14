@@ -111,7 +111,7 @@ namespace Org.OpenAPITools.Controllers
         [Route("/tools/uploadAnalysisTool")]
         [Consumes("multipart/form-data")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        [ProducesResponseType(statusCode: 200, type: typeof(Tool))]
         public abstract IActionResult UploadAnalysisTool(IFormFile sourceCode, IFormFile model, [FromForm (Name = "metadataType")]string metadataType, [FromForm (Name = "toolName")]string toolName);
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Org.OpenAPITools.Controllers
         [Route("/tools/uploadDrawingTool")]
         [Consumes("multipart/form-data")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        [ProducesResponseType(statusCode: 200, type: typeof(Tool))]
         public abstract IActionResult UploadDrawingTool(IFormFile sourceCode, [FromForm (Name = "metadataType")]string metadataType, [FromForm (Name = "toolName")]string toolName);
     }
 }

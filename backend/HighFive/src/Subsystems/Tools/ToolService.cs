@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Accord.Math;
+using IronPython.Modules;
 using IronPython.Runtime.Operations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis;
@@ -27,8 +28,11 @@ namespace src.Subsystems.Tools
         
         public async Task<Tool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataType, string toolName)
         {
+            if (sourceCode == null || model == null)
+            {
+                return null;
+            }
             var generatedToolName = _storageManager.HashMd5(toolName);
-
             var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
             var sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".cs", ContainerName+ "/analysis/" + generatedToolName).Result;
             if (sourceCodeFile == null)
@@ -44,8 +48,11 @@ namespace src.Subsystems.Tools
             sourceCodeFile.AddMetadata("modelName", model.FileName);
             var modelFile = _storageManager
                 .CreateNewFile(modelName + "." + modelNameArr[^1], ContainerName + "/analysis/" + generatedToolName).Result;
-            modelFile.AddMetadata("modelName", model.FileName);
-            await modelFile.UploadFile(model);
+            if (modelFile != null)
+            {
+                modelFile.AddMetadata("modelName", model.FileName);
+                await modelFile?.UploadFile(model);
+            }
 
             AddToToolsFile(generatedToolName, "analysis", metadataType);
             return new Tool
@@ -59,6 +66,10 @@ namespace src.Subsystems.Tools
 
         public async Task<Tool> UploadDrawingTool(IFormFile sourceCode, string metadataType, string toolName)
         {
+            if (sourceCode == null)
+            {
+                return null;
+            }
             var generatedToolName = _storageManager.HashMd5(toolName);
             var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
             var sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".cs", ContainerName+ "/drawing/" + generatedToolName).Result;
