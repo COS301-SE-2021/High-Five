@@ -56,6 +56,7 @@
         <Compile Include="AnalysisObserver.cs" />
         <Compile Include="BrokerClient\BrokerClient.cs" />
         <Compile Include="BrokerClient\CommandHandler\Command.cs" />
+        <Compile Include="BrokerClient\CommandHandler\CommandHandler\CommandHandler.cs" />
         <Compile Include="BrokerClient\CommandHandler\CommandHandler\ICommandHandler.cs" />
         <Compile Include="BrokerClient\CommandHandler\CommandHandler\MockCommandHandler.cs" />
         <Compile Include="BrokerClient\CommandHandler\ICommand.cs" />

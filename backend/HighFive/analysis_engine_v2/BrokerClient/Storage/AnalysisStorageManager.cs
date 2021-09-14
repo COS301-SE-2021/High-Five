@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using analysis_engine_v2.BrokerClient.Service.Models;
-using broker_analysis_client.Client;
 using broker_analysis_client.Client.Models;
 using broker_analysis_client.Storage;
 using Newtonsoft.Json;
@@ -57,32 +56,24 @@ namespace analysis_engine_v2.BrokerClient.Storage
             return response;
         }
 
-        public async Task<string> GetVideo(string videoId)
+        public string GetVideo(string videoId)
         {
             /*
-             * Returns video as byte array
+             * Returns video as url
              */
             var video = _storageManager.GetFile(videoId + ".mp4", "video").Result;
-            if (video == null)
-            {
-                return null;
-            }
 
-            return video.GetUrl();
+            return video?.GetUrl();
         }
 
-        public async Task<string> GetImage(string imageId)
+        public string GetImage(string imageId)
         {
             /*
-             * Returns image as byte array
+             * Returns image as url
              */
             var image = _storageManager.GetFile(imageId + ".mp4", "image").Result;
-            if (image == null)
-            {
-                return null;
-            }
 
-            return image.GetUrl();
+            return image?.GetUrl();
         }
 
         public AnalysisToolComposite GetAnalysisTool(string toolId)
@@ -112,10 +103,10 @@ namespace analysis_engine_v2.BrokerClient.Storage
 
             var response = new AnalysisToolComposite
             {
-                ModelPath = Path.GetTempFileName()
+                ModelPath = Directory.GetCurrentDirectory() + "/Models"
             };
 
-            var model = File.Create(response.ModelPath);
+            var model = File.Create(response.ModelPath + modelFile.GetMetaData("modelName"));
             using var ms = modelFile.ToStream().Result;
             var bytes = new byte[ms.Length];
             ms.Read(bytes, 0, (int) ms.Length);
@@ -171,18 +162,6 @@ namespace analysis_engine_v2.BrokerClient.Storage
             return await metadataFile.ToText();
         }
 
-        public async Task<string> GetLivePipeline()
-        {
-            var livePipeline = _storageManager.GetFile("default_pipeline.txt", "").Result;
-            if (livePipeline == null)
-            {
-                return null;
-            }
-
-            var pipelineObject = JsonConvert.DeserializeObject<PipelineRequest>(await livePipeline.ToText());
-            return FormatPipeline(pipelineObject);
-        }
-        
         private string FormatPipeline(PipelineRequest request)
         {
             var toolIds = request.Tools;
