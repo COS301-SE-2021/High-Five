@@ -57,4 +57,5 @@
   </ion-fab>
   <input hidden type="file" accept="video/mp4" #videoUpload (change)="uploadVideo($event)">
   <input hidden type="file" accept=".png, .jpeg, .jpg" #imageUpload (change)="uploadImage($event)">
+  <ion-progress-bar *ngIf="uploading" [value]="uploadProgress"></ion-progress-bar>
 </ion-content>

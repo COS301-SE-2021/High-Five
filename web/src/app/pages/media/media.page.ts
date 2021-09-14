@@ -5,6 +5,8 @@ import {PopoverController} from '@ionic/angular';
 import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
 import {VideosService} from '../../services/videos/videos.service';
 import {ImagesService} from '../../services/images/images.service';
+import {MediaStorageService} from '../../apis/mediaStorage.service';
+import {HttpEventType} from '@angular/common/http';
 
 @Component({
   selector: 'app-media',
@@ -15,12 +17,17 @@ export class MediaPage implements OnInit {
 
   public mediaType: string;
   public filter: string;
+  public uploading: boolean;
+  // public uploadProgress: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  public uploadProgress: number;
 
   constructor(private router: Router, private popoverController: PopoverController,
               private userPreferencesService: UserPreferencesService, private videosService: VideosService,
-              private imagesService: ImagesService) {
+              private imagesService: ImagesService, private mediaStorageService: MediaStorageService) {
     this.mediaType = 'all';
     this.filter = 'all';
+    this.uploading = false;
+    this.uploadProgress = 0;
   }
 
   segmentChange(ev: any) {
@@ -54,7 +61,7 @@ export class MediaPage implements OnInit {
         if (data.data !== undefined) {
           if (data.data.segment !== undefined) {
             this.userPreferencesService.mediaFilter = data.data.segment;
-            this.filter= this.userPreferencesService.mediaFilter;
+            this.filter = this.userPreferencesService.mediaFilter;
           }
         }
       }
@@ -67,7 +74,35 @@ export class MediaPage implements OnInit {
    * @param video, the data of the video that is going to be uploaded
    */
   public async uploadVideo(video: any) {
-    await this.videosService.addVideo(video.target.files[0]);
+    try {
+      this.mediaStorageService.storeVideoForm(video.target.files[0], 'events', true).subscribe((ev) => {
+        switch (ev.type) {
+          case HttpEventType.UploadProgress:
+            this.uploading = true;
+            this.uploadProgress = ev.loaded / ev.total;
+            break;
+          case HttpEventType.Response:
+            this.videosService.addVideoModel(ev.body);
+            this.uploading = false;
+            this.uploadProgress = 0;
+            break;
+          case HttpEventType.Sent:
+            this.uploading = false;
+            this.uploadProgress = 0;
+            break;
+          case HttpEventType.ResponseHeader:
+            this.uploading = false;
+            this.uploadProgress= 0;
+            break;
+        }
+      });
+    } catch (e) {
+      this.uploading = false;
+      this.uploadProgress = 0;
+    }
+
+
+    // await this.videosService.addVideo(video.target.files[0]);
   }
 
 
