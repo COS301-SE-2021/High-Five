@@ -22,7 +22,6 @@ namespace analysis_engine.BrokerClient
             PrivateKeyFile file = new PrivateKeyFile(@"/home/kyle-pc/.ssh/id_rsa");
             using (var client = new SshClient("newideassolutions.com", "root", file))
             {
-
                 client.Connect();
                 var port = new ForwardedPortLocal("127.0.0.1", 9092, "localhost", 9092);
                 client.AddForwardedPort(port);
