@@ -114,7 +114,6 @@ namespace src.Subsystems.Livestreaming
                 var responseString = await response.Content.ReadAsStringAsync();
                 return responseString;
             }
-
             return null;
         }
 
@@ -168,8 +167,8 @@ namespace src.Subsystems.Livestreaming
             ""listenerHookURL"": """",
             ""acceptOnlyStreamsInDataStore"": false,
             ""acceptOnlyRoomsInDataStore"": false,
-            ""publishTokenControlEnabled"": true,
-            ""playTokenControlEnabled"": true,
+            ""publishTokenControlEnabled"": false,
+            ""playTokenControlEnabled"": false,
             ""timeTokenSubscriberOnly"": false,
             ""enableTimeTokenForPlay"": false,
             ""enableTimeTokenForPublish"": false,

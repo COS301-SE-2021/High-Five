@@ -342,6 +342,19 @@ namespace src.Subsystems.Pipelines
             return true;
         }
 
+        public async Task<Pipeline> GetLivePipeline()
+        {
+            var livePipelineFile = _storageManager.GetFile("live_pipeline.txt", "").Result;
+            if (livePipelineFile == null)
+            {
+                return null;
+            }
+
+            var request = new GetPipelineRequest {PipelineId = await livePipelineFile.ToText()};
+            var livePipeline = GetPipeline(request).Result;
+            return livePipeline;
+        }
+
         private string ToolNameToId(string toolName)
         {
             return toolName switch
