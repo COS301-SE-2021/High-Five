@@ -59,7 +59,7 @@ namespace src.Websockets
 
                         switch (request.Request)
                         {
-                            case "Synchronize":
+                            case "Synchronize": //Should be called from client before any other function
                                 continue;
                             case "AnalyzeImage":
                                 var analyzedImage = _analysisService.AnalyzeImage(request).Result;
@@ -69,13 +69,6 @@ namespace src.Websockets
                                     responseBody = "Invalid pipeline- or media id provided.";
                                     responseType = "error";
                                 }
-                                else
-                                {
-                                    responseTitle = "Image Analyzed";
-                                    responseBody = JsonConvert.SerializeObject(analyzedImage);
-                                    responseType = "success";
-                                }
-
                                 break;
                             case "AnalyzeVideo":
                                 var analyzedVideo = _analysisService.AnalyzeVideo(request).Result;
@@ -84,12 +77,6 @@ namespace src.Websockets
                                     responseTitle = "Video Analysis Error";
                                     responseBody = "Invalid pipeline- or media id provided.";
                                     responseType = "error";
-                                }
-                                else
-                                {
-                                    responseTitle = "Video Analyzed";
-                                    responseBody = JsonConvert.SerializeObject(analyzedVideo);
-                                    responseType = "success";
                                 }
                                 break;
                             case "StartLiveAnalysis":   //This use case must be called by the application
@@ -123,7 +110,10 @@ namespace src.Websockets
                         continue;
                     }
 
-                    await SendMessage(responseTitle, responseBody, responseType, webSocket);
+                    if (!responseTitle.Equals(string.Empty))// This means an error has occurred
+                    {
+                        await SendMessage(responseTitle, responseBody, responseType, webSocket);
+                    }
                 }
             }
             else
@@ -168,17 +158,16 @@ namespace src.Websockets
             /*
              * Listens for messages from the Broker.
              */
-            
             while (webClientSocket.State != WebSocketState.Closed)
             {
                 var message = ((AnalysisService)_analysisService).AnalysisSocket.Receive().Result;
                 if (message.Contains("videoId"))
                 {
-                    await SendMessage("Video Analyzed", JsonConvert.DeserializeObject(message) , "success", webClientSocket);
+                    await SendMessage("Video Analysed", JsonConvert.DeserializeObject(message) , "success", webClientSocket);
                 }
                 else if (message.Contains("imageId"))
                 {
-                    await SendMessage("Image Analyzed", JsonConvert.DeserializeObject(message) , "success", webClientSocket);
+                    await SendMessage("Image Analysed", JsonConvert.DeserializeObject(message) , "success", webClientSocket);
                 }
                 else if (message.Contains("playLink"))
                 {
