@@ -2,13 +2,17 @@ package clients.webclients;
 
 import clients.webclients.connection.Connection;
 import clients.webclients.connectionhandler.ConnectionHandler;
+import clients.webclients.connectionhandler.ResponseObject;
 import clients.webclients.strategy.*;
 import com.google.gson.*;
 import dataclasses.clientrequest.AnalysisRequest;
 import dataclasses.clientrequest.codecs.RequestDecoder;
 import dataclasses.serverinfo.*;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.crypto.DefaultJwtSignatureValidator;
 import logger.EventLogger;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.net.SocketException;
 
@@ -79,7 +83,27 @@ public class ClientParticipant extends WebClient{
                         }
                         return;
                     }
+
+                    //verifying that the request came from the correct backend.
                     request = new RequestDecoder().deserialize(element, null, null);
+                    String secretKey = System.getenv("BROKER_SECRET");
+
+                    String[] chunks = request.getAuthorization().split("\\.");
+
+                    String tokenWithoutSignature = chunks[0] + "." + chunks[1];
+                    String signature = chunks[2];
+
+                    SignatureAlgorithm sa = SignatureAlgorithm.HS256;
+                    SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), sa.getJcaName());
+
+                    DefaultJwtSignatureValidator validator = new DefaultJwtSignatureValidator(sa, secretKeySpec);
+
+                    if (!validator.isValid(tokenWithoutSignature, signature)) {
+                        String response = "{\"status\":\"error\",\"reason\":\"Could not verify JWT token!\"}";
+                        ResponseObject responseObject = new ResponseObject(request.getRequestType(), null, response, connection.getConnectionId());
+                        connectionHandler.onNext(responseObject);
+                        return;
+                    }
 
                     //Process request based on analysis type
                     if (request.getRequestType().contains("Analyze")) {

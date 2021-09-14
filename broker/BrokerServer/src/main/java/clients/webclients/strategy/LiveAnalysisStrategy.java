@@ -56,7 +56,7 @@ public class LiveAnalysisStrategy implements AnalysisStrategy{
             ProducerRecord<String, String> commandToSend = new ProducerRecord<>(info.getServerId(), 1, "Analyze", commandString.toString());
             producer.send(commandToSend);
             producer.close();
-            infoString = "{\"playLink\":\"" + body.getPlayLink() + "\",\"streamId\":\"" + body.getStreamId() + "\",\"serverInformation\":" + info + "}";
+            infoString = "{\"status\":\"success\",\"playLink\":\"" + body.getPlayLink() + "\",\"streamId\":\"" + body.getStreamId() + "\",\"serverInformation\":" + info + "}";
         }
 
 
