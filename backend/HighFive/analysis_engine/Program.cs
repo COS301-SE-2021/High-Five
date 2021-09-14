@@ -2,13 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using analysis_engine.Video;
 using analysis_engine.Video.ConcreteFrameEncoder;
+using Autofac;
 using broker_analysis_client.Client;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
+using Harmonic.Hosting;
 
 namespace analysis_engine
 {
@@ -17,8 +20,20 @@ namespace analysis_engine
         public static void Main(string[] args)
         {
             //TestVideoAnalysis();
-            var client = new BrokerClient.BrokerClient();
-            client.Run();
+            // var client = new BrokerClient.BrokerClient();
+            // client.Run();
+
+            var builder = new RtmpServerBuilder()
+                .UseStartup<Startup>()
+                .UseWebSocket(c =>
+                {
+                    c.BindEndPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), 8080);
+                });
+
+
+            RtmpServer server = builder.Build();
+            var tsk = server.StartAsync();
+            tsk.Wait();
         }
 
         private static void TestVideoAnalysis()
@@ -69,5 +84,13 @@ namespace analysis_engine
         }
 
         
+    }
+    
+    class Startup : IStartup
+    {
+        public void ConfigureServices(ContainerBuilder builder)
+        {
+            
+        }
     }
 }

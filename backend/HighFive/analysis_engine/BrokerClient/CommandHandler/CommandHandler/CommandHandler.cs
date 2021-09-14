@@ -31,7 +31,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                 mediaType = command.CommandType.Contains("AnalyzeImage") ? "image" : "video";
                 Debug.Assert(body != null, nameof(body) + " != null");
                 pipelineString = storageManager.GetPipeline(body.PipelineId).Result;
-                url = mediaType == "image" ? storageManager.GetImage(body.MediaId) : storageManager.GetVideo(body.MediaId);
+                url = mediaType == "image" ? storageManager.GetImage(body.MediaId).Result : storageManager.GetVideo(body.MediaId).Result;
                 outputUrl = tmpFolder + mediaType == "image" ? "tmp.jpg" : "tmp.mp4";
             }
             else
@@ -40,7 +40,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                     JsonConvert.DeserializeObject<LiveAnalysisCommandBody>(JsonConvert.SerializeObject(command.Body));
                 url = ""; //SDK guys need to get this
                 outputUrl = body.PublishLink;
-                pipelineString = ""; //Backend guy needs to write a function to get this.
+                pipelineString = storageManager.GetLivePipeline().Result; 
                 mediaType = "stream";
             }
 
