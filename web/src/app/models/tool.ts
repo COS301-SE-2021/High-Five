@@ -18,4 +18,5 @@ export interface Tool {
    */
   toolType?: string;
   toolMetadataType?: string;
+  isDefaultTool: boolean;
 }
