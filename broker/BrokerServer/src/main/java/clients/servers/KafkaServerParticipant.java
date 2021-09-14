@@ -76,6 +76,7 @@ public class KafkaServerParticipant extends ServerParticipant {
                     EventLogger.getLogger().info("Deleting topic: " + msg.topic());
                     TopicManager.getInstance().lockTopic();
                     TopicManager.getInstance().deleteTopic(msg.topic());
+                    TopicManager.getInstance().unlockTopic();
                     topics.deleteTopic(msg.topic());
                 } else {
                     notify(msg.value());

@@ -89,6 +89,7 @@ public class KafkaTopicListener extends ConnectionListener<String> {
                         addNewServer(++offset, registrationInfo);
                         TopicManager.getInstance().lockTopic();
                         TopicManager.getInstance().addTopic(registrationInfo.getServerId());
+                        TopicManager.getInstance().unlockTopic();
                         notify(registrationInfo.getServerId());
                     }
                 }

@@ -21,7 +21,7 @@ public class TopicManager {
     private final ReentrantLock responseLock = new ReentrantLock();
     private final Executor actionExecutor = Executors.newFixedThreadPool(2);
     private final ReentrantLock topicLock = new ReentrantLock();
-    private boolean isLocked = false;
+    private volatile boolean isLocked = false;
     private Map<String, String> responseIds;
 
     private TopicManager() {
@@ -67,7 +67,6 @@ public class TopicManager {
                 } catch (IOException | InterruptedException e) {
                     EventLogger.getLogger().error(e.getMessage());
                 } finally {
-                    topicLock.unlock();
                     isLocked = false;
                 }
             });
@@ -98,8 +97,7 @@ public class TopicManager {
                 } catch (IOException | InterruptedException e) {
                     EventLogger.getLogger().logException(e);
                 } finally {
-                    topicLock.unlock();
-                    isLocked = true;
+                    isLocked = false;
                 }
             });
         }finally {
@@ -202,5 +200,17 @@ public class TopicManager {
     public void lockTopic() {
         topicLock.lock();
         isLocked = true;
+    }
+
+    public void unlockTopic() {
+
+        while(isLocked) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        topicLock.unlock();
     }
 }
