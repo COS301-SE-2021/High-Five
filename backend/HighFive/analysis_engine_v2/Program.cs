@@ -1,14 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using analysis_engine.Video;
 using analysis_engine.Video.ConcreteFrameEncoder;
-using broker_analysis_client.Client;
-using Emgu.CV;
-using Emgu.CV.CvEnum;
-using Emgu.CV.Structure;
+
 
 namespace analysis_engine
 {
@@ -16,7 +9,9 @@ namespace analysis_engine
     {
         public static void Main(string[] args)
         {
-            TestVideoAnalysis();
+            //TestVideoAnalysis();
+            var client = new BrokerClient.BrokerClient();
+            client.Run();
         }
 
         private static void TestVideoAnalysis()

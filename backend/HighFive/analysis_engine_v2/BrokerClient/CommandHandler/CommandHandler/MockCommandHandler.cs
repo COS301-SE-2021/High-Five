@@ -15,7 +15,6 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
         /// Mocks the command handler interface by waiting 30 seconds and returning a fake result
         /// </summary>
         /// <param name="command"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public void HandleCommand(AnalysisCommand command)
         {
             var clientId = Environment.GetEnvironmentVariable("ENGINE_CLIENT_ID");
@@ -27,23 +26,23 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
             };
             TopicPartition partition = new TopicPartition(clientId, 2);
             var producer = new ProducerBuilder<string, string>(config).Build();
-            for (var i = 0; i < 3; i++)
-            {
-                Thread.Sleep(1000);
-
-                //Send information to Broker
-                Message<string, string> msg = new Message<string, string>
-                {
-                    Key = Guid.NewGuid().ToString(),
-                    Value = "heartbeat"
-                };
-                producer.Produce(partition, msg);
-            }
 
             Message<string, string> msg2;
 
             if (command.CommandType == "AnalyzeVideo")
             {
+                for (var i = 0; i < 3; i++)
+                {
+                    Thread.Sleep(1000);
+
+                    //Send information to Broker
+                    Message<string, string> msg = new Message<string, string>
+                    {
+                        Key = Guid.NewGuid().ToString(),
+                        Value = "heartbeat"
+                    };
+                    producer.Produce(partition, msg);
+                }
                 StoredMediaCommandBody body =
                     JsonConvert.DeserializeObject<StoredMediaCommandBody>(JsonConvert.SerializeObject(command.Body));
                 var metaData = new AnalyzedVideoMetaData
@@ -55,16 +54,39 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                     Url = "http://localhost",
                     VideoId = "vidid"
                 };
-                 msg2 = new Message<string, string>
+                JObject returnData = JsonConvert.DeserializeObject<JObject>(metaData.ToJson());
+                string retStr;
+                if (returnData != null)
+                {
+                    returnData["status"] = "success";
+                    retStr = JsonConvert.SerializeObject(returnData);
+                }
+                else
+                {
+                    retStr = metaData.ToJson();
+                }
+                msg2 = new Message<string, string>
                 {
                     Key = Guid.NewGuid().ToString(),
-                    Value = metaData.ToJson().Replace("\r", "").Replace("\n", "")
+                    Value = retStr.Replace("\r", "").Replace("\n", "")
                 };
                  Console.WriteLine(msg2.Value);
                  producer.Produce(partition, msg2);
             }
             else if (command.CommandType == "AnalyzeImage")
             {
+                for (var i = 0; i < 3; i++)
+                {
+                    Thread.Sleep(1000);
+
+                    //Send information to Broker
+                    Message<string, string> msg = new Message<string, string>
+                    {
+                        Key = Guid.NewGuid().ToString(),
+                        Value = "heartbeat"
+                    };
+                    producer.Produce(partition, msg);
+                }
                 StoredMediaCommandBody body =
                     JsonConvert.DeserializeObject<StoredMediaCommandBody>(JsonConvert.SerializeObject(command.Body));
                 var metaData = new AnalyzedImageMetaData
@@ -75,10 +97,21 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                     Url = "http://localhost",
                     ImageId = "imgid"
                 };
+                JObject returnData = JsonConvert.DeserializeObject<JObject>(metaData.ToJson());
+                string retStr;
+                if (returnData != null)
+                {
+                    returnData["status"] = "success";
+                    retStr = JsonConvert.SerializeObject(returnData);
+                }
+                else
+                {
+                    retStr = metaData.ToJson();
+                }
                 msg2 = new Message<string, string>
                 {
                     Key = Guid.NewGuid().ToString(),
-                    Value = metaData.ToJson().Replace("\r", "").Replace("\n", "")
+                    Value = retStr.Replace("\r", "").Replace("\n", "")
                 };
                 Console.WriteLine(msg2.Value);
                 producer.Produce(partition, msg2);
