@@ -10,7 +10,7 @@ namespace analysis_engine
         public Pipe Input { get; set; }
         public Pipe Output { get; set; }
 
-        public const int FrameSkipper = 3;
+        public const int FrameSkipper = 5;
         
         public bool Last;
         public FilterManager Manager { get; set; }
