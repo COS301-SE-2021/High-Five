@@ -3,7 +3,7 @@
     <ion-row>
       <ion-col>
         <ion-button fill="outline" color="tertiary" shape="round" mode="md" (click)="displaySelectPipelinePopover($event)">
-          <ion-label color="dark">{{userPreferencesService.liveAnalysisPipeline ? userPreferencesService.liveAnalysisPipeline.name : 'None'}}</ion-label>
+          <ion-label color="dark">{{userPreferencesService.liveAnalysisPipeline ? 'Pipeline : ' + userPreferencesService.liveAnalysisPipeline.name : 'Pipeline : None'}}</ion-label>
           <ion-icon color="dark" name="filter-outline"></ion-icon>
         </ion-button>
       </ion-col>
