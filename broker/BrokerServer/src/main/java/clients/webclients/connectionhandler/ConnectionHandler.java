@@ -32,17 +32,19 @@ public class ConnectionHandler implements Observer<ResponseObject> {
                     if (responseObject.requestType.equals("StartLiveAnalysis")) {
                         isRight = connection.getUserId().contains(responseObject.userId);
                         if (isRight) {
-                            EventLogger.getLogger().info("Broadcasting server information to connections with client id" + responseObject.userId);
+                            EventLogger.getLogger().info("Broadcasting server information to connections with client id " + responseObject.userId);
                         }
                     } else {
                         isRight = connection.getConnectionId().contains(responseObject.connectionId);
                         if (isRight) {
-                            EventLogger.getLogger().info("Broadcasting server information to connections with connection id" + responseObject.connectionId);
+                            EventLogger.getLogger().info("Broadcasting server information to connections with connection id " + responseObject.connectionId);
                         }
                     }
                     return isRight;
                 }
             };
+
+            ArrayList<String> connectionsToRemove = new ArrayList<>();
 
             connections.stream().filter(predicate).forEach(
                     item -> {
@@ -50,9 +52,12 @@ public class ConnectionHandler implements Observer<ResponseObject> {
                             item.getWriter().append(responseObject.data).append("\n").flush();
                         } catch (IOException e) {
                             EventLogger.getLogger().logException(e);
+                            connectionsToRemove.add(item.getConnectionId());
                         }
                     }
                     );
+
+            connectionsToRemove.forEach(this::_removeConnection);
 
         } finally {
             lock.unlock();
@@ -78,11 +83,15 @@ public class ConnectionHandler implements Observer<ResponseObject> {
         }
     }
 
+    private void _removeConnection(String connectionId) {
+        EventLogger.getLogger().info("Removing connection " + connectionId + " from ConnectionHandler");
+        connections.removeIf(item -> item.getConnectionId().contains(connectionId));
+    }
+
     public void removeConnection(String connectionId) {
         lock.lock();
         try {
-            EventLogger.getLogger().info("Removing connection " + connectionId + " from ConnectionHandler");
-            connections.removeIf(item -> item.getConnectionId().contains(connectionId));
+            _removeConnection(connectionId);
         } finally {
             lock.unlock();
         }

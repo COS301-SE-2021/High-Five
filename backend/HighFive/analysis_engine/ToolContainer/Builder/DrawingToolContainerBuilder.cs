@@ -2,9 +2,10 @@
 {
     public class DrawingToolContainerBuilder : ToolContainerBuilder
     {
-        public override void buildContainer()
+        public override void buildContainer(bool last)
         {
             this._toolContainer = new DrawingToolContainer();
+            _toolContainer.Last = last;
         }
 
         public override void addInput(Pipe input)

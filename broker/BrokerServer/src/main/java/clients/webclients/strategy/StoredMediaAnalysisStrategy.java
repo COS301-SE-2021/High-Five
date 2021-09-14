@@ -60,7 +60,6 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
 
         //Get response from server
         String response = readResponse(info.getServerId());
-        EventLogger.getLogger().info(response);
 
         //Send response to client
         ResponseObject responseObject = new ResponseObject(request.getRequestType(), null, response, connectionId);

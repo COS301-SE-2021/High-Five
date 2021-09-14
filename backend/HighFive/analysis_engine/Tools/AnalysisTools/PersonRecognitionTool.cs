@@ -12,7 +12,7 @@ namespace analysis_engine
 {
     public class PersonRecognitionTool : AnalysisTool
     {
-        private const string ModelPath = "C:\\ssd-10.onnx";
+        private const string ModelPath = "../../Models/ssd-10.onnx";
         private InferenceSession _model;
         private string _modelInputLayerName;
         private const double MinScore=0.5;

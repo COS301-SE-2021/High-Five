@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace analysis_engine
 {
     public class LinearPipelineBuilder : PipelineBuilder
@@ -26,8 +28,8 @@ namespace analysis_engine
 
         public override void BuildFilters(string filterString)
         {
-            string[] filterStrings = filterString.Split(",");
-            Filter[] temp = new Filter[filterStrings.Length];
+            string[] filterStrings = filterString.Split(',');
+            List<Filter> temp = new List<Filter>();
             int count = 0;
             foreach (var s in filterStrings)
             {
@@ -35,7 +37,11 @@ namespace analysis_engine
                 
                 _filterBuilder.BuildFilterManager("concurrency");
 
-                if (count == 0)//If this is the first filter in the pipeline
+                if (filterStrings.Length == 1)
+                {
+                    _filterBuilder.AddInput(Pipeline.Source);
+                    _filterBuilder.AddOutput(Pipeline.Drain);
+                }else if (count == 0)//If this is the first filter in the pipeline
                 {
                     _filterBuilder.AddInput(Pipeline.Source);
                     _filterBuilder.AddOutput(_pipeFactories[0].GetPipe());
@@ -49,11 +55,12 @@ namespace analysis_engine
                     _filterBuilder.AddInput(temp[count-1].Output);
                     _filterBuilder.AddOutput(_pipeFactories[0].GetPipe());
                 }
-                
-                _filterBuilder.BuildToolContainer(s);
-                temp[count] = _filterBuilder.GetFilter();
+                _filterBuilder.BuildToolContainer(s, filterStrings.Length==(count+1));
+                temp.Add(_filterBuilder.GetFilter());
                 count++;
             }
+
+            Pipeline.Filters = temp;
         }
 
         public override Pipeline GetPipeline()

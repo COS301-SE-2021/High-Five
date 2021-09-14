@@ -3,6 +3,7 @@ package managers.topicmanager;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import logger.EventLogger;
+import managers.concurrencymanager.ConcurrencyManager;
 import org.apache.commons.io.IOUtil;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
@@ -12,14 +13,15 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TopicManager {
     private static TopicManager _instance;
     private final ReentrantLock lock = new ReentrantLock();
     private final ReentrantLock responseLock = new ReentrantLock();
-    private final Executor actionExecutor = Executors.newFixedThreadPool(2);
+    private final ConcurrencyManager actionExecutor = ConcurrencyManager.getInstance();
+    private final ReentrantLock topicLock = new ReentrantLock();
+    private volatile boolean isLocked = false;
     private Map<String, String> responseIds;
 
     private TopicManager() {
@@ -52,13 +54,20 @@ public class TopicManager {
         lock.lock();
         try {
             actionExecutor.execute(() -> {
+                if (!isLocked) {
+                    EventLogger.getLogger().warn("Not deleting topic as lock was not acquired");
+                    return;
+                }
                 String exec = System.getenv("KAFKA_DELETE_TOPIC").replace("{topic}", topic);
                 try {
                     ProcessBuilder builder = new ProcessBuilder(exec.split(" "));
-                    builder.start();
+                    Process proc = builder.start();
                     deleteServer(topic);
-                } catch (IOException e) {
+                    proc.waitFor();
+                } catch (IOException | InterruptedException e) {
                     EventLogger.getLogger().error(e.getMessage());
+                } finally {
+                    isLocked = false;
                 }
             });
         }finally {
@@ -75,6 +84,10 @@ public class TopicManager {
         lock.lock();
         try {
             actionExecutor.execute(() -> {
+                if (!isLocked) {
+                    EventLogger.getLogger().warn("Not adding topic as lock was not acquired");
+                    return;
+                }
                 EventLogger.getLogger().info("Creating topic " + topic);
                 ProcessBuilder builder = new ProcessBuilder(System.getenv("KAFKA_CREATE_TOPIC").
                         replace("{topic}", topic).split(" "));
@@ -83,6 +96,8 @@ public class TopicManager {
                     proc.waitFor();
                 } catch (IOException | InterruptedException e) {
                     EventLogger.getLogger().logException(e);
+                } finally {
+                    isLocked = false;
                 }
             });
         }finally {
@@ -180,5 +195,22 @@ public class TopicManager {
         StringWriter writer = new StringWriter();
         IOUtil.copy(is, writer, "UTF-8");
         return writer;
+    }
+
+    public void lockTopic() {
+        topicLock.lock();
+        isLocked = true;
+    }
+
+    public void unlockTopic() {
+
+        while(isLocked) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        topicLock.unlock();
     }
 }

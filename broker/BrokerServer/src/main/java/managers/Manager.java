@@ -1,6 +1,7 @@
 package managers;
 
 import dataclasses.serverinfo.ServerInformationHolder;
+import managers.concurrencymanager.ConcurrencyManager;
 
 import java.util.concurrent.*;
 
@@ -9,12 +10,11 @@ import java.util.concurrent.*;
  * participants for all current connections.
  */
 public abstract class Manager extends Thread {
-    protected final Executor participants;
+    protected final ConcurrencyManager participants = ConcurrencyManager.getInstance();
     protected Thread listener;
     protected ServerInformationHolder serverInformationHolder;
 
-    public Manager(ServerInformationHolder holder, int numThreads) {
+    public Manager(ServerInformationHolder holder) {
         serverInformationHolder = holder;
-        participants = Executors.newFixedThreadPool(numThreads);
     }
 }

@@ -1,10 +1,11 @@
-﻿
+﻿using System;
+
 namespace analysis_engine
 {
-    public interface Tool
+    public abstract class Tool: MarshalByRefObject
     {
         public static Buffer Buffer;
-        public Data Process(Data data);
-        public void Init();
+        public abstract Data Process(Data data);
+        public abstract void Init();
     }
 }

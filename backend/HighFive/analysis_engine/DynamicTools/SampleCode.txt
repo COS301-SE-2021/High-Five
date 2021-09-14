@@ -1,0 +1,25 @@
+﻿using System;
+using System.IO;
+using analysis_engine;
+using System.Collections.Generic;
+
+namespace High5
+{
+    public class CustomTool: AnalysisTool
+    {
+        public override void Init()
+        {
+            var file = System.IO.File.ReadAllText(@"D:\Tuks\2021\COS301\CapstoneProject\Code\Analysis-develop\High-Five\backend\HighFive\analysis_engine_v2\DynamicTools\SampleCode.txt");
+            //Console.WriteLine(file);
+            Console.WriteLine("Init - Called from dynamically uploaded code.");
+        }
+        
+        public override Data Process(Data data)
+        {
+            var metadata = new BoxCoordinateData();
+            Console.WriteLine("Process - Called from dynamically uploaded code.");
+            //Console.WriteLine("Metwaadata string: " + metadata.someData);
+            return null;
+        }
+    }
+}
