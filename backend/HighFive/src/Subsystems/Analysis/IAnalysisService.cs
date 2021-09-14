@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using IronPython.Modules;
 using Org.OpenAPITools.Models;
 using src.Subsystems.Livestreaming;
 using src.Websockets;
@@ -12,6 +13,7 @@ namespace src.Subsystems.Analysis
         public void SetBaseContainer(string containerName);
         public void SetBrokerToken(string userId);
         public void CloseBrokerSocket();
-        public Task StartLiveStream(string userId);
+        public Task<bool> StartLiveStream(string userId);
+        public Task<bool> Synchronise(SocketRequest fullRequest);
     }
 }

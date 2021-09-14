@@ -70,6 +70,17 @@ namespace src.Subsystems.Pipelines
             return StatusCode(200, response);
         }
 
+        public override IActionResult GetLivePipeline()
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+
+            var response = _pipelineService.GetLivePipeline().Result;
+            return StatusCode(200, response);
+        }
+
         public override IActionResult GetPipeline(GetPipelineRequest request)
         {
             if (!_baseContainerSet)
@@ -119,6 +130,10 @@ namespace src.Subsystems.Pipelines
 
         public override IActionResult SetLivePipeline(GetPipelineRequest getPipelineRequest)
         {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
             var pipelineSet = _pipelineService.SetLivePipeline(getPipelineRequest).Result;
             var response = new EmptyObject
             {
