@@ -22,7 +22,7 @@ public class ServerManagerImpl extends Manager {
     private final ServerTopics topics = new ServerTopics();
 
     public ServerManagerImpl(ServerInformationHolder holder) {
-        super(holder, 1);
+        super(holder);
     }
 
     public void run() {

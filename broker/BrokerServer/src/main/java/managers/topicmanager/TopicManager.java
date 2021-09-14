@@ -3,6 +3,7 @@ package managers.topicmanager;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import logger.EventLogger;
+import managers.concurrencymanager.ConcurrencyManager;
 import org.apache.commons.io.IOUtil;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
@@ -12,14 +13,13 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TopicManager {
     private static TopicManager _instance;
     private final ReentrantLock lock = new ReentrantLock();
     private final ReentrantLock responseLock = new ReentrantLock();
-    private final Executor actionExecutor = Executors.newFixedThreadPool(2);
+    private final ConcurrencyManager actionExecutor = ConcurrencyManager.getInstance();
     private final ReentrantLock topicLock = new ReentrantLock();
     private volatile boolean isLocked = false;
     private Map<String, String> responseIds;

@@ -9,6 +9,7 @@ import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import logger.EventLogger;
 import managers.Manager;
+import managers.concurrencymanager.ConcurrencyManager;
 import servicelocator.wrappers.ClientConnectionWrapper;
 import servicelocator.wrappers.ClientListenerWrapper;
 import servicelocator.wrappers.WebClientWrapper;
@@ -28,9 +29,9 @@ import java.util.concurrent.Executors;
  */
 public class ClientManagerImpl extends Manager {
     private final ConnectionHandler connectionHandler = new ConnectionHandler();
-    private final Executor clientCreator = Executors.newFixedThreadPool(4);
+    private final ConcurrencyManager clientCreator = ConcurrencyManager.getInstance();
     public ClientManagerImpl(ServerInformationHolder holder) {
-        super(holder, 30);
+        super(holder);
     }
 
     public void run() {
