@@ -10,7 +10,11 @@ using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using src.Storage;
 using src.Subsystems.Analysis;
+using src.Subsystems.Livestreaming;
+using src.Subsystems.MediaStorage;
+using src.Subsystems.Pipelines;
 
 namespace src.Websockets
 {
@@ -22,9 +26,10 @@ namespace src.Websockets
         private string _userId;
         private bool _listeningForBroadcast;
 
-        public WebsocketController(IAnalysisService analysisService, IConfiguration configuration)
+        public WebsocketController(IStorageManager storageManager, IMediaStorageService mediaStorageService,
+            IPipelineService pipelineService, IConfiguration configuration, ILivestreamingService livestreamingService)
         {
-            _analysisService = analysisService;
+            _analysisService = new AnalysisService(storageManager, mediaStorageService, pipelineService, configuration, livestreamingService);
             _configuration = configuration;
             _baseContainerSet = false;
         }
@@ -55,6 +60,8 @@ namespace src.Websockets
                         switch (request.Request)
                         {
                             case "Synchronize": //Should be called from client before any other function
+                                await SendMessage("Socket Synchronized", "Socket has been synchronized.", "info",
+                                    webSocket);
                                 continue;
                             case "AnalyzeImage":
                                 var analyzedImage = _analysisService.AnalyzeImage(request).Result;
@@ -90,7 +97,7 @@ namespace src.Websockets
                         }
                         if (!_listeningForBroadcast)
                         {
-                            Task.Run(() =>ListenForBrokerMessage(webSocket));
+                            Task.Run(() => ListenForBrokerMessage(webSocket));
                             _listeningForBroadcast = true;
                         }
                     }
@@ -115,6 +122,7 @@ namespace src.Websockets
                         await SendMessage(responseTitle, responseBody, responseType, webSocket);
                     }
                 }
+                
             }
             else
             {
@@ -158,21 +166,31 @@ namespace src.Websockets
             /*
              * Listens for messages from the Broker.
              */
-            while (webClientSocket.State != WebSocketState.Closed)
+            try
             {
-                var message = ((AnalysisService)_analysisService).AnalysisSocket.Receive().Result;
-                if (message.Contains("VideoId"))
+                while (true)
                 {
-                    await SendMessage("Video Analysed", JsonConvert.DeserializeObject(message) , "success", webClientSocket);
+                    var message = ((AnalysisService) _analysisService).AnalysisSocket.Receive().Result;
+                    if (message.Contains("VideoId"))
+                    {
+                        await SendMessage("Video Analysed", JsonConvert.DeserializeObject(message), "success",
+                            webClientSocket);
+                    }
+                    else if (message.Contains("ImageId"))
+                    {
+                        await SendMessage("Image Analysed", JsonConvert.DeserializeObject(message), "success",
+                            webClientSocket);
+                    }
+                    else if (message.Contains("playLink"))
+                    {
+                        await SendMessage("Livestream Started", JsonConvert.DeserializeObject(message), "info",
+                            webClientSocket);
+                    }
                 }
-                else if (message.Contains("ImageId"))
-                {
-                    await SendMessage("Image Analysed", JsonConvert.DeserializeObject(message) , "success", webClientSocket);
-                }
-                else if (message.Contains("playLink"))
-                {
-                    await SendMessage("Livestream Started", JsonConvert.DeserializeObject(message) , "info", webClientSocket);
-                }
+            }
+            catch (Exception)
+            {
+                // ignored
             }
             /*var socket = new WebSocketClient();
             await socket.Connect(_configuration["BrokerUri"], _userId);
@@ -188,11 +206,6 @@ namespace src.Websockets
             socket.Close();*/
         }
 
-        private async Task CheckMessageToSend(string message, WebSocket webClientSocket)
-        {
-
-        }
-        
         private void ConfigureStorageManager(SocketRequest request)
         {
             if (_baseContainerSet)

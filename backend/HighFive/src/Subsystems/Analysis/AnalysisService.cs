@@ -218,7 +218,6 @@ namespace src.Subsystems.Analysis
         }
 
         public async Task StartLiveStream(string userId)
-
         {
             await _livestreamingService.AuthenticateUser();
             var appName = _livestreamingService.CreateApplication(userId).Result;

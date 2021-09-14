@@ -114,7 +114,6 @@ namespace src.Subsystems.Livestreaming
                 var responseString = await response.Content.ReadAsStringAsync();
                 return responseString;
             }
-
             return null;
         }
 
