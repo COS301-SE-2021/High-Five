@@ -21,10 +21,9 @@ public class RequestDecoder implements JsonDeserializer<AnalysisRequest> {
         String auth = json.getAsJsonObject().get("Authorization").getAsString();
         String userId = json.getAsJsonObject().get("UserId").getAsString();
         JsonElement possibleBody = json.getAsJsonObject().get("Body");
-        if (possibleBody == null && type.contains("Syn")) {
+        if (possibleBody.isJsonNull() && type.contains("Syn")) {
             return new AnalysisRequest(auth, type, userId, null);
         }
-        assert possibleBody != null;
         JsonObject body = possibleBody.getAsJsonObject();
         String mediaIdName;
         RequestBody requestBody;
