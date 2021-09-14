@@ -8,15 +8,19 @@ import {SnotifyService} from 'ng-snotify';
 @Injectable({
   providedIn: 'root'
 })
-export class UserToolsService{
+export class UserToolsService {
   private readonly _userTools = new BehaviorSubject<Tool[]>([]);
   // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly userTools$ = this._userTools.asObservable();
 
+  private readonly _toolTypes = new BehaviorSubject<string[]>([]);
+  // eslint-disable-next-line no-underscore-dangle,@typescript-eslint/member-ordering
+  readonly toolTypes$ = this._toolTypes.asObservable();
+
   constructor(private toolsService: ToolsService, private snotifyService: SnotifyService) {
     this.fetchAllTools();
+    this.fetchAllToolTypes();
   }
-
 
 
   get userTools(): Tool[] {
@@ -29,10 +33,20 @@ export class UserToolsService{
     this._userTools.next(val);
   }
 
+  get toolTypes(): string[] {
+    // eslint-disable-next-line no-underscore-dangle
+    return this._toolTypes.getValue();
+  }
+
+  set toolTypes(val: string[]) {
+    // eslint-disable-next-line no-underscore-dangle
+    this._toolTypes.next(val);
+  }
+
 
   public async addAnalysisTool(classFile: any, model: any, type: string = 'BoxCoordinates', name: string) {
     try {
-      this.toolsService.uploadAnalysisToolForm(classFile, model ,type, name, 'response').subscribe((res) => {
+      this.toolsService.uploadAnalysisToolForm(classFile, model, type, name, 'response').subscribe((res) => {
         if (res.ok) {
           this.snotifyService.success('Successfully added analysis tool : ' + name, 'Tool Addition');
         } else {
@@ -85,6 +99,12 @@ export class UserToolsService{
   public async fetchAllTools() {
     this.toolsService.getTools().subscribe((res) => {
       this.userTools = res.tools;
+    });
+  }
+
+  public async fetchAllToolTypes() {
+    this.toolsService.getToolTypes().subscribe((res) => {
+      this.toolTypes = res.toolTypes;
     });
   }
 }

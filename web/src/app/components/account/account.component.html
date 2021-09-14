@@ -122,9 +122,9 @@
             </ion-list-header>
             <ion-item *ngFor="let userTool of userToolsService.userTools$ | async; trackBy: userToolsTrackFn">
               <ion-label>
-                {{userTool.name}}
+                {{userTool.toolName}}
               </ion-label>
-              <ion-chip [color]="'success'" [disabled]="true" *ngIf="userTool.type==='analysis'">
+              <ion-chip [color]="'success'" [disabled]="true" *ngIf="userTool.toolType==='analysis'">
                 <ion-label>ONNX Model</ion-label>
                 <ion-icon [name]="'checkmark-outline'" ></ion-icon>
               </ion-chip>
@@ -133,7 +133,7 @@
                 <ion-icon [name]="'checkmark-outline'"></ion-icon>
               </ion-chip>
               <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger" (click)="userToolsService.removeUserTool(userTool.id)">
+              <ion-button slot="end" fill="clear" expand="block" color="danger" (click)="userToolsService.removeTool(userTool.toolId,userTool.toolType)">
                 <ion-icon name="trash-outline"></ion-icon>
               </ion-button>
             </ion-item>
