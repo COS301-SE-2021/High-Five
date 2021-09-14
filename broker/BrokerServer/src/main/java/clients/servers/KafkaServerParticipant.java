@@ -74,6 +74,7 @@ public class KafkaServerParticipant extends ServerParticipant {
                 //offline.
                 if ((System.currentTimeMillis() / 1000L) - getMessageTime(msg.value()) > 45) {
                     EventLogger.getLogger().info("Deleting topic: " + msg.topic());
+                    TopicManager.getInstance().lockTopic();
                     TopicManager.getInstance().deleteTopic(msg.topic());
                     topics.deleteTopic(msg.topic());
                 } else {

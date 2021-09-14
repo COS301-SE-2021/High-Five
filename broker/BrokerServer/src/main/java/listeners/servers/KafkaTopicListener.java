@@ -87,6 +87,7 @@ public class KafkaTopicListener extends ConnectionListener<String> {
                     if ((System.currentTimeMillis()/1000L) - registrationInfo.getTimestamp() < 45) {
                         EventLogger.getLogger().info("New topic found: " + registrationInfo.getServerId());
                         addNewServer(++offset, registrationInfo);
+                        TopicManager.getInstance().lockTopic();
                         TopicManager.getInstance().addTopic(registrationInfo.getServerId());
                         notify(registrationInfo.getServerId());
                     }

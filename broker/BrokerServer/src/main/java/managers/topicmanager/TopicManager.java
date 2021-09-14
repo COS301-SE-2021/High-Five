@@ -21,6 +21,7 @@ public class TopicManager {
     private final ReentrantLock responseLock = new ReentrantLock();
     private final Executor actionExecutor = Executors.newFixedThreadPool(2);
     private final ReentrantLock topicLock = new ReentrantLock();
+    private boolean isLocked = false;
     private Map<String, String> responseIds;
 
     private TopicManager() {
@@ -53,7 +54,10 @@ public class TopicManager {
         lock.lock();
         try {
             actionExecutor.execute(() -> {
-                topicLock.lock();
+                if (!isLocked) {
+                    EventLogger.getLogger().warn("Not deleting topic as lock was not acquired");
+                    return;
+                }
                 String exec = System.getenv("KAFKA_DELETE_TOPIC").replace("{topic}", topic);
                 try {
                     ProcessBuilder builder = new ProcessBuilder(exec.split(" "));
@@ -64,6 +68,7 @@ public class TopicManager {
                     EventLogger.getLogger().error(e.getMessage());
                 } finally {
                     topicLock.unlock();
+                    isLocked = false;
                 }
             });
         }finally {
@@ -80,7 +85,10 @@ public class TopicManager {
         lock.lock();
         try {
             actionExecutor.execute(() -> {
-                topicLock.lock();
+                if (!isLocked) {
+                    EventLogger.getLogger().warn("Not adding topic as lock was not acquired");
+                    return;
+                }
                 EventLogger.getLogger().info("Creating topic " + topic);
                 ProcessBuilder builder = new ProcessBuilder(System.getenv("KAFKA_CREATE_TOPIC").
                         replace("{topic}", topic).split(" "));
@@ -91,6 +99,7 @@ public class TopicManager {
                     EventLogger.getLogger().logException(e);
                 } finally {
                     topicLock.unlock();
+                    isLocked = true;
                 }
             });
         }finally {
@@ -188,5 +197,10 @@ public class TopicManager {
         StringWriter writer = new StringWriter();
         IOUtil.copy(is, writer, "UTF-8");
         return writer;
+    }
+
+    public void lockTopic() {
+        topicLock.lock();
+        isLocked = true;
     }
 }
