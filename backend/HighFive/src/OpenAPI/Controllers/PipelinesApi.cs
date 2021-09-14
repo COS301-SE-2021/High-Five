@@ -78,6 +78,17 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Get Live Pipeline use case</remarks>
+        /// <response code="200">Returns current live pipeline</response>
+        [HttpGet]
+        [Route("/pipelines/getLivePipeline")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(Pipeline))]
+        public abstract IActionResult GetLivePipeline();
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Get Pipeline use case</remarks>
         /// <param name="getPipelineRequest"></param>
         /// <response code="200">Returns a pipeline for a given Id</response>

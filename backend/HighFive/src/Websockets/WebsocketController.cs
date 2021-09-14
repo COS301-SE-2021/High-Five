@@ -10,7 +10,11 @@ using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using src.Storage;
 using src.Subsystems.Analysis;
+using src.Subsystems.Livestreaming;
+using src.Subsystems.MediaStorage;
+using src.Subsystems.Pipelines;
 
 namespace src.Websockets
 {
@@ -24,16 +28,17 @@ namespace src.Websockets
 
         public WebsocketController(IAnalysisService analysisService, IConfiguration configuration)
         {
-            _analysisService = analysisService;
+            //_analysisService = new AnalysisService(storageManager, mediaStorageService, pipelineService, configuration, livestreamingService);
             _configuration = configuration;
+            _analysisService = analysisService;
             _baseContainerSet = false;
         }
-        
+
         public override async Task Get()
         {
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
-                using var webSocket = await 
+                using var webSocket = await
                     HttpContext.WebSockets.AcceptWebSocketAsync();
                 await SendMessage("Connected", "You have connected to the socket server.", "info", webSocket);
                 while (webSocket.State == WebSocketState.Open)
@@ -49,20 +54,22 @@ namespace src.Websockets
                         {
                             await SendMessage("Invalid Format", "Request is null", "error",
                                 webSocket);
-                            continue;
+                            break;
                         }
-                        
+
                         switch (request.Request)
                         {
                             case "Synchronize": //Should be called from client before any other function
-                                continue;
+                                await _analysisService.Synchronise(request);
+                                await SendMessage("Synchronized", "Socket has been synchronized with broker.", "info", webSocket);
+                                break;
                             case "AnalyzeImage":
                                 var analyzedImage = _analysisService.AnalyzeImage(request).Result;
                                 if (analyzedImage == null)
                                 {
                                     responseTitle = "Image Analysis Error";
                                     responseBody = "Invalid pipeline- or media id provided.";
-                                    responseType = "error";
+                                    responseType = "syn";
                                 }
                                 break;
                             case "AnalyzeVideo":
@@ -76,7 +83,7 @@ namespace src.Websockets
                                 break;
                             case "StartLiveAnalysis":   //This use case must be called by the application
                                 await _analysisService.StartLiveStream(_userId);
-                                continue;
+                                break;
                             case "Exit":
                                 await SendMessage("Socket Closed", "Connection to the socket was closed.", "info",
                                     webSocket);
@@ -90,7 +97,7 @@ namespace src.Websockets
                         }
                         if (!_listeningForBroadcast)
                         {
-                            Task.Run(() =>ListenForBrokerMessage(webSocket));
+                            Task.Run(() => ListenForBrokerMessage(webSocket));
                             _listeningForBroadcast = true;
                         }
                     }
@@ -104,17 +111,18 @@ namespace src.Websockets
                         await SendMessage("Unauthorized", "Invalid jwt provided.", "error", webSocket);
                         continue;
                     }
-                    catch (Exception e)
+                    /*catch (Exception e)
                     {
-                        await SendMessage("Internal Error", e.StackTrace, "error", webSocket);
+                        await SendMessage("Internal Error", e.Message, "error", webSocket);
                         continue;
-                    }
+                    }*/
 
                     if (!responseTitle.Equals(string.Empty))// This means an error has occurred
                     {
                         await SendMessage(responseTitle, responseBody, responseType, webSocket);
                     }
                 }
+
             }
             else
             {
@@ -122,7 +130,7 @@ namespace src.Websockets
             }
             _analysisService.CloseBrokerSocket();
         }
-        
+
         private static async Task SendMessage(string title, string message, string type, WebSocket webSocket)
         {
             var payload = "{\"title\": \"" + title + "\",\"message\": \"" + message.TrimStart('\"').TrimEnd('\"') + "\",\"type\": \"" + type + "\"}";
@@ -158,21 +166,38 @@ namespace src.Websockets
             /*
              * Listens for messages from the Broker.
              */
-            while (webClientSocket.State != WebSocketState.Closed)
+
+            try
             {
-                var message = ((AnalysisService)_analysisService).AnalysisSocket.Receive().Result;
-                if (message.Contains("VideoId"))
+                while (true)
                 {
-                    await SendMessage("Video Analysed", JsonConvert.DeserializeObject(message) , "success", webClientSocket);
+                    var message = ((AnalysisService) _analysisService).AnalysisSocket.Receive().Result;
+                    if (message.Contains("ACK"))
+                    {
+                        await SendMessage("Socket Synchronized", "Socket has been synchronized with broker.", "info",
+                            webClientSocket);
+                        continue;
+                    }
+                    if (message.Contains("VideoId"))
+                    {
+                        await SendMessage("Video Analysed", JsonConvert.DeserializeObject(message), "success",
+                            webClientSocket);
+                    }
+                    else if (message.Contains("ImageId"))
+                    {
+                        await SendMessage("Image Analysed", JsonConvert.DeserializeObject(message), "success",
+                            webClientSocket);
+                    }
+                    else if (message.Contains("playLink"))
+                    {
+                        await SendMessage("Livestream Started", JsonConvert.DeserializeObject(message), "info",
+                            webClientSocket);
+                    }
                 }
-                else if (message.Contains("ImageId"))
-                {
-                    await SendMessage("Image Analysed", JsonConvert.DeserializeObject(message) , "success", webClientSocket);
-                }
-                else if (message.Contains("playLink"))
-                {
-                    await SendMessage("Livestream Started", JsonConvert.DeserializeObject(message) , "info", webClientSocket);
-                }
+            }
+            catch (Exception)
+            {
+                // ignored
             }
             /*var socket = new WebSocketClient();
             await socket.Connect(_configuration["BrokerUri"], _userId);
@@ -188,18 +213,12 @@ namespace src.Websockets
             socket.Close();*/
         }
 
-        private async Task CheckMessageToSend(string message, WebSocket webClientSocket)
-        {
-
-        }
-        
         private void ConfigureStorageManager(SocketRequest request)
         {
             if (_baseContainerSet)
             {
                 return;
             }
-
             _baseContainerSet = true;
             var tokenString = request.Authorization;
             if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
@@ -253,6 +272,6 @@ namespace src.Websockets
             _analysisService.SetBrokerToken(token.Subject);
             return true;
         }
-        
+
     }
 }

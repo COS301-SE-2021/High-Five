@@ -69,7 +69,7 @@ namespace src.Subsystems.Analysis
              * If this is the case, no analysis needs to be done. Simply return the already analyzed
              * media
              */
-            
+
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/image";
             const string fileExtension = ".img";
@@ -131,15 +131,15 @@ namespace src.Subsystems.Analysis
                 response.Thumbnail = thumbnailFile.GetUrl();
                 return response;
             }
-            
+
             var brokerRequest = new BrokerSocketRequest(fullRequest, _userId) {Authorization = _brokerToken};
             await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
             /*var responseString = AnalysisSocket.Receive().Result;
             Console.WriteLine("Response string: " +responseString);
             response = JsonConvert.DeserializeObject<AnalyzedVideoMetaData>(responseString);*/
-            
+
             return response;
-            
+
             /*rawVideoStream.Seek(0, SeekOrigin.Begin);
             watch.Reset();
             watch.Start();
@@ -196,7 +196,7 @@ namespace src.Subsystems.Analysis
             ConnectToBroker();
             var key = _configuration["BrokerJWTSecret"];
             const string issuer = "https://high5api.azurewebsites.net";
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));    
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var permClaims = new List<Claim>
@@ -204,11 +204,11 @@ namespace src.Subsystems.Analysis
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), new Claim("userId", userId)
             };
 
-            var token = new JwtSecurityToken(issuer, //Issure    
-                issuer,  //Audience    
-                permClaims,    
-                expires: DateTime.Now.AddDays(1),    
-                signingCredentials: credentials);    
+            var token = new JwtSecurityToken(issuer, //Issure
+                issuer,  //Audience
+                permClaims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: credentials);
             _brokerToken = new JwtSecurityTokenHandler().WriteToken(token);
         }
 
@@ -217,8 +217,7 @@ namespace src.Subsystems.Analysis
             AnalysisSocket.Close();
         }
 
-        public async Task StartLiveStream(string userId)
-
+        public async Task<bool> StartLiveStream(string userId)
         {
             await _livestreamingService.AuthenticateUser();
             var appName = _livestreamingService.CreateApplication(userId).Result;
@@ -235,7 +234,7 @@ namespace src.Subsystems.Analysis
                            streamingId + "&token=" + playingToken,
                 StreamId = streamingId
             };
-            
+
             var brokerRequest = new BrokerSocketRequest
             {
                 Authorization = _brokerToken,
@@ -245,6 +244,50 @@ namespace src.Subsystems.Analysis
             };
             await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
             //var socketResponse = AnalysisSocket.Receive().Result;
+            return true;
+        }
+
+        public async Task<bool> Synchronise(SocketRequest fullRequest)
+        {
+            var request = new AnalyzeImageRequest {ImageId = "", PipelineId = ""};
+            fullRequest.Body = request;
+            var pipelineSearchRequest = new GetPipelineRequest {PipelineId = request.PipelineId};
+            var analysisPipeline = _pipelineService.GetPipeline(pipelineSearchRequest).Result;
+            if (analysisPipeline == null)
+            {
+                return false; //invalid pipelineId provided
+            }
+
+            /* First, check if the Media and Pipeline combination has already been analyzed and stored before.
+             * If this is the case, no analysis needs to be done. Simply return the already analyzed
+             * media
+             */
+
+            analysisPipeline.Tools.Sort();
+            const string storageContainer = "analyzed/image";
+            const string fileExtension = ".img";
+            var analyzedMediaName = _storageManager.HashMd5(request.ImageId + "|" + string.Join(",",analysisPipeline.Tools)) + fileExtension;
+            var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
+            var response = new AnalyzedImageMetaData
+            {
+                ImageId = request.ImageId,
+                PipelineId = request.PipelineId
+            };
+            if (testFile != null) //This means the media has already been analyzed with this pipeline combination
+            {
+                if (testFile.Properties is {LastModified: { }})
+                    response.DateAnalyzed = testFile.Properties.LastModified.Value.DateTime;
+                response.Id = testFile.Name;
+                response.Url = testFile.GetUrl();
+                return true;
+            }
+
+            var brokerRequest = new BrokerSocketRequest(fullRequest, _userId) {Authorization = _brokerToken};
+            await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
+            /*var responseString = AnalysisSocket.Receive().Result;
+            response = JsonConvert.DeserializeObject<AnalyzedImageMetaData>(responseString);*/
+
+            return true;
         }
 
         private void ConnectToBroker()
@@ -254,8 +297,7 @@ namespace src.Subsystems.Analysis
                 AnalysisSocket.Connect(_configuration["BrokerUri"], _userId);
                 _brokerConnection = true;
             }
-
         }
-        
+
     }
 }

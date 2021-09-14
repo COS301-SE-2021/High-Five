@@ -405,6 +405,21 @@ paths:
                 items:
                   type: string
 
+
+  /pipelines/getLivePipeline:
+    get:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Get Live Pipeline use case
+      operationId: GetLivePipeline
+      responses:
+        "200":
+          description: Returns current live pipeline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pipeline'
+
   #==========================================================
   #     ANALYSIS SUBSYSTEM PATHING
   #==========================================================

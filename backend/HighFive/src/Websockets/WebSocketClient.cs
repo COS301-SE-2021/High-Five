@@ -11,20 +11,30 @@ namespace src.Websockets
     public class WebSocketClient: IWebSocketClient
     {
         private ClientWebSocket _socket = null;
+        private static int _id = 0;
+        private int _myId;
 
         public async Task Connect(string uri, string userId)
         {
             if (_socket == null)
             {
+                _myId = GetId();
                 _socket = new ClientWebSocket();
                 await _socket.ConnectAsync(new Uri(uri), CancellationToken.None);
+                Console.WriteLine("Socket connected to Broker!");
                 await Send(userId);
                 var ack = Receive().Result;
             }
         }
 
+        private static int GetId()
+        {
+            return _id++;
+        }
+        
         public async Task Send(string data)
         {
+            Console.WriteLine("Sending from socket" + _myId + ", data: " + data);
             await _socket.SendAsync(Encoding.UTF8.GetBytes(data), WebSocketMessageType.Text, true, CancellationToken.None);
         }
 

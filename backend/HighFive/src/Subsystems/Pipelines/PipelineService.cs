@@ -279,7 +279,7 @@ namespace src.Subsystems.Pipelines
              *      Parameters:
              * -> containerName: the user's id that will be used as the container name.
              */
-            
+
             if (!_storageManager.IsContainerSet())
             {
                 return _storageManager.SetBaseContainer(containerName).Result;
@@ -324,7 +324,7 @@ namespace src.Subsystems.Pipelines
             var pipeline = ConvertFileToPipeline(pipelineFile);
             return pipeline;
         }
-        
+
         public void StoreUserInfo(string id, string displayName, string email)
         {
             _storageManager.StoreUserInfo(id, displayName, email);
@@ -340,6 +340,19 @@ namespace src.Subsystems.Pipelines
 
             await livePipelineFile.UploadText(request.PipelineId);
             return true;
+        }
+
+        public async Task<Pipeline> GetLivePipeline()
+        {
+            var livePipelineFile = _storageManager.GetFile("live_pipeline.txt", "").Result;
+            if (livePipelineFile == null)
+            {
+                return null;
+            }
+
+            var request = new GetPipelineRequest {PipelineId = await livePipelineFile.ToText()};
+            var livePipeline = GetPipeline(request).Result;
+            return livePipeline;
         }
 
         private string ToolNameToId(string toolName)
@@ -364,7 +377,7 @@ namespace src.Subsystems.Pipelines
         {
             return FindToolById(_storageManager.HashMd5(toolName));
         }
-        
+
         private string FindToolById(string toolId)
         {
             var allTools = _toolService.GetAllTools();
@@ -377,6 +390,6 @@ namespace src.Subsystems.Pipelines
             }
             return null; //tool does not exist
         }
-        
+
     }
 }
