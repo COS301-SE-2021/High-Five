@@ -68,8 +68,13 @@ namespace src.Storage
             if (_baseContainer.Equals("public"))
             {
                 var toolsFile = new MockBlobFile(new List<IBlobFile>(), "tools.txt");
-                await toolsFile.UploadText("CarRecognitions\nCarFollowing");
-                return toolsFile;
+                    await toolsFile.UploadText(@"analysis/PeopleRecognition/BoxCoordinates\n\r
+                        analysis/AnimalRecognition/BoxCoordinates\n\r
+                        analysis/VehicleRecognition/BoxCoordinates\n\r
+                        analysis/FastVehicleRecognition/BoxCoordinates\n\r
+                        drawing/BoxDrawingTool/BoxCoordinates");
+                    return toolsFile;
+
             }
             
             IBlobFile file = null;

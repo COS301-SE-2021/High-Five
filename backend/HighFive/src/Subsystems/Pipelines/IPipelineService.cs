@@ -15,5 +15,6 @@ namespace src.Subsystems.Pipelines
         public GetPipelineIdsResponse GetPipelineIds();
         public Task<Pipeline> GetPipeline(GetPipelineRequest request);
         public void StoreUserInfo(string id, string displayName, string email);
+        public Task<bool> SetLivePipeline(GetPipelineRequest request);
     }
 }

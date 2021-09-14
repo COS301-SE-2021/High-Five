@@ -117,6 +117,17 @@ namespace src.Subsystems.Pipelines
             return StatusCode(400, response);
         }
 
+        public override IActionResult SetLivePipeline(GetPipelineRequest getPipelineRequest)
+        {
+            var pipelineSet = _pipelineService.SetLivePipeline(getPipelineRequest).Result;
+            var response = new EmptyObject
+            {
+                Success = pipelineSet,
+                Message = "Live pipeline set."
+            };
+            return StatusCode(200, response);
+        }
+
         private void ConfigureStorageManager()
         {
             var tokenString = HttpContext.GetTokenAsync("access_token").Result;

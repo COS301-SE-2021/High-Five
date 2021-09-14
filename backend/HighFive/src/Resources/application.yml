@@ -368,6 +368,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/emptyObject'
+                
+  /pipelines/setLivePipeline:
+    post:
+      tags:
+        - "Pipelines"
+      description: Endpoint for Set Live Pipeline use case
+      operationId: SetLivePipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/getPipelineRequest'
+      responses:
+        "200":
+          description: Tools have been removed from pipeline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
 
   /pipelines/getAllTools:
     get:
@@ -428,20 +448,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/analyzedVideoMetaData'
-
-  /analysis/getLiveAnalysisToken:
-    get:
-      tags:
-        - "Analysis"
-      description: Endpoint for Get Live Analysis Token use case
-      operationId: GetLiveAnalysisToken
-      responses:
-        "200":
-          description: Returns a token that can be used to connect a client to the analysis engine for live streaming/analysis
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getLiveAnalysisTokenResponse'
 
   #==========================================================
   #     USER SUBSYSTEM PATHING
