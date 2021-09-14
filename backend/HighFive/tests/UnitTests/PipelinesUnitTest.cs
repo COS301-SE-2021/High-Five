@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Org.OpenAPITools.Models;
 using src.Storage;
+using src.Subsystems.Admin;
 using src.Subsystems.Pipelines;
 using src.Subsystems.Tools;
 using Xunit;
@@ -14,7 +15,7 @@ namespace tests.UnitTests
         private readonly IPipelineService _mockPipelineService;
         public PipelinesUnitTest()
         {
-            var mockStorageManager = new MockStorageManager();
+            var mockStorageManager = new MockStorageManager(new MockAdminValidator());
             _mockPipelineService = new PipelineService(mockStorageManager, new ToolService(mockStorageManager));
         }
 

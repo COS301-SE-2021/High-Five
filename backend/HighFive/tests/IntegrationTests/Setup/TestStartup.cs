@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using src.AnalysisTools.VideoDecoder;
 using src.Storage;
+using src.Subsystems.Admin;
 using src.Subsystems.Analysis;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
@@ -65,7 +66,7 @@ namespace tests.IntegrationTests
                 });
 
             // Dependency Injections
-            services.Add(new ServiceDescriptor(typeof(IStorageManager), new MockStorageManager()));//singleton
+            services.Add(new ServiceDescriptor(typeof(IStorageManager), new MockStorageManager(new MockAdminValidator())));//singleton
             services.AddScoped<IMediaStorageService, MediaStorageService>();
             services.AddScoped<IPipelineService, PipelineService>();
             services.AddScoped<IAnalysisService, AnalysisService>();
