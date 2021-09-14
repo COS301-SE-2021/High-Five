@@ -50,6 +50,12 @@ namespace Org.OpenAPITools.Models
         /// </summary>
         [DataMember(Name="toolMetadataType", EmitDefaultValue=false)]
         public string ToolMetadataType { get; set; }
+        
+        /// <summary>
+        /// Gets or Sets ToolMetadataType
+        /// </summary>
+        [DataMember(Name="isDefaultTool", EmitDefaultValue=false)]
+        public bool IsDefaultTool { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

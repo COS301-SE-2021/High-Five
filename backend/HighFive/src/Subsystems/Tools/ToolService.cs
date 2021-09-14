@@ -108,7 +108,8 @@ namespace src.Subsystems.Tools
                     ToolId = "D" + defaultCounter++,
                     ToolName = toolNameArr[1],
                     ToolType = toolNameArr[0],
-                    ToolMetadataType = toolNameArr[2]
+                    ToolMetadataType = toolNameArr[2],
+                    IsDefaultTool = true
                 };
                 toolsList.Add(newTool);
             }
@@ -125,7 +126,8 @@ namespace src.Subsystems.Tools
                 {
                     ToolId = toolNameArr[1],
                     ToolType = toolNameArr[0],
-                    ToolMetadataType = toolNameArr[2]
+                    ToolMetadataType = toolNameArr[2],
+                    IsDefaultTool = false
                 };
                 var toolDirectory = toolNameArr[0] + "/" + toolNameArr[1];
                 var toolFiles = _storageManager.GetAllFilesInContainer(ContainerName + "/" + toolDirectory).Result;
