@@ -31,19 +31,16 @@ namespace broker_analysis_client.Storage
          *      this context simply refers to a prefix naming convention of the blob files.
          */
 
-        private static CloudStorageAccount _cloudStorageAccount = null;
+        private static CloudStorageAccount _cloudStorageAccount;
         private readonly Random _random;
         private const string Alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
         private string _baseContainer;
         private CloudBlobContainer _cloudBlobContainer;
 
-        public StorageManager()
+        public StorageManager(string userId)
         {
-            SetBaseContainer("unset");//This initial value indicates that the initial container has not yet been set
-            if (_cloudStorageAccount != null)
-            {
-                _cloudStorageAccount = CloudStorageAccount.Parse(ConfigStrings.StorageConnectionString);
-            }
+            _cloudStorageAccount ??= CloudStorageAccount.Parse(ConfigStrings.StorageConnectionString);
+            SetBaseContainer(userId);
             _random = new Random();
         }
 

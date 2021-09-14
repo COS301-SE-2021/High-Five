@@ -5,6 +5,7 @@ using System.Threading;
 using analysis_engine_v2.BrokerClient.Storage;
 using analysis_engine.BrokerClient.CommandHandler.Models;
 using analysis_engine.BrokerClient.CommandHandler.Models.commandbody;
+using broker_analysis_client.Storage;
 using Confluent.Kafka;
 using Newtonsoft.Json;
 
@@ -14,11 +15,11 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
     {
         public void HandleCommand(AnalysisCommand command)
         {
-            
 
+            StorageManagerContainer.StorageManager = new StorageManager(command.UserId);
             AnalysisStorageManager storageManager = new AnalysisStorageManager();
 
-            string tmpFolder = Path.GetTempPath() + Path.PathSeparator;
+            string tmpFolder = Path.GetTempPath();
             
             string url = "";
             string mediaType = "";
@@ -32,7 +33,10 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                 Debug.Assert(body != null, nameof(body) + " != null");
                 pipelineString = storageManager.GetPipeline(body.PipelineId).Result;
                 url = mediaType == "image" ? storageManager.GetImage(body.MediaId) : storageManager.GetVideo(body.MediaId);
-                outputUrl = tmpFolder + mediaType == "image" ? "tmp.jpg" : "tmp.mp4";
+                /*
+                url = @"C:\Users\Marco\Downloads\cars.jpg";*/
+                outputUrl = mediaType == "image" ? "tmp.jpg" : "tmp.mp4";
+                outputUrl = tmpFolder + outputUrl;
             }
             else
             {
