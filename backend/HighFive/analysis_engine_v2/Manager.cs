@@ -95,7 +95,7 @@ namespace analysis_engine
                         //TODO encoding stream start
                         break;
                     case "image":
-                        //TODO encoding image start
+                        _frameEncoder = new ImageFrameEncoder(@"C:\Users\hanne\RiderProjects\output.jpg");
                         break;
                     default:
                         _frameEncoder =

@@ -48,6 +48,7 @@ namespace analysis_engine
 
             int[] dimensions = { 1, image.Height, image.Width, 3 };
             var inputTensor = new DenseTensor<byte>(input.reshape(image.Height*image.Width*3).ToArray<byte>(),dimensions);
+            //var inputTensor = new DenseTensor<byte>(image.Bytes,dimensions);
             
             var modelInput = new List<NamedOnnxValue>
             {
@@ -84,8 +85,8 @@ namespace analysis_engine
                     output.Boxes.Add(boxes[i * 4 + 3] * height - boxes[i * 4 + 1] * height);
                 }
             }
-            
-            return DrawBoxes(data, output);
+            data.Meta.Add(output);
+            return data;//DrawBoxes(data, output);
         }
         
         private Data DrawBoxes(Data data, BoxCoordinateData output)

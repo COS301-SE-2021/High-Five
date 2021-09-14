@@ -51,7 +51,7 @@ namespace analysis_engine
                     _filterBuilder.AddInput(temp[count-1].Output);
                     _filterBuilder.AddOutput(_pipeFactories[0].GetPipe());
                 }
-                _filterBuilder.BuildToolContainer(s, filterStrings.Length==(count-1));
+                _filterBuilder.BuildToolContainer(s, filterStrings.Length==(count+1));
                 temp.Add(_filterBuilder.GetFilter());
                 count++;
             }

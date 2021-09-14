@@ -1,5 +1,6 @@
 using System;
 using Emgu.CV;
+using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 
 namespace analysis_engine.Video
@@ -14,7 +15,14 @@ namespace analysis_engine.Video
         public override Image<Rgb, byte> GetNextFrame()
         {
             var frame = Capture.QueryFrame();
-            return frame?.ToImage<Rgb, byte>();
+            if (frame == null) return null;
+            var image=frame.ToImage<Rgb, byte>();
+            if (image.Width % 4 != 0)
+            {
+                image=image.Resize(image.Width+(4-image.Width%4), image.Height, Inter.Area);
+            }
+
+            return image;
         }
     }
 }

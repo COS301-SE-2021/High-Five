@@ -16,15 +16,15 @@ namespace analysis_engine
     {
         public static void Main(string[] args)
         {
-            TestAnalysis();
+            TestVideoAnalysis();
         }
 
-        private static void TestAnalysis()
+        private static void TestVideoAnalysis()
         {
             Console.WriteLine("Starting Analysis...");
             var url =
-                @"https://high5storage.blob.core.windows.net/31eb910a-c3f4-412c-b641-26ca8c7c38e3/video/313E9C0D8AE9CEC3FC6327F00C481D70.mp4?sv=2015-12-11&sr=b&sig=teGCzQ4bfI6iK6rvDPam%2FrHDrZgvIh8KX6TwXReMZYU%3D&st=2021-09-13T15%3A41%3A27Z&se=2021-09-13T18%3A41%3A27Z&sp=r";
-            var analysis=new AnalysisObserver(url);
+                @"https://high5storage.blob.core.windows.net/31eb910a-c3f4-412c-b641-26ca8c7c38e3/video/D533488463D0867B3CF57173FA6ABA98.mp4?sp=r&st=2021-09-14T08:49:18Z&se=2021-09-14T16:49:18Z&spr=https&sv=2020-08-04&sr=b&sig=s9cFdgGCI%2FbpkJnJjgmn1cR38g55F33%2B3tjdaUqZG1s%3D";
+            var analysis=new AnalysisObserver(url, "video", "analysis:vehicles,drawing:boxes");
             while (!analysis.Done) System.Threading.Thread.Sleep(1000);
             Console.WriteLine("Analysis Done!");
         }
@@ -33,7 +33,7 @@ namespace analysis_engine
         {
             var count = 0;
             var frameGrabber = new VideoFrameGrabber();
-            frameGrabber.Init(@"https://high5storage.blob.core.windows.net/31eb910a-c3f4-412c-b641-26ca8c7c38e3/video/9269F3E498E14EC2F1871D8221727A4D.mp4?sp=r&st=2021-09-13T13:55:51Z&se=2021-09-13T21:55:51Z&spr=https&sv=2020-08-04&sr=b&sig=3ysadlbbPC84oTqThgrLARR84eqDrbECgUTt0GPFW1E%3D");
+            frameGrabber.Init(@"https://high5storage.blob.core.windows.net/31eb910a-c3f4-412c-b641-26ca8c7c38e3/image/1018157F212558009EE97507E4972AF0.img?sp=r&st=2021-09-14T08:49:40Z&se=2021-09-14T16:49:40Z&spr=https&sv=2020-08-04&sr=b&sig=F8p%2FujTW61op3eKZqC4NagFUfMXrfp1lbjrEDhwusMA%3D");
             var data=new Data(new Frame(frameGrabber.GetNextFrame(), count));
             var frameEncoder = new VideoFrameEncoder(@"C:\Users\hanne\RiderProjects\output.mp4", data.Frame.Image.Size);
 
@@ -44,6 +44,16 @@ namespace analysis_engine
                 data.Frame.Image = frameGrabber.GetNextFrame();
                 data.Frame.FrameID = count;
             }
+        }
+
+        private static void TestImageAnalysis()
+        {
+            Console.WriteLine("Starting Analysis...");
+            var url =
+                @"C:\Users\hanne\RiderProjects\1018157F212558009EE97507E4972AF0.jpg";
+            var analysis=new AnalysisObserver(url, "image","analysis:vehicles,drawing:boxes");
+            while (!analysis.Done) System.Threading.Thread.Sleep(1000);
+            Console.WriteLine("Analysis Done!");
         }
 
         

@@ -40,6 +40,11 @@ namespace analysis_engine
                         {
                             Output.Push(Tool.Process(temp));
                         }
+                        else
+                        {
+                            Output.Push(null);
+                            break;
+                        }
                     }
                 }
                 else
@@ -49,7 +54,7 @@ namespace analysis_engine
                     List<MetaData> meta = null;
                     while (_running)
                     {
-                        if (count % 3 == 0)
+                        if (count % FrameSkipper == 0)
                         {
                             var temp = Input.Pop();
                             if (temp == null)
