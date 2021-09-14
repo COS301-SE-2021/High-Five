@@ -22,7 +22,7 @@ export class LivePage implements OnInit {
   };
 
   constructor(public liveStreamingService: LiveStreamingService, public userPreferencesService: UserPreferencesService,
-              private popoverController: PopoverController, public  pipelineService: PipelineService) {
+              private popoverController: PopoverController, public pipelineService: PipelineService) {
   }
 
 
@@ -47,7 +47,7 @@ export class LivePage implements OnInit {
          */
         if (data.data !== undefined) {
           if (data.data.pipeline !== undefined) {
-            this.userPreferencesService.liveAnalysisPipeline = data.data.pipeline;
+            this.userPreferencesService.updateLiveAnalysisPipeline(data.data.pipeline);
           }
         }
       }

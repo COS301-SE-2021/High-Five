@@ -35,9 +35,6 @@ export class UserPreferencesService {
   set liveAnalysisPipeline(pipeline: Pipeline) {
     // eslint-disable-next-line no-underscore-dangle
     this._liveAnalysisPipeline.next(pipeline);
-    this.apiPipelineService.setLivePipeline({pipelineId: pipeline.id}).subscribe(() => {
-      this.snotifyService.success(`Successfully updated live analysis pipeline to : ` + pipeline.name, 'Live Analysis Pipeline');
-    });
   }
 
   get liveAnalysisPipeline(): Pipeline {
@@ -45,6 +42,13 @@ export class UserPreferencesService {
     return this._liveAnalysisPipeline.value;
   }
 
+
+  public updateLiveAnalysisPipeline(pipeline: Pipeline) {
+    this.liveAnalysisPipeline = pipeline;
+    this.apiPipelineService.setLivePipeline({pipelineId: pipeline.id}).subscribe(() => {
+      this.snotifyService.success(`Successfully updated live analysis pipeline to : ` + pipeline.name, 'Live Analysis Pipeline');
+    });
+  }
 
   private async setInitialLiveAnalysisPipeline() {
     this.apiPipelineService.getLivePipeline().subscribe((res) => {
