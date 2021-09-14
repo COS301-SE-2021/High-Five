@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using analysis_engine_v2.BrokerClient.Service.Models;
+using broker_analysis_client.Client;
 using broker_analysis_client.Client.Models;
 using broker_analysis_client.Storage;
 using Newtonsoft.Json;
@@ -56,24 +57,32 @@ namespace analysis_engine_v2.BrokerClient.Storage
             return response;
         }
 
-        public string GetVideo(string videoId)
+        public async Task<byte[]> GetVideo(string videoId)
         {
             /*
-             * Returns video as url
+             * Returns video as byte array
              */
             var video = _storageManager.GetFile(videoId + ".mp4", "video").Result;
+            if (video == null)
+            {
+                return null;
+            }
 
-            return video?.GetUrl();
+            return await video.ToByteArray();
         }
 
-        public string GetImage(string imageId)
+        public async Task<byte[]> GetImage(string imageId)
         {
             /*
-             * Returns image as url
+             * Returns image as byte array
              */
             var image = _storageManager.GetFile(imageId + ".mp4", "image").Result;
+            if (image == null)
+            {
+                return null;
+            }
 
-            return image?.GetUrl();
+            return await image.ToByteArray();
         }
 
         public AnalysisToolComposite GetAnalysisTool(string toolId)
@@ -83,10 +92,6 @@ namespace analysis_engine_v2.BrokerClient.Storage
              */
             
             var toolSet = _storageManager.GetAllFilesInContainer("tools/analysis/" + toolId).Result;
-            if (toolSet.Count == 0)
-            {
-                return null;
-            }
             IBlobFile sourceCodeFile = null;
             IBlobFile modelFile = null;
             foreach (var tool in toolSet)
@@ -142,9 +147,8 @@ namespace analysis_engine_v2.BrokerClient.Storage
              * Returns pipeline as JSON
              */
             var pipelineFile = _storageManager.GetFile(pipelineId + ".json", "pipeline").Result;
-            if (pipelineFile == null) return null;
-            var pipelineObject = JsonConvert.DeserializeObject<PipelineRequest>(await pipelineFile.ToText());
-            return FormatPipeline(pipelineObject);
+            if (pipelineFile == null || !await pipelineFile.Exists()) return null;
+            return await pipelineFile.ToText();
         }
 
         public async Task<string> GetMetadataType(string metadataTypeName)
@@ -160,34 +164,6 @@ namespace analysis_engine_v2.BrokerClient.Storage
             }
 
             return await metadataFile.ToText();
-        }
-
-        private string FormatPipeline(PipelineRequest request)
-        {
-            var toolIds = request.Tools;
-            var resultStr = string.Empty;
-            foreach (var toolId in toolIds)
-            {
-                resultStr += MapToolIdToString(toolId);
-                if (toolId != toolIds[toolIds.Count - 1])
-                {
-                    resultStr += ",";
-                }
-            }
-            return resultStr;
-        }
-
-        private string MapToolIdToString(string toolId)
-        {
-            return toolId switch
-            {
-                "D0" => "analysis:people",
-                "D1" => "analysis:animal",
-                "D2" => "analysis:vehicles",
-                "D3" => "analysis:fastvehicles",
-                "D4" => "drawing:boxes",
-                _ => "dynamic:" + toolId
-            };
         }
     }
 }

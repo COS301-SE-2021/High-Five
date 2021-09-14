@@ -35,7 +35,13 @@
         <Prefer32bit>false</Prefer32bit>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="Confluent.Kafka, Version=1.7.0.0, Culture=neutral, PublicKeyToken=12c514ca49093d1e">
+          <HintPath>C:\Users\Marco\.nuget\packages\confluent.kafka\1.7.0\lib\netcoreapp2.1\Confluent.Kafka.dll</HintPath>
+        </Reference>
         <Reference Include="mscorlib" />
+        <Reference Include="Renci.SshNet, Version=2020.0.1.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106">
+          <HintPath>C:\Users\Marco\.nuget\packages\ssh.net\2020.0.1\lib\netstandard2.0\Renci.SshNet.dll</HintPath>
+        </Reference>
         <Reference Include="System" />
         <Reference Include="System.ComponentModel.Composition" />
         <Reference Include="System.Core" />
@@ -48,6 +54,22 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="AnalysisObserver.cs" />
+        <Compile Include="BrokerClient\BrokerClient.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Command.cs" />
+        <Compile Include="BrokerClient\CommandHandler\CommandHandler\ICommandHandler.cs" />
+        <Compile Include="BrokerClient\CommandHandler\CommandHandler\MockCommandHandler.cs" />
+        <Compile Include="BrokerClient\CommandHandler\ICommand.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Models\AnalysisCommand.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Models\commandbody\CommandBody.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Models\commandbody\LiveAnalysisCommandBody.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Models\commandbody\StoredMediaCommandBody.cs" />
+        <Compile Include="BrokerClient\IBrokerClient.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\IResourceUsageCollector.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\Models\PerformanceInfo.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\Models\ServerInformation.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\ResourceCollector\IResourceCollector.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\ResourceCollector\MockResourceCollector.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\ResourceUsageCollector.cs" />
         <Compile Include="BrokerClient\Service\AnalysisClientService.cs" />
         <Compile Include="BrokerClient\Service\IAnalysisClientService.cs" />
         <Compile Include="BrokerClient\Service\Models\AnalysisToolComposite.cs" />
@@ -144,6 +166,7 @@
       <Content Include="DynamicTools\SampleMetadata.txt" />
     </ItemGroup>
     <ItemGroup>
+      <PackageReference Include="Confluent.Kafka" Version="1.7.0" />
       <PackageReference Include="Emgu.CV" Version="4.5.3.4721" />
       <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721" />
       <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="1.0.0" />
@@ -160,6 +183,7 @@
       <PackageReference Include="NETStandard.Library" Version="1.6.1" />
       <PackageReference Include="Newtonsoft.Json" Version="6.0.8" />
       <PackageReference Include="NumSharp" Version="0.30.0" />
+      <PackageReference Include="SSH.NET" Version="2020.0.1" />
       <PackageReference Include="System.AppContext" Version="4.3.0" />
       <PackageReference Include="System.Buffers" Version="4.5.1" />
       <PackageReference Include="System.Collections" Version="4.3.0" />

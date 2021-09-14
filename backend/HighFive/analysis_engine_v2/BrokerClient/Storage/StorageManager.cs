@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using analysis_engine;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -40,9 +39,10 @@ namespace broker_analysis_client.Storage
         public StorageManager()
         {
             SetBaseContainer("unset");//This initial value indicates that the initial container has not yet been set
+            var connectionString = "";
             if (_cloudStorageAccount != null)
             {
-                _cloudStorageAccount = CloudStorageAccount.Parse(ConfigStrings.StorageConnectionString);
+                _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             }
             _random = new Random();
         }
