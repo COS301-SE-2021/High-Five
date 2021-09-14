@@ -330,6 +330,18 @@ namespace src.Subsystems.Pipelines
             _storageManager.StoreUserInfo(id, displayName, email);
         }
 
+        public async Task<bool> SetLivePipeline(GetPipelineRequest request)
+        {
+            var livePipelineFile = _storageManager.GetFile("live_pipeline.txt", "").Result;
+            if (livePipelineFile == null)
+            {
+                livePipelineFile = _storageManager.CreateNewFile("live_pipeline.txt", "").Result;
+            }
+
+            await livePipelineFile.UploadText(request.PipelineId);
+            return true;
+        }
+
         private string ToolNameToId(string toolName)
         {
             return toolName switch
