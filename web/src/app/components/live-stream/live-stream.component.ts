@@ -1,5 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {LiveStreamingService} from '../../services/live-streaming/live-streaming.service';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-live-stream',
@@ -8,17 +10,19 @@ import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 })
 export class LiveStreamComponent implements OnInit {
   @Input() streamId: string;
+
   // eslint-disable-next-line max-len
 
-  constructor(private domSanitizer: DomSanitizer) {
+  constructor(private domSanitizer: DomSanitizer, private liveStreamingService: LiveStreamingService) {
   }
 
   ngOnInit() {
 
   }
 
+// + '&token=' + this.getOTT()
   public getUrl(): SafeResourceUrl {
-    const x: string = 'https://highfiveanalysis.ddns.net:5443/test5/play.html?name=' + this.streamId + '&token=' + this.getOTT();
+    const x: string = environment.streamPlayBaseUrl + this.liveStreamingService.appName + '/play.html?name=' + this.streamId;
     console.log(x);
     return this.domSanitizer.bypassSecurityTrustResourceUrl(x);
   }

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AnimationOptions} from 'ngx-lottie';
+import {LiveStreamingService} from '../../services/live-streaming/live-streaming.service';
 
 
 @Component({
@@ -8,7 +9,6 @@ import {AnimationOptions} from 'ngx-lottie';
   styleUrls: ['./live.page.scss'],
 })
 export class LivePage implements OnInit {
-  public liveStreams = [];
 
   /**
    * The configuration of the lottie animation on this page (not present currently)
@@ -17,13 +17,9 @@ export class LivePage implements OnInit {
     path: '/assets/lottie-animations/67783-drones-isometric-lottie-animation.json'
   };
 
-  constructor() {
-    for (let i = 0; i < 1; i++) {
-      this.liveStreams = this.liveStreams.concat([{
-        title: 'Test',
-      }]);
-    }
+  constructor(public liveStreamingService: LiveStreamingService) {
   }
+
 
 
   ngOnInit() {
