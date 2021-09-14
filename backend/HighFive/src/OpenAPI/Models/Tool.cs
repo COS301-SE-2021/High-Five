@@ -50,9 +50,9 @@ namespace Org.OpenAPITools.Models
         /// </summary>
         [DataMember(Name="toolMetadataType", EmitDefaultValue=false)]
         public string ToolMetadataType { get; set; }
-        
+
         /// <summary>
-        /// Gets or Sets ToolMetadataType
+        /// Gets or Sets IsDefaultTool
         /// </summary>
         [DataMember(Name="isDefaultTool", EmitDefaultValue=false)]
         public bool IsDefaultTool { get; set; }
@@ -69,6 +69,7 @@ namespace Org.OpenAPITools.Models
             sb.Append("  ToolName: ").Append(ToolName).Append("\n");
             sb.Append("  ToolType: ").Append(ToolType).Append("\n");
             sb.Append("  ToolMetadataType: ").Append(ToolMetadataType).Append("\n");
+            sb.Append("  IsDefaultTool: ").Append(IsDefaultTool).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -124,6 +125,11 @@ namespace Org.OpenAPITools.Models
                     ToolMetadataType == other.ToolMetadataType ||
                     ToolMetadataType != null &&
                     ToolMetadataType.Equals(other.ToolMetadataType)
+                ) && 
+                (
+                    IsDefaultTool == other.IsDefaultTool ||
+                    
+                    IsDefaultTool.Equals(other.IsDefaultTool)
                 );
         }
 
@@ -145,6 +151,8 @@ namespace Org.OpenAPITools.Models
                     hashCode = hashCode * 59 + ToolType.GetHashCode();
                     if (ToolMetadataType != null)
                     hashCode = hashCode * 59 + ToolMetadataType.GetHashCode();
+                    
+                    hashCode = hashCode * 59 + IsDefaultTool.GetHashCode();
                 return hashCode;
             }
         }
