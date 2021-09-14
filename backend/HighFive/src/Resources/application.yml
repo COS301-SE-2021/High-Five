@@ -1151,6 +1151,8 @@ components:
           description: Analysis or drawing
         toolMetadataType:
           type: string
+        isDefaultTool:
+          type: boolean
 
     getToolTypesResponse:
       type: object
