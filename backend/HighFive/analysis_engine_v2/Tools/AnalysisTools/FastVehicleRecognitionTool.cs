@@ -79,10 +79,10 @@ namespace analysis_engine
                 if (scores[i] > MinScore && labels[i]>=MinClass && labels[i]<=MaxClass)
                 {
                     output.Classes.Add(_classes[Convert.ToInt32(labels[i]-1)]);
-                    output.Boxes.Add(boxes[i * 4] * width);
-                    output.Boxes.Add(boxes[i * 4 + 1] * height);
-                    output.Boxes.Add(boxes[i * 4 + 2] * width - boxes[i * 4] * width);
-                    output.Boxes.Add(boxes[i * 4 + 3] * height - boxes[i * 4 + 1] * height);
+                    output.Boxes.Add(boxes[i * 4 + 1] * width);
+                    output.Boxes.Add(boxes[i * 4] * height);
+                    output.Boxes.Add(boxes[i * 4 + 3] * width - boxes[i * 4 + 1] * width);
+                    output.Boxes.Add(boxes[i * 4 + 2] * height - boxes[i * 4] * height);
                 }
             }
             data.Meta.Add(output);

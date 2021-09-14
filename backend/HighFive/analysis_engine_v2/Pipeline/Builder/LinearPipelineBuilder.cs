@@ -37,7 +37,11 @@ namespace analysis_engine
                 
                 _filterBuilder.BuildFilterManager("concurrency");
 
-                if (count == 0)//If this is the first filter in the pipeline
+                if (filterStrings.Length == 1)
+                {
+                    _filterBuilder.AddInput(Pipeline.Source);
+                    _filterBuilder.AddOutput(Pipeline.Drain);
+                }else if (count == 0)//If this is the first filter in the pipeline
                 {
                     _filterBuilder.AddInput(Pipeline.Source);
                     _filterBuilder.AddOutput(_pipeFactories[0].GetPipe());
