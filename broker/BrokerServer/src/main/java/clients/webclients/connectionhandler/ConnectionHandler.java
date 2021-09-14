@@ -44,16 +44,20 @@ public class ConnectionHandler implements Observer<ResponseObject> {
                 }
             };
 
+            ArrayList<String> connectionsToRemove = new ArrayList<>();
+
             connections.stream().filter(predicate).forEach(
                     item -> {
                         try {
                             item.getWriter().append(responseObject.data).append("\n").flush();
                         } catch (IOException e) {
                             EventLogger.getLogger().logException(e);
-                            removeConnection(item.getConnectionId());
+                            connectionsToRemove.add(item.getConnectionId());
                         }
                     }
                     );
+
+            connectionsToRemove.forEach(this::_removeConnection);
 
         } finally {
             lock.unlock();
@@ -79,11 +83,15 @@ public class ConnectionHandler implements Observer<ResponseObject> {
         }
     }
 
+    private void _removeConnection(String connectionId) {
+        EventLogger.getLogger().info("Removing connection " + connectionId + " from ConnectionHandler");
+        connections.removeIf(item -> item.getConnectionId().contains(connectionId));
+    }
+
     public void removeConnection(String connectionId) {
         lock.lock();
         try {
-            EventLogger.getLogger().info("Removing connection " + connectionId + " from ConnectionHandler");
-            connections.removeIf(item -> item.getConnectionId().contains(connectionId));
+            _removeConnection(connectionId);
         } finally {
             lock.unlock();
         }
