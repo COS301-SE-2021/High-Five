@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,8 +17,12 @@ using src.AnalysisTools.VideoDecoder;
 using src.Storage;
 using src.Subsystems.Admin;
 using src.Subsystems.Analysis;
+using src.Subsystems.FileDownloads;
+using src.Subsystems.Livestreaming;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
+using src.Subsystems.Tools;
+using src.Subsystems.User;
 
 namespace tests.IntegrationTests
 {
@@ -38,11 +45,15 @@ namespace tests.IntegrationTests
             {
                 c.AddPolicy("AllowOrigin", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             });
-            
+
             services.AddMvc().AddApplicationPart(typeof(Org.OpenAPITools.Controllers.TestApiController).Assembly)
                 .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.MediaStorageApiController).Assembly)
                 .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.PipelinesApiController).Assembly)
-                .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.AnalysisApiController).Assembly);
+                .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.AnalysisApiController).Assembly)
+                .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.UserApiController).Assembly)
+                .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.LivestreamApiController).Assembly)
+                .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.ToolsApiController).Assembly)
+                .AddApplicationPart(typeof(Org.OpenAPITools.Controllers.DownloadsApiController).Assembly);
 
             // Configuring of Azure AD B2C Authentication
             services.AddAuthentication(options =>
@@ -61,16 +72,42 @@ namespace tests.IntegrationTests
                             c.Response.StatusCode = 401;
                             c.Response.ContentType = "application/json";
                             await c.Response.WriteAsync("{\"error\":\"Invalid token provided. (Developer's note, this error might also mean something else went wrong with the back-end)\"}");
+                        },
+                        OnTokenValidated = async ctx =>
+                        {
+                            var adminValidator = ctx.HttpContext.RequestServices.GetRequiredService<IAdminValidator>();
+                            var userId = ((JwtSecurityToken)ctx.SecurityToken).Subject;
+                            if (adminValidator.IsAdmin(userId))
+                            {
+                                var claims = new List<Claim>
+                                {
+                                    new Claim("Admin", "true")
+                                };
+                                var appIdentity = new ClaimsIdentity(claims);
+                                ctx.Principal.AddIdentity(appIdentity);
+                            }
                         }
                     };
                 });
-
+            
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
+            });
+            
+            //singletons
+            var mockAdminValidator = new MockAdminValidator();
+            services.Add(new ServiceDescriptor(typeof(IAdminValidator), mockAdminValidator));
+            services.Add(new ServiceDescriptor(typeof(IStorageManager), new MockStorageManager(mockAdminValidator)));//singleton
             // Dependency Injections
-            services.Add(new ServiceDescriptor(typeof(IStorageManager), new MockStorageManager(new MockAdminValidator())));//singleton
             services.AddScoped<IMediaStorageService, MediaStorageService>();
             services.AddScoped<IPipelineService, PipelineService>();
             services.AddScoped<IAnalysisService, AnalysisService>();
             services.AddScoped<IVideoDecoder, MockVideoDecoder>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IToolService, ToolService>();
+            services.AddScoped<IDownloadsService, DownloadsService>();
+            services.AddScoped<ILivestreamingService, LivestreamingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
