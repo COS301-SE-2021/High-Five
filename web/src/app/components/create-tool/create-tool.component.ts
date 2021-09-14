@@ -24,13 +24,10 @@ export class CreateToolComponent implements OnInit {
 
 
   public createTool() {
-    console.log(this.toolType);
     if (this.toolType === 'analysis') {
       this.userToolsService.addAnalysisTool(this.toolClassFile, this.toolModelFile, this.metaData, this.toolName);
-      console.log('here');
     } else if (this.toolType === 'drawing') {
       this.userToolsService.addDrawingTool(this.toolClassFile, this.metaData, this.toolName);
-      console.log('here');
     }
     this.modalController.dismiss({dismissed: true});
   }

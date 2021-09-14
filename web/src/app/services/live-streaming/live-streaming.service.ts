@@ -18,7 +18,6 @@ export class LiveStreamingService {
     this.fetchAll();
     this.appName = msalService.instance.getActiveAccount().localAccountId;
     this.appName = this.appName.replace(/-/g, '');
-    console.log(this.appName);
   }
 
   get streams(): LiveStream[] {

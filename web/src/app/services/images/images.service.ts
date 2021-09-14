@@ -39,7 +39,7 @@ export class ImagesService {
       this.mediaStorageService.storeImageForm(image, 'events', true).subscribe((ev: HttpEvent<any>) => {
         switch (ev.type) {
           case HttpEventType.UploadProgress:
-            console.log(Math.round(ev.loaded / ev.total * 100));
+            // console.log(Math.round(ev.loaded / ev.total * 100));
             break;
           case HttpEventType.Response:
             this.snotifyService.success('Successfully uploaded image', 'Image upload');

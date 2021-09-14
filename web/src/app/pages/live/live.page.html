@@ -1,3 +1,15 @@
+<ion-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-button fill="outline" color="tertiary" shape="round" mode="md" (click)="displaySelectPipelinePopover($event)">
+          <ion-label color="dark">{{userPreferencesService.liveAnalysisPipeline ? userPreferencesService.liveAnalysisPipeline.name : 'None'}}</ion-label>
+          <ion-icon color="dark" name="filter-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-header>
 <ion-content>
   <ion-grid class="ion-justify-content-center ion-align-items-center">
     <ion-row class="ion-justify-content-center ion-align-items-center">

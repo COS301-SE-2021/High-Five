@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {PopoverController} from '@ionic/angular';
 
 @Component({
-  selector: 'app-add-tool',
+  selector: 'app-add-item',
   templateUrl: './add-item.component.html',
   styleUrls: ['./add-item.component.scss'],
 })
