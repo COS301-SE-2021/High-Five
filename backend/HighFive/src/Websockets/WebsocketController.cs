@@ -52,14 +52,14 @@ namespace src.Websockets
                         }
                         if (request == null)
                         {
-                            await SendMessage("Invalid Format", "Request is not structured correctly.", "error",
+                            await SendMessage("Invalid Format", "Request is null", "error",
                                 webSocket);
                             continue;
                         }
 
                         switch (request.Request)
                         {
-                            case "Synchronize":
+                            case "Synchronize": //Should be called from client before any other function
                                 continue;
                             case "AnalyzeImage":
                                 var analyzedImage = _analysisService.AnalyzeImage(request).Result;
@@ -69,13 +69,6 @@ namespace src.Websockets
                                     responseBody = "Invalid pipeline- or media id provided.";
                                     responseType = "error";
                                 }
-                                else
-                                {
-                                    responseTitle = "Image Analyzed";
-                                    responseBody = JsonConvert.SerializeObject(analyzedImage);
-                                    responseType = "success";
-                                }
-
                                 break;
                             case "AnalyzeVideo":
                                 var analyzedVideo = _analysisService.AnalyzeVideo(request).Result;
@@ -85,16 +78,9 @@ namespace src.Websockets
                                     responseBody = "Invalid pipeline- or media id provided.";
                                     responseType = "error";
                                 }
-                                else
-                                {
-                                    responseTitle = "Video Analyzed";
-                                    responseBody = JsonConvert.SerializeObject(analyzedVideo);
-                                    responseType = "success";
-                                }
                                 break;
                             case "StartLiveAnalysis":   //This use case must be called by the application
                                 await _analysisService.StartLiveStream(_userId);
-                                
                                 continue;
                             case "Exit":
                                 await SendMessage("Socket Closed", "Connection to the socket was closed.", "info",
@@ -124,7 +110,10 @@ namespace src.Websockets
                         continue;
                     }
 
-                    await SendMessage(responseTitle, responseBody, responseType, webSocket);
+                    if (!responseTitle.Equals(string.Empty))// This means an error has occurred
+                    {
+                        await SendMessage(responseTitle, responseBody, responseType, webSocket);
+                    }
                 }
             }
             else
@@ -137,6 +126,13 @@ namespace src.Websockets
         private static async Task SendMessage(string title, string message, string type, WebSocket webSocket)
         {
             var payload = "{\"title\": \"" + title + "\",\"message\": \"" + message.TrimStart('\"').TrimEnd('\"') + "\",\"type\": \"" + type + "\"}";
+            var buffer = Encoding.Default.GetBytes(payload);
+            await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+        }
+
+        private static async Task SendMessage(string title, object message, string type, WebSocket webSocket)
+        {
+            var payload = "{\"title\": \"" + title + "\",\"message\":" + JsonConvert.SerializeObject(message) + ",\"type\": \"" + type + "\"}";
             var buffer = Encoding.Default.GetBytes(payload);
             await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
         }
@@ -160,10 +156,25 @@ namespace src.Websockets
         private async Task ListenForBrokerMessage(WebSocket webClientSocket)
         {
             /*
-             * Listens for messages from the Broker, will only send a message to the
-             * front-end if a livestream started notification is pushed through.
+             * Listens for messages from the Broker.
              */
-            var socket = new WebSocketClient();
+            while (webClientSocket.State != WebSocketState.Closed)
+            {
+                var message = ((AnalysisService)_analysisService).AnalysisSocket.Receive().Result;
+                if (message.Contains("videoId"))
+                {
+                    await SendMessage("Video Analysed", JsonConvert.DeserializeObject(message) , "success", webClientSocket);
+                }
+                else if (message.Contains("imageId"))
+                {
+                    await SendMessage("Image Analysed", JsonConvert.DeserializeObject(message) , "success", webClientSocket);
+                }
+                else if (message.Contains("playLink"))
+                {
+                    await SendMessage("Livestream Started", JsonConvert.DeserializeObject(message) , "info", webClientSocket);
+                }
+            }
+            /*var socket = new WebSocketClient();
             await socket.Connect(_configuration["BrokerUri"], _userId);
             while (webClientSocket.State != WebSocketState.Closed)
             {
@@ -172,9 +183,9 @@ namespace src.Websockets
                 {
                     continue;
                 }
-                await SendMessage("Livestream Started", message, "info", webClientSocket);
+                await SendMessage("Livestream Started", JsonConvert.DeserializeObject(message) , "info", webClientSocket);
             }
-            socket.Close();
+            socket.Close();*/
         }
         
         private void ConfigureStorageManager(SocketRequest request)
