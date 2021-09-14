@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using analysis_engine.BrokerClient.ResourceUsageCollector;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -13,19 +15,21 @@ namespace analysis_engine
     {
         public static void Main(string[] args)
         {
-            var originalImage1 = CvInvoke.Imread("C:\\Users\\Bieldt\\OneDrive\\Pictures\\cows.jpg", ImreadModes.Unchanged);
+            // var originalImage1 = CvInvoke.Imread("C:\\Users\\Bieldt\\OneDrive\\Pictures\\cows.jpg", ImreadModes.Unchanged);
+            //
+            // var watch1 = new Stopwatch();
+            //
+            // var runner1 = new FastVehicleRecognitionTool();
+            //
+            // runner1.Init();
+            //
+            // var data1 = new Data();
+            //
+            // data1.Frame.Image = originalImage1.ToImage<Rgb, byte>();
+            //
+            // var result1 = data1;
             
-            var watch1 = new Stopwatch();
-            
-            var runner1 = new FastVehicleRecognitionTool();
-            
-            runner1.Init();
-            
-            var data1 = new Data();
-            
-            data1.Frame.Image = originalImage1.ToImage<Rgb, byte>();
-            
-            var result1 = data1;
+            new BrokerClient.BrokerClient().Run();
             
             // Task.Run(() =>
             // {
@@ -38,9 +42,13 @@ namespace analysis_engine
             //     watch1.Stop();
             //     Console.WriteLine("1: Execution time: " + watch1.ElapsedMilliseconds/100.0 + "ms");
             // });
-            
 
-            while (true) ;
+
+            while (true)
+            {
+                //Make thread sleep such as to not overuse resources
+                Thread.Sleep(1000);
+            }
             // CvInvoke.Imwrite("C:\\Users\\Bieldt\\OneDrive\\Pictures\\output.jpg", result.Frame.Image);
         }
 

@@ -48,6 +48,7 @@ public class KafkaServerParticipant extends ServerParticipant {
             KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
 
             consumer.assign(partitions);
+            consumer.seekToEnd(partitions);
 
             //Iterate through each server
             for (TopicPartition partition : partitions) {

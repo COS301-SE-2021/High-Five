@@ -2,6 +2,7 @@ package managers.client;
 
 import clients.webclients.WebClient;
 import clients.webclients.connection.Connection;
+import clients.webclients.connectionhandler.ConnectionHandler;
 import dataclasses.serverinfo.ServerInformationHolder;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
@@ -12,16 +13,24 @@ import servicelocator.wrappers.ClientConnectionWrapper;
 import servicelocator.wrappers.ClientListenerWrapper;
 import servicelocator.wrappers.WebClientWrapper;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
+import java.util.UUID;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * This class manages a ClientListener, which listens out for new connections,
  * and adds these new connections to a pool of participants.
  */
 public class ClientManagerImpl extends Manager {
+    private final ConnectionHandler connectionHandler = new ConnectionHandler();
+    private final Executor clientCreator = Executors.newFixedThreadPool(4);
     public ClientManagerImpl(ServerInformationHolder holder) {
-        super(holder, 8);
+        super(holder, 30);
     }
 
     public void run() {
@@ -38,14 +47,23 @@ public class ClientManagerImpl extends Manager {
             @Override
             public void onNext(@NonNull Socket connection) {
 
-                try {
-                    EventLogger.getLogger().info("Creating new client connection");
-                    Connection webConnection = ClientConnectionWrapper.get(connection);
-                    WebClient client = WebClientWrapper.get(webConnection, serverInformationHolder);
-                    participants.execute(client);
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    EventLogger.getLogger().logException(e);
-                }
+                clientCreator.execute(() -> {
+                    try {
+                        EventLogger.getLogger().info("Creating new client connection");
+                        Connection webConnection = ClientConnectionWrapper.get(connection);
+                        webConnection.setConnectionId(UUID.randomUUID().toString());
+                        BufferedReader reader = webConnection.getReader();
+                        String userId = reader.readLine();
+                        webConnection.setUserId(userId);
+                        BufferedWriter writer = webConnection.getWriter();
+                        writer.append("ACK\n").flush();
+                        connectionHandler.addConnection(webConnection);
+                        WebClient client = WebClientWrapper.get(webConnection, connectionHandler, serverInformationHolder);
+                        participants.execute(client);
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | IOException e) {
+                        EventLogger.getLogger().logException(e);
+                    }
+                });
             }
 
             @Override

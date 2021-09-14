@@ -1,6 +1,10 @@
 package clients.webclients.strategy;
 
+import clients.webclients.connectionhandler.ConnectionHandler;
+import clients.webclients.connectionhandler.ResponseObject;
 import dataclasses.analysiscommand.AnalysisCommand;
+import dataclasses.analysiscommand.commandbody.StoredMediaCommandBody;
+import dataclasses.clientrequest.requestbody.StoredMediaRequestBody;
 import dataclasses.serverinfo.ServerInformation;
 import dataclasses.clientrequest.AnalysisRequest;
 import dataclasses.serverinfo.ServerInformationHolder;
@@ -27,10 +31,11 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
      *
      * @param request Analysis request for media to be analysed
      * @param information Information about the server to perform analysis.
-     * @param writer Writer to inform web client that media is going to be analysed
+     * @param handler Connection handler to send response to
+     * @param connectionId Connection id
      */
     @Override
-    public void processRequest(AnalysisRequest request, ServerInformationHolder information, BufferedWriter writer) throws IOException {
+    public void processRequest(AnalysisRequest request, ServerInformationHolder information, ConnectionHandler handler, String connectionId) throws IOException {
 
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");
@@ -42,7 +47,9 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
         ServerInformation info = information.get(builder);
 
         //Create new command
-        AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getMediaId(), request.getPipelineId());
+        StoredMediaRequestBody body = (StoredMediaRequestBody) request.getBody();
+        StoredMediaCommandBody commandBody = new StoredMediaCommandBody(body.getMediaId(), body.getPipelineId());
+        AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getUserId(), commandBody);
         EventLogger.getLogger().info("Sending command to server " + info.getServerId());
 
         //Send command to server
@@ -53,9 +60,11 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
 
         //Get response from server
         String response = readResponse(info.getServerId());
+        EventLogger.getLogger().info(response);
 
         //Send response to client
-        writer.append(response).append("\n").flush();
+        ResponseObject responseObject = new ResponseObject(request.getRequestType(), null, response, connectionId);
+        handler.onNext(responseObject);
     }
 
     /**
@@ -65,62 +74,85 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
      */
     private String readResponse(String topic) throws IOException {
         EventLogger.getLogger().info("Reading response from topic " + topic);
+        ConsumerRecord<String, String> message;
+        String retMsg;
 
-        List<ConsumerRecord<String, String>> messageList = null;
+        //loop until we get a valid message
+        while(true) {
 
-        boolean messageFound = false;
+            List<ConsumerRecord<String, String>> messageList = null;
 
-        //Listen for a new message from the server.
-        for (int i = 0; i < 10; i++) {
-            //Initialise the Kafka consumer to read a response from the communication partition of the topic
-            Properties props = new Properties();
-            props.setProperty("bootstrap.servers", "localhost:9092");
-            props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-            props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            boolean messageFound = false;
 
-            TopicPartition partition = new TopicPartition(topic, 2);
+            //Listen for a new message from the server.
+            for (int i = 0; i < 10; i++) {
+                //Initialise the Kafka consumer to read a response from the communication partition of the topic
+                Properties props = new Properties();
+                props.setProperty("bootstrap.servers", "localhost:9092");
+                props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+                props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
-            KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-            consumer.assign(List.of(partition));
-            consumer.seekToEnd(List.of(partition));
+                TopicPartition partition = new TopicPartition(topic, 2);
 
-            long position = consumer.position(partition);
-            System.out.println(position);
-            if (position > 0) {
-                position--;
+                KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+                consumer.assign(List.of(partition));
+                consumer.seekToEnd(List.of(partition));
+
+                long position = consumer.position(partition);
+                if (position > 0) {
+                    position--;
+                }
+                consumer.seek(partition, position);
+
+                messageList = consumer.poll(Duration.ofSeconds(5)).records(partition);
+
+                if (messageList.size() > 0) {
+                    messageFound = TopicManager.getInstance().isNewMessage(messageList.get(0));
+                }
+
+                //Only go through if we have a message that has not been sent before
+                if (messageFound) {
+                    consumer.close();
+                    break;
+                }
+
+                consumer.close();
+
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
-            consumer.seek(partition, position);
 
-             messageList = consumer.poll(Duration.ofSeconds(5)).records(partition);
+            /*
+            Throw an exception if the server has not responded.
+            A server is non-responsive when it has sent no new messages, or no messages at all.
+             */
+            if (messageList.size() == 0 || !messageFound) {
+                throw new IOException("No new messages could be read from topic: " + topic);
+            }
 
-             if (messageList.size() > 0) {
-                 messageFound = TopicManager.getInstance().isNewMessage(messageList.get(0));
-             }
+            message = messageList.get(0);
+            retMsg = message.value();
 
-             //Only go through if we have a message that has not been sent before
-             if (messageFound) {
-                 break;
-             }
+            /*
+            "heartbeat" may be contained in a valid message. A real heartbeat
+            message will just have the word "heartbeat", so we just extract the first
+            9 characters.
+             */
+            String possibleBeat = retMsg.substring(0, 9);
 
-            consumer.close();
-
-            try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+            /*
+            Heartbeat messages mean that the AnalysisEngine is still analysing the
+            media. While we are receiving "heartbeat", continue listening for a
+            response.
+             */
+            if (!possibleBeat.contains("heartbeat")) {
+                break;
             }
         }
 
-        /*
-        Throw an exception if the server has not responded.
-        A server is non-responsive when it has sent no new messages, or no messages at all.
-         */
-        if (messageList.size() == 0 || !messageFound) {
-            throw new IOException("No new messages could be read from topic: " + topic);
-        }
-
-        ConsumerRecord<String, String> message = messageList.get(0);
-
-        return message.value();
+        return retMsg;
     }
 }
