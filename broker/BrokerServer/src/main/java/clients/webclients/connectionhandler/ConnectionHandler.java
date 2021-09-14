@@ -50,6 +50,7 @@ public class ConnectionHandler implements Observer<ResponseObject> {
                             item.getWriter().append(responseObject.data).append("\n").flush();
                         } catch (IOException e) {
                             EventLogger.getLogger().logException(e);
+                            removeConnection(item.getConnectionId());
                         }
                     }
                     );

@@ -50,6 +50,7 @@ public class ClientParticipant extends WebClient{
                 if (connection.isClosed()) {
                     EventLogger.getLogger().info("Client has disconnected");
                     connection.close();
+                    connectionHandler.removeConnection(connection.getConnectionId());
                     return;
                 }
                 //Fetch the request from the client
@@ -80,6 +81,7 @@ public class ClientParticipant extends WebClient{
                         if (connection.isClosed()) {
                             EventLogger.getLogger().info("Client has disconnected");
                             connection.close();
+                            connectionHandler.removeConnection(connection.getConnectionId());
                         }
                         return;
                     }
@@ -99,6 +101,7 @@ public class ClientParticipant extends WebClient{
                     DefaultJwtSignatureValidator validator = new DefaultJwtSignatureValidator(sa, secretKeySpec);
 
                     if (!validator.isValid(tokenWithoutSignature, signature)) {
+                        EventLogger.getLogger().warn("Client " + connection.getUserId() + " could not be verified");
                         String response = "{\"status\":\"error\",\"reason\":\"Could not verify JWT token!\"}";
                         ResponseObject responseObject = new ResponseObject(request.getRequestType(), null, response, connection.getConnectionId());
                         connectionHandler.onNext(responseObject);
@@ -120,9 +123,21 @@ public class ClientParticipant extends WebClient{
                 }
             } catch (SocketException socketException) {
                 EventLogger.getLogger().info("Client has disconnected");
+                try {
+                    connection.close();
+                } catch (IOException e) {
+                    EventLogger.getLogger().logException(e);
+                }
+                connectionHandler.removeConnection(connection.getConnectionId());
                 return;
-            } catch (IOException exception) {
+            } catch (IOException | NullPointerException exception) {
                 EventLogger.getLogger().logException(exception);
+                try {
+                    connection.close();
+                } catch (IOException e) {
+                    EventLogger.getLogger().logException(e);
+                }
+                connectionHandler.removeConnection(connection.getConnectionId());
                 return;
             }
         }
