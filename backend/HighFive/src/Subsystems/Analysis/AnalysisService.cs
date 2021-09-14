@@ -37,7 +37,7 @@ namespace src.Subsystems.Analysis
         private readonly IMediaStorageService _mediaStorageService;
         private readonly IPipelineService _pipelineService;
         private readonly IConfiguration _configuration;
-        private readonly IWebSocketClient _analysisSocket;
+        public readonly IWebSocketClient AnalysisSocket;
         private readonly ILivestreamingService _livestreamingService;
         private string _brokerToken;
         private string _userId;
@@ -51,7 +51,7 @@ namespace src.Subsystems.Analysis
             _livestreamingService = livestreamingService;
             _pipelineService = pipelineService;
             _configuration = configuration;
-            _analysisSocket = new WebSocketClient();
+            AnalysisSocket = new WebSocketClient();
             _brokerConnection = false;
         }
 
@@ -90,8 +90,8 @@ namespace src.Subsystems.Analysis
             }
 
             var brokerRequest = new BrokerSocketRequest(fullRequest, _userId) {Authorization = _brokerToken};
-            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
-            var responseString = _analysisSocket.Receive().Result;
+            await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
+            var responseString = AnalysisSocket.Receive().Result;
             response = JsonConvert.DeserializeObject<AnalyzedImageMetaData>(responseString);
 
             return response;
@@ -133,8 +133,8 @@ namespace src.Subsystems.Analysis
             }
             
             var brokerRequest = new BrokerSocketRequest(fullRequest, _userId) {Authorization = _brokerToken};
-            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
-            var responseString = _analysisSocket.Receive().Result;
+            await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
+            var responseString = AnalysisSocket.Receive().Result;
             Console.WriteLine("Response string: " +responseString);
             response = JsonConvert.DeserializeObject<AnalyzedVideoMetaData>(responseString);
             
@@ -214,7 +214,7 @@ namespace src.Subsystems.Analysis
 
         public void CloseBrokerSocket()
         {
-            _analysisSocket.Close();
+            AnalysisSocket.Close();
         }
 
         public async Task StartLiveStream(string userId)
@@ -243,15 +243,15 @@ namespace src.Subsystems.Analysis
                 Request = "StartLiveAnalysis",
                 Body = response
             };
-            await _analysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
-            var socketResponse = _analysisSocket.Receive().Result;
+            await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
+            var socketResponse = AnalysisSocket.Receive().Result;
         }
 
         private void ConnectToBroker()
         {
             if (!_brokerConnection)
             {
-                _analysisSocket.Connect(_configuration["BrokerUri"], _userId);
+                AnalysisSocket.Connect(_configuration["BrokerUri"], _userId);
                 _brokerConnection = true;
             }
 
