@@ -8,6 +8,7 @@ import {LivePageRoutingModule} from './live-routing.module';
 
 import {LivePage} from './live.page';
 import {CustomComponentsModule} from '../../components/components.module';
+import {LiveStreamComponent} from '../../components/live-stream/live-stream.component';
 
 @NgModule({
   imports: [
@@ -15,9 +16,9 @@ import {CustomComponentsModule} from '../../components/components.module';
     FormsModule,
     IonicModule,
     LivePageRoutingModule,
-    CustomComponentsModule
+    CustomComponentsModule,
   ],
-  declarations: [LivePage]
+  declarations: [LivePage, LiveStreamComponent]
 })
 export class LivePageModule {
 }

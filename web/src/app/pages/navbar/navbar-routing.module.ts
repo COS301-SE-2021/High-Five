@@ -23,6 +23,10 @@ const routes: Routes = [
         loadChildren:() => import('../media/media.module').then(m => m.MediaPageModule),
       },
       {
+        path:'live',
+        loadChildren:() => import('../live/live.module').then(m => m.LivePageModule),
+      },
+      {
         path:'',
         redirectTo : 'landing',
         pathMatch:'full',
