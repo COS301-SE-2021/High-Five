@@ -31,30 +31,7 @@ namespace src.Subsystems.User
 
         public bool UpgradeToAdmin(UserRequest request)
         {
-            var response = false;
-            var oldContainer = _storageManager.GetCurrentContainer();
-            _storageManager.SetBaseContainer("public");
-            var adminsFile = _storageManager.GetFile("admins.txt", "").Result;
-            _storageManager.SetBaseContainer(oldContainer);
-            var adminsArray = adminsFile.ToText().Result.Split("\n", StringSplitOptions.None);
-            //the above line splits the text file's contents by newlines into an array
-            var adminListString = string.Empty;
-            foreach (var admin in adminsArray)
-            {
-                adminListString += admin;
-                if (!adminsArray[^1].Equals(admin))
-                {
-                    adminListString += "\n";
-                }
-            }
-            if (adminsArray.IndexOf(request.Id) == -1)
-            {
-                response = true;
-                adminListString += "\n" +request.Id;
-            }
-
-            adminsFile.UploadText(adminListString);
-            return response;
+            return _adminValidator.UpgradeToAdmin(request.Id);
         }
 
         public bool IsAdmin(string userId)
