@@ -21,7 +21,6 @@ namespace src.Websockets
                 _myId = GetId();
                 _socket = new ClientWebSocket();
                 await _socket.ConnectAsync(new Uri(uri), CancellationToken.None);
-                Console.WriteLine("Socket connected to Broker!");
                 await Send(userId);
                 var ack = Receive().Result;
             }
@@ -34,7 +33,6 @@ namespace src.Websockets
         
         public async Task Send(string data)
         {
-            Console.WriteLine("Sending from socket" + _myId + ", data: " + data);
             await _socket.SendAsync(Encoding.UTF8.GetBytes(data), WebSocketMessageType.Text, true, CancellationToken.None);
         }
 

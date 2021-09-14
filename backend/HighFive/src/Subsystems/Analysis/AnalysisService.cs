@@ -91,8 +91,8 @@ namespace src.Subsystems.Analysis
 
             var brokerRequest = new BrokerSocketRequest(fullRequest, _userId) {Authorization = _brokerToken};
             await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
-            /*var responseString = AnalysisSocket.Receive().Result;
-            response = JsonConvert.DeserializeObject<AnalyzedImageMetaData>(responseString);*/
+            var responseString = AnalysisSocket.Receive().Result;
+            response = JsonConvert.DeserializeObject<AnalyzedImageMetaData>(responseString);
 
             return response;
         }
@@ -134,9 +134,9 @@ namespace src.Subsystems.Analysis
             
             var brokerRequest = new BrokerSocketRequest(fullRequest, _userId) {Authorization = _brokerToken};
             await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
-            /*var responseString = AnalysisSocket.Receive().Result;
+            var responseString = AnalysisSocket.Receive().Result;
             Console.WriteLine("Response string: " +responseString);
-            response = JsonConvert.DeserializeObject<AnalyzedVideoMetaData>(responseString);*/
+            response = JsonConvert.DeserializeObject<AnalyzedVideoMetaData>(responseString);
             
             return response;
             
