@@ -3,6 +3,7 @@ import {ModalController, PopoverController, ToastController} from '@ionic/angula
 import {AddItemComponent} from '../add-item/add-item.component';
 import {PipelineService} from '../../services/pipeline/pipeline.service';
 import {Pipeline} from '../../models/pipeline';
+import {UserToolsService} from '../../services/user-tools/user-tools.service';
 
 @Component({
   selector: 'app-add-pipeline',
@@ -18,7 +19,8 @@ export class AddPipelineComponent implements OnInit {
   tools: string[] = [];
 
   constructor(private modalController: ModalController, private popoverController: PopoverController,
-              public pipelineService: PipelineService, private toastController: ToastController) {
+              public pipelineService: PipelineService, private toastController: ToastController,
+              private userToolsService: UserToolsService) {
     // Nothing added here
   }
 
@@ -54,7 +56,7 @@ export class AddPipelineComponent implements OnInit {
       event: ev,
       translucent: true,
       componentProps: {
-        availableItems: this.pipelineService.tools.filter(tool => !this.tools.includes(tool))
+        availableItems: this.userToolsService.userTools.map(t => t.toolName).filter(tool => !this.tools.includes(tool))
       }
     });
     await addToolPopover.present();
