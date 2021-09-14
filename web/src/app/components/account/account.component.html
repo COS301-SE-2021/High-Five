@@ -94,7 +94,6 @@
                 </ion-col>
               </ion-row>
             </ion-grid>
-
           </ion-item>
         </ion-list>
         <ion-grid>
@@ -132,8 +131,7 @@
                 <ion-label>Tool Class File</ion-label>
                 <ion-icon [name]="'checkmark-outline'"></ion-icon>
               </ion-chip>
-              <ion-toggle slot="end"></ion-toggle>
-              <ion-button slot="end" fill="clear" expand="block" color="danger" (click)="userToolsService.removeTool(userTool.toolId,userTool.toolType)">
+              <ion-button slot="end" fill="clear" expand="block" color="danger" [disabled]="userTool.isDefaultTool" (click)="userToolsService.removeTool(userTool.toolId,userTool.toolType)">
                 <ion-icon name="trash-outline"></ion-icon>
               </ion-button>
             </ion-item>
