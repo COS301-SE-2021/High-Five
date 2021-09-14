@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Accord;
 using Microsoft.Extensions.Hosting;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -10,6 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Org.OpenAPITools.Models;
 using src.Storage;
+using src.Subsystems.Tools;
 using static System.String;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -30,10 +32,12 @@ namespace src.Subsystems.Pipelines
 
         private readonly IStorageManager _storageManager;
         private const string ContainerName = "pipeline";
+        private readonly IToolService _toolService;
 
-        public PipelineService(IStorageManager storageManager)
+        public PipelineService(IStorageManager storageManager, IToolService toolService)
         {
             _storageManager = storageManager;
+            _toolService = toolService;
         }
 
         public GetPipelinesResponse GetPipelines()
@@ -85,6 +89,12 @@ namespace src.Subsystems.Pipelines
             {
                 blobFile.AddMetadata("salt", salt);
             }
+
+            var temp = new List<string>(pipeline.Tools);
+            for (var k = 0; k < pipeline.Tools.Count; k++)
+            {
+                pipeline.Tools[k] = ToolNameToId(pipeline.Tools[k]);
+            }
             var newPipeline = new Pipeline
             {
                 Id = generatedName,
@@ -93,7 +103,7 @@ namespace src.Subsystems.Pipelines
                 MetadataType = pipeline.MetadataType
             };
             await UploadPipelineToStorage(newPipeline, blobFile);
-
+            newPipeline.Tools = temp;
             var response = new CreatePipelineResponse()
             {
                 Pipeline = newPipeline
@@ -120,7 +130,15 @@ namespace src.Subsystems.Pipelines
             }
 
             var pipeline = ConvertFileToPipeline(file);
+            for (var k = 0; k < pipeline.Tools.Count; k++)
+            {
+                pipeline.Tools[k] = ToolNameToId(pipeline.Tools[k]);
+            }
             var pipelineToolset = pipeline.Tools;
+            for (var k = 0; k < request.Tools.Count; k++)
+            {
+                request.Tools[k] = ToolNameToId(request.Tools[k]);
+            }
             pipelineToolset.AddRange(request.Tools);
             pipeline.Tools = pipelineToolset.Distinct().ToList();
             await UploadPipelineToStorage(pipeline, file);
@@ -150,6 +168,11 @@ namespace src.Subsystems.Pipelines
             foreach (var tool in request.Tools)
             {
                 pipelineToolset.Remove(tool);
+            }
+
+            for (var k = 0; k < pipelineToolset.Count; k++)
+            {
+                pipelineToolset[k] = ToolNameToId(pipelineToolset[k]);
             }
             pipeline.Tools = pipelineToolset;
             await UploadPipelineToStorage(pipeline, file);
@@ -192,18 +215,39 @@ namespace src.Subsystems.Pipelines
             return toolsArray;
         }
 
-        private static Pipeline ConvertFileToPipeline(IBlobFile file)
+        private Pipeline ConvertFileToPipeline(IBlobFile file)
         {
             /*
              *      Description:
-             * This is a helper function that converts a BlobFile object into a Pipeline object.
+             * This is a helper function that converts a BlobFile object into a Pipeline object. All tool
+             * id's in the pipeline are converted to their tool names before the pipeline is returned.
              *
              *      Parameters:
              * -> file: the file object that will be converted to a pipeline object.
              */
 
             var jsonData = file.ToText().Result;
-            return JsonConvert.DeserializeObject<Pipeline>(jsonData);
+            var pipeline = JsonConvert.DeserializeObject<Pipeline>(jsonData);
+            var toolIdCopy = new List<string>(pipeline.Tools);
+            for (var k = 0; k < pipeline.Tools.Count; k++)
+            {
+                var toolId = pipeline.Tools[k];
+                var toolName = ToolIdToName(toolId);
+                if (toolName == null)
+                {
+                    toolIdCopy.Remove(toolId);
+                }
+                else
+                {
+                    pipeline.Tools[k] = toolName;
+                }
+            }
+
+            var temp = new List<string>(pipeline.Tools);
+            pipeline.Tools = toolIdCopy;
+            file.UploadText(JsonConvert.SerializeObject(pipeline));//removes unused tools
+            pipeline.Tools = temp;
+            return pipeline;
         }
 
         private static async Task UploadPipelineToStorage(Pipeline pipeline, IBlobFile blobFile)
@@ -286,9 +330,41 @@ namespace src.Subsystems.Pipelines
             _storageManager.StoreUserInfo(id, displayName, email);
         }
 
-        /*private string ToolNameToId(string toolName)
+        private string ToolNameToId(string toolName)
         {
-            
-        }*/
+            return toolName switch
+            {
+                "PeopleRecognition" => "D0",
+                "AnimalRecognition" => "D1",
+                "VehicleRecognition" => "D2",
+                "FastVehicleRecognition" => "D3",
+                "BoxDrawingTool" => "D4",
+                _ => FindToolByName(toolName)
+            };
+        }
+
+        private string ToolIdToName(string toolId)
+        {
+            return FindToolById(toolId);
+        }
+
+        private string FindToolByName(string toolName)
+        {
+            return FindToolById(_storageManager.HashMd5(toolName));
+        }
+        
+        private string FindToolById(string toolId)
+        {
+            var allTools = _toolService.GetAllTools();
+            foreach (var tool in allTools)
+            {
+                if (tool.ToolId.Equals(toolId))
+                {
+                    return tool.ToolName;
+                }
+            }
+            return null; //tool does not exist
+        }
+        
     }
 }
