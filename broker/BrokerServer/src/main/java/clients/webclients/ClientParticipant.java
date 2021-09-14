@@ -27,7 +27,7 @@ public class ClientParticipant extends WebClient{
     private final ConnectionHandler connectionHandler;
     private final ServerInformationHolder informationHolder;
     private static final String CLOSECONNECTION = "closeconnection";
-    private static final String SYN = "Syn";
+    public static final String SYN = "Syn";
 
     public ClientParticipant(Connection connection, ConnectionHandler handler, ServerInformationHolder informationHolder) {
         EventLogger.getLogger().info("Starting ClientParticipant session");
@@ -59,13 +59,6 @@ public class ClientParticipant extends WebClient{
                 String requestData = reader.readLine();
 
                 if (requestData == null) {
-                    continue;
-                }
-
-                //When a client asks to synchronise, then send and acknowledgement
-                if (requestData.substring(0, SYN.length()).contains(SYN)) {
-                    ResponseObject responseObject = new ResponseObject("none", null, "ACK", connection.getConnectionId());
-                    connectionHandler.onNext(responseObject);
                     continue;
                 }
 
@@ -116,6 +109,14 @@ public class ClientParticipant extends WebClient{
                         ResponseObject responseObject = new ResponseObject(request.getRequestType(), null, response, connection.getConnectionId());
                         connectionHandler.onNext(responseObject);
                         return;
+                    }
+
+                    //When a client asks to synchronise, then send and acknowledgement
+                    if (request.getRequestType().contains(SYN)) {
+                        EventLogger.getLogger().info("Synchronising with client " + connection.getUserId());
+                        ResponseObject responseObject = new ResponseObject("none", null, "ACK", connection.getConnectionId());
+                        connectionHandler.onNext(responseObject);
+                        continue;
                     }
 
                     //Process request based on analysis type
