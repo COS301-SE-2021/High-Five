@@ -74,7 +74,7 @@ export class WebsocketService {
       Request: 'AnalyzeVideo',
       // eslint-disable-next-line @typescript-eslint/naming-convention
       Body: {
-        imageId: mediaId,
+        videoId: mediaId,
         pipelineId,
       },
     });
@@ -96,21 +96,24 @@ export class WebsocketService {
 
     } else if (msg.type === 'success') {
       // @ts-ignore
-      if (msg.message.Request !== undefined) {
         // @ts-ignore
-        if (msg.message.Request === 'AnalyzeImage') {
+        if (msg.title === 'Image Analysed') {
           // @ts-ignore
-          this.analyzedImagesService.analyzedImages = this.analyzedImagesService.analyzedImages.concat(msg.message.Request.body);
-        } else {
+          this.analyzedImagesService.analyzedImages = this.analyzedImagesService.analyzedImages.concat(msg.message);
           // @ts-ignore
-          this.analyzedVideosService.analyzeVideos = this.analyzedVideosService.analyzeVideos.concat(msg.message.Request.body);
+          this.ngSnotify.success('Analyzed Image', msg.title);
+        } else if(msg.title ==='Video Analysed') {
+          // @ts-ignore
+          this.analyzedVideosService.analyzeVideos = this.analyzedVideosService.analyzeVideos.concat(msg.message);
+          this.ngSnotify.success('Analyzed video', msg.title);
         }
-      } else {
+         // @ts-ignore
+      this.ngSnotify.success(msg.message, msg.title);
+    } else {
         // @ts-ignore
         this.ngSnotify.success(msg.message, msg.title);
 
       }
-    }
   }
 
 
