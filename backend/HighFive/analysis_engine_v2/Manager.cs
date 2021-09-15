@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using analysis_engine.Video;
 using analysis_engine.Video.ConcreteFrameEncoder;
@@ -19,6 +21,9 @@ namespace analysis_engine
         private FrameEncoder _frameEncoder=null;
         private string _mediaType;
         private AnalysisObserver _analysisObserver;
+        private VideoCapture _streamFrameCapture;
+        private Mat _tempFrame;
+
         public Manager(AnalysisObserver analysisObserver)
         {
             _frameCount = 0;
@@ -39,7 +44,8 @@ namespace analysis_engine
             _pipeline = _builderDirector.Construct(pipelineString);
         }
 
-        public void GiveLinkToFootage(string mediaType, string url, string outputUrl="")
+        public void GiveLinkToFootage(string mediaType, string url, string outputUrl="", 
+            Stream input=null)
         {
             _mediaType = mediaType;
             switch (mediaType)
@@ -51,10 +57,11 @@ namespace analysis_engine
                 case "stream":
                     _frameGrabber = new StreamFrameGrabber();
                     _frameGrabber.Init(url);
+                    _streamFrameCapture = new VideoCapture(url);
                     break;
                 case "image":
                     _frameGrabber = new ImageFrameGrabber();
-                    _frameGrabber.Init(url);
+                    _frameGrabber.Init(input);
                     break;
                 default:
                     _frameGrabber = new VideoFrameGrabber();
@@ -93,7 +100,7 @@ namespace analysis_engine
                         break;
                     case "stream":
                         _frameEncoder =
-                            new VideoFrameEncoder(_outputUrl, data.Frame.Image.Size);
+                            new StreamFrameEncoder(_outputUrl, data.Frame.Image.Size);
                         break;
                     case "image":
                         _frameEncoder = new ImageFrameEncoder(_outputUrl);
@@ -115,15 +122,26 @@ namespace analysis_engine
         public void StartAnalysis()
         {
             var drawFilter=_pipeline.Init();
-            Task.Factory.StartNew(() =>
+            if (_mediaType != "stream")
             {
-                var data = GetNextFrame();
-                while (data!=null){
-                    _pipeline.Source.Push(data);
-                    data = GetNextFrame();
-                }
-                _pipeline.Source.Push(null);
-            });
+                Task.Factory.StartNew(() =>
+                {
+                    var data = GetNextFrame();
+                    while (data != null)
+                    {
+                        _pipeline.Source.Push(data);
+                        data = GetNextFrame();
+                    }
+
+                    _pipeline.Source.Push(null);
+                });
+            }
+            else
+            {
+                _streamFrameCapture.ImageGrabbed += LiveFrameProcess;
+                _tempFrame = new Mat();
+                _streamFrameCapture.Start();
+            }
 
             Task.Factory.StartNew(() =>
             {
@@ -135,6 +153,21 @@ namespace analysis_engine
                 }
                 _analysisObserver.AnalysisFinished();
             });
+        }
+
+        private void LiveFrameProcess(object sender, EventArgs e)
+        {
+            _streamFrameCapture.Retrieve(_tempFrame);
+            Data temp = _dataPool.GetData();
+            temp.Frame.Image = _tempFrame.ToImage<Rgb,byte>();
+            temp.Frame.FrameID = _frameCount;
+            _frameCount++;
+            _pipeline.Source.Push(temp);
+            // if (_frameCount > 3600)//This is for stopping the stream after a certain amount of time
+            // {
+            //     _streamFrameCapture.Stop();
+            //     _pipeline.Source.Push(null);
+            // }
         }
     }
 }
