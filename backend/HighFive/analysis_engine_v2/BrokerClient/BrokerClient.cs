@@ -46,7 +46,7 @@ namespace analysis_engine.BrokerClient
                 producer.Produce(partition, msg);
                 
                 //Give Broker enough time to register the AnalysisEngine
-                Thread.Sleep(30000);
+                Thread.Sleep(15000);
 
                 _commander = new Command();
                 _usageCollector = new ResourceUsageCollector.ResourceUsageCollector();
