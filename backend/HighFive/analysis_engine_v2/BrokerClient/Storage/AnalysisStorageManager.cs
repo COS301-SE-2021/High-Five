@@ -209,7 +209,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
                 "D2" => "analysis:vehicles",
                 "D3" => "analysis:fastvehicles",
                 "D4" => "drawing:boxes",
-                _ => "dynamic:" + toolId
+                _ => "dynamic:" + _storageManager.HashMd5(toolId)
             };
         }
         
