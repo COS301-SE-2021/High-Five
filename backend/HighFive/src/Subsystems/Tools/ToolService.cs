@@ -165,7 +165,7 @@ namespace src.Subsystems.Tools
 
         public async Task<bool> CreateMetaDataType(IFormFile file, string name)
         {
-            var generatedName = _storageManager.HashMd5(file.Name);
+            var generatedName = _storageManager.HashMd5(name);
             var metadataFile = _storageManager.CreateNewFile(generatedName + ".cs", ContainerName + "/metadata").Result;
             if (metadataFile == null || GetDefaultToolMetaData().IndexOf(name) != -1)
             {

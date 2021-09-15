@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{2BFA80D5-1103-4D1F-BE12-6C7D1A4A5B01}</ProjectGuid>
+        <OutputType>Exe</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>analysis_engine_v2</RootNamespace>
+        <AssemblyName>analysis_engine_v2</AssemblyName>
+        <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <PlatformTarget>x64</PlatformTarget>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <Prefer32bit>false</Prefer32bit>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <PlatformTarget>x64</PlatformTarget>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <Prefer32bit>false</Prefer32bit>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="Confluent.Kafka, Version=1.7.0.0, Culture=neutral, PublicKeyToken=12c514ca49093d1e">
+          <HintPath>C:\Users\Marco\.nuget\packages\confluent.kafka\1.7.0\lib\netcoreapp2.1\Confluent.Kafka.dll</HintPath>
+        </Reference>
+        <Reference Include="mscorlib" />
+        <Reference Include="Renci.SshNet, Version=2020.0.1.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106">
+          <HintPath>C:\Users\Marco\.nuget\packages\ssh.net\2020.0.1\lib\netstandard2.0\Renci.SshNet.dll</HintPath>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.ComponentModel.Composition" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Drawing" />
+        <Reference Include="System.IO.Compression.FileSystem" />
+        <Reference Include="System.Numerics" />
+        <Reference Include="System.Xml" />
+        <Reference Include="System.Xml.Linq" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="AnalysisObserver.cs" />
+        <Compile Include="BrokerClient\BrokerClient.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Command.cs" />
+        <Compile Include="BrokerClient\CommandHandler\CommandHandler\CommandHandler.cs" />
+        <Compile Include="BrokerClient\CommandHandler\CommandHandler\ICommandHandler.cs" />
+        <Compile Include="BrokerClient\CommandHandler\CommandHandler\MockCommandHandler.cs" />
+        <Compile Include="BrokerClient\CommandHandler\ICommand.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Models\AnalysisCommand.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Models\commandbody\CommandBody.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Models\commandbody\LiveAnalysisCommandBody.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Models\commandbody\StoredMediaCommandBody.cs" />
+        <Compile Include="BrokerClient\IBrokerClient.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\IResourceUsageCollector.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\Models\PerformanceInfo.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\Models\ServerInformation.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\ResourceCollector\IResourceCollector.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\ResourceCollector\MockResourceCollector.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\ResourceUsageCollector.cs" />
+        <Compile Include="BrokerClient\Service\AnalysisClientService.cs" />
+        <Compile Include="BrokerClient\Service\IAnalysisClientService.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalysisToolComposite.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalyzedImageMetaData.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalyzedVideoMetaData.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalyzeImageRequest.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalyzeVideoRequest.cs" />
+        <Compile Include="BrokerClient\Service\Models\PipelineRequest.cs" />
+        <Compile Include="BrokerClient\Storage\AnalysisStorageManager.cs" />
+        <Compile Include="BrokerClient\Storage\BlobFile.cs" />
+        <Compile Include="BrokerClient\Storage\IAnalysisStorageManager.cs" />
+        <Compile Include="BrokerClient\Storage\IBlobFile.cs" />
+        <Compile Include="BrokerClient\Storage\IStorageManager.cs" />
+        <Compile Include="BrokerClient\Storage\StorageManager.cs" />
+        <Compile Include="BrokerClient\Storage\StorageManagerContainer.cs" />
+        <Compile Include="ConfigStrings.cs" />
+        <Compile Include="Data\BoxCoordinateData.cs" />
+        <Compile Include="Data\Buffer.cs" />
+        <Compile Include="Data\ConcurrentMergerRingBuffer.cs" />
+        <Compile Include="Data\Data.cs" />
+        <Compile Include="Data\DataFactory.cs" />
+        <Compile Include="Data\DataPool.cs" />
+        <Compile Include="Data\Frame.cs" />
+        <Compile Include="Data\MetaData.cs" />
+        <Compile Include="Data\RingBuffer.cs" />
+        <Compile Include="DynamicTools\DynamicToolBuilder.cs" />
+        <Compile Include="DynamicTools\DynamicToolFactory.cs" />
+        <Compile Include="Filter\Builder\FilterBuilder.cs" />
+        <Compile Include="Filter\Filter.cs" />
+        <Compile Include="Filter\FilterManager.cs" />
+        <Compile Include="Manager.cs" />
+        <Compile Include="Pipeline\Builder\LinearPipelineBuilder.cs" />
+        <Compile Include="Pipeline\Builder\ParallelPipelineBuilder.cs" />
+        <Compile Include="Pipeline\Builder\PipelineBuilder.cs" />
+        <Compile Include="Pipeline\Builder\PipelineBuilderDirector.cs" />
+        <Compile Include="Pipeline\LinearPipeline.cs" />
+        <Compile Include="Pipeline\ParallelPipeline.cs" />
+        <Compile Include="Pipeline\Pipeline.cs" />
+        <Compile Include="Pipes\ConcurrentInputMergerPipe.cs" />
+        <Compile Include="Pipes\ConcurrentQueuePipe.cs" />
+        <Compile Include="Pipes\Factories\ConcurrentInputMergerPipeFactory.cs" />
+        <Compile Include="Pipes\Factories\ConcurrentQueuePipeFactory.cs" />
+        <Compile Include="Pipes\Factories\InputMergerPipeFactory.cs" />
+        <Compile Include="Pipes\Factories\InputSplitterPipeFactory.cs" />
+        <Compile Include="Pipes\Factories\PipeFactory.cs" />
+        <Compile Include="Pipes\InputMerger.cs" />
+        <Compile Include="Pipes\InputSplitter.cs" />
+        <Compile Include="Pipes\Pipe.cs" />
+        <Compile Include="Program.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="ToolContainer\AnalysisToolContainer.cs" />
+        <Compile Include="ToolContainer\Builder\AnalysisToolContainerBuilder.cs" />
+        <Compile Include="ToolContainer\Builder\DrawingToolContainerBuilder.cs" />
+        <Compile Include="ToolContainer\Builder\DroneToolContainerBuilder.cs" />
+        <Compile Include="ToolContainer\Builder\DynamicToolContainerBuilder.cs" />
+        <Compile Include="ToolContainer\Builder\ToolContainerbuilder.cs" />
+        <Compile Include="ToolContainer\ConcurrencyManager.cs" />
+        <Compile Include="ToolContainer\DrawingToolContainer.cs" />
+        <Compile Include="ToolContainer\DroneToolContainer.cs" />
+        <Compile Include="ToolContainer\DynamicToolContainer.cs" />
+        <Compile Include="ToolContainer\ToolContainer.cs" />
+        <Compile Include="Tools\AnalysisTool.cs" />
+        <Compile Include="Tools\AnalysisTools\AnimalRecognitionTool.cs" />
+        <Compile Include="Tools\AnalysisTools\FastVehicleRecognitionTool.cs" />
+        <Compile Include="Tools\AnalysisTools\PersonRecognitionTool.cs" />
+        <Compile Include="Tools\AnalysisTools\SelfDrawingAnimalRecognitionTool.cs" />
+        <Compile Include="Tools\AnalysisTools\SelfDrawingPersonRecognitionTool.cs" />
+        <Compile Include="Tools\AnalysisTools\SelfDrawingVehicleRecognitionTool.cs" />
+        <Compile Include="Tools\AnalysisTools\VehicleRecognitionTool.cs" />
+        <Compile Include="Tools\Builders\AnalysisToolBuilder.cs" />
+        <Compile Include="Tools\Builders\DrawingToolBuilder.cs" />
+        <Compile Include="Tools\Builders\DroneToolBuilder.cs" />
+        <Compile Include="Tools\Builders\ToolBuilder.cs" />
+        <Compile Include="Tools\DrawingTool.cs" />
+        <Compile Include="Tools\DrawingTools\BoxDrawingTool.cs" />
+        <Compile Include="Tools\Tool.cs" />
+        <Compile Include="DynamicTools\DynamicTool.cs" />
+        <Compile Include="DynamicTools\DynamicCompiler.cs" />
+        <Compile Include="Video\ConcreteFrameEncoder\ImageFrameEncoder.cs" />
+        <Compile Include="Video\ConcreteFrameEncoder\StreamFrameEncoder.cs" />
+        <Compile Include="Video\ConcreteFrameEncoder\VideoFrameEncoder.cs" />
+        <Compile Include="Video\ConcreteFrameGrabber\ImageFrameGrabber.cs" />
+        <Compile Include="Video\ConcreteFrameGrabber\StreamFrameGrabber.cs" />
+        <Compile Include="Video\ConcreteFrameGrabber\VideoFrameGrabber.cs" />
+        <Compile Include="Video\FrameEncoder.cs" />
+        <Compile Include="Video\FrameGrabber.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="appsettings.Development.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Include="DynamicTools\SampleCode.txt" />
+      <Content Include="DynamicTools\SampleMetadata.txt" />
+      <Content Include="Properties\launchSettings.json" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Confluent.Kafka" Version="1.7.0" />
+      <PackageReference Include="Emgu.CV" Version="4.5.3.4721" />
+      <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721" />
+      <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="1.0.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.0.0-rc" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.0.0-rc" />
+      <PackageReference Include="Microsoft.Data.Edm" Version="5.6.4" />
+      <PackageReference Include="Microsoft.Data.OData" Version="5.6.4" />
+      <PackageReference Include="Microsoft.Data.Services.Client" Version="5.6.4" />
+      <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.8.1" />
+      <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.8.1" />
+      <PackageReference Include="Microsoft.NETCore.Platforms" Version="1.1.0" />
+      <PackageReference Include="Microsoft.Win32.Primitives" Version="4.3.0" />
+      <PackageReference Include="NETStandard.Library" Version="1.6.1" />
+      <PackageReference Include="Newtonsoft.Json" Version="6.0.8" />
+      <PackageReference Include="NumSharp" Version="0.30.0" />
+      <PackageReference Include="SSH.NET" Version="2020.0.1" />
+      <PackageReference Include="System.AppContext" Version="4.3.0" />
+      <PackageReference Include="System.Buffers" Version="4.5.1" />
+      <PackageReference Include="System.Collections" Version="4.3.0" />
+      <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
+      <PackageReference Include="System.Collections.Immutable" Version="1.2.0" />
+      <PackageReference Include="System.Console" Version="4.3.0" />
+      <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
+      <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.3.0" />
+      <PackageReference Include="System.Diagnostics.FileVersionInfo" Version="4.0.0" />
+      <PackageReference Include="System.Diagnostics.StackTrace" Version="4.0.1" />
+      <PackageReference Include="System.Diagnostics.Tools" Version="4.3.0" />
+      <PackageReference Include="System.Diagnostics.Tracing" Version="4.3.0" />
+      <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
+      <PackageReference Include="System.Dynamic.Runtime" Version="4.0.11" />
+      <PackageReference Include="System.Globalization" Version="4.3.0" />
+      <PackageReference Include="System.Globalization.Calendars" Version="4.3.0" />
+      <PackageReference Include="System.IO" Version="4.3.0" />
+      <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+      <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
+      <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+      <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
+      <PackageReference Include="System.Linq" Version="4.3.0" />
+      <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
+      <PackageReference Include="System.Memory" Version="4.5.4" />
+      <PackageReference Include="System.Net.Http" Version="4.3.0" />
+      <PackageReference Include="System.Net.Primitives" Version="4.3.0" />
+      <PackageReference Include="System.Net.Sockets" Version="4.3.0" />
+      <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+      <PackageReference Include="System.ObjectModel" Version="4.3.0" />
+      <PackageReference Include="System.Reflection" Version="4.3.0" />
+      <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
+      <PackageReference Include="System.Reflection.Metadata" Version="1.4.1-beta-24430-01" />
+      <PackageReference Include="System.Reflection.Primitives" Version="4.3.0" />
+      <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
+      <PackageReference Include="System.Runtime" Version="4.3.1" />
+      <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
+      <PackageReference Include="System.Runtime.Extensions" Version="4.3.0" />
+      <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
+      <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
+      <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+      <PackageReference Include="System.Runtime.Numerics" Version="4.3.0" />
+      <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.0" />
+      <PackageReference Include="System.Security.Cryptography.Encoding" Version="4.3.0" />
+      <PackageReference Include="System.Security.Cryptography.Primitives" Version="4.3.0" />
+      <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.0" />
+      <PackageReference Include="System.Spatial" Version="5.6.4" />
+      <PackageReference Include="System.Text.Encoding" Version="4.3.0" />
+      <PackageReference Include="System.Text.Encoding.CodePages" Version="4.0.1" />
+      <PackageReference Include="System.Text.Encoding.Extensions" Version="4.3.0" />
+      <PackageReference Include="System.Text.RegularExpressions" Version="4.3.0" />
+      <PackageReference Include="System.Threading" Version="4.3.0" />
+      <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
+      <PackageReference Include="System.Threading.Tasks.Parallel" Version="4.0.1" />
+      <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
+      <PackageReference Include="System.Threading.Timer" Version="4.3.0" />
+      <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.0" />
+      <PackageReference Include="System.Xml.XDocument" Version="4.3.0" />
+      <PackageReference Include="System.Xml.XmlDocument" Version="4.0.1" />
+      <PackageReference Include="System.Xml.XPath" Version="4.0.1" />
+      <PackageReference Include="System.Xml.XPath.XDocument" Version="4.0.1" />
+      <PackageReference Include="WindowsAzure.Storage" Version="7.2.1" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Models" />
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+
+</Project>

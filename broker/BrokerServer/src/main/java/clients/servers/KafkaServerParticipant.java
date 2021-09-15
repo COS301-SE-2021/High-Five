@@ -48,6 +48,7 @@ public class KafkaServerParticipant extends ServerParticipant {
             KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
 
             consumer.assign(partitions);
+            consumer.seekToEnd(partitions);
 
             //Iterate through each server
             for (TopicPartition partition : partitions) {
@@ -73,7 +74,9 @@ public class KafkaServerParticipant extends ServerParticipant {
                 //offline.
                 if ((System.currentTimeMillis() / 1000L) - getMessageTime(msg.value()) > 45) {
                     EventLogger.getLogger().info("Deleting topic: " + msg.topic());
+                    TopicManager.getInstance().lockTopic();
                     TopicManager.getInstance().deleteTopic(msg.topic());
+                    TopicManager.getInstance().unlockTopic();
                     topics.deleteTopic(msg.topic());
                 } else {
                     notify(msg.value());

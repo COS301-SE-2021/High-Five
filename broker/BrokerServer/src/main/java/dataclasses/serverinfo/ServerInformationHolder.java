@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class ServerInformationHolder {
     ReentrantLock lock = new ReentrantLock();
-    private HashMap<ServerInformation, ServerUsage> serverPerformanceInfo = new HashMap<>();
+    private final HashMap<ServerInformation, ServerUsage> serverPerformanceInfo = new HashMap<>();
 
     /**
      * Adds a ServerInformation object to the list. Once the item is added, the list is
