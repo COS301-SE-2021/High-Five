@@ -15,7 +15,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
         public byte[] GetDrawingTool(string toolId);
         public void UnloadAnalysisModel(string modelPath);
 
-        public Task<string> GetPipeline(string pipelineId);
+        public Task<string> GetPipeline(string pipelineId, bool format=true);
         public Task<string> GetMetadataType(string metadataTypeName);
         public Task<string> GetLivePipeline();
     }

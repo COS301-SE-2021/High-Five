@@ -136,7 +136,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
             File.Delete(modelPath);
         }
 
-        public async Task<string> GetPipeline(string pipelineId)
+        public async Task<string> GetPipeline(string pipelineId, bool format = true)
         {
             /*
              * Returns pipeline as JSON
@@ -144,7 +144,14 @@ namespace analysis_engine_v2.BrokerClient.Storage
             var pipelineFile = _storageManager.GetFile(pipelineId + ".json", "pipeline").Result;
             if (pipelineFile == null) return null;
             var pipelineObject = JsonConvert.DeserializeObject<PipelineRequest>(await pipelineFile.ToText());
-            return FormatPipeline(pipelineObject);
+            if (format)
+            {
+                return FormatPipeline(pipelineObject);
+            }
+            else
+            {
+                return JsonConvert.SerializeObject(pipelineObject);
+            }
         }
 
         public async Task<string> GetMetadataType(string metadataTypeName)
