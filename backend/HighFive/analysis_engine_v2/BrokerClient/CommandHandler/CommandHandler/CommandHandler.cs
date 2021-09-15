@@ -21,7 +21,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
 
             string tmpFolder = Path.GetTempPath();
             
-            string url = "";
+            object url;
             string mediaType = "";
             string pipelineString = "";
             string outputUrl = "";
@@ -32,6 +32,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                 mediaType = command.CommandType.Contains("AnalyzeImage") ? "image" : "video";
                 Debug.Assert(body != null, nameof(body) + " != null");
                 pipelineString = storageManager.GetPipeline(body.PipelineId).Result;
+                Console.WriteLine(pipelineString);
                 url = mediaType == "image" ? storageManager.GetImage(body.MediaId) : storageManager.GetVideo(body.MediaId);
                 /*
                 url = @"C:\Users\Marco\Downloads\cars.jpg";*/
@@ -57,8 +58,9 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
             runThread.Join();
         }
 
-        private void RunAnalysis(string url, string mediaType, string pipelineString, string outputUrl)
+        private void RunAnalysis(object url, string mediaType, string pipelineString, string outputUrl)
         {
+            Console.WriteLine(outputUrl);
             var clientId = "analysisclient001";
             
             //Create a new Kafka producer
@@ -69,7 +71,16 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
             TopicPartition partition = new TopicPartition(clientId, 2);
             var producer = new ProducerBuilder<string, string>(config).Build();
 
-            AnalysisObserver analysisObserver = new AnalysisObserver(url, mediaType, pipelineString, outputUrl);
+            AnalysisObserver analysisObserver;
+
+            if (mediaType == "image")
+            {
+                analysisObserver = new AnalysisObserver((Stream) url, mediaType, pipelineString, outputUrl);
+            }
+            else
+            {
+                analysisObserver = new AnalysisObserver((string)url, mediaType, pipelineString, outputUrl);
+            }
 
             while (!analysisObserver.Done)
             {
@@ -87,6 +98,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                     producer.Produce(partition, msg);
                 }
             }
+            Console.WriteLine("DONE!");
         }
     }
 }

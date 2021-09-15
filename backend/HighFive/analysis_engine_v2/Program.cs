@@ -25,6 +25,7 @@ namespace analysis_engine
             var client = new BrokerClient.BrokerClient();
             client.Run();
             //TestSdk();
+
         }
 
         private static void TestVideoAnalysis()

@@ -19,7 +19,7 @@ namespace analysis_engine.BrokerClient
         public void Run()
         {
             //Open a SSH tunnel to the remote server. This authenticates the BrokerClient.
-            PrivateKeyFile file = new PrivateKeyFile(@"C:/Users/Marco/Downloads/id_rsa");
+            PrivateKeyFile file = new PrivateKeyFile(@"C:/Users/Administrator/id_rsa");
             using (var client = new SshClient("newideassolutions.com", "root", file))
             {
                 client.Connect();

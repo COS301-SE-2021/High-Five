@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using analysis_engine.Video;
 using analysis_engine.Video.ConcreteFrameEncoder;
 using Emgu.CV;
-using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
+
+//using Emgu.CV;
+//using Emgu.CV.CvEnum;
+//using Emgu.CV.Structure;
 
 namespace analysis_engine
 {

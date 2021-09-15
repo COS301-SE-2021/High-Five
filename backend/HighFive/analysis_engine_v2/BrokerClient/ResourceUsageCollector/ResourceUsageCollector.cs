@@ -50,12 +50,7 @@ namespace analysis_engine.BrokerClient.ResourceUsageCollector
 
         private PerformanceInfo GetUsage()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                return new MockResourceCollector().GetPerformance();
-            }
-
-            return null;
+            return new MockResourceCollector().GetPerformance();
         }
     }
 }
