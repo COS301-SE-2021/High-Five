@@ -154,6 +154,8 @@ namespace analysis_engine
                     ReturnAnalyzedFrame(data);
                     data = _pipeline.Drain.Pop();
                 }
+                
+                _frameEncoder.Dispose();
                 _analysisObserver.AnalysisFinished();
             });
         }

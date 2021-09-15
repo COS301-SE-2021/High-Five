@@ -53,5 +53,10 @@ namespace analysis_engine.Video.ConcreteFrameEncoder
         {
             return _url;
         }
+
+        public override void Dispose()
+        {
+            _videoWriter.Dispose();
+        }
     }
 }

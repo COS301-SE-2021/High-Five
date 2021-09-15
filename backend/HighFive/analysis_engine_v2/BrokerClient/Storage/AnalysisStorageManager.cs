@@ -4,19 +4,16 @@ using analysis_engine_v2.BrokerClient.Service.Models;
 using broker_analysis_client.Client.Models;
 using broker_analysis_client.Storage;
 using Newtonsoft.Json;
-using src.AnalysisTools.VideoDecoder;
 
 namespace analysis_engine_v2.BrokerClient.Storage
 {
     public class AnalysisStorageManager: IAnalysisStorageManager
     {
         private readonly IStorageManager _storageManager;
-        private readonly IVideoDecoder _videoDecoder;
 
         public AnalysisStorageManager()
         {
             _storageManager = StorageManagerContainer.StorageManager;
-            _videoDecoder = new VideoDecoder();
         }
         
         public async Task<AnalyzedImageMetaData> StoreImage(string imagePath, AnalyzeImageRequest request)
