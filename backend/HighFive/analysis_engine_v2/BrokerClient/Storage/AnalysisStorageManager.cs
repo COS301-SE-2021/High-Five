@@ -13,7 +13,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
 
         public AnalysisStorageManager()
         {
-            _storageManager = new StorageManager();
+            _storageManager = StorageManagerContainer.StorageManager;
         }
         
         public async Task<AnalyzedImageMetaData> StoreImage(byte[] image, AnalyzeImageRequest request)
@@ -71,7 +71,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
             /*
              * Returns image as url
              */
-            var image = _storageManager.GetFile(imageId + ".mp4", "image").Result;
+            var image = _storageManager.GetFile(imageId + ".img", "image").Result;
 
             return image?.GetUrl();
         }
@@ -189,5 +189,18 @@ namespace analysis_engine_v2.BrokerClient.Storage
                 _ => "dynamic:" + toolId
             };
         }
+        
+        public async Task<string> GetLivePipeline()
+        {
+            var livePipeline = _storageManager.GetFile("default_pipeline.txt", "").Result;
+            if (livePipeline == null)
+            {
+                return null;
+            }
+        
+            var pipelineObject = JsonConvert.DeserializeObject<PipelineRequest>(await livePipeline.ToText());
+            return FormatPipeline(pipelineObject);
+        }
+
     }
 }

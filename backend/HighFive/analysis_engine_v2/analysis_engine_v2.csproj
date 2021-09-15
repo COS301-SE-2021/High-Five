@@ -85,6 +85,7 @@
         <Compile Include="BrokerClient\Storage\IBlobFile.cs" />
         <Compile Include="BrokerClient\Storage\IStorageManager.cs" />
         <Compile Include="BrokerClient\Storage\StorageManager.cs" />
+        <Compile Include="BrokerClient\Storage\StorageManagerContainer.cs" />
         <Compile Include="ConfigStrings.cs" />
         <Compile Include="Data\BoxCoordinateData.cs" />
         <Compile Include="Data\Buffer.cs" />
@@ -165,6 +166,7 @@
       </Content>
       <Content Include="DynamicTools\SampleCode.txt" />
       <Content Include="DynamicTools\SampleMetadata.txt" />
+      <Content Include="Properties\launchSettings.json" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="Confluent.Kafka" Version="1.7.0" />

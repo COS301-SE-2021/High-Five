@@ -16,5 +16,6 @@ namespace analysis_engine_v2.BrokerClient.Storage
 
         public Task<string> GetPipeline(string pipelineId);
         public Task<string> GetMetadataType(string metadataTypeName);
+        public Task<string> GetLivePipeline();
     }
 }
