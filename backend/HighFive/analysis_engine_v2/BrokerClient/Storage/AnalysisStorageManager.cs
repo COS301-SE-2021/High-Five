@@ -45,7 +45,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
 
         public async Task<AnalyzedVideoMetaData> StoreVideo(string videoPath, AnalyzeVideoRequest request)
         {
-            var analysisPipeline = JsonConvert.DeserializeObject<PipelineRequest>(GetPipeline(request.PipelineId).Result);
+            var analysisPipeline = JsonConvert.DeserializeObject<PipelineRequest>(GetPipeline(request.PipelineId, false).Result);
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/video";
             const string fileExtension = ".mp4";
