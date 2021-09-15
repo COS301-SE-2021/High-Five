@@ -49,7 +49,7 @@ export class WebsocketService {
    * @param mediaType the media type, video or image
    */
   public async analyzeImage(mediaId: string, pipelineId: string, mediaType: string = 'image') {
-    this.ngSnotify.info('Request send to analyze image');
+    this.ngSnotify.info('Request sent to analyze image');
     this.sendMessage({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       Request: 'AnalyzeImage',
@@ -69,7 +69,7 @@ export class WebsocketService {
    * @param mediaType the media type, video or image
    */
   public async analyzeVideo(mediaId: string, pipelineId: string, mediaType: string = 'video') {
-    this.ngSnotify.info('Request send to analyze video');
+    this.ngSnotify.info('Request sent to analyze video');
     this.sendMessage({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       Request: 'AnalyzeVideo',

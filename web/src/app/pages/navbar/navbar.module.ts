@@ -11,6 +11,7 @@ import {defineLordIconElement} from 'lord-icon-element';
 import {UsersService} from '../../services/users/users.service';
 import {WebsocketService} from '../../services/websocket/websocket.service';
 import {CreateToolComponent} from '../../components/create-tool/create-tool.component';
+import {OAuthModule} from 'angular-oauth2-oidc';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import {CreateToolComponent} from '../../components/create-tool/create-tool.comp
     CommonModule,
     FormsModule,
     IonicModule,
-    NavbarPageRoutingModule
+    NavbarPageRoutingModule,
+    OAuthModule.forRoot(),
   ],
   providers: [WebsocketService],
   declarations: [NavbarPage, CreateToolComponent],

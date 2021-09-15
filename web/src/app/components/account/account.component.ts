@@ -5,6 +5,7 @@ import {UsersService} from '../../services/users/users.service';
 import {User} from '../../models/user';
 import {UserToolsService} from '../../services/user-tools/user-tools.service';
 import {CreateToolComponent} from '../create-tool/create-tool.component';
+import {OAuthService} from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-account',
@@ -16,7 +17,8 @@ export class AccountComponent implements OnInit {
 
 
   constructor(private modalController: ModalController, public msalService: MsalService,
-              public usersService: UsersService, public userToolsService: UserToolsService) {
+              public usersService: UsersService, public userToolsService: UserToolsService,
+              private oauthService: OAuthService) {
 
     this.option = 'details';
   }
@@ -68,5 +70,11 @@ export class AccountComponent implements OnInit {
     }).then((c) => {
       c.present();
     }));
+  }
+
+  public editUserProfile() {
+    this.oauthService.initLoginFlowInPopup().then((val) => {
+      console.log(val);
+    });
   }
 }

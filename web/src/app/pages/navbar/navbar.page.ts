@@ -5,6 +5,16 @@ import {MsalService} from '@azure/msal-angular';
 import {PopoverController} from '@ionic/angular';
 import {NavbarMediaPopoverComponent} from '../../components/navbar-media-popover/navbar-media-popover.component';
 import {AccountPopoverComponent} from '../../components/account-popover/account-popover.component';
+import {AuthConfig, OAuthService} from 'angular-oauth2-oidc';
+import {environment} from '../../../environments/environment';
+
+const oauthConfig: AuthConfig = {
+  issuer: environment.oauthConfig.issuer,
+  redirectUri: window.location.origin,
+  clientId: environment.clientId,
+  scope: environment.oauthConfig.scope,
+  strictDiscoveryDocumentValidation: false
+};
 
 @Component({
   selector: 'app-navbar',
@@ -13,11 +23,16 @@ import {AccountPopoverComponent} from '../../components/account-popover/account-
 })
 export class NavbarPage implements OnInit {
   isDesktop: boolean;
+
   constructor(private screenSizeService: ScreenSizeServiceService, private router: Router,
-              private msalService: MsalService, private popoverController: PopoverController) {
+              private msalService: MsalService, private popoverController: PopoverController,
+              private oauthService: OAuthService) {
     this.screenSizeService.isDesktopView().subscribe(isDesktop => {
       this.isDesktop = isDesktop;
     });
+    this.oauthService.configure(oauthConfig);
+    this.oauthService.loadDiscoveryDocument(environment.oauthConfig.discoveryDoc);
+
 
   }
 
