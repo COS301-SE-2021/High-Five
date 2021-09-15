@@ -24,13 +24,14 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class DownloadSdkFilesResponse : IEquatable<DownloadSdkFilesResponse>
+    public class UserRequest : IEquatable<UserRequest>
     {
         /// <summary>
-        /// Gets or Sets SdkZip
+        /// user id
         /// </summary>
-        [DataMember(Name="sdkZip", EmitDefaultValue=false)]
-        public FileDownload SdkZip { get; set; }
+        /// <value>user id</value>
+        [DataMember(Name="id", EmitDefaultValue=false)]
+        public string Id { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -39,8 +40,8 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class DownloadSdkFilesResponse {\n");
-            sb.Append("  SdkZip: ").Append(SdkZip).Append("\n");
+            sb.Append("class UserRequest {\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -63,24 +64,24 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((DownloadSdkFilesResponse)obj);
+            return obj.GetType() == GetType() && Equals((UserRequest)obj);
         }
 
         /// <summary>
-        /// Returns true if DownloadSdkFilesResponse instances are equal
+        /// Returns true if UserRequest instances are equal
         /// </summary>
-        /// <param name="other">Instance of DownloadSdkFilesResponse to be compared</param>
+        /// <param name="other">Instance of UserRequest to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(DownloadSdkFilesResponse other)
+        public bool Equals(UserRequest other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    SdkZip == other.SdkZip ||
-                    SdkZip != null &&
-                    SdkZip.Equals(other.SdkZip)
+                    Id == other.Id ||
+                    Id != null &&
+                    Id.Equals(other.Id)
                 );
         }
 
@@ -94,8 +95,8 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (SdkZip != null)
-                    hashCode = hashCode * 59 + SdkZip.GetHashCode();
+                    if (Id != null)
+                    hashCode = hashCode * 59 + Id.GetHashCode();
                 return hashCode;
             }
         }
@@ -103,12 +104,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(DownloadSdkFilesResponse left, DownloadSdkFilesResponse right)
+        public static bool operator ==(UserRequest left, UserRequest right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(DownloadSdkFilesResponse left, DownloadSdkFilesResponse right)
+        public static bool operator !=(UserRequest left, UserRequest right)
         {
             return !Equals(left, right);
         }

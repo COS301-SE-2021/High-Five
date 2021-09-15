@@ -1232,17 +1232,7 @@ components:
     downloadSdkFilesResponse:
       type: object
       properties:
-        boxCoordinatesClass:
-          $ref: '#/components/schemas/fileDownload'
-        toolInterface:
-          $ref: '#/components/schemas/fileDownload'
-        analysisToolAbstractClass:
-          $ref: '#/components/schemas/fileDownload'
-        drawingToolAbstractClass:
-          $ref: '#/components/schemas/fileDownload'
-        metaDataClass:
-          $ref: '#/components/schemas/fileDownload'
-        dataClass:
+        sdkZip:
           $ref: '#/components/schemas/fileDownload'
 
     #==========================================================
