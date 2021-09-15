@@ -1,11 +1,13 @@
 <ion-card>
   <ion-card-header>
     <ion-card-title >Please choose an action</ion-card-title>
-    <ion-card-subtitle>You can either login with an existing account, or you can create a new account with Register</ion-card-subtitle>
+    <ion-card-subtitle>You can either login with an existing account, or you can create a new account, just click on the button below</ion-card-subtitle>
   </ion-card-header>
-  <ion-grid>
-    <ion-row class="ion-justify-content-center">
-      <ion-button  (click)="login()" style="width: 100%">Sign In/Register</ion-button>
-    </ion-row>
-  </ion-grid>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row class="ion-justify-content-center">
+        <ion-button  (click)="login()" style="width: 100%">Sign In/Register</ion-button>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
 </ion-card>
