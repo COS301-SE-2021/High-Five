@@ -55,7 +55,6 @@ namespace src.Subsystems.Tools
             {
                 response.Message = "That tool does not exist.";
             }
-
             return StatusCode(200, response);
         }
 
@@ -65,7 +64,6 @@ namespace src.Subsystems.Tools
             {
                 ConfigureStorageManager();
             }
-
             var response = _toolService.GetMetaDataTypes();
             return StatusCode(200, response);
         }
@@ -126,14 +124,14 @@ namespace src.Subsystems.Tools
             {
                 tool = _toolService.UploadAnalysisTool(sourceCode, model, metadataType, toolName).Result;
             }
-            catch (InvalidDataException e)
+            catch (Exception e)
             {
                 return StatusCode(400, new EmptyObject {Success = false, Message = "Your uploaded dll has errors."});
             }
 
             if (tool == null)
             {
-                return StatusCode(400, null);
+                return StatusCode(400, new EmptyObject{Success = false, Message = "A tool with that name already exists."});
             }
             return StatusCode(200, tool);
         }
@@ -157,7 +155,7 @@ namespace src.Subsystems.Tools
 
             if (tool == null)
             {
-                return StatusCode(400, null);
+                return StatusCode(400, new EmptyObject{Success = false, Message = "A tool with that name already exists."});
             }
             return StatusCode(200, tool);
         }

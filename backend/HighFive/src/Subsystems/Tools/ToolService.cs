@@ -35,19 +35,20 @@ namespace src.Subsystems.Tools
             var generatedToolName = _storageManager.HashMd5(toolName);
             var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
             var sourceCodeFile = _storageManager.GetFile(sourceCodeName + ".dll",ContainerName+ "/analysis/" + generatedToolName).Result;
-            if (sourceCodeFile == null)
+            if (sourceCodeFile != null)
             {
                 return null;
             }
-
-            if (!validateDll(sourceCode))
-            {
-                throw new InvalidDataException();
-            }
+            
             sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".dll", ContainerName+ "/analysis/" + generatedToolName).Result;
             sourceCodeFile.AddMetadata("toolName",toolName);
             sourceCodeFile.AddMetadata("metadataType", metadataType);
             await sourceCodeFile.UploadFile(sourceCode);
+            if (!validateDll(sourceCodeFile))
+            {
+                await sourceCodeFile.Delete();
+                throw new InvalidDataException();
+            }
 
             var modelNameArr = model.FileName.Split(".");
             var modelName = _storageManager.HashMd5(model.FileName);
@@ -79,18 +80,19 @@ namespace src.Subsystems.Tools
             var generatedToolName = _storageManager.HashMd5(toolName);
             var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
             var sourceCodeFile = _storageManager.GetFile(sourceCodeName + ".dll",ContainerName+ "/drawing/" + generatedToolName).Result;
-            if (sourceCodeFile == null)
+            if (sourceCodeFile != null)
             {
                 return null;
-            }
-            if (!validateDll(sourceCode))
-            {
-                throw new InvalidDataException();
             }
             sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".dll", ContainerName+ "/drawing/" + generatedToolName).Result;
             sourceCodeFile.AddMetadata("toolName",toolName);
             sourceCodeFile.AddMetadata("metadataType", metadataType);
             await sourceCodeFile.UploadFile(sourceCode);
+            if (!validateDll(sourceCodeFile))
+            {
+                await sourceCodeFile.Delete();
+                throw new InvalidDataException();
+            }
 
             AddToToolsFile(generatedToolName, "drawing", metadataType);
             return new Tool
@@ -330,13 +332,11 @@ namespace src.Subsystems.Tools
             return metadataArray;
         }
 
-        private bool validateDll(IFormFile file)
+        private bool validateDll(IBlobFile file)
         {
-            using var ms = new MemoryStream();
-            file.CopyTo(ms);
-            var dllBytes = ms.ToArray();
             try
             {
+                var dllBytes = file.ToByteArray().Result;
                 var assembly = Assembly.Load(dllBytes);
                 var dynamicType = assembly.GetType("High5.CustomTool");
                 var obj = Activator.CreateInstance(dynamicType);
