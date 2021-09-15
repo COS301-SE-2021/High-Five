@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using broker_analysis_client.Client.Models;
 
 namespace analysis_engine_v2.BrokerClient.Storage
@@ -8,7 +9,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
         public Task<AnalyzedImageMetaData> StoreImage(byte[] image, AnalyzeImageRequest request);
         public Task<AnalyzedVideoMetaData> StoreVideo(byte[] video, AnalyzeVideoRequest requests);
         public string GetVideo(string videoId);
-        public string GetImage(string imageId);
+        public Stream GetImage(string imageId);
 
         public AnalysisToolComposite GetAnalysisTool(string toolId);
         public byte[] GetDrawingTool(string toolId);

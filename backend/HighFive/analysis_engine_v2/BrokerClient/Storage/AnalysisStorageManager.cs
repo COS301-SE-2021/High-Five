@@ -66,14 +66,14 @@ namespace analysis_engine_v2.BrokerClient.Storage
             return video?.GetUrl();
         }
 
-        public string GetImage(string imageId)
+        public Stream GetImage(string imageId)
         {
             /*
              * Returns image as url
              */
             var image = _storageManager.GetFile(imageId + ".img", "image").Result;
 
-            return image?.GetUrl();
+            return image?.ToStream().Result;
         }
 
         public AnalysisToolComposite GetAnalysisTool(string toolId)
