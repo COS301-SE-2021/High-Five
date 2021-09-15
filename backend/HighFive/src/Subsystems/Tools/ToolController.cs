@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -119,7 +120,17 @@ namespace src.Subsystems.Tools
             {
                 ConfigureStorageManager();
             }
-            var tool =_toolService.UploadAnalysisTool(sourceCode, model, metadataType, toolName).Result;
+
+            Tool tool;
+            try
+            {
+                tool = _toolService.UploadAnalysisTool(sourceCode, model, metadataType, toolName).Result;
+            }
+            catch (InvalidDataException e)
+            {
+                return StatusCode(400, new EmptyObject {Success = false, Message = "Your uploaded dll has errors."});
+            }
+
             if (tool == null)
             {
                 return StatusCode(400, null);
@@ -133,7 +144,17 @@ namespace src.Subsystems.Tools
             {
                 ConfigureStorageManager();
             }
-            var tool =_toolService.UploadDrawingTool(sourceCode, metadataType, toolName).Result;
+
+            Tool tool;
+            try
+            {
+                tool = _toolService.UploadDrawingTool(sourceCode, metadataType, toolName).Result;
+            }
+            catch (Exception e)
+            {
+                return StatusCode(400, new EmptyObject {Success = false, Message = "Your uploaded dll has errors."});
+            }
+
             if (tool == null)
             {
                 return StatusCode(400, null);

@@ -39,6 +39,11 @@ namespace src.Subsystems.Tools
             {
                 return null;
             }
+
+            if (!validateDll(sourceCode))
+            {
+                throw new InvalidDataException();
+            }
             sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".dll", ContainerName+ "/analysis/" + generatedToolName).Result;
             sourceCodeFile.AddMetadata("toolName",toolName);
             sourceCodeFile.AddMetadata("metadataType", metadataType);
@@ -77,6 +82,10 @@ namespace src.Subsystems.Tools
             if (sourceCodeFile == null)
             {
                 return null;
+            }
+            if (!validateDll(sourceCode))
+            {
+                throw new InvalidDataException();
             }
             sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".dll", ContainerName+ "/drawing/" + generatedToolName).Result;
             sourceCodeFile.AddMetadata("toolName",toolName);
@@ -319,6 +328,24 @@ namespace src.Subsystems.Tools
             var metadataArray = defaultMetadataFile.ToText().Result.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
             //the above line splits the text file's contents by newlines into an array
             return metadataArray;
+        }
+
+        private bool validateDll(IFormFile file)
+        {
+            using var ms = new MemoryStream();
+            file.CopyTo(ms);
+            var dllBytes = ms.ToArray();
+            try
+            {
+                var assembly = Assembly.Load(dllBytes);
+                var dynamicType = assembly.GetType("High5.CustomTool");
+                var obj = Activator.CreateInstance(dynamicType);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
