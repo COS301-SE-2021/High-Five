@@ -59,7 +59,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
 
         private void RunAnalysis(string url, string mediaType, string pipelineString, string outputUrl)
         {
-            var clientId = Environment.GetEnvironmentVariable("ENGINE_CLIENT_ID");
+            var clientId = "analysisclient001";
             
             //Create a new Kafka producer
             var config = new ProducerConfig
