@@ -51,15 +51,12 @@ namespace analysis_engine.BrokerClient
             /*var assemblyBytes =
                 File.ReadAllBytes(
                     @"D:\Tuks\2021\COS301\CapstoneProject\Code\DLLTest\MyCustomTool\MyCustomTool\bin\Debug\MyCustomTool.dll");*/
-            var asm = Assembly.Load(assemblyBytes);
-            var type = asm.GetType("High5.CustomTool");
-            return (DynamicTool)Activator.CreateInstance(type);
             
-            /*var dynamicTool = (DynamicTool) _restrictedDomain.CreateInstanceAndUnwrap(
+            var dynamicTool = (DynamicTool) _restrictedDomain.CreateInstanceAndUnwrap(
                 _dynamicToolType.Assembly.FullName, _dynamicToolType.FullName,
                 false, BindingFlags.Default, null, new object[] {toolId}, null, null);
             dynamicTool.LoadCompiledBytes(assemblyBytes);
-            return dynamicTool;*/
+            return dynamicTool;
         }
         
         public void UnloadRestrictedDomain()
