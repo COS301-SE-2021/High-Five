@@ -7,6 +7,7 @@ using System.Security;
 using System.Security.Permissions;
 using analysis_engine_v2.BrokerClient.Service.Models;
 using Emgu.CV.DepthAI;
+using High5SDK;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 

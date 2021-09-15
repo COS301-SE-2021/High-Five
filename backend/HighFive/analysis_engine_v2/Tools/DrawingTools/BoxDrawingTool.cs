@@ -4,6 +4,7 @@ using System.Linq;//TODO Check this import
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
+using High5SDK;
 
 namespace analysis_engine
 {

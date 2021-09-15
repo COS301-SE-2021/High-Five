@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Security.Policy;
 using Emgu.CV;
+using High5SDK;
 
 namespace analysis_engine.Video.ConcreteFrameEncoder
 {

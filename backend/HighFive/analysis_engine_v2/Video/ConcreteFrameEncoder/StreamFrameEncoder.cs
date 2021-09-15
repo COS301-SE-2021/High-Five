@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Emgu.CV;
 using FFMpegCore;
 using FFMpegCore.Pipes;
+using High5SDK;
 using NReco.VideoConverter;
 
 namespace analysis_engine.Video.ConcreteFrameEncoder

@@ -14,6 +14,7 @@ using broker_analysis_client.Storage;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
+using High5SDK;
 
 namespace analysis_engine
 {

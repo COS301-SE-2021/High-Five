@@ -6,6 +6,7 @@ using analysis_engine.Video;
 using analysis_engine.Video.ConcreteFrameEncoder;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using High5SDK;
 
 //using Emgu.CV;
 //using Emgu.CV.CvEnum;

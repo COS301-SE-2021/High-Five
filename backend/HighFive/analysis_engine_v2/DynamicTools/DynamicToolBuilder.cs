@@ -1,3 +1,5 @@
+using High5SDK;
+
 namespace analysis_engine.BrokerClient
 {
     public class DynamicToolBuilder : ToolBuilder

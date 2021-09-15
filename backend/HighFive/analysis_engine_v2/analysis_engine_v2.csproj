@@ -86,17 +86,9 @@
         <Compile Include="BrokerClient\Storage\IStorageManager.cs" />
         <Compile Include="BrokerClient\Storage\StorageManager.cs" />
         <Compile Include="BrokerClient\Storage\StorageManagerContainer.cs" />
-        <Compile Include="BrokerClient\VideoDecoder\IVideoDecoder.cs" />
-        <Compile Include="BrokerClient\VideoDecoder\VideoDecoder.cs" />
         <Compile Include="ConfigStrings.cs" />
         <Compile Include="Data\BoxCoordinateData.cs" />
-        <Compile Include="Data\Buffer.cs" />
         <Compile Include="Data\ConcurrentMergerRingBuffer.cs" />
-        <Compile Include="Data\Data.cs" />
-        <Compile Include="Data\DataFactory.cs" />
-        <Compile Include="Data\DataPool.cs" />
-        <Compile Include="Data\Frame.cs" />
-        <Compile Include="Data\MetaData.cs" />
         <Compile Include="Data\RingBuffer.cs" />
         <Compile Include="DynamicTools\DynamicToolBuilder.cs" />
         <Compile Include="DynamicTools\DynamicToolFactory.cs" />
@@ -134,7 +126,6 @@
         <Compile Include="ToolContainer\DroneToolContainer.cs" />
         <Compile Include="ToolContainer\DynamicToolContainer.cs" />
         <Compile Include="ToolContainer\ToolContainer.cs" />
-        <Compile Include="Tools\AnalysisTool.cs" />
         <Compile Include="Tools\AnalysisTools\AnimalRecognitionTool.cs" />
         <Compile Include="Tools\AnalysisTools\FastVehicleRecognitionTool.cs" />
         <Compile Include="Tools\AnalysisTools\PersonRecognitionTool.cs" />
@@ -146,9 +137,7 @@
         <Compile Include="Tools\Builders\DrawingToolBuilder.cs" />
         <Compile Include="Tools\Builders\DroneToolBuilder.cs" />
         <Compile Include="Tools\Builders\ToolBuilder.cs" />
-        <Compile Include="Tools\DrawingTool.cs" />
         <Compile Include="Tools\DrawingTools\BoxDrawingTool.cs" />
-        <Compile Include="Tools\Tool.cs" />
         <Compile Include="DynamicTools\DynamicTool.cs" />
         <Compile Include="DynamicTools\DynamicCompiler.cs" />
         <Compile Include="Video\ConcreteFrameEncoder\ImageFrameEncoder.cs" />
@@ -174,6 +163,7 @@
         <PackageReference Include="Emgu.CV" Version="4.5.3.4721" />
         <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721" />
         <PackageReference Include="FFMpegCore" Version="4.5.0" />
+        <PackageReference Include="High5SDK_v1" Version="1.0.0" />
         <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="1.0.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.0.0-rc" />

@@ -5,6 +5,7 @@ using System.Security;
 using System.Security.Permissions;
 using analysis_engine_v2.BrokerClient.Storage;
 using broker_analysis_client.Client.Models;
+using High5SDK;
 using Microsoft.CodeAnalysis;
 using Microsoft.ML.OnnxRuntime;
 

@@ -1,4 +1,6 @@
-﻿namespace analysis_engine
+﻿using High5SDK;
+
+namespace analysis_engine
 {
     public class DrawingToolBuilder : ToolBuilder
     {
