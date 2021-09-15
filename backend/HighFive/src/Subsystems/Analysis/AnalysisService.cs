@@ -135,39 +135,9 @@ namespace src.Subsystems.Analysis
             var brokerRequest = new BrokerSocketRequest(fullRequest, _userId) {Authorization = _brokerToken};
             await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
             var responseString = AnalysisSocket.Receive().Result;
-            Console.WriteLine("Response string: " +responseString);
             response = JsonConvert.DeserializeObject<AnalyzedVideoMetaData>(responseString);
             
             return response;
-            
-            /*rawVideoStream.Seek(0, SeekOrigin.Begin);
-            watch.Reset();
-            watch.Start();
-            var analyzedVideoData = _videoDecoder.EncodeVideoFromFrames(analyzedFrameData, rawVideoStream);
-            watch.Stop();
-            Console.WriteLine("Convert from frames to video: " + watch.ElapsedMilliseconds + "ms");
-
-            watch.Reset();
-            watch.Start();
-            //create thumbnail from analyzed video
-            var thumbnail =
-                _storageManager.CreateNewFile(analyzedMediaName.Replace(fileExtension, "") + "-thumbnail.jpg",
-                    storageContainer).Result;
-            await thumbnail.UploadFileFromByteArray(analyzedFrameData[0], "image/jpg");//uploads synchronously
-
-            var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
-            analyzedFile.AddMetadata("videoId", request.VideoId);
-            analyzedFile.AddMetadata("pipelineId", request.PipelineId);
-            const string contentType = "video/mp4";
-            await analyzedFile.UploadFileFromByteArray(analyzedVideoData, contentType);
-            watch.Stop();
-            Console.WriteLine("Store video & thumbnail to cloud: " + watch.ElapsedMilliseconds + " ms");
-
-            if (analyzedFile.Properties.LastModified != null)
-                response.DateAnalyzed = analyzedFile.Properties.LastModified.Value.DateTime;
-            response.Id = analyzedMediaName.Replace(fileExtension, "");
-            response.Url = analyzedFile.GetUrl();
-            response.Thumbnail = thumbnail.GetUrl();*/
         }
 
         public void SetBaseContainer(string containerName)

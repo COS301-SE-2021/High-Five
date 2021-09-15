@@ -100,7 +100,7 @@ namespace src.Subsystems.Pipelines
                 Id = generatedName,
                 Name = pipeline.Name,
                 Tools = pipeline.Tools,
-                MetadataType = pipeline.MetadataType
+                MetadataType = "BoxCoordinateData"
             };
             await UploadPipelineToStorage(newPipeline, blobFile);
             newPipeline.Tools = temp;
@@ -245,7 +245,7 @@ namespace src.Subsystems.Pipelines
 
             var temp = new List<string>(pipeline.Tools);
             pipeline.Tools = toolIdCopy;
-            file.UploadText(JsonConvert.SerializeObject(pipeline));//removes unused tools
+            //file.UploadText(JsonConvert.SerializeObject(pipeline));//removes unused tools
             pipeline.Tools = temp;
             return pipeline;
         }

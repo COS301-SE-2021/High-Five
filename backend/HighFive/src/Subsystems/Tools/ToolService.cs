@@ -99,7 +99,7 @@ namespace src.Subsystems.Tools
             {
                 ToolId = generatedToolName,
                 ToolName = toolName,
-                ToolType = "analysis",
+                ToolType = "drawing",
                 ToolMetadataType = metadataType
             };
         }
