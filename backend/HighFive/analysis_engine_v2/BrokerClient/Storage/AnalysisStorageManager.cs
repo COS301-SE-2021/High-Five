@@ -51,11 +51,12 @@ namespace analysis_engine_v2.BrokerClient.Storage
             const string fileExtension = ".mp4";
             var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + request.PipelineId);
             
-            var thumbnailPath = Path.GetTempFileName();
-            await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);
+            /*var thumbnailPath = Path.GetTempFileName();
+            await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);*/
+            var originalThumbnailFile = _storageManager.GetFile(request.VideoId + "-thumbnail.jpg", "video").Result;
             var thumbnailFile = _storageManager.CreateNewFile(analyzedMediaName + "-thumbnail.jpg", storageContainer).Result;
-            await thumbnailFile.UploadFile(thumbnailPath, "image/jpg");
-            
+            await thumbnailFile.UploadFileFromStream(await originalThumbnailFile.ToStream(), "image/jpg");
+
             var video = File.ReadAllBytes(videoPath);
             var testFile = _storageManager.CreateNewFile(analyzedMediaName+ fileExtension, storageContainer).Result;
             testFile.AddMetadata("videoId", request.VideoId);
