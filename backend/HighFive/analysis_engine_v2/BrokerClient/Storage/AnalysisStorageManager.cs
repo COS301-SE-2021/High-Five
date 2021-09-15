@@ -4,54 +4,71 @@ using analysis_engine_v2.BrokerClient.Service.Models;
 using broker_analysis_client.Client.Models;
 using broker_analysis_client.Storage;
 using Newtonsoft.Json;
+using src.AnalysisTools.VideoDecoder;
 
 namespace analysis_engine_v2.BrokerClient.Storage
 {
     public class AnalysisStorageManager: IAnalysisStorageManager
     {
         private readonly IStorageManager _storageManager;
+        private readonly IVideoDecoder _videoDecoder;
 
         public AnalysisStorageManager()
         {
             _storageManager = StorageManagerContainer.StorageManager;
+            _videoDecoder = new VideoDecoder();
         }
         
-        public async Task<AnalyzedImageMetaData> StoreImage(byte[] image, AnalyzeImageRequest request)
+        public async Task<AnalyzedImageMetaData> StoreImage(string imagePath, AnalyzeImageRequest request)
         {
+            var image = File.ReadAllBytes(imagePath);
             var analysisPipeline = JsonConvert.DeserializeObject<PipelineRequest>(GetPipeline(request.PipelineId).Result);
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/image";
             const string fileExtension = ".img";
             var analyzedMediaName = _storageManager.HashMd5(request.ImageId + "|" + string.Join(",",analysisPipeline.Tools));
             var testFile = _storageManager.CreateNewFile(analyzedMediaName+ fileExtension, storageContainer).Result;
-            await testFile.UploadFileFromByteArray(image);
+            testFile.AddMetadata("imageId", request.ImageId);
+            testFile.AddMetadata("pipelineId", request.PipelineId);
+            await testFile.UploadFileFromByteArray(image, "image/jpg");
 
             var response = new AnalyzedImageMetaData
             {
                 Id = analyzedMediaName,
                 ImageId = request.ImageId,
                 PipelineId = request.PipelineId,
-                Url = testFile.GetUrl()
+                Url = testFile.GetUrl(),
+                DateAnalyzed = testFile.Properties.LastModified.Value.DateTime
             };
             return response;
         }
 
-        public async Task<AnalyzedVideoMetaData> StoreVideo(byte[] video, AnalyzeVideoRequest request)
+        public async Task<AnalyzedVideoMetaData> StoreVideo(string videoPath, AnalyzeVideoRequest request)
         {
+            var video = File.ReadAllBytes(videoPath);
             var analysisPipeline = JsonConvert.DeserializeObject<PipelineRequest>(GetPipeline(request.PipelineId).Result);
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/video";
             const string fileExtension = ".mp4";
             var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + string.Join(",",analysisPipeline.Tools));
             var testFile = _storageManager.CreateNewFile(analyzedMediaName+ fileExtension, storageContainer).Result;
-            await testFile.UploadFileFromByteArray(video);
+            testFile.AddMetadata("videoId", request.VideoId);
+            testFile.AddMetadata("pipelineId", request.PipelineId);
+            await testFile.UploadFileFromByteArray(video, "video/mp4");
+
+            var thumbnailPath = Path.GetTempFileName();
+            await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);
+            var thumbnailFile = _storageManager.CreateNewFile(analyzedMediaName + "-thumbnail.jpg", storageContainer).Result;
+            await thumbnailFile.UploadFile(thumbnailPath, "image/jpg");
 
             var response = new AnalyzedVideoMetaData
             {
                 Id = analyzedMediaName,
                 VideoId = request.VideoId,
                 PipelineId = request.PipelineId,
-                Url = testFile.GetUrl()
+                Url = testFile.GetUrl(),
+                DateAnalyzed = testFile.Properties.LastModified.Value.DateTime,
+                Thumbnail = thumbnailFile.GetUrl()
             };
             return response;
         }
@@ -207,6 +224,12 @@ namespace analysis_engine_v2.BrokerClient.Storage
         
             var pipelineObject = JsonConvert.DeserializeObject<PipelineRequest>(await livePipeline.ToText());
             return FormatPipeline(pipelineObject);
+        }
+
+        private string GetVideoThumbnail(string videoId)
+        {
+            var file = _storageManager.GetFile(videoId, "video").Result;
+            return file.GetUrl();
         }
 
     }

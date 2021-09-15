@@ -86,6 +86,8 @@
         <Compile Include="BrokerClient\Storage\IStorageManager.cs" />
         <Compile Include="BrokerClient\Storage\StorageManager.cs" />
         <Compile Include="BrokerClient\Storage\StorageManagerContainer.cs" />
+        <Compile Include="BrokerClient\VideoDecoder\IVideoDecoder.cs" />
+        <Compile Include="BrokerClient\VideoDecoder\VideoDecoder.cs" />
         <Compile Include="ConfigStrings.cs" />
         <Compile Include="Data\BoxCoordinateData.cs" />
         <Compile Include="Data\Buffer.cs" />
@@ -249,6 +251,7 @@
       <PackageReference Include="System.Xml.XPath" Version="4.0.1" />
       <PackageReference Include="System.Xml.XPath.XDocument" Version="4.0.1" />
       <PackageReference Include="WindowsAzure.Storage" Version="7.2.1" />
+      <PackageReference Include="Xabe.FFmpeg" Version="5.0.2" />
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Models" />

@@ -103,6 +103,22 @@ namespace broker_analysis_client.Storage
             await _file.UploadTextAsync(text);
         }
 
+        public async Task UploadFile(string path, string contentType = "")
+        {
+            /*
+             *      Description:
+             * This function will upload a new file from a directory to the cloud in the Azure Blob Storage associated
+             * with the file contained within this BlobFile. This function overwrites any data currently stored
+             * in the CloudBlockBlob file and uploads it to the storage directly.
+             *
+             *      Parameters:
+             * -> path: the full path pointing to where the file is stored.
+             */
+
+            _file.Properties.ContentType = contentType;
+            await _file.UploadFromFileAsync(path);
+        }
+
         public async Task Delete()
         {
             /*

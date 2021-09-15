@@ -13,6 +13,7 @@ namespace broker_analysis_client.Storage
         public Task UploadFileFromStream(Stream stream, string contentType="");
         public Task UploadFileFromByteArray(byte[] array, string contentType = "");
         public Task UploadText(string text);
+        public Task UploadFile(string path, string contentType="");
         public Task Delete();
         public Task<bool> Exists();
         public Task<byte[]> ToByteArray();

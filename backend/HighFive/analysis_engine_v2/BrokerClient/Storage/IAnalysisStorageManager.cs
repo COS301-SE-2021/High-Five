@@ -6,8 +6,8 @@ namespace analysis_engine_v2.BrokerClient.Storage
 {
     public interface IAnalysisStorageManager
     {
-        public Task<AnalyzedImageMetaData> StoreImage(byte[] image, AnalyzeImageRequest request);
-        public Task<AnalyzedVideoMetaData> StoreVideo(byte[] video, AnalyzeVideoRequest requests);
+        public Task<AnalyzedImageMetaData> StoreImage(string imagePath, AnalyzeImageRequest request);
+        public Task<AnalyzedVideoMetaData> StoreVideo(string videoPath, AnalyzeVideoRequest requests);
         public string GetVideo(string videoId);
         public Stream GetImage(string imageId);
 
