@@ -51,17 +51,16 @@ namespace analysis_engine_v2.BrokerClient.Storage
             const string fileExtension = ".mp4";
             var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + request.PipelineId);
             
-            /*var thumbnailPath = Path.GetTempFileName();
-            await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);*/
-            var originalThumbnailFile = _storageManager.GetFile(request.VideoId + "-thumbnail.jpg", "video").Result;
+            var thumbnailPath = Path.GetTempFileName();
+            await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);
+            //var originalThumbnailFile = _storageManager.GetFile(request.VideoId + "-thumbnail.jpg", "video").Result;
             var thumbnailFile = _storageManager.CreateNewFile(analyzedMediaName + "-thumbnail.jpg", storageContainer).Result;
-            await thumbnailFile.UploadFileFromStream(await originalThumbnailFile.ToStream(), "image/jpg");
-
-            var video = File.ReadAllBytes(videoPath);
+            await thumbnailFile.UploadFile(thumbnailPath, "image/jpg");
+            
             var testFile = _storageManager.CreateNewFile(analyzedMediaName+ fileExtension, storageContainer).Result;
             testFile.AddMetadata("videoId", request.VideoId);
             testFile.AddMetadata("pipelineId", request.PipelineId);
-            await testFile.UploadFileFromByteArray(video, "video/mp4");
+            await testFile.UploadFile(videoPath, "video/mp4");
 
             var response = new AnalyzedVideoMetaData
             {
