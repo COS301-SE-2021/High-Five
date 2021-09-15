@@ -23,9 +23,8 @@ namespace src.Subsystems.FileDownloads
 
         public override IActionResult DownloadSdkFiles()
         {
-            return StatusCode(503, null);
-            /*var response = _downloadsService.DownloadSdkFiles();
-            return StatusCode(200, response);*/
+            var response = _downloadsService.DownloadSdkFiles();
+            return StatusCode(200, response);
         }
 
         public override IActionResult DownloadSdkManual()

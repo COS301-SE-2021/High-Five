@@ -34,11 +34,12 @@ namespace src.Subsystems.Tools
             }
             var generatedToolName = _storageManager.HashMd5(toolName);
             var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
-            var sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".cs", ContainerName+ "/analysis/" + generatedToolName).Result;
+            var sourceCodeFile = _storageManager.GetFile(sourceCodeName + ".dll",ContainerName+ "/analysis/" + generatedToolName).Result;
             if (sourceCodeFile == null)
             {
                 return null;
             }
+            sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".dll", ContainerName+ "/analysis/" + generatedToolName).Result;
             sourceCodeFile.AddMetadata("toolName",toolName);
             sourceCodeFile.AddMetadata("metadataType", metadataType);
             await sourceCodeFile.UploadFile(sourceCode);
@@ -72,11 +73,12 @@ namespace src.Subsystems.Tools
             }
             var generatedToolName = _storageManager.HashMd5(toolName);
             var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
-            var sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".cs", ContainerName+ "/drawing/" + generatedToolName).Result;
+            var sourceCodeFile = _storageManager.GetFile(sourceCodeName + ".dll",ContainerName+ "/drawing/" + generatedToolName).Result;
             if (sourceCodeFile == null)
             {
                 return null;
             }
+            sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".dll", ContainerName+ "/drawing/" + generatedToolName).Result;
             sourceCodeFile.AddMetadata("toolName",toolName);
             sourceCodeFile.AddMetadata("metadataType", metadataType);
             await sourceCodeFile.UploadFile(sourceCode);
