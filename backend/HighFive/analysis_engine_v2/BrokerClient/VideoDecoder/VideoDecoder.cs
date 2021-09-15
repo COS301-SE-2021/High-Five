@@ -8,7 +8,7 @@ namespace src.AnalysisTools.VideoDecoder
     public class VideoDecoder: IVideoDecoder
     {
         private static bool _ffmpegLoaded;
-        private readonly string _ffMpegPath = Directory.GetCurrentDirectory() + @"..\..\ffmpeg\bin";
+        private readonly string _ffMpegPath = Directory.GetCurrentDirectory() + @"..\..\..\ffmpeg\bin";
 
         public VideoDecoder()
         {
