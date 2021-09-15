@@ -11,7 +11,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
         public string GetImage(string imageId);
 
         public AnalysisToolComposite GetAnalysisTool(string toolId);
-        public string GetDrawingTool(string toolId);
+        public byte[] GetDrawingTool(string toolId);
         public void UnloadAnalysisModel(string modelPath);
 
         public Task<string> GetPipeline(string pipelineId);

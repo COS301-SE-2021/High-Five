@@ -5,9 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using analysis_engine.BrokerClient;
 using analysis_engine.Video;
 using analysis_engine.Video.ConcreteFrameEncoder;
+using analysis_engine_v2.BrokerClient.Storage;
 using broker_analysis_client.Client;
+using broker_analysis_client.Storage;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -18,9 +21,10 @@ namespace analysis_engine
     {
         public static void Main(string[] args)
         {
-            TestImageAnalysis();
+            //TestImageAnalysis();
             // var client = new BrokerClient.BrokerClient();
             // client.Run();
+            TestSdk();
         }
 
         private static void TestVideoAnalysis()
@@ -70,6 +74,14 @@ namespace analysis_engine
             var analysis=new AnalysisObserver(stream, "image","analysis:vehicles,drawing:boxes", @"C:\Users\hanne\RiderProjects\output.jpg");
             while (!analysis.Done) System.Threading.Thread.Sleep(1000);
             Console.WriteLine("Analysis Done!");
+        }
+
+        private static void TestSdk()
+        {
+            StorageManagerContainer.StorageManager = new StorageManager("31eb910a-c3f4-412c-b641-26ca8c7c38e3");
+            var factory = new DynamicToolFactory();
+            var customTool = factory.CreateDynamicTool("95C50C7CC68E399AC5540898DFD06820");
+            Console.WriteLine("Tool Finished");
         }
 
         

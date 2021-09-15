@@ -113,19 +113,19 @@ namespace analysis_engine_v2.BrokerClient.Storage
             model.Write(bytes, 0, bytes.Length);
             ms.Close();
 
-            response.SourceCode = sourceCodeFile?.ToText().Result;
+            response.ByteData = sourceCodeFile?.ToByteArray().Result;
             
             return response;
         }
 
-        public string GetDrawingTool(string toolId)
+        public byte[] GetDrawingTool(string toolId)
         {
             /*
              * Returns source code for Drawing Tool
              */
             var toolSet = _storageManager.GetAllFilesInContainer("tools/drawing/" + toolId).Result;
             var drawingToolFile = toolSet[0];
-            return drawingToolFile.ToText().Result;
+            return drawingToolFile.ToByteArray().Result;
         }
 
         public void UnloadAnalysisModel(string modelPath)

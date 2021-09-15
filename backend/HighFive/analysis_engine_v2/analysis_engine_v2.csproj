@@ -165,7 +165,6 @@
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
       <Content Include="DynamicTools\SampleCode.txt" />
-      <Content Include="DynamicTools\SampleMetadata.txt" />
       <Content Include="Properties\launchSettings.json" />
     </ItemGroup>
     <ItemGroup>

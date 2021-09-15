@@ -40,10 +40,13 @@ namespace analysis_engine.BrokerClient
 
             var toolFiles = _analysisStorageManager.GetAnalysisTool(toolId) ?? new AnalysisToolComposite
             {
-                SourceCode = _analysisStorageManager.GetDrawingTool(toolId)
+                ByteData = _analysisStorageManager.GetDrawingTool(toolId)
             };
 
-            var assemblyBytes = DynamicCompiler.Compile(toolFiles.SourceCode);
+            var assemblyBytes = toolFiles.ByteData;
+            /*var assemblyBytes =
+                File.ReadAllBytes(
+                    @"D:\Tuks\2021\COS301\CapstoneProject\Code\DLLTest\MyCustomTool\MyCustomTool\bin\Debug\MyCustomTool.dll");*/
             var dynamicTool = (DynamicTool) _restrictedDomain.CreateInstanceAndUnwrap(
                 _dynamicToolType.Assembly.FullName, _dynamicToolType.FullName,
                 false, BindingFlags.Default, null, new object[] {toolId}, null, null);
