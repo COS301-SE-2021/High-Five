@@ -22,7 +22,7 @@ namespace src.AnalysisTools.VideoDecoder
         public async Task GetThumbnailFromVideo(string videoPath, string thumbnailPath)
         {
             var info = await Xabe.FFmpeg.FFmpeg.GetMediaInfo(videoPath).ConfigureAwait(false);
-            var videoStream = info.VideoStreams.First()?.SetCodec(VideoCodec.png);
+            var videoStream = info.VideoStreams.First()?.SetCodec(VideoCodec.h264);
 
             var conversionResult = await Xabe.FFmpeg.FFmpeg.Conversions.New()
                 .AddStream(videoStream)
