@@ -22,9 +22,9 @@ namespace analysis_engine
         public static void Main(string[] args)
         {
             //TestImageAnalysis();
-            // var client = new BrokerClient.BrokerClient();
-            // client.Run();
-            TestSdk();
+            var client = new BrokerClient.BrokerClient();
+            client.Run();
+            //TestSdk();
         }
 
         private static void TestVideoAnalysis()
@@ -78,12 +78,12 @@ namespace analysis_engine
 
         private static void TestSdk()
         {
+            var test = ConfigStrings.ModelDirectory;
             StorageManagerContainer.StorageManager = new StorageManager("31eb910a-c3f4-412c-b641-26ca8c7c38e3");
             var factory = new DynamicToolFactory();
             var customTool = factory.CreateDynamicTool("95C50C7CC68E399AC5540898DFD06820");
             Console.WriteLine("Tool Finished");
         }
-
         
     }
 }
