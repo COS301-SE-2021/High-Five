@@ -28,7 +28,6 @@ export class WebsocketService {
       }
     });
     this.socket.subscribe((msg) => {
-      console.log(msg);
       this.handleMessage(msg);
     });
     this.sendMessage({
@@ -50,6 +49,7 @@ export class WebsocketService {
    * @param mediaType the media type, video or image
    */
   public async analyzeImage(mediaId: string, pipelineId: string, mediaType: string = 'image') {
+    this.ngSnotify.info('Request send to analyze image');
     this.sendMessage({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       Request: 'AnalyzeImage',
@@ -69,6 +69,7 @@ export class WebsocketService {
    * @param mediaType the media type, video or image
    */
   public async analyzeVideo(mediaId: string, pipelineId: string, mediaType: string = 'video') {
+    this.ngSnotify.info('Request send to analyze video');
     this.sendMessage({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       Request: 'AnalyzeVideo',
@@ -81,7 +82,6 @@ export class WebsocketService {
   }
 
   private handleMessage(msg: JsonObject) {
-    console.log(msg);
     if (msg.type === 'info') {
       // @ts-ignore
       if (msg.title === 'Livestream Started') {
@@ -96,24 +96,25 @@ export class WebsocketService {
 
     } else if (msg.type === 'success') {
       // @ts-ignore
+      // @ts-ignore
+      if (msg.title === 'Image Analysed') {
         // @ts-ignore
-        if (msg.title === 'Image Analysed') {
-          // @ts-ignore
-          this.analyzedImagesService.analyzedImages = this.analyzedImagesService.analyzedImages.concat(msg.message);
-          // @ts-ignore
-          this.ngSnotify.success('Analyzed Image', msg.title);
-        } else if(msg.title ==='Video Analysed') {
-          // @ts-ignore
-          this.analyzedVideosService.analyzeVideos = this.analyzedVideosService.analyzeVideos.concat(msg.message);
-          this.ngSnotify.success('Analyzed video', msg.title);
-        }
-         // @ts-ignore
-      this.ngSnotify.success(msg.message, msg.title);
-    } else {
+        this.analyzedImagesService.analyzedImages = this.analyzedImagesService.analyzedImages.concat(msg.message);
+        // @ts-ignore
+        this.ngSnotify.success('Analyzed Image', msg.title);
+      } else if (msg.title === 'Video Analysed') {
+        // @ts-ignore
+        this.analyzedVideosService.analyzeVideos = this.analyzedVideosService.analyzeVideos.concat(msg.message);
+        this.ngSnotify.success('Analyzed video', msg.title);
+      }else{
         // @ts-ignore
         this.ngSnotify.success(msg.message, msg.title);
-
       }
+    } else {
+      // @ts-ignore
+      this.ngSnotify.success(msg.message, msg.title);
+
+    }
   }
 
 
