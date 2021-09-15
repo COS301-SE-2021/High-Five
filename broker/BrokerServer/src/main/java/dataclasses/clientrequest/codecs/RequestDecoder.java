@@ -10,6 +10,10 @@ public class RequestDecoder implements JsonDeserializer<AnalysisRequest> {
 
     @Override
     public AnalysisRequest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        if (json == null) {
+            return null;
+        }
+
         String type = json.getAsJsonObject().get("Request").getAsString();
         String auth = json.getAsJsonObject().get("Authorization").getAsString();
         JsonObject body = json.getAsJsonObject().get("Body").getAsJsonObject();

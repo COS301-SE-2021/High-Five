@@ -4,14 +4,20 @@ import dataclasses.analysiscommand.AnalysisCommand;
 import dataclasses.serverinfo.ServerInformation;
 import dataclasses.clientrequest.AnalysisRequest;
 import dataclasses.serverinfo.ServerInformationHolder;
-import dataclasses.serverinfo.ServerUsage;
 import dataclasses.telemetry.builder.TelemetryBuilder;
 import dataclasses.telemetry.builder.TelemetryCollector;
 import logger.EventLogger;
+import managers.topicmanager.TopicManager;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.producer.*;
+import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.io.*;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
+import java.time.Duration;
+import java.util.List;
+import java.util.Properties;
 
 public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
 
@@ -26,55 +32,30 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
     @Override
     public void processRequest(AnalysisRequest request, ServerInformationHolder information, BufferedWriter writer) throws IOException {
 
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        Producer<String, String> producer = new KafkaProducer<>(props, new StringSerializer(), new StringSerializer());
+
+
         //Uploaded media analysis doesn't require any hardware priority
         TelemetryBuilder builder = new TelemetryBuilder().setCollector(TelemetryCollector.ALL);
         ServerInformation info = information.get(builder);
 
-        //Generate random topic to get information from server
-        String responseTopic = "RESPONSE_TOPIC" + ThreadLocalRandom.current().nextInt();
-        createResponseTopic(responseTopic);
-
         //Create new command
-        AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getMediaId(), request.getPipelineId(), responseTopic);
+        AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getMediaId(), request.getPipelineId());
         EventLogger.getLogger().info("Sending command to server " + info.getServerId());
 
-        //Open process to send command
-        String command = System.getenv("KAFKA_SEND_COMMAND").replace("{topic}", info.getServerId());
-        ProcessBuilder processBuilder = new ProcessBuilder(command.split(" "));
-        Process proc = processBuilder.start();
-
         //Send command to server
-        BufferedWriter outputStreamWriter =
-                new BufferedWriter(new OutputStreamWriter(proc.getOutputStream()));
+        ProducerRecord<String, String> commandToSend = new ProducerRecord<>(info.getServerId(), 1, "Analyze", commandString.toString());
+        producer.send(commandToSend);
+        producer.close();
 
-        outputStreamWriter.write(commandString.toString());
-        outputStreamWriter.flush();
-        proc.destroy();
 
         //Get response from server
-        String response = readResponse(responseTopic);
+        String response = readResponse(info.getServerId());
 
         //Send response to client
         writer.append(response).append("\n").flush();
-
-        //Delete random topic
-        deleteTopic(responseTopic);
-    }
-
-    /**
-     * Creates a new topic for the server to use to send data back to the Broker
-     * @param topic Random topic name
-     */
-    private void createResponseTopic(String topic) throws IOException {
-        EventLogger.getLogger().info("Creating response topic " + topic);
-        String command = System.getenv("KAFKA_CREATE_TOPIC").replace("{topic}", topic);
-        ProcessBuilder builder = new ProcessBuilder(command.split(" "));
-        Process proc = builder.start();
-        try {
-            proc.waitFor();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
     }
 
     /**
@@ -85,44 +66,61 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
     private String readResponse(String topic) throws IOException {
         EventLogger.getLogger().info("Reading response from topic " + topic);
 
+        List<ConsumerRecord<String, String>> messageList = null;
+
+        boolean messageFound = false;
+
+        //Listen for a new message from the server.
+        for (int i = 0; i < 10; i++) {
+            //Initialise the Kafka consumer to read a response from the communication partition of the topic
+            Properties props = new Properties();
+            props.setProperty("bootstrap.servers", "localhost:9092");
+            props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+
+            TopicPartition partition = new TopicPartition(topic, 2);
+
+            KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+            consumer.assign(List.of(partition));
+            consumer.seekToEnd(List.of(partition));
+
+            long position = consumer.position(partition);
+            System.out.println(position);
+            if (position > 0) {
+                position--;
+            }
+            consumer.seek(partition, position);
+
+             messageList = consumer.poll(Duration.ofSeconds(5)).records(partition);
+
+             if (messageList.size() > 0) {
+                 messageFound = TopicManager.getInstance().isNewMessage(messageList.get(0));
+             }
+
+             //Only go through if we have a message that has not been sent before
+             if (messageFound) {
+                 break;
+             }
+
+            consumer.close();
+
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
         /*
-        Create command to fetch message from topic.
-        As this topic shall only exist for the server to send a response,
-        it'll only ever have 1 message.
+        Throw an exception if the server has not responded.
+        A server is non-responsive when it has sent no new messages, or no messages at all.
          */
-        String exec = System.getenv("KAFKA_GET_MESSAGES")
-                .replace("{topic}", topic)
-                .replace("{offset}", "0"); //Since only one message is being sent.
-
-        ProcessBuilder builder = new ProcessBuilder(exec.split(" "));
-        Process proc = builder.start();
-
-        //Read response from server
-        BufferedReader inputStreamReader =
-                new BufferedReader(new InputStreamReader(proc.getInputStream()));
-
-        String returnString = inputStreamReader.readLine();
-
-        //send error response if string was null
-        if (returnString == null) {
-            //return error string
+        if (messageList.size() == 0 || !messageFound) {
+            throw new IOException("No new messages could be read from topic: " + topic);
         }
-        return returnString;
-    }
 
-    /**
-     * Deletes the random topic once a response is read from it.
-     *
-     * @param topic Random topic to delete
-     */
-    private void deleteTopic(String topic) throws IOException {
-        EventLogger.getLogger().info("Deleting random topic " + topic);
-        String exec = System.getenv("KAFKA_DELETE_TOPIC").replace("{topic}", topic);
-        ProcessBuilder builder = new ProcessBuilder(exec.split(" "));
-        try {
-            builder.start().waitFor();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        ConsumerRecord<String, String> message = messageList.get(0);
+
+        return message.value();
     }
 }

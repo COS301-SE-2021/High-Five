@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class ServerManagerImpl extends Manager {
 
-    private final ArrayList<String> topics = new ArrayList<>();
+    private final ServerTopics topics = new ServerTopics();
 
     public ServerManagerImpl(ServerInformationHolder holder) {
         super(holder, 1);
@@ -40,7 +40,7 @@ public class ServerManagerImpl extends Manager {
 
             @Override
             public void onNext(@NonNull String message) {
-                topics.add(message);
+                topics.addTopic(message);
             }
 
             @Override
