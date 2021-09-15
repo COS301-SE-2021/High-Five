@@ -6,7 +6,7 @@ import {VideosService} from '../../services/videos/videos.service';
 import {AddItemComponent} from '../add-item/add-item.component';
 import {PipelineService} from '../../services/pipeline/pipeline.service';
 import {Pipeline} from '../../models/pipeline';
-import {AnalyzedVideosService} from '../../services/analyzed-videos/analyzed-videos.service';
+import {WebsocketService} from '../../services/websocket/websocket.service';
 
 
 @Component({
@@ -19,7 +19,7 @@ export class VideostoreCardComponent implements OnInit {
 
   constructor(public platform: Platform, private modalController: ModalController, private videoService: VideosService,
               private popoverController: PopoverController, private pipelineService: PipelineService,
-              private analyzeVideosService: AnalyzedVideosService) {
+              private webSocketService: WebsocketService) {
   }
 
   ngOnInit() {
@@ -90,7 +90,7 @@ export class VideostoreCardComponent implements OnInit {
   private async analyseVideo(pipelines: string[]) {
     for (const pipelineName of pipelines) {
       const selectedPipeline = this.pipelineService.pipelines.find((pipeline: Pipeline) => pipeline.name === pipelineName);
-      await this.analyzeVideosService.analyzeVideo(this.video.id, selectedPipeline.id);
+      await this.webSocketService.analyzeVideo(this.video.id, selectedPipeline.id);
     }
   }
 

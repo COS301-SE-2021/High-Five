@@ -35,7 +35,24 @@ export class PipelineComponent implements OnInit {
    * @param tool a string representing a tool which should be removed from the pipeline
    */
   public async onRemoveTool(tool: string) {
-    await this.pipelineService.removeTool(this.pipeline.id, [tool]);
+    if (this.pipeline.tools.indexOf(tool) === this.pipeline.tools.length - 1) {
+      if (this.userToolsService.drawingToolCount([tool])>0 ) {
+        await this.toastController.create({
+          message: `A pipeline's last tool must be a drawing tool, cannot remove tool`,
+          duration: 2000,
+          translucent: true,
+          position: 'bottom'
+        }).then((toast) => {
+          toast.present();
+        });
+      } else {
+        await this.pipelineService.removeTool(this.pipeline.id, [tool]);
+
+      }
+    } else {
+      await this.pipelineService.removeTool(this.pipeline.id, [tool]);
+    }
+
 
   }
 
@@ -45,7 +62,9 @@ export class PipelineComponent implements OnInit {
    * @param tools, an array of strings representing the tools which must be added to the pipeline
    */
   public async onAddTool(tools: string[]) {
-    await this.pipelineService.addTool(this.pipeline.id, tools);
+    this.pipelineService.addTool(this.pipeline.id, tools).then(() => {
+      this.updateToolColours();
+    });
 
   }
 

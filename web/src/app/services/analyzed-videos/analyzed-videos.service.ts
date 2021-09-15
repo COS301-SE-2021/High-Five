@@ -3,7 +3,6 @@ import {BehaviorSubject} from 'rxjs';
 import {MediaStorageService} from '../../apis/mediaStorage.service';
 import {AnalyzedVideoMetaData} from '../../models/analyzedVideoMetaData';
 import {AnalysisService} from '../../apis/analysis.service';
-import {WebsocketService} from '../websocket/websocket.service';
 import {SnotifyService} from 'ng-snotify';
 
 @Injectable({
@@ -17,7 +16,7 @@ export class AnalyzedVideosService {
   readonly analyzedVideos$ = this._analyzeVideos.asObservable();
 
   constructor(private mediaStorageService: MediaStorageService, private analysisService: AnalysisService,
-              private websocketService: WebsocketService, private snotifyService: SnotifyService) {
+              private snotifyService: SnotifyService) {
     this.fetchAll();
   }
 
@@ -32,25 +31,6 @@ export class AnalyzedVideosService {
   }
 
 
-  /**
-   * Function will send a request to analyze a media with the specified mediaId, pipelineId and media type
-   *
-   * @param mediaId the id of the media which to analyze (video or image)
-   * @param pipelineId the id of the pipeline with which to analyze the media
-   * @param mediaType the media type, video or image
-   */
-  public async analyzeVideo(mediaId: string, pipelineId: string, mediaType: string = 'video') {
-    this.websocketService.sendMessage({
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      Request: 'AnalyzeVideo',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      Body: {
-        imageId: mediaId,
-        piplineId: pipelineId,
-      },
-    });
-    await this.fetchAll();
-  }
 
   public async fetchAll() {
     await this.mediaStorageService.getAnalyzedVideos().subscribe((res) => {

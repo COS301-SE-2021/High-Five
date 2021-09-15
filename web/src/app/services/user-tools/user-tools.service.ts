@@ -109,4 +109,14 @@ export class UserToolsService {
       this.toolTypes = res.toolTypes;
     });
   }
+
+  public  drawingToolCount(toolNames: string[]): number {
+    let count  =0;
+    for (const toolName of toolNames) {
+      if(this.userTools.filter(tool => tool.toolName === toolName)[0].toolType === 'drawing'){
+        count++;
+      }
+    }
+    return count;
+  }
 }

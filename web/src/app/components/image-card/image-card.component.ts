@@ -5,7 +5,7 @@ import {AddItemComponent} from '../add-item/add-item.component';
 import {PipelineService} from '../../services/pipeline/pipeline.service';
 import {ImagesService} from '../../services/images/images.service';
 import {Pipeline} from '../../models/pipeline';
-import {AnalyzedImagesService} from '../../services/analyzed-images/analyzed-images.service';
+import {WebsocketService} from '../../services/websocket/websocket.service';
 
 @Component({
   selector: 'app-image-card',
@@ -17,7 +17,7 @@ export class ImageCardComponent implements OnInit {
   public alt = 'assets/images/defaultprofile.svg';
 
   constructor(private popoverController: PopoverController, private pipelineService: PipelineService,
-              private imagesService: ImagesService, private analyzedImagesService: AnalyzedImagesService) {
+              private imagesService: ImagesService, private webSocketService: WebsocketService) {
     // No constructor body needed as properties are retrieved from angular input
   }
 
@@ -84,7 +84,7 @@ export class ImageCardComponent implements OnInit {
   private async analyseImage(pipelines: string[]) {
     for (const pipelineName of pipelines) {
       const selectedPipeline = this.pipelineService.pipelines.find((pipeline: Pipeline) => pipeline.name === pipelineName);
-      await this.analyzedImagesService.analyzeImage(this.image.id, selectedPipeline.id);
+      await this.webSocketService.analyzeImage(this.image.id, selectedPipeline.id);
     }
   }
 }

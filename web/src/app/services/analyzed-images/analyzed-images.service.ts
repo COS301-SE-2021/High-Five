@@ -3,7 +3,6 @@ import {BehaviorSubject} from 'rxjs';
 import {MediaStorageService} from '../../apis/mediaStorage.service';
 import {AnalyzedImageMetaData} from '../../models/analyzedImageMetaData';
 import {AnalysisService} from '../../apis/analysis.service';
-import {WebsocketService} from '../websocket/websocket.service';
 import {SnotifyService} from 'ng-snotify';
 
 @Injectable({
@@ -16,7 +15,7 @@ export class AnalyzedImagesService {
   readonly analyzedImages$ = this._analyzedImages.asObservable();
 
   constructor(private mediaStorageService: MediaStorageService, private analysisService: AnalysisService,
-              private websocketService: WebsocketService, private snotifyService: SnotifyService) {
+              private snotifyService: SnotifyService) {
     this.fetchAll();
   }
 
@@ -36,25 +35,6 @@ export class AnalyzedImagesService {
   set analyzedImages(val: AnalyzedImageMetaData[]) {
     // eslint-disable-next-line no-underscore-dangle
     this._analyzedImages.next(val);
-  }
-
-  /**
-   * Function will send a request to analyze a media with the specified mediaId, pipelineId and media type
-   *
-   * @param mediaId the id of the media which to analyze (video or image)
-   * @param pipelineId the id of the pipeline with which to analyze the media
-   * @param mediaType the media type, video or image
-   */
-  public async analyzeImage(mediaId: string, pipelineId: string, mediaType: string = 'image') {
-    this.websocketService.sendMessage({
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      Request: 'AnalyzeImage',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      Body: {
-        imageId: mediaId,
-        piplineId: pipelineId,
-      },
-    });
   }
 
   /**
