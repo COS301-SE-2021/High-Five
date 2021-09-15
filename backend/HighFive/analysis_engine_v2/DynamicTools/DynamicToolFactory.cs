@@ -19,7 +19,7 @@ namespace analysis_engine.BrokerClient
         {
             var permissions = new PermissionSet(PermissionState.None);
             permissions.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
-            permissions.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read, ConfigStrings.ModelDirectory));
+            permissions.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read | FileIOPermissionAccess.PathDiscovery, ConfigStrings.ModelDirectory));
             var setup = new AppDomainSetup();
             setup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             
