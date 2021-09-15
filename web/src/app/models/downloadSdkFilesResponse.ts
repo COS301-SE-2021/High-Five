@@ -12,10 +12,5 @@
 import {FileDownload} from './fileDownload';
 
 export interface DownloadSdkFilesResponse {
-  boxCoordinatesClass?: FileDownload;
-  toolInterface?: FileDownload;
-  analysisToolAbstractClass?: FileDownload;
-  drawingToolAbstractClass?: FileDownload;
-  metaDataClass?: FileDownload;
-  dataClass?: FileDownload;
+  sdkZip: FileDownload;
 }
