@@ -45,21 +45,22 @@ namespace analysis_engine_v2.BrokerClient.Storage
 
         public async Task<AnalyzedVideoMetaData> StoreVideo(string videoPath, AnalyzeVideoRequest request)
         {
-            var video = File.ReadAllBytes(videoPath);
             var analysisPipeline = JsonConvert.DeserializeObject<PipelineRequest>(GetPipeline(request.PipelineId).Result);
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/video";
             const string fileExtension = ".mp4";
             var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + request.PipelineId);
-            var testFile = _storageManager.CreateNewFile(analyzedMediaName+ fileExtension, storageContainer).Result;
-            testFile.AddMetadata("videoId", request.VideoId);
-            testFile.AddMetadata("pipelineId", request.PipelineId);
-            await testFile.UploadFileFromByteArray(video, "video/mp4");
-
+            
             var thumbnailPath = Path.GetTempFileName();
             await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);
             var thumbnailFile = _storageManager.CreateNewFile(analyzedMediaName + "-thumbnail.jpg", storageContainer).Result;
             await thumbnailFile.UploadFile(thumbnailPath, "image/jpg");
+            
+            var video = File.ReadAllBytes(videoPath);
+            var testFile = _storageManager.CreateNewFile(analyzedMediaName+ fileExtension, storageContainer).Result;
+            testFile.AddMetadata("videoId", request.VideoId);
+            testFile.AddMetadata("pipelineId", request.PipelineId);
+            await testFile.UploadFileFromByteArray(video, "video/mp4");
 
             var response = new AnalyzedVideoMetaData
             {
