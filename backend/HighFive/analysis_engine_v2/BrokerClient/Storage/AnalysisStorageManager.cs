@@ -22,11 +22,11 @@ namespace analysis_engine_v2.BrokerClient.Storage
         public async Task<AnalyzedImageMetaData> StoreImage(string imagePath, AnalyzeImageRequest request)
         {
             var image = File.ReadAllBytes(imagePath);
-            var analysisPipeline = JsonConvert.DeserializeObject<PipelineRequest>(GetPipeline(request.PipelineId).Result);
+            var analysisPipeline = JsonConvert.DeserializeObject<PipelineRequest>(GetPipeline(request.PipelineId, false).Result);
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/image";
             const string fileExtension = ".img";
-            var analyzedMediaName = _storageManager.HashMd5(request.ImageId + "|" + string.Join(",",analysisPipeline.Tools));
+            var analyzedMediaName = _storageManager.HashMd5(request.ImageId + "|" + analysisPipeline.Id);
             var testFile = _storageManager.CreateNewFile(analyzedMediaName+ fileExtension, storageContainer).Result;
             testFile.AddMetadata("imageId", request.ImageId);
             testFile.AddMetadata("pipelineId", request.PipelineId);
@@ -50,7 +50,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/video";
             const string fileExtension = ".mp4";
-            var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + string.Join(",",analysisPipeline.Tools));
+            var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + request.PipelineId);
             var testFile = _storageManager.CreateNewFile(analyzedMediaName+ fileExtension, storageContainer).Result;
             testFile.AddMetadata("videoId", request.VideoId);
             testFile.AddMetadata("pipelineId", request.PipelineId);
