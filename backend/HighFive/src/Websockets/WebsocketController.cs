@@ -71,7 +71,7 @@ namespace src.Websockets
                                 }
                                 else
                                 {
-                                    await SendMessage("Video Analysed", analyzedImage,
+                                    await SendMessage("Image Analysed", analyzedImage,
                                         "success", webSocket);
                                 }
                                 break;

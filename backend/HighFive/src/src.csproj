@@ -37,6 +37,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="AnalysisTools" />
       <Folder Include="OpenAPI" />
     </ItemGroup>
 

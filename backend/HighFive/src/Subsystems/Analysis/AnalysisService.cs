@@ -73,8 +73,8 @@ namespace src.Subsystems.Analysis
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/image";
             const string fileExtension = ".img";
-            var analyzedMediaName = _storageManager.HashMd5(request.ImageId + "|" + string.Join(",",analysisPipeline.Tools)) + fileExtension;
-            var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
+            var analyzedMediaName = _storageManager.HashMd5(request.ImageId + "|" + analysisPipeline.Id);
+            var testFile = _storageManager.GetFile(analyzedMediaName+ fileExtension, storageContainer).Result;
             var response = new AnalyzedImageMetaData
             {
                 ImageId = request.ImageId,
@@ -114,7 +114,7 @@ namespace src.Subsystems.Analysis
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/video";
             const string fileExtension = ".mp4";
-            var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + string.Join(",",analysisPipeline.Tools)) + fileExtension;
+            var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + request.PipelineId) + fileExtension;
             var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
             var response = new AnalyzedVideoMetaData
             {
