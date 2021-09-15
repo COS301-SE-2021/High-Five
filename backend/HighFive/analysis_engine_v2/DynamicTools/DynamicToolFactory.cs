@@ -6,6 +6,7 @@ using System.Security.Permissions;
 using analysis_engine_v2.BrokerClient.Storage;
 using broker_analysis_client.Client.Models;
 using Microsoft.CodeAnalysis;
+using Microsoft.ML.OnnxRuntime;
 
 namespace analysis_engine.BrokerClient
 {
@@ -21,6 +22,9 @@ namespace analysis_engine.BrokerClient
             permissions.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
             permissions.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read | FileIOPermissionAccess.PathDiscovery, ConfigStrings.ModelDirectory));
             permissions.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read | FileIOPermissionAccess.PathDiscovery, Environment.CurrentDirectory));
+            permissions.AddPermission(
+                new FileIOPermission(FileIOPermissionAccess.Read | FileIOPermissionAccess.PathDiscovery,
+                    typeof(SessionOptions).Assembly.Location));
             var setup = new AppDomainSetup();
             setup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             
