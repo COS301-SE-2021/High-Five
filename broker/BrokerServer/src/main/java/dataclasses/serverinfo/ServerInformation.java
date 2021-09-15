@@ -57,10 +57,10 @@ public class ServerInformation {
 
     public String toString() {
         return "{" +
-                "id: \"" + serverId + "\"," +
-                "address: \"" + address + "\"," +
-                "port: \"" + port + "\"," +
-                "credentials: \"" + credentials + "\"}";
+                "\"id\": \"" + serverId + "\"," +
+                "\"address\": \"" + address + "\"," +
+                "\"port\": \"" + port + "\"," +
+                "\"credentials\": \"" + credentials + "\"}";
     }
 
     public ServerInformation clone() {

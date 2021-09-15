@@ -19,7 +19,7 @@ public class ServerInformationDecoder implements JsonDeserializer<ServerInformat
      */
     @Override
     public ServerInformation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        String address = json.getAsJsonObject().get("ServerIP").getAsString();
+        String address = json.getAsJsonObject().get("ServerIp").getAsString();
         String id = json.getAsJsonObject().get("ServerId").getAsString();
         String port = json.getAsJsonObject().get("ServerPort").getAsString();
         String credentials = json.getAsJsonObject().get("Credentials").getAsString();

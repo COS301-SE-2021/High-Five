@@ -1,4 +1,5 @@
 import logger.EventLogger;
+import managers.concurrencymanager.ConcurrencyManager;
 import org.apache.catalina.startup.Tomcat;
 
 import java.io.*;
@@ -11,6 +12,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         EventLogger.getLogger().info("Starting Broker");
+        ConcurrencyManager.getInstance(); //initialise the concurrency manager
         Broker b = new Broker();
 
         EventLogger.getLogger().info("Starting Embedded Tomcat server");

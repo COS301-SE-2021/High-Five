@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <UserSecretsId>dotnet-analysis_engine-DE859BDF-CF9D-4653-AB7E-C0210987A951</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Confluent.Kafka" Version="1.7.0" />
+        <PackageReference Include="Emgu.CV" Version="4.5.3.4721" />
+        <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721" />
+        <PackageReference Include="Harmonic" Version="0.0.2" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.0-3.final" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.8.1" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.8.1" />
+        <PackageReference Include="Mono.Posix-4.5" Version="4.5.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="NumSharp" Version="0.30.0" />
+        <PackageReference Include="SSH.NET" Version="2020.0.1" />
+        <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="BrokerClient" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="System.Security.Permissions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+        <HintPath>..\..\..\..\..\..\..\..\..\..\..\..\usr\share\dotnet\packs\Microsoft.AspNetCore.App.Ref\5.0.0\ref\net5.0\System.Security.Permissions.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+</Project>

@@ -32,7 +32,6 @@ namespace src
         {
             Configuration = configuration;
         }
-
         
         public IConfiguration Configuration { get; }
         

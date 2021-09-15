@@ -1,5 +1,6 @@
 package clients.webclients.strategy;
 
+import clients.webclients.connectionhandler.ConnectionHandler;
 import dataclasses.serverinfo.ServerInformation;
 import dataclasses.clientrequest.AnalysisRequest;
 import dataclasses.serverinfo.ServerInformationHolder;
@@ -17,7 +18,6 @@ public interface AnalysisStrategy {
      * Processes the request.
      * @param request Request to process
      * @param information Server to use for analysis
-     * @param writer Writer to get any responses from the server
      */
-    void processRequest(AnalysisRequest request, ServerInformationHolder information, BufferedWriter writer) throws IOException;
+    void processRequest(AnalysisRequest request, ServerInformationHolder information, ConnectionHandler handler, String connectionId) throws IOException;
 }
