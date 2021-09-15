@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using analysis_engine_v2.BrokerClient.Service.Models;
 using broker_analysis_client.Client.Models;
@@ -99,7 +100,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
             /*
              * Writes Model to disk and returns analysis source code
              */
-            
+            Console.WriteLine("Searching in " + "tools/analysis/" + toolId);
             var toolSet = _storageManager.GetAllFilesInContainer("tools/analysis/" + toolId).Result;
             if (toolSet.Count == 0)
             {
@@ -121,7 +122,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
 
             var response = new AnalysisToolComposite
             {
-                ModelPath = Directory.GetCurrentDirectory() + "/Models"
+                ModelPath = Directory.GetCurrentDirectory() + @"\..\..\Models\"
             };
 
             var model = File.Create(response.ModelPath + modelFile.GetMetaData("modelName"));
