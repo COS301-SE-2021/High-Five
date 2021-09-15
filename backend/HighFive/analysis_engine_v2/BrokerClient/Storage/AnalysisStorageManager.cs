@@ -119,7 +119,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
 
             var response = new AnalysisToolComposite
             {
-                ModelPath = Directory.GetCurrentDirectory() + @"\..\..\Models\"
+                ModelPath = @"..\..\Models\"
             };
 
             var model = File.Create(response.ModelPath + modelFile.GetMetaData("modelName"));
