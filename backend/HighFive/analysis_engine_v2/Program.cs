@@ -22,11 +22,9 @@ namespace analysis_engine
     {
         public static void Main(string[] args)
         {
-            //TestImageAnalysis();
-            var client = new BrokerClient.BrokerClient();
-            client.Run();
-            //TestSdk();
-
+            TestStreamAnalysis();
+            // var client = new BrokerClient.BrokerClient();
+            // client.Run();
         }
 
         private static void TestVideoAnalysis()
@@ -43,7 +41,7 @@ namespace analysis_engine
         {
             Console.WriteLine("Starting Analysis...");
             var url =
-                @"http://192.168.11.153:5080/test5/streams/184949160521935207548503.m3u8?token=009818323712942561669670";
+                @"http://192.168.11.153:5080/55799ed725ac42bcbb1925c715380541/streams/114725691588075395384115.m3u8";
             var analysis=new AnalysisObserver(url, "stream", "analysis:fastvehicles,drawing:boxes", @"C:\Users\hanne\RiderProjects\output.mp4");
             while (!analysis.Done) System.Threading.Thread.Sleep(1000);
             Console.WriteLine("Analysis Done!");
@@ -78,14 +76,6 @@ namespace analysis_engine
             Console.WriteLine("Analysis Done!");
         }
 
-        private static void TestSdk()
-        {
-            var test = ConfigStrings.ModelDirectory;
-            StorageManagerContainer.StorageManager = new StorageManager("31eb910a-c3f4-412c-b641-26ca8c7c38e3");
-            var factory = new DynamicToolFactory();
-            var customTool = factory.CreateDynamicTool("95C50C7CC68E399AC5540898DFD06820");
-            Console.WriteLine("Tool Finished");
-        }
         
     }
 }
