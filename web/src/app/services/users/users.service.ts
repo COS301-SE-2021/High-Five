@@ -33,6 +33,7 @@ export class UsersService {
               private analyzedVideosService: AnalyzedVideosService, private toolsService: ToolsService,
               private userToolsService: UserToolsService) {
     this.queryIsAdmin();
+    this.fetchAllUnreviewedTools();
   }
 
 
