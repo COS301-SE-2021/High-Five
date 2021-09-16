@@ -26,7 +26,9 @@ namespace src.Subsystems.Tools
         [Authorize(Policy = "Admin")]
         public override IActionResult ApproveTool(ReviewToolRequest reviewToolRequest)
         {
-            throw new NotImplementedException();
+            var status = _toolService.ApproveToolUploadRequest(reviewToolRequest);
+            var response = new EmptyObject {Success = status};
+            return StatusCode(200, response);
         }
 
         public override IActionResult CreateMetaDataType(string name, IFormFile file)
@@ -121,13 +123,16 @@ namespace src.Subsystems.Tools
         [Authorize(Policy = "Admin")]
         public override IActionResult GetUnreviewedTools()
         {
-            throw new NotImplementedException();
+            var response = _toolService.GetUnreviewedTools();
+            return StatusCode(200, response);
         }
 
         [Authorize(Policy = "Admin")]
         public override IActionResult RejectTool(ReviewToolRequest reviewToolRequest)
         {
-            throw new NotImplementedException();
+            var status = _toolService.RejectToolUploadRequest(reviewToolRequest);
+            var response = new EmptyObject {Success = status};
+            return StatusCode(200, response);
         }
 
         public override IActionResult UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataType, string toolName)
