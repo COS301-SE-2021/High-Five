@@ -44,6 +44,7 @@ namespace src.Subsystems.Tools
             sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".dll", ContainerName+ "/analysis/" + generatedToolName).Result;
             sourceCodeFile.AddMetadata("toolName",toolName);
             sourceCodeFile.AddMetadata("metadataType", metadataType);
+            sourceCodeFile.AddMetadata("approved", "false");
             await sourceCodeFile.UploadFile(sourceCode);
             if (!validateDll(sourceCodeFile))
             {
@@ -68,7 +69,8 @@ namespace src.Subsystems.Tools
                 ToolId = generatedToolName,
                 ToolName = toolName,
                 ToolType = "analysis",
-                ToolMetadataType = metadataType
+                ToolMetadataType = metadataType,
+                IsApproved = false
             };
         }
 
@@ -88,6 +90,7 @@ namespace src.Subsystems.Tools
             sourceCodeFile = _storageManager.CreateNewFile(sourceCodeName + ".dll", ContainerName+ "/drawing/" + generatedToolName).Result;
             sourceCodeFile.AddMetadata("toolName",toolName);
             sourceCodeFile.AddMetadata("metadataType", metadataType);
+            sourceCodeFile.AddMetadata("approved", "false");
             await sourceCodeFile.UploadFile(sourceCode);
             if (!validateDll(sourceCodeFile))
             {
@@ -101,7 +104,8 @@ namespace src.Subsystems.Tools
                 ToolId = generatedToolName,
                 ToolName = toolName,
                 ToolType = "drawing",
-                ToolMetadataType = metadataType
+                ToolMetadataType = metadataType,
+                IsApproved = false
             };
         }
 
@@ -271,7 +275,30 @@ namespace src.Subsystems.Tools
 
         public GetUnreviewedToolsResponse GetUnreviewedTools()
         {
-            throw new NotImplementedException();
+            var toolsList = new List<UnreviewedTool>();
+            var defaultCounter = 0;
+            var ls = GetUnreviewedToolsAsArray();
+            foreach(var defaultToolString in ls)
+            {
+                var toolNameArr = defaultToolString.Split("/");
+                var getRequest = new GetToolFilesRequest
+                {
+                    ToolId = toolNameArr[2],
+                    ToolType = toolNameArr[1]
+                };
+                var toolFiles = GetToolFiles(getRequest);
+                var newTool = new UnreviewedTool
+                {
+                    UserId = toolNameArr[0],
+                    ToolType = toolNameArr[1],
+                    ToolId = toolNameArr[2],
+                    ToolDll = toolFiles.ToolSourceCode.FileUrl,
+                    ToolModel = toolFiles.ToolSourceCode.FileUrl
+                };
+                toolsList.Add(newTool);
+            }
+
+            return new GetUnreviewedToolsResponse {UnreviewedTools = toolsList};
         }
 
         public bool RejectToolUploadRequest(ReviewToolRequest request)
@@ -331,6 +358,17 @@ namespace src.Subsystems.Tools
             var currentContainer = _storageManager.GetCurrentContainer();
             _storageManager.SetBaseContainer("public");
             var defaultToolsFile = _storageManager.GetFile("default_tools.txt","").Result;
+            _storageManager.SetBaseContainer(currentContainer);
+            var toolsArray = defaultToolsFile.ToText().Result.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+            //the above line splits the text file's contents by newlines into an array
+            return toolsArray;
+        }
+        
+        private string[] GetUnreviewedToolsAsArray()
+        {
+            var currentContainer = _storageManager.GetCurrentContainer();
+            _storageManager.SetBaseContainer("public");
+            var defaultToolsFile = _storageManager.GetFile("unreviewed_tools.txt","").Result;
             _storageManager.SetBaseContainer(currentContainer);
             var toolsArray = defaultToolsFile.ToText().Result.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
             //the above line splits the text file's contents by newlines into an array

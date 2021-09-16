@@ -31,6 +31,12 @@ namespace Org.OpenAPITools.Models
         /// </summary>
         [DataMember(Name="userId", EmitDefaultValue=false)]
         public string UserId { get; set; }
+        
+        /// <summary>
+        /// Gets or Sets ToolType
+        /// </summary>
+        [DataMember(Name="toolType", EmitDefaultValue=false)]
+        public string ToolType { get; set; }
 
         /// <summary>
         /// Gets or Sets ToolId
