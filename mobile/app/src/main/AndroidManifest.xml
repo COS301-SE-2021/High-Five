@@ -36,7 +36,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/logo1_2round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.HighFive" >
+        android:theme="@style/Theme.HighFive"
+        android:requestLegacyExternalStorage="true">
 
         <!-- DJI SDK -->
         <uses-library android:name="com.android.future.usb.accessory" />
