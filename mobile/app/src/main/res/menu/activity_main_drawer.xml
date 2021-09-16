@@ -4,15 +4,6 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/navigation_home"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="@string/title_home" />
-
-        <item
-            android:id="@+id/navigation_analysis"
-            android:icon="@drawable/ic_dashboard_black_24dp"
-            android:title="@string/analysis_fragment" />
 
         <item
             android:id="@+id/navigation_media"
@@ -22,6 +13,6 @@
         <item
             android:id="@+id/navigation_drone"
             android:icon="@drawable/ic_notifications_black_24dp"
-            android:title="Drone" />
+            android:title="@string/drone" />
     </group>
 </menu>
