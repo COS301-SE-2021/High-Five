@@ -6,7 +6,7 @@ namespace Org.OpenAPITools
 {
     public class Program
     {
-        private const bool Deployed = false;
+        private const bool Deployed = true;
         public static void Main(string[] args)
         {
             if (Deployed)

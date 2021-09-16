@@ -187,7 +187,7 @@ namespace src.Subsystems.Analysis
             AnalysisSocket.Close();
         }
 
-        public async Task<bool> StartLiveStream(string userId)
+        public async Task<bool> StartLiveAnalysis(string userId)
         {
             await _livestreamingService.AuthenticateUser();
             var appName = _livestreamingService.CreateApplication(userId).Result;
@@ -198,7 +198,7 @@ namespace src.Subsystems.Analysis
 
             var analysedStreamId = _livestreamingService.CreateStreamingUrl(appName).Result;
             var analysedStreamPublishToken = _livestreamingService.CreateOneTimeToken(appName, analysedStreamId, "publish").Result;
-            var response = new LiveStreamingLinks
+            var response = new LiveAnalysisLinks
             {
                 PublishLinkDrone = _configuration["LivestreamUri"].Replace("https", "rtmp") +
                                    "/" + appName + "/" + droneStreamingId + "?token=" + dronePublishToken,
@@ -214,6 +214,34 @@ namespace src.Subsystems.Analysis
                 Authorization = _brokerToken,
                 UserId = _userId,
                 Request = "StartLiveAnalysis",
+                Body = response
+            };
+            await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
+            var socketResponse = AnalysisSocket.Receive().Result;
+            return true;
+        }
+
+        public async Task<bool> StartLiveStream(string userId)
+        {
+            await _livestreamingService.AuthenticateUser();
+            var appName = _livestreamingService.CreateApplication(userId).Result;
+            await _livestreamingService.UpdateApplicationSettings(appName);
+            var droneStreamingId = _livestreamingService.CreateStreamingUrl(appName).Result;
+            var dronePublishToken = _livestreamingService.CreateOneTimeToken(appName, droneStreamingId, "publish").Result;
+
+            var streamId = _livestreamingService.CreateStreamingUrl(appName).Result;
+            var response = new LiveStreamLinks
+            {
+                PublishLinkDrone = _configuration["LivestreamUri"].Replace("https", "rtmp") +
+                                   "/" + appName + "/" + droneStreamingId + "?token=" + dronePublishToken,
+                StreamId = streamId
+            };
+            
+            var brokerRequest = new BrokerSocketRequest
+            {
+                Authorization = _brokerToken,
+                UserId = _userId,
+                Request = "StartLiveStream",
                 Body = response
             };
             await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));

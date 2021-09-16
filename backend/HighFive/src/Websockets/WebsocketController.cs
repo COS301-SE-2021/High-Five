@@ -89,8 +89,11 @@ namespace src.Websockets
                                         "success", webSocket);
                                 }
                                 break;
-                            case "StartLiveAnalysis":   //This use case must be called by the application
+                            case "StartLiveStream":   //This use case must be called by the application
                                 await _analysisService.StartLiveStream(_userId);
+                                break;
+                            case "StartLiveAnalysis":   //This use case must be called by the application
+                                await _analysisService.StartLiveAnalysis(_userId);
                                 break;
                             case "Exit":
                                 await SendMessage("Socket Closed", "Connection to the socket was closed.", "info",

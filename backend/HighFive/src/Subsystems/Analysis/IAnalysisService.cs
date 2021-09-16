@@ -13,6 +13,7 @@ namespace src.Subsystems.Analysis
         public void SetBaseContainer(string containerName);
         public void SetBrokerToken(string userId);
         public void CloseBrokerSocket();
+        public Task<bool> StartLiveAnalysis(string userId);
         public Task<bool> StartLiveStream(string userId);
         public Task<bool> Synchronise(SocketRequest fullRequest);
     }
