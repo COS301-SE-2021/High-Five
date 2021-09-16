@@ -122,12 +122,16 @@ namespace analysis_engine_v2.BrokerClient.Storage
                 ModelPath = Environment.CurrentDirectory + @"\..\..\Models\"
             };
 
-            var model = File.Create(response.ModelPath + modelFile.GetMetaData("modelName"));
-            using var ms = modelFile.ToStream().Result;
-            var bytes = new byte[ms.Length];
-            ms.Read(bytes, 0, (int) ms.Length);
-            model.Write(bytes, 0, bytes.Length);
-            ms.Close();
+            
+            if (!File.Exists(response.ModelPath + modelFile.GetMetaData("modelName")))
+            {
+                var model = File.Create(response.ModelPath + modelFile.GetMetaData("modelName"));
+                using var ms = modelFile.ToStream().Result;
+                var bytes = new byte[ms.Length];
+                ms.Read(bytes, 0, (int) ms.Length);
+                model.Write(bytes, 0, bytes.Length);
+                ms.Close();
+            }
 
             response.ByteData = sourceCodeFile?.ToByteArray().Result;
             

@@ -19,12 +19,10 @@ namespace analysis_engine.BrokerClient
 
         static DynamicToolFactory()
         {
-            var permissions = new PermissionSet(PermissionState.None);
+            var permissions = new PermissionSet(PermissionState.Unrestricted);
             permissions.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
-            permissions.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read | FileIOPermissionAccess.PathDiscovery, ConfigStrings.ModelDirectory));
-            permissions.AddPermission(
-                new FileIOPermission(FileIOPermissionAccess.Read | FileIOPermissionAccess.PathDiscovery,
-                    typeof(SessionOptions).Assembly.Location));
+            /*permissions.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read | FileIOPermissionAccess.PathDiscovery, ConfigStrings.ModelDirectory));
+            permissions.AddPermission(new PrincipalPermission(PermissionState.Unrestricted));*/
             var setup = new AppDomainSetup();
             setup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             
@@ -49,15 +47,16 @@ namespace analysis_engine.BrokerClient
             };
 
             var assemblyBytes = toolFiles.ByteData;
-            /*var assemblyBytes =
-                File.ReadAllBytes(
-                    @"D:\Tuks\2021\COS301\CapstoneProject\Code\DLLTest\MyCustomTool\MyCustomTool\bin\Debug\MyCustomTool.dll");*/
-            
-            var dynamicTool = (DynamicTool) _restrictedDomain.CreateInstanceAndUnwrap(
+            var asm = Assembly.Load(assemblyBytes);
+            var dynamicTool = new DynamicTool(toolId);
+            dynamicTool.LoadCompiledBytes(asm);
+            return dynamicTool;
+
+            /*var dynamicTool = (DynamicTool) _restrictedDomain.CreateInstanceAndUnwrap(
                 _dynamicToolType.Assembly.FullName, _dynamicToolType.FullName,
                 false, BindingFlags.Default, null, new object[] {toolId}, null, null);
             dynamicTool.LoadCompiledBytes(assemblyBytes);
-            return dynamicTool;
+            return dynamicTool;*/
         }
         
         public void UnloadRestrictedDomain()

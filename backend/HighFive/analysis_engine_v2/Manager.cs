@@ -51,6 +51,7 @@ namespace analysis_engine
         public void GiveLinkToFootage(string mediaType, string url, string outputUrl="", 
             Stream input=null)
         {
+            Console.WriteLine("Giving link to footage.");
             _mediaType = mediaType;
             switch (mediaType)
             {

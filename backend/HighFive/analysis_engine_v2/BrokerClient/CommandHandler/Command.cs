@@ -26,6 +26,7 @@ namespace analysis_engine.BrokerClient.CommandHandler
             consumer.Assign(partition);
             while (true)
             {
+                Console.WriteLine("Time to start getting commands");
                 var command = consumer.Consume();
                 new CommandHandler.CommandHandler().HandleCommand(JsonConvert.DeserializeObject<AnalysisCommand>(command.Message.Value));
             }
