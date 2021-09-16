@@ -18,6 +18,7 @@ import java.net.URI
 import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 import com.bdpsolutions.highfive.subsystems.main.HighFiveApplication
+import com.bdpsolutions.highfive.utils.ContextHolder
 
 
 class DjiStreamer{
@@ -65,7 +66,7 @@ class DjiStreamer{
                 }
             }
 
-        val builder: AlertDialog.Builder = AlertDialog.Builder(HighFiveApplication.getInstance()?.applicationContext!!)
+        val builder: AlertDialog.Builder = AlertDialog.Builder(ContextHolder.appContext?.applicationContext!!)
         builder.setMessage("Live stream or live analysis").setPositiveButton("Live Analysis", dialogClickListener)
             .setNegativeButton("Live Streaming", dialogClickListener).show()
 
