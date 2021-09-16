@@ -35,7 +35,6 @@ namespace src.Websockets
             {
                 using var webSocket = await 
                     HttpContext.WebSockets.AcceptWebSocketAsync();
-                await SendMessage("Connected", "You have connected to the socket server.", "info", webSocket);
                 while (webSocket.State == WebSocketState.Open)
                 {
                     var responseTitle = string.Empty;
@@ -60,6 +59,7 @@ namespace src.Websockets
                         switch (request.Request)
                         {
                             case "Synchronize":
+                                await SendMessage("Connected", "You have connected to the socket server.", "info", webSocket);
                                 break;
                             case "AnalyzeImage":
                                 var analyzedImage = _analysisService.AnalyzeImage(request).Result;

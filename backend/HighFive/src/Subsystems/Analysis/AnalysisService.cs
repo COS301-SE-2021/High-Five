@@ -192,17 +192,21 @@ namespace src.Subsystems.Analysis
             await _livestreamingService.AuthenticateUser();
             var appName = _livestreamingService.CreateApplication(userId).Result;
             await _livestreamingService.UpdateApplicationSettings(appName);
-            var streamingId = _livestreamingService.CreateStreamingUrl(appName).Result;
-            var publishToken = _livestreamingService.CreateOneTimeToken(appName, streamingId, "publish").Result;
-            var playingToken = _livestreamingService.CreateOneTimeToken(appName, streamingId, "play").Result;
+            var droneStreamingId = _livestreamingService.CreateStreamingUrl(appName).Result;
+            var dronePublishToken = _livestreamingService.CreateOneTimeToken(appName, droneStreamingId, "publish").Result;
+            var dronePlayToken = _livestreamingService.CreateOneTimeToken(appName, droneStreamingId, "play").Result;
 
+            var analysedStreamId = _livestreamingService.CreateStreamingUrl(appName).Result;
+            var analysedStreamPublishToken = _livestreamingService.CreateOneTimeToken(appName, analysedStreamId, "publish").Result;
             var response = new LiveStreamingLinks
             {
-                PublishLink = _configuration["LivestreamUri"].Replace("https", "rtmp") +
-                              "/" + appName + "/" + streamingId + "?token=" + publishToken,
-                PlayLink = _configuration["LivestreamUri"] + ":5443/" + appName + "/play.html?name=" +
-                           streamingId + "&token=" + playingToken,
-                StreamId = streamingId
+                PublishLinkDrone = _configuration["LivestreamUri"].Replace("https", "rtmp") +
+                                   "/" + appName + "/" + droneStreamingId + "?token=" + dronePublishToken,
+                PlayLinkAnalysisEngine = _configuration["LivestreamUri"] + ":5443/" + appName + "/play.html?name=" +
+                                         droneStreamingId + "&token=" + dronePlayToken,
+                PublishLinkAnalysisEngine = _configuration["LivestreamUri"].Replace("https", "rtmp") +
+                                            "/" + appName + "/" + analysedStreamId + "?token=" + analysedStreamPublishToken,
+                StreamId = analysedStreamId
             };
             
             var brokerRequest = new BrokerSocketRequest

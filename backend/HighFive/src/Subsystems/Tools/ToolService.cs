@@ -141,7 +141,7 @@ namespace src.Subsystems.Tools
                     ToolType = toolNameArr[0],
                     ToolMetadataType = toolNameArr[2],
                     IsDefaultTool = true,
-                    IsApproved = bool.Parse(toolNameArr[3])
+                    IsApproved = true
                 };
                 toolsList.Add(newTool);
             }
@@ -159,7 +159,8 @@ namespace src.Subsystems.Tools
                     ToolId = toolNameArr[1],
                     ToolType = toolNameArr[0],
                     ToolMetadataType = toolNameArr[2],
-                    IsDefaultTool = false
+                    IsDefaultTool = false,
+                    IsApproved = bool.Parse(toolNameArr[3])
                 };
                 var toolDirectory = toolNameArr[0] + "/" + toolNameArr[1];
                 var toolFiles = _storageManager.GetAllFilesInContainer(ContainerName + "/" + toolDirectory).Result;
@@ -288,7 +289,10 @@ namespace src.Subsystems.Tools
                     ToolId = toolNameArr[2],
                     ToolType = toolNameArr[1]
                 };
+                var store = _storageManager.GetCurrentContainer();
+                _storageManager.SetBaseContainer(toolNameArr[0]);
                 var toolFiles = GetToolFiles(getRequest);
+                _storageManager.SetBaseContainer(store);
                 var newTool = new UnreviewedTool
                 {
                     UserId = toolNameArr[0],
@@ -330,6 +334,8 @@ namespace src.Subsystems.Tools
         public bool ApproveToolUploadRequest(ReviewToolRequest request)
         {
             RemoveFromUnreviewedToolsFile(request.ToolOwnerId, request.ToolId);
+            var store = _storageManager.GetCurrentContainer();
+            _storageManager.SetBaseContainer(request.ToolOwnerId);
             var deleteStatus = RemoveFromToolsFile(request.ToolId, "analysis");
             var type = "analysis";
             if (!deleteStatus)
@@ -338,6 +344,7 @@ namespace src.Subsystems.Tools
                 type = "drawing";
             }
             AddToToolsFile(request.ToolId, type, "BoxCoordinateData", true);
+            _storageManager.SetBaseContainer(store);
             return true;
         }
 
@@ -450,7 +457,11 @@ namespace src.Subsystems.Tools
             _storageManager.SetBaseContainer("public");
             var defaultToolsFile = _storageManager.GetFile("unreviewed_tools.txt","").Result;
             _storageManager.SetBaseContainer(currentContainer);
-            var toolsArray = defaultToolsFile.ToText().Result.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+            if (defaultToolsFile.ToText().Result.Equals(string.Empty))
+            {
+                return Array.Empty<string>();
+            }
+            var toolsArray = defaultToolsFile.ToText().Result.Split(new[] {"\n"}, StringSplitOptions.None);
             //the above line splits the text file's contents by newlines into an array
             return toolsArray;
         }

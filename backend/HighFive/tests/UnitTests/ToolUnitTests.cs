@@ -9,7 +9,7 @@ using Xunit;
 
 namespace tests.UnitTests
 {
-    [Trait("Category","UnitTests")]
+    [Trait("Category","UnitTests_WIP")]
     public class ToolUnitTests
     {
         private readonly IToolService _mockToolService;
@@ -28,7 +28,7 @@ namespace tests.UnitTests
         public async Task TestUploadAnalysisToolValidModelValidCode()
         {
             var validFile = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "tool", "tool.cs");
-            var response =await _mockToolService.UploadAnalysisTool(validFile, validFile, "BoxCoordinates", "MyTool");
+            var response =await _mockToolService.UploadAnalysisTool(validFile, validFile, "BoxCoordinates", "MyTool", "");
             
             Assert.NotNull(response);
             Assert.Equal("MyTool", response.ToolName);
@@ -38,7 +38,7 @@ namespace tests.UnitTests
         public async Task TestUploadAnalysisToolNullModelValidCode()
         {
             var validFile = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "tool", "tool.cs");
-            var response =await _mockToolService.UploadAnalysisTool(validFile, null, "BoxCoordinates", "MyTool");
+            var response =await _mockToolService.UploadAnalysisTool(validFile, null, "BoxCoordinates", "MyTool", "");
             
             Assert.Null(response);
         }
@@ -46,7 +46,7 @@ namespace tests.UnitTests
         [Fact]
         public async Task TestUploadAnalysisToolNullModelNullCode()
         {
-            var response =await _mockToolService.UploadAnalysisTool(null, null, "BoxCoordinates", "MyTool");
+            var response =await _mockToolService.UploadAnalysisTool(null, null, "BoxCoordinates", "MyTool", "");
             
             Assert.Null(response);
         }
@@ -55,7 +55,7 @@ namespace tests.UnitTests
         public async Task TestUploadAnalysisToolValidModelNullCode()
         {
             var validFile = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "tool", "tool.cs");
-            var response =await _mockToolService.UploadAnalysisTool(null, validFile, "BoxCoordinates", "MyTool");
+            var response =await _mockToolService.UploadAnalysisTool(null, validFile, "BoxCoordinates", "MyTool", "");
             
             Assert.Null(response);
         }
@@ -64,7 +64,7 @@ namespace tests.UnitTests
         public async Task TestUploadDrawingToolValidCode()
         {
             var validFile = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "tool", "tool.cs");
-            var response =await _mockToolService.UploadDrawingTool(validFile, "BoxCoordinates", "MyTool");
+            var response =await _mockToolService.UploadDrawingTool(validFile, "BoxCoordinates", "MyTool", "");
             
             Assert.NotNull(response);
             Assert.Equal("MyTool", response.ToolName);
@@ -73,7 +73,7 @@ namespace tests.UnitTests
         [Fact]
         public async Task TestUploadDrawingToolNullCode()
         {
-            var response =await _mockToolService.UploadDrawingTool(null, "BoxCoordinates", "MyTool");
+            var response =await _mockToolService.UploadDrawingTool(null, "BoxCoordinates", "MyTool", "");
             
             Assert.Null(response);
         }
@@ -82,7 +82,7 @@ namespace tests.UnitTests
         public async Task TestGetAllTools()
         {
             var validFile = new FormFile(new FileStream(Path.GetTempFileName(),FileMode.Create), 0, 1, "tool", "tool.cs");
-            await _mockToolService.UploadAnalysisTool(validFile, validFile, "BoxCoordinates", "MyTool");
+            await _mockToolService.UploadAnalysisTool(validFile, validFile, "BoxCoordinates", "MyTool", "");
             var response = _mockToolService.GetAllTools();
             
             Assert.NotEmpty(response);

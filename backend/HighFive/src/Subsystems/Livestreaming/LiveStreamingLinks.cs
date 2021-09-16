@@ -2,9 +2,9 @@
 {
     public class LiveStreamingLinks
     {
-        public string PublishLink { get; set; }
-        public string PlayLink { get; set; }
-        
+        public string PublishLinkDrone { get; set; }
+        public string PlayLinkAnalysisEngine { get; set; }
+        public string PublishLinkAnalysisEngine { get; set; }
         public string StreamId { get; set; }
     }
 }
