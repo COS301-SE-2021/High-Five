@@ -21,7 +21,6 @@ object JWTDecoder {
     private fun getBody(token: String): String {
         val splitString: List<String> = token.split(".")
         val base64EncodedBody = splitString[1]
-        val base64Url = Base64(true)
-        return String(base64Url.decode(base64EncodedBody))
+        return String(android.util.Base64.decode(base64EncodedBody, android.util.Base64.DEFAULT))
     }
 }
