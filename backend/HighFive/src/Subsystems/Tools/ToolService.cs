@@ -27,7 +27,7 @@ namespace src.Subsystems.Tools
             _storageManager = storageManager;
         }
         
-        public async Task<Tool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataType, string toolName)
+        public async Task<Tool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataType, string toolName, string userId)
         {
             if (sourceCode == null || model == null)
             {
@@ -64,6 +64,7 @@ namespace src.Subsystems.Tools
             }
 
             AddToToolsFile(generatedToolName, "analysis", metadataType);
+            AddToUnreviewedToolsFile(userId, generatedToolName, "analysis", metadataType);
             return new Tool
             {
                 ToolId = generatedToolName,
@@ -74,7 +75,7 @@ namespace src.Subsystems.Tools
             };
         }
 
-        public async Task<Tool> UploadDrawingTool(IFormFile sourceCode, string metadataType, string toolName)
+        public async Task<Tool> UploadDrawingTool(IFormFile sourceCode, string metadataType, string toolName, string userId)
         {
             if (sourceCode == null)
             {
@@ -99,6 +100,7 @@ namespace src.Subsystems.Tools
             }
 
             AddToToolsFile(generatedToolName, "drawing", metadataType);
+            AddToUnreviewedToolsFile(userId, generatedToolName, "drawing", metadataType);
             return new Tool
             {
                 ToolId = generatedToolName,
@@ -276,7 +278,6 @@ namespace src.Subsystems.Tools
         public GetUnreviewedToolsResponse GetUnreviewedTools()
         {
             var toolsList = new List<UnreviewedTool>();
-            var defaultCounter = 0;
             var ls = GetUnreviewedToolsAsArray();
             foreach(var defaultToolString in ls)
             {
@@ -351,6 +352,61 @@ namespace src.Subsystems.Tools
 
             toolsFile.UploadText(updatedToolsList);
             return removed;
+        }
+        
+        private void AddToUnreviewedToolsFile(string userId, string toolName, string type, string metadataType)
+        {
+            var store = _storageManager.GetCurrentContainer();
+            _storageManager.SetBaseContainer("public");
+            var toolsFile = _storageManager.GetFile("unreviewed_tools.txt", "").Result;
+            _storageManager.SetBaseContainer(store);
+            
+            var toolsText = toolsFile.ToText().Result;
+            if (toolsText != string.Empty)
+            {
+                toolsText += "\n";
+            }
+            toolsText += userId+ "/" + type + "/" + toolName + "/" + metadataType;
+
+            toolsFile.UploadText(toolsText);
+        }
+        
+        private bool RemoveFromUnreviewedToolsFile(string toolId, string type)
+        {
+            var store = _storageManager.GetCurrentContainer();
+            _storageManager.SetBaseContainer("public");
+            var toolsFile = _storageManager.GetFile("unreviewed_tools.txt", "").Result;
+            _storageManager.SetBaseContainer(store);
+            
+            var toolsList = toolsFile.ToText().Result.Split("\n");
+            //the above line splits the text file's contents by newlines into an array
+            var updatedToolsList = string.Empty;
+            var removed = false;
+            foreach (var tool in toolsList)
+            {
+                if (tool.Contains(type + "/" +toolId))
+                {
+                    removed = true;
+                    if (tool == toolsList[^1])
+                    {
+                        updatedToolsList = updatedToolsList.TrimEnd('\n');
+                    }
+                    continue;
+                }
+                updatedToolsList += tool;
+                if (tool != toolsList[^1])
+                {
+                    updatedToolsList += "\n";
+                }
+            }
+
+            toolsFile.UploadText(updatedToolsList);
+            return removed;
+        }
+        
+        private bool ReviewTool(string userId, string type, string toolId, bool review)
+        {
+            return false;
         }
 
         private string[] GetDefaultTools()

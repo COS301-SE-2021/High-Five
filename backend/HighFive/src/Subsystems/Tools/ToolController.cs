@@ -15,6 +15,7 @@ namespace src.Subsystems.Tools
     {
         private readonly IToolService _toolService;
         private bool _baseContainerSet;
+        private string _userId;
 
         public ToolController(IToolService toolService)
         {
@@ -139,7 +140,7 @@ namespace src.Subsystems.Tools
             Tool tool;
             try
             {
-                tool = _toolService.UploadAnalysisTool(sourceCode, model, metadataType, toolName).Result;
+                tool = _toolService.UploadAnalysisTool(sourceCode, model, metadataType, toolName, _userId).Result;
             }
             catch (Exception e)
             {
@@ -163,7 +164,7 @@ namespace src.Subsystems.Tools
             Tool tool;
             try
             {
-                tool = _toolService.UploadDrawingTool(sourceCode, metadataType, toolName).Result;
+                tool = _toolService.UploadDrawingTool(sourceCode, metadataType, toolName, _userId).Result;
             }
             catch (Exception e)
             {
@@ -186,6 +187,7 @@ namespace src.Subsystems.Tools
             }
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
+            _userId = jsonToken.Subject;
             var alreadyExisted = _toolService.SetBaseContainer(jsonToken.Subject);
             var id = jsonToken.Subject;
             var displayName = jsonToken.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
