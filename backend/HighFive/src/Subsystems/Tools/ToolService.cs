@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -33,7 +34,7 @@ namespace src.Subsystems.Tools
                 return null;
             }
             var generatedToolName = _storageManager.HashMd5(toolName);
-            var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
+            var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName + generatedToolName);
             var sourceCodeFile = _storageManager.GetFile(sourceCodeName + ".dll",ContainerName+ "/analysis/" + generatedToolName).Result;
             if (sourceCodeFile != null)
             {
@@ -78,7 +79,7 @@ namespace src.Subsystems.Tools
                 return null;
             }
             var generatedToolName = _storageManager.HashMd5(toolName);
-            var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName);
+            var sourceCodeName = _storageManager.HashMd5(sourceCode.FileName + generatedToolName);
             var sourceCodeFile = _storageManager.GetFile(sourceCodeName + ".dll",ContainerName+ "/drawing/" + generatedToolName).Result;
             if (sourceCodeFile != null)
             {
@@ -266,6 +267,21 @@ namespace src.Subsystems.Tools
                 Model = new FileDownload {FileUrl = modelFile?.GetUrl()}
             };
             return response;
+        }
+
+        public GetUnreviewedToolsResponse GetUnreviewedTools()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool RejectToolUploadRequest(ReviewToolRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ApproveToolUploadRequest(ReviewToolRequest request)
+        {
+            throw new NotImplementedException();
         }
 
         private void AddToToolsFile(string toolName, string type, string metadataType)

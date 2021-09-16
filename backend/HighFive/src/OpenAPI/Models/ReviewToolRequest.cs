@@ -24,14 +24,19 @@ namespace Org.OpenAPITools.Models
     /// 
     /// </summary>
     [DataContract]
-    public class UserRequest : IEquatable<UserRequest>
+    public class ReviewToolRequest : IEquatable<ReviewToolRequest>
     {
         /// <summary>
-        /// user id
+        /// Gets or Sets ToolOwnerId
         /// </summary>
-        /// <value>user id</value>
-        [DataMember(Name="id", EmitDefaultValue=false)]
-        public string Id { get; set; }
+        [DataMember(Name="toolOwnerId", EmitDefaultValue=false)]
+        public string ToolOwnerId { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ToolId
+        /// </summary>
+        [DataMember(Name="toolId", EmitDefaultValue=false)]
+        public string ToolId { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -40,8 +45,9 @@ namespace Org.OpenAPITools.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class UserRequest {\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("class ReviewToolRequest {\n");
+            sb.Append("  ToolOwnerId: ").Append(ToolOwnerId).Append("\n");
+            sb.Append("  ToolId: ").Append(ToolId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -64,24 +70,29 @@ namespace Org.OpenAPITools.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((UserRequest)obj);
+            return obj.GetType() == GetType() && Equals((ReviewToolRequest)obj);
         }
 
         /// <summary>
-        /// Returns true if UserRequest instances are equal
+        /// Returns true if ReviewToolRequest instances are equal
         /// </summary>
-        /// <param name="other">Instance of UserRequest to be compared</param>
+        /// <param name="other">Instance of ReviewToolRequest to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(UserRequest other)
+        public bool Equals(ReviewToolRequest other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    Id == other.Id ||
-                    Id != null &&
-                    Id.Equals(other.Id)
+                    ToolOwnerId == other.ToolOwnerId ||
+                    ToolOwnerId != null &&
+                    ToolOwnerId.Equals(other.ToolOwnerId)
+                ) && 
+                (
+                    ToolId == other.ToolId ||
+                    ToolId != null &&
+                    ToolId.Equals(other.ToolId)
                 );
         }
 
@@ -95,8 +106,10 @@ namespace Org.OpenAPITools.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Id != null)
-                    hashCode = hashCode * 59 + Id.GetHashCode();
+                    if (ToolOwnerId != null)
+                    hashCode = hashCode * 59 + ToolOwnerId.GetHashCode();
+                    if (ToolId != null)
+                    hashCode = hashCode * 59 + ToolId.GetHashCode();
                 return hashCode;
             }
         }
@@ -104,12 +117,12 @@ namespace Org.OpenAPITools.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(UserRequest left, UserRequest right)
+        public static bool operator ==(ReviewToolRequest left, ReviewToolRequest right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(UserRequest left, UserRequest right)
+        public static bool operator !=(ReviewToolRequest left, ReviewToolRequest right)
         {
             return !Equals(left, right);
         }

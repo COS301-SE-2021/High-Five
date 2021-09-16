@@ -28,6 +28,19 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Approve Tool use case</remarks>
+        /// <param name="reviewToolRequest"></param>
+        /// <response code="200">Tool has been approved by and admin and uploaded</response>
+        [HttpPost]
+        [Route("/tools/approveTool")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult ApproveTool([FromBody]ReviewToolRequest reviewToolRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Create Meta Data Type use case</remarks>
         /// <param name="name"></param>
         /// <param name="file"></param>
@@ -97,6 +110,30 @@ namespace Org.OpenAPITools.Controllers
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetAllToolsResponse))]
         public abstract IActionResult GetTools();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Get Unreviewed Tools use case</remarks>
+        /// <response code="200">Returns all tools that has yet to be reviewed</response>
+        [HttpGet]
+        [Route("/tools/getUnreviewedTools")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetUnreviewedToolsResponse))]
+        public abstract IActionResult GetUnreviewedTools();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Reject Tool use case</remarks>
+        /// <param name="reviewToolRequest"></param>
+        /// <response code="200">Tool has been rejected by and admin and removed from storage</response>
+        [HttpPost]
+        [Route("/tools/rejectTool")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult RejectTool([FromBody]ReviewToolRequest reviewToolRequest);
 
         /// <summary>
         /// 

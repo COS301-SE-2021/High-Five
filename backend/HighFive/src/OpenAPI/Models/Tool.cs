@@ -58,6 +58,12 @@ namespace Org.OpenAPITools.Models
         public bool IsDefaultTool { get; set; }
 
         /// <summary>
+        /// Gets or Sets IsApproved
+        /// </summary>
+        [DataMember(Name="isApproved", EmitDefaultValue=false)]
+        public bool IsApproved { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -70,6 +76,7 @@ namespace Org.OpenAPITools.Models
             sb.Append("  ToolType: ").Append(ToolType).Append("\n");
             sb.Append("  ToolMetadataType: ").Append(ToolMetadataType).Append("\n");
             sb.Append("  IsDefaultTool: ").Append(IsDefaultTool).Append("\n");
+            sb.Append("  IsApproved: ").Append(IsApproved).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -130,6 +137,11 @@ namespace Org.OpenAPITools.Models
                     IsDefaultTool == other.IsDefaultTool ||
                     
                     IsDefaultTool.Equals(other.IsDefaultTool)
+                ) && 
+                (
+                    IsApproved == other.IsApproved ||
+                    
+                    IsApproved.Equals(other.IsApproved)
                 );
         }
 
@@ -153,6 +165,8 @@ namespace Org.OpenAPITools.Models
                     hashCode = hashCode * 59 + ToolMetadataType.GetHashCode();
                     
                     hashCode = hashCode * 59 + IsDefaultTool.GetHashCode();
+                    
+                    hashCode = hashCode * 59 + IsApproved.GetHashCode();
                 return hashCode;
             }
         }

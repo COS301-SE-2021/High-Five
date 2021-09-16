@@ -718,6 +718,60 @@ paths:
               schema:
                 $ref: '#/components/schemas/getToolFilesResponse'
 
+  /tools/getUnreviewedTools:
+    get:
+      tags:
+        - "Tools"
+      description: Endpoint for Get Unreviewed Tools use case
+      operationId: GetUnreviewedTools
+      responses:
+        "200":
+          description: Returns all tools that has yet to be reviewed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getUnreviewedToolsResponse'
+
+  /tools/approveTool:
+    post:
+      tags:
+        - "Tools"
+      description: Endpoint for Approve Tool use case
+      operationId: ApproveTool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reviewToolRequest'
+      responses:
+        "200":
+          description: Tool has been approved by and admin and uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
+  /tools/rejectTool:
+    post:
+      tags:
+        - "Tools"
+      description: Endpoint for Reject Tool use case
+      operationId: RejectTool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reviewToolRequest'
+      responses:
+        "200":
+          description: Tool has been rejected by and admin and removed from storage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
+
   #==========================================================
   #     DOWNLOADS SUBSYSTEM PATHING
   #==========================================================
@@ -1174,6 +1228,8 @@ components:
           type: string
         isDefaultTool:
           type: boolean
+        isApproved:
+          type: boolean
 
     getToolTypesResponse:
       type: object
@@ -1217,6 +1273,34 @@ components:
         model:
           $ref: '#/components/schemas/fileDownload'
           description: Will be null if request type was drawing
+          
+    reviewToolRequest:
+      type: object
+      properties:
+        toolOwnerId:
+          type: string
+        toolId:
+          type: string
+    
+    getUnreviewedToolsResponse:
+      type: object
+      properties:
+        unreviewedTools:
+          type: array
+          items:
+            $ref: '#/components/schemas/unreviewedTool'
+    
+    unreviewedTool:
+      type: object
+      properties:
+        userId:
+          type: string
+        toolId:
+          type: string
+        toolDll:
+          type: string
+        toolModel:
+          type: string
 
     #==========================================================
     #     DOWNLOADS COMPONENTS

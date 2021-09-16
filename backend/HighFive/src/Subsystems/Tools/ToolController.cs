@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -21,6 +20,12 @@ namespace src.Subsystems.Tools
         {
             _toolService = toolService;
             _baseContainerSet = false;
+        }
+
+        [Authorize(Policy = "Admin")]
+        public override IActionResult ApproveTool(ReviewToolRequest reviewToolRequest)
+        {
+            throw new NotImplementedException();
         }
 
         public override IActionResult CreateMetaDataType(string name, IFormFile file)
@@ -110,6 +115,18 @@ namespace src.Subsystems.Tools
             var toolsList = _toolService.GetAllTools();
             var response = new GetAllToolsResponse {Tools = toolsList};
             return StatusCode(200, response);
+        }
+
+        [Authorize(Policy = "Admin")]
+        public override IActionResult GetUnreviewedTools()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Authorize(Policy = "Admin")]
+        public override IActionResult RejectTool(ReviewToolRequest reviewToolRequest)
+        {
+            throw new NotImplementedException();
         }
 
         public override IActionResult UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataType, string toolName)
