@@ -1,23 +1,18 @@
 package dataclasses.analysiscommand.commandbody;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+
 public class StoredMediaCommandBody implements CommandBody {
-    private final String mediaId;
-    private final String pipelineId;
+    @SerializedName("MediaId") String mediaId;
+    @SerializedName("PipelineId") String pipelineId;
 
     public StoredMediaCommandBody(String mediaId, String pipelineId) {
         this.mediaId = mediaId;
         this.pipelineId = pipelineId;
     }
 
-    public String getMediaId() {
-        return mediaId;
-    }
-
-    public String getPipelineId() {
-        return pipelineId;
-    }
-
     public String toString() {
-        return "{\"PipelineId\":\"" + pipelineId + "\",\"MediaId\":\"" + mediaId + "\"}";
+        return new Gson().toJson(this);
     }
 }

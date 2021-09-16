@@ -1,23 +1,21 @@
 package dataclasses.analysiscommand.commandbody;
 
-public class LiveAnalysisCommandBody implements CommandBody {
-    private final String streamId;
-    private final String publishLink;
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
-    public LiveAnalysisCommandBody(String streamId, String publishLink) {
+public class LiveAnalysisCommandBody implements CommandBody {
+    @SerializedName("StreamId") String streamId;
+    @SerializedName("PublishLink") String publishLink;
+    @SerializedName("PlayLink") String playLink;
+
+    public LiveAnalysisCommandBody(String streamId, String publishLink, String playLink) {
         this.streamId = streamId;
         this.publishLink = publishLink;
-    }
-
-    public String getPublishLink() {
-        return publishLink;
-    }
-
-    public String getStreamId() {
-        return streamId;
+        this.playLink = playLink;
     }
 
     public String toString() {
-        return "{\"StreamId\":\"" + streamId + "\",\"PublishLink\":\"" + publishLink + "\"}";
+        return new Gson().toJson(this);
     }
+
 }

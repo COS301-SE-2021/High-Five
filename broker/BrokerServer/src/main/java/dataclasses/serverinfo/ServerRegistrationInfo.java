@@ -1,8 +1,11 @@
 package dataclasses.serverinfo;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+
 public class ServerRegistrationInfo {
-    private String serverId;
-    private long timestamp;
+    @SerializedName("serverId") String serverId;
+    @SerializedName("timestamp") long timestamp;
 
     public ServerRegistrationInfo(String id, long timestamp) {
         serverId = id;
@@ -13,19 +16,13 @@ public class ServerRegistrationInfo {
         return serverId;
     }
 
-    public void setServerId(String serverId) {
-        this.serverId = serverId;
-    }
 
     public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
 
     public String toString() {
-        return "{\"serverId\":\"" + serverId + "\",\"timestamp\":" + timestamp + "}";
+        return new Gson().toJson(this);
     }
 }

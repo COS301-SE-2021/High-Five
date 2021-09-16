@@ -126,7 +126,7 @@ public class ClientParticipant extends WebClient{
                         new StoredMediaAnalysisStrategy().processRequest(request, informationHolder, connectionHandler, connection.getConnectionId());
                     } else {
                         EventLogger.getLogger().info("Performing live analysis request");
-                        new LiveAnalysisStrategy().processRequest(request, informationHolder, connectionHandler, connection.getUserId());
+                        new LiveAnalysisStrategy().processRequest(request, informationHolder, connectionHandler, connection.getConnectionId());
                     }
                 } catch (Exception e) {
                     EventLogger.getLogger().logException(e);

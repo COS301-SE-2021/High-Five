@@ -96,4 +96,17 @@ public class ConnectionHandler implements Observer<ResponseObject> {
             lock.unlock();
         }
     }
+
+    public String getUserId(String connectionId) {
+        lock.lock();
+        try {
+            return connections.stream()
+                    .filter(item -> item.getConnectionId().contains(connectionId))
+                    .findFirst()
+                    .map(Connection::getUserId)
+                    .orElse("");
+        } finally {
+            lock.unlock();
+        }
+    }
 }

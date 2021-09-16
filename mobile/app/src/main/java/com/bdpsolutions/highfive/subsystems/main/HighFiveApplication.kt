@@ -10,14 +10,14 @@ import dagger.hilt.android.HiltAndroidApp
 class HighFiveApplication : Application(){
     private var droneApplication: DroneApplication? = null
     //This is commented out to run on AVD. Uncomment to run on real device
-//    override fun attachBaseContext(base: Context?) {
-//        super.attachBaseContext(base)
-//        Helper.install(this@HighFiveApplication)
-//        if (droneApplication == null) {
-//            droneApplication = DroneApplication()
-//            droneApplication!!.setContext(this)
-//        }
-//    }
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        Helper.install(this@HighFiveApplication)
+        if (droneApplication == null) {
+            droneApplication = DroneApplication()
+            droneApplication!!.setContext(this)
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()

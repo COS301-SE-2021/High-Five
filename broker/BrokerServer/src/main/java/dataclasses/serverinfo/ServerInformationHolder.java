@@ -32,7 +32,6 @@ public class ServerInformationHolder {
                     entries.getValue().gpu = usage.gpu;
                     entries.getValue().net = usage.net;
                     entries.getValue().disk = usage.disk;
-                    entries.getKey().setCredentials(info.getCredentials());
                     return;
                 }
             }
