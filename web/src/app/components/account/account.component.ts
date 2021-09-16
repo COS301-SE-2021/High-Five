@@ -1,4 +1,4 @@
-import {Component, OnInit, Pipe, PipeTransform} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ModalController, ToastController} from '@ionic/angular';
 import {MsalService} from '@azure/msal-angular';
 import {UsersService} from '../../services/users/users.service';
@@ -6,7 +6,6 @@ import {User} from '../../models/user';
 import {UserToolsService} from '../../services/user-tools/user-tools.service';
 import {CreateToolComponent} from '../create-tool/create-tool.component';
 import {OAuthService} from 'angular-oauth2-oidc';
-import {Tool} from '../../models/tool';
 import {UnreviewedTool} from '../../models/unreviewedTool';
 
 
@@ -112,5 +111,14 @@ export class AccountComponent implements OnInit {
         toast.present();
       });
     });
+  }
+
+  downloadOnnx(unapprovedTool: UnreviewedTool) {
+    window.open(unapprovedTool.toolModel);
+  }
+
+  downloadDll(unapprovedTool: UnreviewedTool) {
+    window.open(unapprovedTool.toolDll);
+
   }
 }

@@ -131,8 +131,13 @@ export class UsersService {
       try {
         this.toolsService.approveTool({toolId: tool.toolId, toolOwnerId: tool.userId}, 'response').subscribe((res) => {
           if (res.ok) {
-            this.snotifyService.success('Successfully approved tool', 'Tool Rejection');
-            this.userToolsService.userTools = this.userToolsService.userTools.filter(t => t.toolId !== tool.toolId);
+            this.snotifyService.success('Successfully approved tool', 'Tool Approval');
+            const tool1 = this.userToolsService.userTools.filter(t => t.toolId === tool.toolId)[0];
+            const index = this.userToolsService.userTools.indexOf(tool1);
+            this.userToolsService.userTools[index] = {
+              ...tool1,
+              isApproved: true
+            };
           } else {
             this.unreviewedTools = [...this.unreviewedTools, unreviewedTool];
           }
