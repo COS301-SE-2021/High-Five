@@ -140,7 +140,8 @@ namespace src.Subsystems.Tools
                     ToolName = toolNameArr[1],
                     ToolType = toolNameArr[0],
                     ToolMetadataType = toolNameArr[2],
-                    IsDefaultTool = true
+                    IsDefaultTool = true,
+                    IsApproved = bool.Parse(toolNameArr[3])
                 };
                 toolsList.Add(newTool);
             }
@@ -322,17 +323,25 @@ namespace src.Subsystems.Tools
                 };
                 deleteStatus = DeleteTool(deleteRequest).Result;
             }
-
             _storageManager.SetBaseContainer(store);
             return true;
         }
 
         public bool ApproveToolUploadRequest(ReviewToolRequest request)
         {
-            throw new NotImplementedException();
+            RemoveFromUnreviewedToolsFile(request.ToolOwnerId, request.ToolId);
+            var deleteStatus = RemoveFromToolsFile(request.ToolId, "analysis");
+            var type = "analysis";
+            if (!deleteStatus)
+            {
+                deleteStatus = RemoveFromToolsFile(request.ToolId, "drawing");
+                type = "drawing";
+            }
+            AddToToolsFile(request.ToolId, type, "BoxCoordinateData", true);
+            return true;
         }
 
-        private void AddToToolsFile(string toolName, string type, string metadataType)
+        private void AddToToolsFile(string toolName, string type, string metadataType, bool approved = false)
         {
             var toolsFile = _storageManager.GetFile("tools.txt", "").Result;
             var toolsText = toolsFile.ToText().Result;
@@ -340,7 +349,7 @@ namespace src.Subsystems.Tools
             {
                 toolsText += "\n";
             }
-            toolsText += type + "/" + toolName + "/" + metadataType;
+            toolsText += type + "/" + toolName + "/" + metadataType + "/" + approved;
 
             toolsFile.UploadText(toolsText);
         }
