@@ -89,7 +89,7 @@ export class PipelineComponent implements OnInit {
        * frontend (backend validation also exists)
        */
       componentProps: {
-        availableItems: this.userToolsService.userTools.map(t => t.toolName).filter(tool => !this.pipeline.tools.includes(tool)),
+        availableItems: this.userToolsService.userTools.filter(t => t.isApproved).map(t => t.toolName).filter(tool => !this.pipeline.tools.includes(tool)),
         title: 'Add Tool'
       }
     });

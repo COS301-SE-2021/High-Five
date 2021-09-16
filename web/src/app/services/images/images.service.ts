@@ -68,7 +68,7 @@ export class ImagesService {
 
     if (serverRemove) {
       try {
-        await this.mediaStorageService.deleteImage({id: imageId}, 'response').subscribe((res) => {
+        this.mediaStorageService.deleteImage({id: imageId}, 'response').subscribe((res) => {
           if (res.ok) {
             this.snotifyService.success('Successfully removed image', 'Image Removal');
           } else {
@@ -88,7 +88,7 @@ export class ImagesService {
    * Makes a request to retrieve all images
    */
   public async fetchAll() {
-    await this.mediaStorageService.getAllImages().subscribe((res) => {
+    this.mediaStorageService.getAllImages().subscribe((res) => {
       this.images = res.images;
     });
   }

@@ -26,6 +26,11 @@
           Uploaded Tools
         </ion-label>
       </ion-segment-button>
+      <ion-segment-button *ngIf="usersService.getIsAdmin()" value="unapprovedtools">
+        <ion-label>
+          Unapproved Tools
+        </ion-label>
+      </ion-segment-button>
       <ion-segment-button *ngIf="usersService.getIsAdmin()" value="admin">
         <ion-label>
           Admin
@@ -164,6 +169,32 @@
               </ion-button>
               <ion-button slot="end" fill="clear" expand="block" color="danger" (click)="requestToRemoveUser(user);">
                 <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+      </div>
+      <div *ngSwitchCase="'unapprovedtools'"  style="height: 100%;">
+        <ion-content>
+          <ion-list>
+            <ion-list-header>
+              <ion-label color="dark">
+                First is the tool name, then the toggle for allowing other users to use this tool, lastly is the button
+                to delete the tool
+              </ion-label>
+              <ion-button slot="end" fill="clear" expand="block" color="primary" (click)="refreshUnapproved()">
+                <ion-icon name="refresh-outline"></ion-icon>
+              </ion-button>
+            </ion-list-header>
+            <ion-item *ngFor="let unapprovedTool of usersService.unreviewedTools$ | async; trackBy: unreviewedToolsTrackFn">
+              <ion-label>
+                {{getToolName(unapprovedTool.toolId)}}
+              </ion-label>
+              <ion-button slot="end" fill="clear" expand="block" color="danger" (click)="rejectTool(unapprovedTool)">
+                <ion-icon name="close-outline"></ion-icon>
+              </ion-button>
+              <ion-button slot="end" fill="clear" expand="block" color="danger" (click)="approveTool(unapprovedTool)">
+                <ion-icon name="checkmark-outline"></ion-icon>
               </ion-button>
             </ion-item>
           </ion-list>

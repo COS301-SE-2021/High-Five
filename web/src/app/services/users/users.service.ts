@@ -8,6 +8,9 @@ import {VideosService} from '../videos/videos.service';
 import {ImagesService} from '../images/images.service';
 import {AnalyzedImagesService} from '../analyzed-images/analyzed-images.service';
 import {AnalyzedVideosService} from '../analyzed-videos/analyzed-videos.service';
+import {UnreviewedTool} from '../../models/unreviewedTool';
+import {ToolsService} from '../../apis/tools.service';
+import {UserToolsService} from '../user-tools/user-tools.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +23,15 @@ export class UsersService {
   readonly users$ = this._users.asObservable();
   private isAdmin = false;
 
+  private readonly _unreviewedTools = new BehaviorSubject<UnreviewedTool[]>([]);
+  // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
+  readonly unreviewedTools$ = this._unreviewedTools.asObservable();
+
   constructor(private userService: UserService, private snotifyService: SnotifyService,
               private pipelineService: PipelineService, private videosService: VideosService,
               private imagesService: ImagesService, private analyzedImagesService: AnalyzedImagesService,
-              private analyzedVideosService: AnalyzedVideosService) {
+              private analyzedVideosService: AnalyzedVideosService, private toolsService: ToolsService,
+              private userToolsService: UserToolsService) {
     this.queryIsAdmin();
   }
 
@@ -40,6 +48,16 @@ export class UsersService {
 
   getIsAdmin(): boolean {
     return this.isAdmin;
+  }
+
+  get unreviewedTools(): UnreviewedTool[] {
+    // eslint-disable-next-line no-underscore-dangle
+    return this._unreviewedTools.getValue();
+  }
+
+  set unreviewedTools(val: UnreviewedTool[]) {
+    // eslint-disable-next-line no-underscore-dangle
+    this._unreviewedTools.next(val);
   }
 
   public async purgeMedia(id: string) {
@@ -85,6 +103,50 @@ export class UsersService {
     } else {
       this.snotifyService.error(`User doesn't exist anymore, please contact an admin id this is a mistake`, 'User Upgrade');
     }
+  }
+
+  public async rejectTool(tool: UnreviewedTool) {
+    if (this.isAdmin) {
+      const unreviewedTool = this.unreviewedTools.find(t => t === tool);
+      this.unreviewedTools = this.unreviewedTools.filter(t => t !== unreviewedTool);
+      try {
+        this.toolsService.rejectTool({toolId: tool.toolId, toolOwnerId: tool.userId}, 'response').subscribe((res) => {
+          if (res.ok) {
+            this.snotifyService.success('Successfully rejected tool', 'Tool Rejection');
+            this.userToolsService.userTools = this.userToolsService.userTools.filter(t => t.toolId !== tool.toolId);
+          } else {
+            this.unreviewedTools = [...this.unreviewedTools, unreviewedTool];
+          }
+        });
+      } catch (e) {
+
+      }
+    }
+  }
+
+  public async approveTool(tool: UnreviewedTool) {
+    if (this.isAdmin) {
+      const unreviewedTool = this.unreviewedTools.find(t => t === tool);
+      this.unreviewedTools = this.unreviewedTools.filter(t => t !== unreviewedTool);
+      try {
+        this.toolsService.approveTool({toolId: tool.toolId, toolOwnerId: tool.userId}, 'response').subscribe((res) => {
+          if (res.ok) {
+            this.snotifyService.success('Successfully approved tool', 'Tool Rejection');
+            this.userToolsService.userTools = this.userToolsService.userTools.filter(t => t.toolId !== tool.toolId);
+          } else {
+            this.unreviewedTools = [...this.unreviewedTools, unreviewedTool];
+          }
+        });
+      } catch (e) {
+
+      }
+    }
+  }
+
+  public async fetchAllUnreviewedTools() {
+    this.toolsService.getUnreviewedTools().subscribe((res) => {
+      this.unreviewedTools = res.unreviewedTools;
+    });
   }
 
   public async revokeAdmin(id: string) {

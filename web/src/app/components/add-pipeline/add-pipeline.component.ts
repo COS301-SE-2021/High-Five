@@ -80,7 +80,7 @@ export class AddPipelineComponent implements OnInit {
       event: ev,
       translucent: true,
       componentProps: {
-        availableItems: this.userToolsService.userTools.map(t => t.toolName).filter(tool => !this.tools.includes(tool))
+        availableItems: this.userToolsService.userTools.filter(t => t.isApproved).map(t => t.toolName).filter(tool => !this.tools.includes(tool))
       }
     });
     await addToolPopover.present();
