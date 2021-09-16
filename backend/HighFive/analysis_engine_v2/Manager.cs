@@ -1,11 +1,15 @@
 ﻿using System;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using analysis_engine.Video;
 using analysis_engine.Video.ConcreteFrameEncoder;
 using Emgu.CV;
+using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
+using High5SDK;
 
 //using Emgu.CV;
 //using Emgu.CV.CvEnum;
@@ -58,9 +62,10 @@ namespace analysis_engine
                     _frameGrabber.Init(url);
                     break;
                 case "stream":
-                    _frameGrabber = new StreamFrameGrabber();
-                    _frameGrabber.Init(url);
+                    // _frameGrabber = new StreamFrameGrabber();
+                    // _frameGrabber.Init(url);
                     _streamFrameCapture = new VideoCapture(url);
+                    // StartTcpServer();
                     break;
                 case "image":
                     _frameGrabber = new ImageFrameGrabber();
@@ -154,6 +159,8 @@ namespace analysis_engine
                     ReturnAnalyzedFrame(data);
                     data = _pipeline.Drain.Pop();
                 }
+                
+                _frameEncoder.Dispose();
                 _analysisObserver.AnalysisFinished();
             });
         }
@@ -162,7 +169,12 @@ namespace analysis_engine
         {
             _streamFrameCapture.Retrieve(_tempFrame);
             Data temp = _dataPool.GetData();
-            temp.Frame.Image = _tempFrame.ToImage<Rgb,byte>();
+            var image=_tempFrame.ToImage<Rgb, byte>();
+            if (image.Width % 4 != 0)
+            {
+                image=image.Resize(image.Width+(4-image.Width%4), image.Height, Inter.Area);
+            }
+            temp.Frame.Image = image;
             temp.Frame.FrameID = _frameCount;
             _frameCount++;
             _pipeline.Source.Push(temp);
@@ -171,6 +183,19 @@ namespace analysis_engine
             //     _streamFrameCapture.Stop();
             //     _pipeline.Source.Push(null);
             // }
+        }
+
+        private void StartTcpServer()
+        {
+            var listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            
+            IPAddress IP = IPAddress.Parse("127.0.0.1");
+            IPEndPoint IPE = new IPEndPoint(IP, 4321);
+                
+            listener.Bind(IPE);
+            listener.Listen(20);
+            
+            var handler = listener.Accept(); 
         }
     }
 }

@@ -1,22 +1,20 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using analysis_engine_v2.BrokerClient.Service.Models;
 using broker_analysis_client.Client.Models;
 using broker_analysis_client.Storage;
 using Newtonsoft.Json;
-using src.AnalysisTools.VideoDecoder;
 
 namespace analysis_engine_v2.BrokerClient.Storage
 {
     public class AnalysisStorageManager: IAnalysisStorageManager
     {
         private readonly IStorageManager _storageManager;
-        private readonly IVideoDecoder _videoDecoder;
 
         public AnalysisStorageManager()
         {
             _storageManager = StorageManagerContainer.StorageManager;
-            _videoDecoder = new VideoDecoder();
         }
         
         public async Task<AnalyzedImageMetaData> StoreImage(string imagePath, AnalyzeImageRequest request)
@@ -51,11 +49,11 @@ namespace analysis_engine_v2.BrokerClient.Storage
             const string fileExtension = ".mp4";
             var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + request.PipelineId);
             
-            var thumbnailPath = Path.GetTempFileName();
-            await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);
-            //var originalThumbnailFile = _storageManager.GetFile(request.VideoId + "-thumbnail.jpg", "video").Result;
+            /*var thumbnailPath = Path.GetTempFileName();
+            await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);*/
+            var originalThumbnailFile = _storageManager.GetFile(request.VideoId + "-thumbnail.jpg", "video").Result;
             var thumbnailFile = _storageManager.CreateNewFile(analyzedMediaName + "-thumbnail.jpg", storageContainer).Result;
-            await thumbnailFile.UploadFile(thumbnailPath, "image/jpg");
+            await thumbnailFile.UploadFileFromStream(await originalThumbnailFile.ToStream(), "image/jpg");
             
             var testFile = _storageManager.CreateNewFile(analyzedMediaName+ fileExtension, storageContainer).Result;
             testFile.AddMetadata("videoId", request.VideoId);
@@ -99,7 +97,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
             /*
              * Writes Model to disk and returns analysis source code
              */
-            
+            Console.WriteLine("Searching in " + "tools/analysis/" + toolId);
             var toolSet = _storageManager.GetAllFilesInContainer("tools/analysis/" + toolId).Result;
             if (toolSet.Count == 0)
             {
@@ -121,7 +119,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
 
             var response = new AnalysisToolComposite
             {
-                ModelPath = Directory.GetCurrentDirectory() + "/Models"
+                ModelPath = Environment.CurrentDirectory + @"\..\..\Models\"
             };
 
             var model = File.Create(response.ModelPath + modelFile.GetMetaData("modelName"));
@@ -211,7 +209,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
                 "D2" => "analysis:vehicles",
                 "D3" => "analysis:fastvehicles",
                 "D4" => "drawing:boxes",
-                _ => "dynamic:" + toolId
+                _ => "dynamic:" + _storageManager.HashMd5(toolId)
             };
         }
         

@@ -1,4 +1,5 @@
 using Emgu.CV;
+using High5SDK;
 
 namespace analysis_engine.Video.ConcreteFrameEncoder
 {
@@ -20,6 +21,11 @@ namespace analysis_engine.Video.ConcreteFrameEncoder
         public override string GetVideo()
         {
             return _url;
+        }
+
+        public override void Dispose()
+        {
+            
         }
     }
 }
