@@ -31,6 +31,8 @@ import {Tool} from '../models/tool';
 import {BASE_PATH, COLLECTION_FORMATS} from '../variables';
 import {Configuration} from '../configuration';
 import {environment} from '../../environments/environment';
+import {GetUnreviewedToolsResponse} from '../models/getUnreviewedToolsResponse';
+import {ReviewToolRequest} from '../models/reviewToolRequest';
 
 
 @Injectable()
@@ -64,6 +66,54 @@ export class ToolsService {
     return false;
   }
 
+
+  /**
+   *
+   * Endpoint for Approve Tool use case
+   *
+   * @param body
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public approveTool(body: ReviewToolRequest, observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
+  public approveTool(body: ReviewToolRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
+  public approveTool(body: ReviewToolRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
+  public approveTool(body: ReviewToolRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    if (body === null || body === undefined) {
+      throw new Error('Required parameter body was null or undefined when calling approveTool.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+      'application/json'
+    ];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected != undefined) {
+      headers = headers.set('Content-Type', httpContentTypeSelected);
+    }
+
+    return this.httpClient.request<EmptyObject>('post', `${this.basePath}/tools/approveTool`,
+      {
+        body,
+        withCredentials: this.configuration.withCredentials,
+        headers,
+        observe,
+        reportProgress
+      }
+    );
+  }
 
   /**
    *
@@ -331,6 +381,90 @@ export class ToolsService {
 
     return this.httpClient.request<GetAllToolsResponse>('get', `${this.basePath}/tools/getAllTools`,
       {
+        withCredentials: this.configuration.withCredentials,
+        headers,
+        observe,
+        reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   * Endpoint for Get Unreviewed Tools use case
+   *
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getUnreviewedTools(observe?: 'body', reportProgress?: boolean): Observable<GetUnreviewedToolsResponse>;
+  public getUnreviewedTools(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GetUnreviewedToolsResponse>>;
+  public getUnreviewedTools(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GetUnreviewedToolsResponse>>;
+  public getUnreviewedTools(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    let headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [];
+
+    return this.httpClient.request<GetUnreviewedToolsResponse>('get', `${this.basePath}/tools/getUnreviewedTools`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers,
+        observe,
+        reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   * Endpoint for Reject Tool use case
+   *
+   * @param body
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public rejectTool(body: ReviewToolRequest, observe?: 'body', reportProgress?: boolean): Observable<EmptyObject>;
+  public rejectTool(body: ReviewToolRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<EmptyObject>>;
+  public rejectTool(body: ReviewToolRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<EmptyObject>>;
+  public rejectTool(body: ReviewToolRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    if (body === null || body === undefined) {
+      throw new Error('Required parameter body was null or undefined when calling rejectTool.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+      'application/json'
+    ];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected != undefined) {
+      headers = headers.set('Content-Type', httpContentTypeSelected);
+    }
+
+    return this.httpClient.request<EmptyObject>('post', `${this.basePath}/tools/rejectTool`,
+      {
+        body,
         withCredentials: this.configuration.withCredentials,
         headers,
         observe,

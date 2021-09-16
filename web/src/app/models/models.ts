@@ -44,3 +44,7 @@ export * from './tool';
 export * from './user';
 export * from './userRequest';
 export * from './videoMetaData';
+export * from './reviewToolRequest';
+export * from './unreviewedTool';
+export * from './getUnreviewedToolsResponse';
+

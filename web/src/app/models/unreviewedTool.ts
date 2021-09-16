@@ -10,14 +10,9 @@
  * Do not edit the class manually.
  */
 
-export interface Tool {
+export interface UnreviewedTool {
+  userId?: string;
   toolId?: string;
-  toolName?: string;
-  /**
-   * Analysis or drawing
-   */
-  toolType?: string;
-  toolMetadataType?: string;
-  isDefaultTool: boolean;
-  isApproved?: boolean;
+  toolDll?: string;
+  toolModel?: string;
 }

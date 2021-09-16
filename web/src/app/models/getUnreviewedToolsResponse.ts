@@ -9,15 +9,8 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { UnreviewedTool } from './unreviewedTool';
 
-export interface Tool {
-  toolId?: string;
-  toolName?: string;
-  /**
-   * Analysis or drawing
-   */
-  toolType?: string;
-  toolMetadataType?: string;
-  isDefaultTool: boolean;
-  isApproved?: boolean;
+export interface GetUnreviewedToolsResponse {
+    unreviewedTools?: Array<UnreviewedTool>;
 }

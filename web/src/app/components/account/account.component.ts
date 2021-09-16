@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Pipe, PipeTransform} from '@angular/core';
 import {ModalController} from '@ionic/angular';
 import {MsalService} from '@azure/msal-angular';
 import {UsersService} from '../../services/users/users.service';
@@ -6,6 +6,15 @@ import {User} from '../../models/user';
 import {UserToolsService} from '../../services/user-tools/user-tools.service';
 import {CreateToolComponent} from '../create-tool/create-tool.component';
 import {OAuthService} from 'angular-oauth2-oidc';
+import {Tool} from '../../models/tool';
+
+
+// @Pipe({name: 'filterDefault'})
+// class FilterDefaultPipe implements PipeTransform {
+//   transform(list: Tool[]) {
+//     return list.filter(item => !item.isDefaultTool);
+//   }
+// }
 
 @Component({
   selector: 'app-account',

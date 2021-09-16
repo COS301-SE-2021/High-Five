@@ -10,14 +10,7 @@
  * Do not edit the class manually.
  */
 
-export interface Tool {
+export interface ReviewToolRequest {
+  toolOwnerId?: string;
   toolId?: string;
-  toolName?: string;
-  /**
-   * Analysis or drawing
-   */
-  toolType?: string;
-  toolMetadataType?: string;
-  isDefaultTool: boolean;
-  isApproved?: boolean;
 }
