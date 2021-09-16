@@ -148,7 +148,6 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:$viewpager_version"
     implementation "com.squareup.picasso:picasso:$picasso_version"
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    implementation "org.java-websocket:Java-WebSocket:$websocket_version"
 
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 
