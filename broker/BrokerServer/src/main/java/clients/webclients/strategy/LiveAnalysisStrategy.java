@@ -40,8 +40,8 @@ public class LiveAnalysisStrategy implements AnalysisStrategy{
         String infoString;
         String droneString;
         if (info == null) {
-            infoString = "No servers are available";
-            droneString = "No servers are available";
+            infoString = null;
+            droneString = "{\"status\":\"error\",\"message\":\"No servers are available\"}";
         } else {
             Properties props = new Properties();
             props.put("bootstrap.servers", "localhost:9092");
@@ -57,15 +57,17 @@ public class LiveAnalysisStrategy implements AnalysisStrategy{
             ProducerRecord<String, String> commandToSend = new ProducerRecord<>(info.getServerId(), 1, "Analyze", commandString.toString());
             producer.send(commandToSend);
             producer.close();
-            infoString = "{\"status\":\"success\",\"playLink\":\"" + body.getPlayLinkWeb() + "\",\"streamId\":\"" + body.getStreamId() +  "\"}";
+            infoString = "{\"status\":\"success\",\"streamId\":\"" + body.getStreamId() + "\"}";
             droneString = "{\"status\":\"success\",\"publishLink\":\"" + body.getPublishLinkDrone() + "\",\"streamId\":\"" + body.getStreamId() +  "\"}";
         }
 
 
 
-        ResponseObject webResponse = new ResponseObject(request.getRequestType(), userId, infoString, null);
         ResponseObject droneResponse = new ResponseObject("DroneResponse", null, droneString, connectionId);
-        handler.onNext(webResponse);
+        if (infoString != null) {
+            ResponseObject webResponse = new ResponseObject(request.getRequestType(), userId, infoString, null);
+            handler.onNext(webResponse);
+        }
         handler.onNext(droneResponse);
     }
 }

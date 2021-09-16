@@ -122,12 +122,15 @@ public class ClientParticipant extends WebClient{
                     //Process request based on analysis type
                     if (request.getRequestType().contains("Analyze")) {
                         EventLogger.getLogger().info("Performing analysis on uploaded media");
-
                         new StoredMediaAnalysisStrategy().processRequest(request, informationHolder, connectionHandler, connection.getConnectionId());
-                    } else {
+                    } else if (request.getRequestType().contains("StartLiveAnalysis")){
                         EventLogger.getLogger().info("Performing live analysis request");
                         new LiveAnalysisStrategy().processRequest(request, informationHolder, connectionHandler, connection.getConnectionId());
+                    } else {
+                        EventLogger.getLogger().info("Performing live stream request");
+                        new LiveStreamStrategy().processRequest(request, informationHolder, connectionHandler, connection.getConnectionId());
                     }
+
                 } catch (Exception e) {
                     EventLogger.getLogger().logException(e);
                     out.append(e.getMessage()).flush();

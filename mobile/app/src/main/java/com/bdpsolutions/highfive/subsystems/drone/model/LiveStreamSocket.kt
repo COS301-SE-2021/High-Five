@@ -3,13 +3,17 @@ package com.bdpsolutions.highfive.subsystems.drone.model
 import android.util.Log
 import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
 import com.bdpsolutions.highfive.utils.DatabaseHandler
+import com.bdpsolutions.highfive.utils.ToastUtils
 import com.google.gson.Gson
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.lang.Exception
 import java.net.URI
 
-class LiveStreamSocket(endpoint: URI, private val callback: (String) -> Unit) : WebSocketClient(endpoint) {
+class LiveStreamSocket(private val requestType: String,
+                       endpoint: URI,
+                       private val callback: (String) -> Unit) : WebSocketClient(endpoint)
+{
 
     private var state : Int = 0;
 
@@ -40,13 +44,18 @@ class LiveStreamSocket(endpoint: URI, private val callback: (String) -> Unit) : 
 
                 val request = SocketRequest(
                     authorization = refreshToken,
-                    request = "StartLiveAnalysis"
+                    request = requestType
                 )
                 send(Gson().toJson(request))
             }
             state++;
         } else {
-            //Deserialize response and send url to callback.
+            val response = Gson().fromJson(message, SocketResponse::class.java)
+            if (response.status == "success") {
+                callback(response.publishLink!!)
+            } else {
+                ToastUtils.showToast(response.message)
+            }
         }
     }
 
