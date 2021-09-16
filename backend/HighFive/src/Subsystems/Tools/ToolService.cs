@@ -304,7 +304,27 @@ namespace src.Subsystems.Tools
 
         public bool RejectToolUploadRequest(ReviewToolRequest request)
         {
-            throw new NotImplementedException();
+            RemoveFromUnreviewedToolsFile(request.ToolOwnerId, request.ToolId);
+            var store = _storageManager.GetCurrentContainer();
+            _storageManager.SetBaseContainer(request.ToolOwnerId);
+            var deleteRequest = new DeleteToolRequest
+            {
+                ToolId = request.ToolId,
+                ToolType = "analysis"
+            };
+            var deleteStatus = DeleteTool(deleteRequest).Result;
+            if (!deleteStatus)
+            {
+                deleteRequest = new DeleteToolRequest
+                {
+                    ToolId = request.ToolId,
+                    ToolType = "drawing"
+                };
+                deleteStatus = DeleteTool(deleteRequest).Result;
+            }
+
+            _storageManager.SetBaseContainer(store);
+            return true;
         }
 
         public bool ApproveToolUploadRequest(ReviewToolRequest request)
@@ -371,7 +391,7 @@ namespace src.Subsystems.Tools
             toolsFile.UploadText(toolsText);
         }
         
-        private bool RemoveFromUnreviewedToolsFile(string toolId, string type)
+        private bool RemoveFromUnreviewedToolsFile(string userId, string toolId)
         {
             var store = _storageManager.GetCurrentContainer();
             _storageManager.SetBaseContainer("public");
@@ -384,7 +404,7 @@ namespace src.Subsystems.Tools
             var removed = false;
             foreach (var tool in toolsList)
             {
-                if (tool.Contains(type + "/" +toolId))
+                if (tool.Contains(toolId) && tool.Contains(userId))
                 {
                     removed = true;
                     if (tool == toolsList[^1])
@@ -402,11 +422,6 @@ namespace src.Subsystems.Tools
 
             toolsFile.UploadText(updatedToolsList);
             return removed;
-        }
-        
-        private bool ReviewTool(string userId, string type, string toolId, bool review)
-        {
-            return false;
         }
 
         private string[] GetDefaultTools()
