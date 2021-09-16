@@ -114,16 +114,14 @@ class DroneActivity : AppCompatActivity() {
 
                         override fun onProductChanged(baseProduct: BaseProduct) {}
                         override fun onComponentChange(
-                            componentKey: ComponentKey, oldComponent: BaseComponent,
-                            newComponent: BaseComponent
+                            componentKey: ComponentKey?, oldComponent: BaseComponent?,
+                            newComponent: BaseComponent?
                         ) {
-                            if (newComponent != null) {
-                                newComponent.setComponentListener { isConnected ->
-                                    Log.d(
-                                        TAG,
-                                        "onComponentConnectivityChanged: $isConnected"
-                                    )
-                                }
+                            newComponent?.setComponentListener { isConnected ->
+                                Log.d(
+                                    TAG,
+                                    "onComponentConnectivityChanged: $isConnected"
+                                )
                             }
                             Log.d(
                                 TAG, String.format(
