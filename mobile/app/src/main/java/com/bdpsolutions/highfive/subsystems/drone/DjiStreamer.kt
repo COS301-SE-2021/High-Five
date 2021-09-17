@@ -18,6 +18,7 @@ import java.net.URI
 import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 import com.bdpsolutions.highfive.subsystems.main.HighFiveApplication
+import com.bdpsolutions.highfive.utils.ToastUtils
 
 
 class DjiStreamer{
@@ -28,7 +29,7 @@ class DjiStreamer{
     private fun StartStreaming(url: String) {
 
         if (DJISDKManager.getInstance().liveStreamManager.isStreaming) {
-            setResultToToast("already started the Stream!")
+            ToastUtils.showToast("already started the Stream!")
             return
         }
 
@@ -38,13 +39,19 @@ class DjiStreamer{
 
     }
 
-    fun setupLiveStream(url: String) {
-        initListener()
-        DJISDKManager.getInstance().liveStreamManager.registerListener(listener)
-        DJISDKManager.getInstance().liveStreamManager.setAudioStreamingEnabled(false)
-        DJISDKManager.getInstance().liveStreamManager.setVideoSource(LiveStreamManager.LiveStreamVideoSource.Primary)
-        StartStreaming(url)
+    fun setupLiveStream(url: String?) {
 
+        if (url == null) {
+            ToastUtils.showToast("Cannot start stream: Publish URL not received!")
+        }
+
+        ConcurrencyExecutor.execute {
+            initListener()
+            DJISDKManager.getInstance().liveStreamManager.registerListener(listener)
+            DJISDKManager.getInstance().liveStreamManager.setAudioStreamingEnabled(false)
+            DJISDKManager.getInstance().liveStreamManager.setVideoSource(LiveStreamManager.LiveStreamVideoSource.Primary)
+            StartStreaming(url!!)
+        }
     }
 
     private fun initListener() {
@@ -52,9 +59,9 @@ class DjiStreamer{
                 i ->
             run {
                 if (i == 0) {
-                    setResultToToast("Stream started successfully")
+                    ToastUtils.showToast("Stream started successfully")
                 } else {
-                    setResultToToast("Stream initialisation failed")
+                    ToastUtils.showToast("Stream initialisation failed")
                 }
             }
         }

@@ -30,7 +30,9 @@ public class ConnectionHandler implements Observer<ResponseObject> {
                 public boolean test(Connection connection) {
                     boolean isRight;
                     if (responseObject.requestType.contains("StartLive")) { // Live analysis or live streaming
-                        isRight = connection.getUserId().contains(responseObject.userId);
+
+                        //Only broadcast to the other clients that did not make the "StartLive" request
+                        isRight = connection.getUserId().contains(responseObject.userId) && !connection.getConnectionId().contains(responseObject.connectionId);
                         if (isRight) {
                             EventLogger.getLogger().info("Broadcasting server information to connections with client id " + responseObject.userId);
                         }

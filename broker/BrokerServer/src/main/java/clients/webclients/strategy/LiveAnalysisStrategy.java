@@ -63,9 +63,9 @@ public class LiveAnalysisStrategy implements AnalysisStrategy{
 
 
 
-        ResponseObject droneResponse = new ResponseObject("DroneResponse", null, droneString, connectionId);
+        ResponseObject droneResponse = new ResponseObject("DroneResponse", userId, droneString, connectionId);
         if (infoString != null) {
-            ResponseObject webResponse = new ResponseObject(request.getRequestType(), userId, infoString, null);
+            ResponseObject webResponse = new ResponseObject(request.getRequestType(), userId, infoString, connectionId);
             handler.onNext(webResponse);
         }
         handler.onNext(droneResponse);

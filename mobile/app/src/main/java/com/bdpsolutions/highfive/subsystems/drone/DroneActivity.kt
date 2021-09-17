@@ -43,10 +43,15 @@ import java.util.ArrayList
 
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
+import android.os.Bundle
+
+
+
 
 class DroneActivity : AppCompatActivity() {
     private val TAG: String = DroneActivity::class.java.getName()
     private lateinit var binding: ActivityDroneBinding
+    private var streamUrl: String? = null
 
 
     private var btnLive: ToggleButton? = null
@@ -193,17 +198,20 @@ class DroneActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkAndRequestPermissions()
+        val extras = intent.extras
+        streamUrl = extras?.getString("streamUrl")
+
         // When the compile and target version is higher than 22, please request the
         // following permissions at runtime to ensure the
         // SDK work well.
-        var djiStreamer : DjiStreamer = DjiStreamer()
+        val djiStreamer : DjiStreamer = DjiStreamer()
         binding = ActivityDroneBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // Hiding status bars, since this is the splash screen
         btnLive = binding.toggleLive
         binding.toggleLive.setOnClickListener{
             if(binding.toggleLive.isChecked){
-                djiStreamer.setupLiveStream("rtmp://highfiveanalysis.ddns.net/55799ed725ac42bcbb1925c715380541/070482602661397257359202")
+                djiStreamer.setupLiveStream(streamUrl)
             }
         }
 

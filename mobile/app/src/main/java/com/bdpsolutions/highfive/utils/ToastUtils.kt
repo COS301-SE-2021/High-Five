@@ -3,6 +3,7 @@ package com.bdpsolutions.highfive.utils
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.util.Log
 import android.util.Pair
 import android.widget.TextView
 import android.widget.Toast
@@ -34,7 +35,11 @@ object ToastUtils {
     }
 
     fun showToast(msg: String?) {
-        Toast.makeText(HighFiveApplication.getInstance(), msg, Toast.LENGTH_SHORT).show()
+        try {
+            Toast.makeText(HighFiveApplication.getInstance(), msg, Toast.LENGTH_SHORT).show()
+        } catch (e: NullPointerException) {
+            Log.e("ToastUtils", "${e.message}")
+        }
     }
 
     fun setResultToToast(string: String?) {
