@@ -15,7 +15,7 @@ class LiveStreamSocket(private val requestType: String,
                        private val callback: (String) -> Unit) : WebSocketClient(endpoint)
 {
 
-    private var state : Int = 0;
+    private var state : Int = 0
 
     override fun onOpen(handshakedata: ServerHandshake?) {
         Log.i("LiveStreamSocket", "Opened new WebSocket connection")
@@ -26,13 +26,18 @@ class LiveStreamSocket(private val requestType: String,
 
             val request = SocketRequest(
                 authorization = refreshToken,
-                request = "Synchronize"
+                request = "Synchronize",
+                body = "{}"
             )
+            Log.d("LiveStreamSocket", Gson().toJson(request))
+            //ToastUtils.showToast(Gson().toJson(request))
             send(Gson().toJson(request))
         }
     }
 
     override fun onMessage(message: String?) {
+
+        Log.d("LiveStreamSocket", "$message")
 
         //The first message it'll receive will be an acknowledgement following a Synchronisation request,
         //so the response can be ignored and we send a liveAnalysis request
@@ -44,13 +49,17 @@ class LiveStreamSocket(private val requestType: String,
 
                 val request = SocketRequest(
                     authorization = refreshToken,
-                    request = requestType
+                    request = requestType,
+                    body = "{}"
                 )
                 send(Gson().toJson(request))
+                //callback("rtmp://highfiveanalysis.ddns.net/55799ed725ac42bcbb1925c715380541/070482602661397257359202")
             }
-            state++;
+            state++
         } else {
             val response = Gson().fromJson(message, SocketResponse::class.java)
+            Log.d("LiveStreamSocket", "got response")
+            //ToastUtils.showToast("Got response")
             if (response.status == "success") {
                 callback(response.publishLink!!)
             } else {
