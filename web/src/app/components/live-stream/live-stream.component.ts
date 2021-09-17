@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {LiveStreamingService} from '../../services/live-streaming/live-streaming.service';
 import {environment} from '../../../environments/environment';
-import {LiveStream} from "../../models/liveStream";
+import {LiveStream} from '../../models/liveStream';
 
 @Component({
   selector: 'app-live-stream',
@@ -23,14 +23,10 @@ export class LiveStreamComponent implements OnInit {
 
 // + '&token=' + this.getOTT()
   public getUrl(): SafeResourceUrl {
-    const x: string = environment.streamPlayBaseUrl + this.liveStreamingService.appName + '/play.html?name=' + this.stream.streamId+
-    '&token='+ this.stream.oneTimeToken;
-    this.liveStreamingService.getStreamToken(this.stream.streamId);
+    const x: string = environment.streamPlayBaseUrl + this.liveStreamingService.appName + '/play.html?name=' + this.stream.streamId +
+      '&token=' + this.stream.oneTimeToken;
+    this.liveStreamingService.setStreamToken(this.stream.streamId);
     return this.domSanitizer.bypassSecurityTrustResourceUrl(x);
-  }
-
-  private getOTT(): string {
-    return 'x';
   }
 
 }

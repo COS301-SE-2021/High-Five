@@ -38,7 +38,7 @@ export class LiveStreamingService {
    */
   public async addStream(liveStream: LiveStream) {
     this.streams = this.streams.concat(liveStream);
-    await this.getStreamToken(liveStream.streamId);
+    await this.setStreamToken(liveStream.streamId);
   }
 
 
@@ -57,7 +57,22 @@ export class LiveStreamingService {
     });
   }
 
-  public async getStreamToken(id: string) {
-    this.liveStreamService.createOneTimeToken({streamingId: id}).subscribe((res) => res.message);
+  public async setStreamToken(id: string) {
+    this.liveStreamService.createOneTimeToken({streamingId: id}).subscribe((res) => {
+      const token = JSON.parse(res.message);
+      const stream = this.streams.find(s => s.streamId === id);
+      if (stream) {
+        const index = this.streams.indexOf(stream);
+        this.streams[index] = {
+          ...stream,
+          oneTimeToken: token,
+        };
+      }
+    });
+
+    //
+    // const pipeline = this.pipelines.find(p => p.id === id);
+    // if (pipeline) {
+    //   const index = this.pipelines.indexOf(pipeline);
   }
 }
