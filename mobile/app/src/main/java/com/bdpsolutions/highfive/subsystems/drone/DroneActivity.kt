@@ -203,7 +203,7 @@ class DroneActivity : AppCompatActivity() {
         btnLive = binding.toggleLive
         binding.toggleLive.setOnClickListener{
             if(binding.toggleLive.isChecked){
-                djiStreamer.setupLiveStream()
+                djiStreamer.setupLiveStream("rtmp://highfiveanalysis.ddns.net/55799ed725ac42bcbb1925c715380541/070482602661397257359202")
             }
         }
 

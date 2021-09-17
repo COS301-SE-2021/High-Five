@@ -32,42 +32,18 @@ class DjiStreamer{
             return
         }
 
-        ConcurrencyExecutor.execute {
-            DJISDKManager.getInstance().liveStreamManager.liveUrl = url
-            val result = DJISDKManager.getInstance().liveStreamManager.startStream()
-            DJISDKManager.getInstance().liveStreamManager.setStartTime()
-        }
+        DJISDKManager.getInstance().liveStreamManager.liveUrl = url
+        val result = DJISDKManager.getInstance().liveStreamManager.startStream()
+        DJISDKManager.getInstance().liveStreamManager.setStartTime()
+
     }
 
-    fun setupLiveStream() {
+    fun setupLiveStream(url: String) {
         initListener()
         DJISDKManager.getInstance().liveStreamManager.registerListener(listener)
         DJISDKManager.getInstance().liveStreamManager.setAudioStreamingEnabled(false)
         DJISDKManager.getInstance().liveStreamManager.setVideoSource(LiveStreamManager.LiveStreamVideoSource.Primary)
-        val dialogClickListener =
-            DialogInterface.OnClickListener { _, which ->
-                run {
-                    val requestType = when (which) {
-                        DialogInterface.BUTTON_POSITIVE -> {
-                            "StartLiveAnalysis"
-                        }
-                        else -> "StartLiveStream"
-                    }
-                    ConcurrencyExecutor.execute {
-                        val webSocket = LiveStreamSocket(requestType, URI(Endpoints.WEBSOCKET_URL)) { response ->
-                            StartStreaming(response)
-                        }
-                        webSocket.connect();
-                        while (!webSocket.isClosed) {
-                            Thread.sleep(1000L)
-                        }
-                    }
-                }
-            }
-
-        val builder: AlertDialog.Builder = AlertDialog.Builder(HighFiveApplication.getInstance()?.applicationContext!!)
-        builder.setMessage("Live stream or live analysis").setPositiveButton("Live Analysis", dialogClickListener)
-            .setNegativeButton("Live Streaming", dialogClickListener).show()
+        StartStreaming(url)
 
     }
 
