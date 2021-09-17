@@ -41,8 +41,8 @@ namespace analysis_engine
         {
             Console.WriteLine("Starting Analysis...");
             var url =
-                @"http://192.168.11.153:5080/55799ed725ac42bcbb1925c715380541/streams/114725691588075395384115.m3u8";
-            var analysis=new AnalysisObserver(url, "stream", "analysis:fastvehicles,drawing:boxes", @"rtmp://192.168.11.153/55799ed725ac42bcbb1925c715380541/065753898677033738659196");
+                @"https://highfiveanalysis.ddns.net:5443/HannesSpecialApplication/streams/623826825957388763860216.m3u8";
+            var analysis=new AnalysisObserver(url, "stream", "analysis:fastvehicles,drawing:boxes", @"rtmp://highfiveanalysis.ddns.net/HannesSpecialApplication/739730292422487197285373");
             while (!analysis.Done) System.Threading.Thread.Sleep(1000);
             Console.WriteLine("Analysis Done!");
         }
