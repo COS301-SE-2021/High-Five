@@ -299,7 +299,7 @@ namespace src.Subsystems.Tools
                     ToolType = toolNameArr[1],
                     ToolId = toolNameArr[2],
                     ToolDll = toolFiles.ToolSourceCode.FileUrl,
-                    ToolModel = toolFiles.ToolSourceCode.FileUrl
+                    ToolModel = toolFiles.Model.FileUrl
                 };
                 toolsList.Add(newTool);
             }

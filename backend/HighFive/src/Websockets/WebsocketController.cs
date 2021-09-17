@@ -90,7 +90,8 @@ namespace src.Websockets
                                 }
                                 break;
                             case "StartLiveStream":   //This use case must be called by the application
-                                await _analysisService.StartLiveStream(_userId);
+                                var response = _analysisService.StartLiveStream(_userId).Result;
+                                await SendMessage("Publish Link Received", JsonConvert.DeserializeObject(response), "info", webSocket);
                                 break;
                             case "StartLiveAnalysis":   //This use case must be called by the application
                                 await _analysisService.StartLiveAnalysis(_userId);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Sockets;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -221,7 +222,7 @@ namespace src.Subsystems.Analysis
             return true;
         }
 
-        public async Task<bool> StartLiveStream(string userId)
+        public async Task<string> StartLiveStream(string userId)
         {
             await _livestreamingService.AuthenticateUser();
             var appName = _livestreamingService.CreateApplication(userId).Result;
@@ -245,8 +246,8 @@ namespace src.Subsystems.Analysis
                 Body = response
             };
             await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
-            //var socketResponse = AnalysisSocket.Receive().Result;
-            return true;
+            var socketResponse = AnalysisSocket.Receive().Result;
+            return socketResponse;
         }
 
         public async Task<bool> Synchronise(SocketRequest fullRequest)
