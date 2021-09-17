@@ -18,7 +18,7 @@ namespace analysis_engine
         private InferenceSession _model;
         private string _modelInputLayerName;
         private const double MinScore=0.50;
-        private const long MinClass = 2;
+        private const long MinClass = 1;
         private const long MaxClass = 9;
 
         private static string[] _classes ={
@@ -72,7 +72,7 @@ namespace analysis_engine
             var output= new BoxCoordinateData();
             output.Classes = new List<string>();
             output.Boxes = new List<float>();
-            output.Purpose = "Vehicle";
+            output.PredictedClass = "Vehicle";
             var width = data.Frame.Image.Width;
             var height = data.Frame.Image.Height;
             for (int i = 0; i < numDetections[0]; i++)

@@ -5,7 +5,7 @@ namespace analysis_engine
 {
     public class BoxCoordinateData : MetaData
     {
-        public string Purpose;
+        public string PredictedClass;
         public List<float> Boxes;
         public List<string> Classes;
     }

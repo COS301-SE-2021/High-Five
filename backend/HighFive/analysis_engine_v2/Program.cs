@@ -42,7 +42,7 @@ namespace analysis_engine
             Console.WriteLine("Starting Analysis...");
             var url =
                 @"http://192.168.11.153:5080/55799ed725ac42bcbb1925c715380541/streams/114725691588075395384115.m3u8";
-            var analysis=new AnalysisObserver(url, "stream", "analysis:fastvehicles,drawing:boxes", @"C:\Users\hanne\RiderProjects\output.mp4");
+            var analysis=new AnalysisObserver(url, "stream", "analysis:fastvehicles,drawing:boxes", @"rtmp://192.168.11.153/55799ed725ac42bcbb1925c715380541/065753898677033738659196");
             while (!analysis.Done) System.Threading.Thread.Sleep(1000);
             Console.WriteLine("Analysis Done!");
         }

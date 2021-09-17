@@ -81,7 +81,7 @@ namespace analysis_engine
             var output= new BoxCoordinateData();
             output.Classes = new List<string>();
             output.Boxes = new List<float>();
-            output.Purpose = "Animal";
+            output.PredictedClass = "Animal";
             var width = data.Frame.Image.Width;
             var height = data.Frame.Image.Height;
             for (int i = 0; i < labels.Count; i++)
