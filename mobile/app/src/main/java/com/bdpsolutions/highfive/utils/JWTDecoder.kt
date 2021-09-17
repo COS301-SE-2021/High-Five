@@ -1,5 +1,5 @@
 package com.bdpsolutions.highfive.utils
-import org.apache.commons.codec.binary.Base64
+import android.util.Base64
 import java.util.regex.Pattern
 
 /**
@@ -21,7 +21,6 @@ object JWTDecoder {
     private fun getBody(token: String): String {
         val splitString: List<String> = token.split(".")
         val base64EncodedBody = splitString[1]
-        val base64Url = Base64(true)
-        return String(base64Url.decode(base64EncodedBody))
+        return String(Base64.decode(base64EncodedBody, Base64.DEFAULT))
     }
 }

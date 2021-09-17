@@ -12,6 +12,7 @@
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
         <LangVersion>default</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <PlatformTarget>x64</PlatformTarget>
@@ -483,6 +484,7 @@
     <ItemGroup>
         <PackageReference Include="Confluent.Kafka" Version="1.7.0" />
         <PackageReference Include="Emgu.CV" Version="4.5.3.4721" />
+        <PackageReference Include="Emgu.CV.Bitmap" Version="4.5.3.4721" />
         <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721" />
         <PackageReference Include="FFMpegCore" Version="4.5.0" />
         <PackageReference Include="High5SDK_v1" Version="1.0.0" />

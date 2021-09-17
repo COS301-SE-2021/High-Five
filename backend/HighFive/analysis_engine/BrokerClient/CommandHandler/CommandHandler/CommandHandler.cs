@@ -83,6 +83,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                     producer.Produce(partition, msg);
                 }
             }
+            Console.WriteLine();
         }
     }
 }
