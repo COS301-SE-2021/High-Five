@@ -151,7 +151,7 @@ dependencies {
     implementation "com.squareup.picasso:picasso:$picasso_version"
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation "org.java-websocket:Java-WebSocket:$websocket_version"
-    implementation("ch.acra:acra-mail:$acra_ersion")
+    implementation("ch.acra:acra-mail:$acra_version")
 
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 
