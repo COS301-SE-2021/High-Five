@@ -27,7 +27,7 @@ import {OAuthModule} from 'angular-oauth2-oidc';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class NavbarPageModule {
-  constructor(private usersService: UsersService) {
+  constructor(private usersService: UsersService, private websocketService: WebsocketService) {
     defineLordIconElement(lottie.loadAnimation);
 
   }

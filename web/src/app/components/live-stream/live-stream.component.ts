@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {LiveStreamingService} from '../../services/live-streaming/live-streaming.service';
 import {environment} from '../../../environments/environment';
+import {LiveStream} from "../../models/liveStream";
 
 @Component({
   selector: 'app-live-stream',
@@ -9,7 +10,7 @@ import {environment} from '../../../environments/environment';
   styleUrls: ['./live-stream.component.scss'],
 })
 export class LiveStreamComponent implements OnInit {
-  @Input() streamId: string;
+  @Input() stream: LiveStream;
 
   // eslint-disable-next-line max-len
 
@@ -22,8 +23,9 @@ export class LiveStreamComponent implements OnInit {
 
 // + '&token=' + this.getOTT()
   public getUrl(): SafeResourceUrl {
-    const x: string = environment.streamPlayBaseUrl + this.liveStreamingService.appName + '/play.html?name=' + this.streamId;
-    console.log(x);
+    const x: string = environment.streamPlayBaseUrl + this.liveStreamingService.appName + '/play.html?name=' + this.stream.streamId+
+    '&token='+ this.stream.oneTimeToken;
+    this.liveStreamingService.getStreamToken(this.stream.streamId);
     return this.domSanitizer.bypassSecurityTrustResourceUrl(x);
   }
 

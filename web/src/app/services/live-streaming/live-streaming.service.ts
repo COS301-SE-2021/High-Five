@@ -31,10 +31,6 @@ export class LiveStreamingService {
   }
 
 
-  public async getNewTokenForStreamId(streamId: string) {
-
-  }
-
   /**
    * Uploads a video
    *
@@ -42,6 +38,7 @@ export class LiveStreamingService {
    */
   public async addStream(liveStream: LiveStream) {
     this.streams = this.streams.concat(liveStream);
+    await this.getStreamToken(liveStream.streamId);
   }
 
 
@@ -58,5 +55,9 @@ export class LiveStreamingService {
         this.streams = this.streams.concat({streamId: stream.name});
       }
     });
+  }
+
+  public async getStreamToken(id: string) {
+    this.liveStreamService.createOneTimeToken({streamingId: id}).subscribe((res) => res.message);
   }
 }

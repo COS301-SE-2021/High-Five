@@ -85,7 +85,10 @@ export class WebsocketService {
     if (msg.type === 'info') {
       // @ts-ignore
       if (msg.title === 'Livestream Started') {
-
+        // @ts-ignore
+        this.liveStreamingService.addStream({streamId: msg.message.streamId, oneTimeToken: null, baseUrl: null}).then((r) => {
+          this.ngSnotify.info('Live Stream Started, refresh the live page', 'Live Stream Started');
+        });
       } else {
         // @ts-ignore
         this.ngSnotify.info(msg.message, msg.title);
@@ -106,7 +109,7 @@ export class WebsocketService {
         // @ts-ignore
         this.analyzedVideosService.analyzeVideos = this.analyzedVideosService.analyzeVideos.concat(msg.message);
         this.ngSnotify.success('Analyzed video', msg.title);
-      }else{
+      } else {
         // @ts-ignore
         this.ngSnotify.success(msg.message, msg.title);
       }

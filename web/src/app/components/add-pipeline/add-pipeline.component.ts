@@ -80,6 +80,7 @@ export class AddPipelineComponent implements OnInit {
       event: ev,
       translucent: true,
       componentProps: {
+        // eslint-disable-next-line max-len
         availableItems: this.userToolsService.userTools.filter(t => t.isApproved).map(t => t.toolName).filter(tool => !this.tools.includes(tool))
       }
     });

@@ -45,6 +45,7 @@ export class UserToolsService {
 
 
   public async addAnalysisTool(classFile: any, model: any, type: string = 'BoxCoordinates', name: string) {
+    this.snotifyService.info(`Starting tool upload, you'll be notified once it's done`);
     try {
       this.toolsService.uploadAnalysisToolForm(classFile, model, type, name, 'response').subscribe((res) => {
         if (res.ok) {
@@ -61,6 +62,7 @@ export class UserToolsService {
 
 
   public async addDrawingTool(classFile: any, type: string = 'BoxCoordinates', name: string) {
+    this.snotifyService.info(`Starting tool upload, you'll be notified once it's done`);
     try {
       this.toolsService.uploadDrawingToolForm(classFile, type, name, 'response').subscribe((res) => {
         if (res.ok) {
@@ -110,10 +112,10 @@ export class UserToolsService {
     });
   }
 
-  public  drawingToolCount(toolNames: string[]): number {
-    let count  =0;
+  public drawingToolCount(toolNames: string[]): number {
+    let count = 0;
     for (const toolName of toolNames) {
-      if(this.userTools.filter(tool => tool.toolName === toolName)[0].toolType === 'drawing'){
+      if (this.userTools.filter(tool => tool.toolName === toolName)[0].toolType === 'drawing') {
         count++;
       }
     }

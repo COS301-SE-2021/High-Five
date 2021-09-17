@@ -14,7 +14,7 @@
   <ion-grid class="ion-justify-content-center ion-align-items-center">
     <ion-row class="ion-justify-content-center ion-align-items-center">
       <ion-col *ngFor="let live of liveStreamingService.streams$ | async ;" class="ion-justify-content-center ion-align-items-center">
-       <app-live-stream [streamId]="live.streamId"></app-live-stream>
+       <app-live-stream [stream]="live"></app-live-stream>
       </ion-col>
     </ion-row>
   </ion-grid>
