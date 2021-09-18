@@ -84,9 +84,10 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                 {
                     LiveAnalysisCommandBody body =
                         JsonConvert.DeserializeObject<LiveAnalysisCommandBody>(JsonConvert.SerializeObject(command.Body));
-                    _url = ""; //SDK guys need to get this
-                    _outputUrl = body.PublishLink;
-                    _pipelineString = ""; //Backend guy needs to write a function to get this.
+                    Debug.Assert(body != null, nameof(body) + " != null");
+                    _url = body.PlayLink; //SDK guys need to get this
+                    _outputUrl = _outputUrl = "tmp" +  Guid.NewGuid().ToString().Replace("-", "") +  ".mp4";
+                    _pipelineString = _storageManager.GetLivePipeline().Result; //Backend guy has delivered.
                     _mediaType = "stream";
                 }
                 
