@@ -53,8 +53,11 @@ namespace analysis_engine_v2.BrokerClient.Storage
             await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);*/
             var originalThumbnailFile = _storageManager.GetFile(request.VideoId + "-thumbnail.jpg", "video").Result;
             var thumbnailFile = _storageManager.CreateNewFile(analyzedMediaName + "-thumbnail.jpg", storageContainer).Result;
-            await thumbnailFile.UploadFileFromStream(await originalThumbnailFile.ToStream(), "image/jpg");
-            
+            if (thumbnailFile != null)
+            {
+                await thumbnailFile.UploadFileFromStream(await originalThumbnailFile.ToStream(), "image/jpg"); 
+            }
+
             var testFile = _storageManager.CreateNewFile(analyzedMediaName+ fileExtension, storageContainer).Result;
             testFile.AddMetadata("videoId", request.VideoId);
             testFile.AddMetadata("pipelineId", request.PipelineId);

@@ -19,17 +19,17 @@ namespace analysis_engine.BrokerClient
 
         static DynamicToolFactory()
         {
-            var permissions = new PermissionSet(PermissionState.Unrestricted);
+            /*var permissions = new PermissionSet(PermissionState.Unrestricted);
             permissions.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
-            /*permissions.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read | FileIOPermissionAccess.PathDiscovery, ConfigStrings.ModelDirectory));
-            permissions.AddPermission(new PrincipalPermission(PermissionState.Unrestricted));*/
+            permissions.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read | FileIOPermissionAccess.PathDiscovery, ConfigStrings.ModelDirectory));
+            permissions.AddPermission(new PrincipalPermission(PermissionState.Unrestricted));
             var setup = new AppDomainSetup();
             setup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             
             _restrictedDomain = AppDomain.CreateDomain("restrictedDomain",
                 null,
                 setup,
-                permissions);
+                permissions);*/
 
             _analysisStorageManager = new AnalysisStorageManager();
         }

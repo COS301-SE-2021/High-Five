@@ -36,22 +36,82 @@
         <Prefer32bit>false</Prefer32bit>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="Confluent.Kafka, Version=1.6.3.0, Culture=neutral, PublicKeyToken=12c514ca49093d1e">
+            <HintPath>..\..\..\..\..\.nuget\packages\confluent.kafka\1.6.3\lib\netstandard2.0\Confluent.Kafka.dll</HintPath>
+        </Reference>
         <Reference Include="Confluent.Kafka, Version=1.7.0.0, Culture=neutral, PublicKeyToken=12c514ca49093d1e">
-            <HintPath>C:\Users\Marco\.nuget\packages\confluent.kafka\1.7.0\lib\netcoreapp2.1\Confluent.Kafka.dll</HintPath>
+            <HintPath>..\..\..\..\..\.nuget\packages\confluent.kafka\1.7.0\lib\net46\Confluent.Kafka.dll</HintPath>
+        </Reference>
+        <Reference Include="Emgu.CV.Bitmap, Version=4.5.3.4721, Culture=neutral, PublicKeyToken=7281126722ab4438">
+          <HintPath>..\..\..\..\..\.nuget\packages\emgu.cv.bitmap\4.5.3.4721\lib\netstandard2.0\Emgu.CV.Bitmap.dll</HintPath>
+        </Reference>
+        <Reference Include="Emgu.CV.Platform.NetStandard, Version=4.5.3.4721, Culture=neutral, PublicKeyToken=7281126722ab4438">
+            <HintPath>..\..\..\..\..\.nuget\packages\emgu.cv\4.5.3.4721\lib\netstandard2.0\Emgu.CV.Platform.NetStandard.dll</HintPath>
+        </Reference>
+        <Reference Include="FFMpegCore, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\..\..\..\..\.nuget\packages\ffmpegcore\4.5.0\lib\netstandard2.0\FFMpegCore.dll</HintPath>
+        </Reference>
+        <Reference Include="High5SDK_v1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=efead08a4dac83d5">
+          <HintPath>..\..\..\..\..\.nuget\packages\high5sdk_v1\1.0.2\lib\net48\High5SDK_v1.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.CodeAnalysis, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+            <HintPath>..\..\..\..\..\.nuget\packages\microsoft.codeanalysis.common\2.0.0\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.CodeAnalysis.Analyzers, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+            <HintPath>..\..\..\..\..\.nuget\packages\microsoft.codeanalysis.analyzers\1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+            <HintPath>..\..\..\..\..\.nuget\packages\microsoft.codeanalysis.csharp\2.0.0\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.ML.OnnxRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=f27f157f0a5b7bb6">
+            <HintPath>..\..\..\..\..\.nuget\packages\microsoft.ml.onnxruntime.managed\1.8.1\lib\netstandard1.1\Microsoft.ML.OnnxRuntime.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+            <HintPath>..\..\..\..\..\.nuget\packages\microsoft.windowsazure.configurationmanager\3.2.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+            <HintPath>..\..\..\..\..\.nuget\packages\windowsazure.storage\7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
         </Reference>
         <Reference Include="mscorlib" />
+        <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+            <HintPath>..\..\..\..\..\.nuget\packages\newtonsoft.json\10.0.3\lib\portable-net45+win8+wp8+wpa81\Newtonsoft.Json.dll</HintPath>
+        </Reference>
+        <Reference Include="NReco.VideoConverter, Version=1.1.4.0, Culture=neutral, PublicKeyToken=395ccb334978a0cd">
+            <HintPath>..\..\..\..\..\.nuget\packages\nreco.videoconverter\1.1.4\lib\net40\NReco.VideoConverter.dll</HintPath>
+        </Reference>
+        <Reference Include="NumSharp, Version=0.30.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+            <HintPath>..\..\..\..\..\.nuget\packages\numsharp\0.30.0\lib\netstandard2.0\NumSharp.dll</HintPath>
+        </Reference>
         <Reference Include="Renci.SshNet, Version=2020.0.1.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106">
-            <HintPath>C:\Users\Marco\.nuget\packages\ssh.net\2020.0.1\lib\netstandard2.0\Renci.SshNet.dll</HintPath>
+            <HintPath>..\..\..\..\..\.nuget\packages\ssh.net\2020.0.1\lib\net40\Renci.SshNet.dll</HintPath>
         </Reference>
         <Reference Include="System" />
+        <Reference Include="System.Collections.Immutable, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+            <HintPath>..\..\..\..\..\.nuget\packages\system.collections.immutable\5.0.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+        </Reference>
         <Reference Include="System.ComponentModel.Composition" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Drawing" />
+        <Reference Include="System.Drawing.Common, Version=4.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+          <HintPath>..\..\..\..\..\.nuget\packages\system.drawing.common\5.0.2\lib\net461\System.Drawing.Common.dll</HintPath>
+        </Reference>
         <Reference Include="System.IO.Compression.FileSystem" />
+        <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+            <HintPath>..\..\..\..\..\.nuget\packages\system.memory\4.5.4\lib\netstandard2.0\System.Memory.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Memory.Data, Version=1.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+            <HintPath>..\..\..\..\..\.nuget\packages\system.memory.data\1.0.2\lib\netstandard2.0\System.Memory.Data.dll</HintPath>
+        </Reference>
         <Reference Include="System.Numerics" />
+        <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+            <HintPath>..\..\..\..\..\.nuget\packages\system.runtime.compilerservices.unsafe\5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+        </Reference>
         <Reference Include="System.Xml" />
         <Reference Include="System.Xml.Linq" />
+        <Reference Include="Xabe.FFmpeg, Version=5.0.2.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\..\..\..\..\.nuget\packages\xabe.ffmpeg\5.0.2\lib\netstandard2.0\Xabe.FFmpeg.dll</HintPath>
+        </Reference>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="AnalysisObserver.cs" />
@@ -88,7 +148,6 @@
         <Compile Include="BrokerClient\Storage\StorageManager.cs" />
         <Compile Include="BrokerClient\Storage\StorageManagerContainer.cs" />
         <Compile Include="ConfigStrings.cs" />
-        <Compile Include="Data\BoxCoordinateData.cs" />
         <Compile Include="Data\ConcurrentMergerRingBuffer.cs" />
         <Compile Include="Data\RingBuffer.cs" />
         <Compile Include="DotNetPusher-master\DotNetPusher\Encoders\Encoder.cs" />
@@ -482,16 +541,16 @@
         <Content Include="Properties\launchSettings.json" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Confluent.Kafka" Version="1.7.0" />
+        <PackageReference Include="Confluent.Kafka" Version="1.6.3" />
         <PackageReference Include="Emgu.CV" Version="4.5.3.4721" />
         <PackageReference Include="Emgu.CV.Bitmap" Version="4.5.3.4721" />
         <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721" />
         <PackageReference Include="FFMpegCore" Version="4.5.0" />
-        <PackageReference Include="High5SDK_v1" Version="1.0.0" />
+        <PackageReference Include="SDK_v1" Version="1.0.2" />
         <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="1.0.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.0.0-rc" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.0.0-rc" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.0.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.0.0" />
         <PackageReference Include="Microsoft.Data.Edm" Version="5.6.4" />
         <PackageReference Include="Microsoft.Data.OData" Version="5.6.4" />
         <PackageReference Include="Microsoft.Data.Services.Client" Version="5.6.4" />
