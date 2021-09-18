@@ -261,7 +261,7 @@ namespace src.Subsystems.Livestreaming
             ""webRTCKeyframeTime"": 2000,
             ""jwtStreamSecretKey"": ""C8UComX0XA5Xbi4mHOI0oNoDSvXm29Ph"",
             ""publishJwtControlEnabled"": false,
-            ""playJwtControlEnabled"": true,
+            ""playJwtControlEnabled"": false,
             ""dashHttpStreaming"": true,
             ""s3StreamsFolderPath"": ""streams"",
             ""s3PreviewsFolderPath"": ""previews"",
