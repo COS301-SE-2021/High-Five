@@ -1,5 +1,5 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {Component, Input, OnInit} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
 import {LiveStreamingService} from '../../services/live-streaming/live-streaming.service';
 import {environment} from '../../../environments/environment';
 import {LiveStream} from '../../models/liveStream';
@@ -25,9 +25,7 @@ export class LiveStreamComponent implements OnInit {
   ngOnInit() {
     this.platform.ready().then(() => {
       this.url = environment.streamPlayBaseUrl +
-        this.liveStreamingService.appName + '/play.html?name=' + this.stream.streamId +
-        '&token=' + this.stream.oneTimeToken;
-      console.log(this.url);
+        this.liveStreamingService.appName + '/play.html?name=' + this.stream.streamId;
     });
   }
 

@@ -51,7 +51,6 @@ export class AppComponent implements OnInit {
 
   }
 
-  //TODO : Look into better way to change platform, other than resizing
   //Source for idea : https://youtu.be/FVwuCO5vJxI
   @HostListener('window:resize', ['$event'])
   private onResize(event) {
