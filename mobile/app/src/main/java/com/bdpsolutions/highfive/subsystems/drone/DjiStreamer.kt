@@ -19,9 +19,10 @@ import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 import com.bdpsolutions.highfive.subsystems.main.HighFiveApplication
 import com.bdpsolutions.highfive.utils.ToastUtils
+import io.reactivex.rxjava3.core.Observer
 
 
-class DjiStreamer{
+class DjiStreamer(private val toastObserver: Observer<String>){
     private val l = DJISDKManager.getInstance().liveStreamManager
     fun DjiStreamer(){}
     var listener = LiveStreamManager.OnLiveChangeListener {  }
@@ -29,7 +30,7 @@ class DjiStreamer{
     private fun StartStreaming(url: String) {
 
         if (DJISDKManager.getInstance().liveStreamManager.isStreaming) {
-            ToastUtils.showToast("already started the Stream!")
+            toastObserver.onNext("already started the Stream!")
             return
         }
 
@@ -39,19 +40,24 @@ class DjiStreamer{
 
     }
 
-    fun setupLiveStream(url: String?) {
+    fun setupLiveStream(requestType: String?) {
 
-        if (url == null) {
-            ToastUtils.showToast("Cannot start stream: Publish URL not received!")
+        if (requestType == null) {
+            toastObserver.onNext("Cannot start stream: Publish URL not received!")
         }
 
-        ConcurrencyExecutor.execute {
-            initListener()
-            DJISDKManager.getInstance().liveStreamManager.registerListener(listener)
-            DJISDKManager.getInstance().liveStreamManager.setAudioStreamingEnabled(false)
-            DJISDKManager.getInstance().liveStreamManager.setVideoSource(LiveStreamManager.LiveStreamVideoSource.Primary)
-            StartStreaming(url!!)
+        val webSocket = LiveStreamSocket(requestType!!, URI(Endpoints.WEBSOCKET_URL)) {
+            ConcurrencyExecutor.execute {
+                ConcurrencyExecutor.execute {
+                    initListener()
+                    DJISDKManager.getInstance().liveStreamManager.registerListener(listener)
+                    DJISDKManager.getInstance().liveStreamManager.setAudioStreamingEnabled(false)
+                    DJISDKManager.getInstance().liveStreamManager.setVideoSource(LiveStreamManager.LiveStreamVideoSource.Primary)
+                    StartStreaming(it)
+                }
+            }
         }
+        webSocket.connect()
     }
 
     private fun initListener() {
@@ -59,9 +65,9 @@ class DjiStreamer{
                 i ->
             run {
                 if (i == 0) {
-                    ToastUtils.showToast("Stream started successfully")
+                    toastObserver.onNext("Stream started successfully")
                 } else {
-                    ToastUtils.showToast("Stream initialisation failed")
+                    toastObserver.onNext("Stream initialisation failed")
                 }
             }
         }
