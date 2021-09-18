@@ -134,7 +134,7 @@ export class PipelineService {
       };
       this.pipelines = [...this.pipelines];
       try {
-        await this.pipelinesService.removeTools({pipelineId: id, tools}, 'response').subscribe((res) => {
+        this.pipelinesService.removeTools({pipelineId: id, tools}, 'response').subscribe((res) => {
           if (res.ok) {
             this.snotifyService.success('Successfully removed tools : ' + tools, 'Tool Removal');
           } else {
