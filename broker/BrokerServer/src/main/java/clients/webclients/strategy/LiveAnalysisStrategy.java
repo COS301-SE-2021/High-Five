@@ -23,17 +23,8 @@ public class LiveAnalysisStrategy implements AnalysisStrategy{
     @Override
     public void processRequest(AnalysisRequest request, ServerInformationHolder information, ConnectionHandler handler, String connectionId) throws IOException {
 
-        /*
-        Live streaming requires CPU usage, but it prioritises GPU usage
-        and needs good network connection.
-         */
-        TelemetryBuilder usageTelemetry = new TelemetryBuilder()
-                .setCollector(TelemetryCollector.CPU)
-                .setCollector(TelemetryCollector.GPU_PRIORITY)
-                .setCollector(TelemetryCollector.NETWORK_PRIORITY);
-
-        ServerInformation info = information.get(usageTelemetry);
-
+        TelemetryBuilder builder = new TelemetryBuilder().setCollector(TelemetryCollector.ALL);
+        ServerInformation info = information.get(builder);
         String userId = handler.getUserId(connectionId);
 
 
@@ -49,7 +40,7 @@ public class LiveAnalysisStrategy implements AnalysisStrategy{
 
             //Create new command
             LiveAnalysisRequestBody body = (LiveAnalysisRequestBody) request.getBody();
-            LiveAnalysisCommandBody commandBody = new LiveAnalysisCommandBody("http://192.168.11.153:5080/" + handler.getUserId(connectionId).replace("-","") + "/streams/" + body.getStreamId() + ".m3u8?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.nqWmKQX1Q1lDJEIgq48gOFK7L-mAuMSaXO-k510lI-o");
+            LiveAnalysisCommandBody commandBody = new LiveAnalysisCommandBody("http://192.168.11.153:5080/" + handler.getUserId(connectionId).replace("-","") + "/streams/" + body.getStreamId() + ".m3u8");
             AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getUserId(), commandBody);
             EventLogger.getLogger().info("Sending command to server " + info.getServerId());
 
