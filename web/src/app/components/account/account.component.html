@@ -120,8 +120,9 @@
           <ion-list>
             <ion-list-header>
               <ion-label color="dark">
-                First is the tool name, then the toggle for allowing other users to use this tool, lastly is the button
-                to delete the tool
+                First is the tool name, then the status of whether the tool has been approved or not, then the whether
+                the tools contains the .onnx file and/or the .dll file (Class File), lastly is the button to delete the
+                tool
               </ion-label>
             </ion-list-header>
             <ion-item *ngFor="let userTool of userToolsService.userTools$ | async; trackBy: userToolsTrackFn">
@@ -158,8 +159,8 @@
           <ion-list>
             <ion-list-header>
               <ion-label color="dark">
-                First is the user's name, then the button for purging all media of the user (including pipelines), then
-                the toggle to promote the user to admin,
+                First is the user's name, then the toggle to promote the user to admin, then the button for purging all
+                media of the user (including pipelines),
                 lastly is the button to request to delete the user's account.
               </ion-label>
             </ion-list-header>
@@ -184,8 +185,8 @@
           <ion-list>
             <ion-list-header>
               <ion-label color="dark">
-                First is the tool name, then the toggle for allowing other users to use this tool, lastly is the button
-                to delete the tool
+                First is the tool name, then the buttons to download the .dll file and .onnx file (if there is one) of
+                the tool, lastly are the buttons to approve or deny the tool
               </ion-label>
               <ion-button fill="clear" expand="block" (click)="refreshUnapproved()">
                 Refresh
