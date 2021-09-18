@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AnimationOptions} from 'ngx-lottie';
 import {LiveStreamingService} from '../../services/live-streaming/live-streaming.service';
 import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
@@ -12,7 +12,7 @@ import {PipelineService} from '../../services/pipeline/pipeline.service';
   templateUrl: './live.page.html',
   styleUrls: ['./live.page.scss'],
 })
-export class LivePage implements OnInit {
+export class LivePage implements OnInit, OnDestroy {
 
   /**
    * The configuration of the lottie animation on this page (not present currently)
@@ -27,6 +27,7 @@ export class LivePage implements OnInit {
 
 
   ngOnInit() {
+    this.liveStreamingService.fetchAll();
   }
 
   public async displaySelectPipelinePopover(ev: any) {
@@ -53,4 +54,9 @@ export class LivePage implements OnInit {
       }
     );
   }
+
+  ngOnDestroy(): void {
+    this.liveStreamingService.streams = [];
+  }
+
 }

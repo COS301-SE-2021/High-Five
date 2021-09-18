@@ -1,8 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {LiveStreamingService} from '../../services/live-streaming/live-streaming.service';
 import {environment} from '../../../environments/environment';
 import {LiveStream} from '../../models/liveStream';
+import {Platform} from '@ionic/angular';
 
 @Component({
   selector: 'app-live-stream',
@@ -11,22 +12,23 @@ import {LiveStream} from '../../models/liveStream';
 })
 export class LiveStreamComponent implements OnInit {
   @Input() stream: LiveStream;
+  public url: string;
 
   // eslint-disable-next-line max-len
 
-  constructor(private domSanitizer: DomSanitizer, private liveStreamingService: LiveStreamingService) {
+  constructor(public domSanitizer: DomSanitizer, private liveStreamingService: LiveStreamingService,
+              private platform: Platform) {
+
+
   }
 
   ngOnInit() {
-
-  }
-
-// + '&token=' + this.getOTT()
-  public getUrl(): SafeResourceUrl {
-    const x: string = environment.streamPlayBaseUrl + this.liveStreamingService.appName + '/play.html?name=' + this.stream.streamId +
-      '&token=' + this.stream.oneTimeToken;
-    this.liveStreamingService.setStreamToken(this.stream.streamId);
-    return this.domSanitizer.bypassSecurityTrustResourceUrl(x);
+    this.platform.ready().then(() => {
+      this.url = environment.streamPlayBaseUrl +
+        this.liveStreamingService.appName + '/play.html?name=' + this.stream.streamId +
+        '&token=' + this.stream.oneTimeToken;
+      console.log(this.url);
+    });
   }
 
 }

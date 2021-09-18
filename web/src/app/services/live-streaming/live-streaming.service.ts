@@ -28,6 +28,9 @@ export class LiveStreamingService {
   set streams(val: LiveStream[]) {
     // eslint-disable-next-line no-underscore-dangle
     this._streams.next(val);
+    for (const liveStream of this.streams) {
+      this.setStreamToken(liveStream.streamId);
+    }
   }
 
 
@@ -38,7 +41,6 @@ export class LiveStreamingService {
    */
   public async addStream(liveStream: LiveStream) {
     this.streams = this.streams.concat(liveStream);
-    await this.setStreamToken(liveStream.streamId);
   }
 
 
@@ -59,7 +61,7 @@ export class LiveStreamingService {
 
   public async setStreamToken(id: string) {
     this.liveStreamService.createOneTimeToken({streamingId: id}).subscribe((res) => {
-      const token = JSON.parse(res.message);
+      const token = res.message;
       const stream = this.streams.find(s => s.streamId === id);
       if (stream) {
         const index = this.streams.indexOf(stream);
@@ -69,10 +71,13 @@ export class LiveStreamingService {
         };
       }
     });
-
-    //
-    // const pipeline = this.pipelines.find(p => p.id === id);
-    // if (pipeline) {
-    //   const index = this.pipelines.indexOf(pipeline);
   }
+  //
+  // public async receivedNewStreamNotification(streamId: string) {
+  //   if (!this.streams.find(s => s.streamId === streamId)) {
+  //     this.snotifyService.info('New livestream started : ' + streamId);
+  //     const newStream: LiveStream = {streamId};
+  //     this.streams = this.streams.concat(newStream);
+  //   }
+  // }
 }

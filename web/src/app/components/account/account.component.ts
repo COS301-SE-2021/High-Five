@@ -9,13 +9,6 @@ import {OAuthService} from 'angular-oauth2-oidc';
 import {UnreviewedTool} from '../../models/unreviewedTool';
 
 
-// @Pipe({name: 'filterDefault'})
-// class FilterDefaultPipe implements PipeTransform {
-//   transform(list: Tool[]) {
-//     return list.filter(item => !item.isDefaultTool);
-//   }
-// }
-
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
@@ -51,8 +44,7 @@ export class AccountComponent implements OnInit {
 
   public async purgeUserMedia(user: User) {
     this.usersService.purgeMedia(user.id).then(() => {
-      }
-    );
+    });
   }
 
   public async changeUserAdminStatus(event: Event, user: User) {
