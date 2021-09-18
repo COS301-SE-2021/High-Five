@@ -53,8 +53,11 @@ namespace analysis_engine_v2.BrokerClient.Storage
             await _videoDecoder.GetThumbnailFromVideo(videoPath, thumbnailPath);*/
             var originalThumbnailFile = _storageManager.GetFile(request.VideoId + "-thumbnail.jpg", "video").Result;
             var thumbnailFile = _storageManager.CreateNewFile(analyzedMediaName + "-thumbnail.jpg", storageContainer).Result;
-            await thumbnailFile.UploadFileFromStream(await originalThumbnailFile.ToStream(), "image/jpg");
-            
+            if (thumbnailFile != null)
+            {
+                await thumbnailFile.UploadFileFromStream(await originalThumbnailFile.ToStream(), "image/jpg"); 
+            }
+
             var testFile = _storageManager.CreateNewFile(analyzedMediaName+ fileExtension, storageContainer).Result;
             testFile.AddMetadata("videoId", request.VideoId);
             testFile.AddMetadata("pipelineId", request.PipelineId);
@@ -122,12 +125,16 @@ namespace analysis_engine_v2.BrokerClient.Storage
                 ModelPath = Environment.CurrentDirectory + @"\..\..\Models\"
             };
 
-            var model = File.Create(response.ModelPath + modelFile.GetMetaData("modelName"));
-            using var ms = modelFile.ToStream().Result;
-            var bytes = new byte[ms.Length];
-            ms.Read(bytes, 0, (int) ms.Length);
-            model.Write(bytes, 0, bytes.Length);
-            ms.Close();
+            
+            if (!File.Exists(response.ModelPath + modelFile.GetMetaData("modelName")))
+            {
+                var model = File.Create(response.ModelPath + modelFile.GetMetaData("modelName"));
+                using var ms = modelFile.ToStream().Result;
+                var bytes = new byte[ms.Length];
+                ms.Read(bytes, 0, (int) ms.Length);
+                model.Write(bytes, 0, bytes.Length);
+                ms.Close();
+            }
 
             response.ByteData = sourceCodeFile?.ToByteArray().Result;
             

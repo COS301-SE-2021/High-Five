@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -30,6 +31,7 @@ namespace analysis_engine
         private AnalysisObserver _analysisObserver;
         private VideoCapture _streamFrameCapture;
         private Mat _tempFrame;
+        private bool _analysisDone = false;
 
         public Manager(AnalysisObserver analysisObserver)
         {
@@ -37,8 +39,9 @@ namespace analysis_engine
             _analysisObserver=analysisObserver;
         }
 
-        public void CreatePipeline(string type, string pipelineString)
+        public void CreatePipeline(string type, string pipelineString, string mediaType, string outputUrl="")
         {
+            _outputUrl = outputUrl;
             if (type.Equals("linear"))
             {
                 _builderDirector = new PipelineBuilderDirector(new LinearPipelineBuilder());
@@ -51,9 +54,10 @@ namespace analysis_engine
             _pipeline = _builderDirector.Construct(pipelineString);
         }
 
-        public void GiveLinkToFootage(string mediaType, string url, string outputUrl="", 
+        public void GiveLinkToFootage(string mediaType, string url, 
             Stream input=null)
         {
+            Console.WriteLine("Giving link to footage.");
             _mediaType = mediaType;
             switch (mediaType)
             {
@@ -62,10 +66,7 @@ namespace analysis_engine
                     _frameGrabber.Init(url);
                     break;
                 case "stream":
-                    // _frameGrabber = new StreamFrameGrabber();
-                    // _frameGrabber.Init(url);
                     _streamFrameCapture = new VideoCapture(url);
-                    // StartTcpServer();
                     break;
                 case "image":
                     _frameGrabber = new ImageFrameGrabber();
@@ -76,8 +77,6 @@ namespace analysis_engine
                     _frameGrabber.Init(url);
                     break;
             }
-            
-            _outputUrl = outputUrl;
         }
 
         private Data GetNextFrame()
@@ -107,8 +106,7 @@ namespace analysis_engine
                             new VideoFrameEncoder(_outputUrl, data.Frame.Image.Size);
                         break;
                     case "stream":
-                        _frameEncoder =
-                            new StreamFrameEncoder(_outputUrl, data.Frame.Image.Size);
+                        _frameEncoder = new VideoFrameEncoder(_outputUrl, data.Frame.Image.Size);
                         break;
                     case "image":
                         _frameEncoder = new ImageFrameEncoder(_outputUrl);
@@ -146,9 +144,17 @@ namespace analysis_engine
             }
             else
             {
+                _analysisDone = false;
                 _streamFrameCapture.ImageGrabbed += LiveFrameProcess;
                 _tempFrame = new Mat();
                 _streamFrameCapture.Start();
+                while (!_analysisDone)
+                {
+                    _analysisDone = true;
+                    Thread.Sleep(2000);
+                }
+                _streamFrameCapture.Stop();
+                _pipeline.Source.Push(null);
             }
 
             Task.Factory.StartNew(() =>
@@ -167,6 +173,7 @@ namespace analysis_engine
 
         private void LiveFrameProcess(object sender, EventArgs e)
         {
+            _analysisDone = false;
             _streamFrameCapture.Retrieve(_tempFrame);
             Data temp = _dataPool.GetData();
             var image=_tempFrame.ToImage<Rgb, byte>();
@@ -185,17 +192,9 @@ namespace analysis_engine
             // }
         }
 
-        private void StartTcpServer()
+        private void StopAnalysis()
         {
-            var listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            
-            IPAddress IP = IPAddress.Parse("127.0.0.1");
-            IPEndPoint IPE = new IPEndPoint(IP, 4321);
-                
-            listener.Bind(IPE);
-            listener.Listen(20);
-            
-            var handler = listener.Accept(); 
+            _pipeline.Source.Push(null);
         }
     }
 }

@@ -18,72 +18,16 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
         private volatile bool _isDone = false;
         private volatile string _retString = "";
         private AnalysisStorageManager _storageManager;
-        
-        public void HandleCommand(AnalysisCommand command)
+        private volatile object _url;
+        private volatile object _request = null;
+        private volatile string _mediaType = "";
+        private volatile string _pipelineString = "";
+        private volatile string _outputUrl = "";
+        private volatile TopicPartition _partition;
+        private volatile IProducer<string, string> _producer;
+
+        public CommandHandler()
         {
-
-            StorageManagerContainer.StorageManager = new StorageManager(command.UserId);
-            _storageManager = new AnalysisStorageManager();
-
-            string tmpFolder = Path.GetTempPath();
-            
-            object url;
-            object request = null;
-            string mediaType = "";
-            string pipelineString = "";
-            string outputUrl = "";
-            if (command.CommandType.Contains("Analyze"))
-            {
-                StoredMediaCommandBody body =
-                    JsonConvert.DeserializeObject<StoredMediaCommandBody>(JsonConvert.SerializeObject(command.Body));
-                
-                mediaType = command.CommandType.Contains("AnalyzeImage") ? "image" : "video";
-                Debug.Assert(body != null, nameof(body) + " != null");
-                pipelineString = _storageManager.GetPipeline(body.PipelineId).Result;
-                url = mediaType == "image" ? _storageManager.GetImage(body.MediaId) : _storageManager.GetVideo(body.MediaId);
-                /*
-                url = @"C:\Users\Marco\Downloads\cars.jpg";*/
-                outputUrl = "tmp" +  Guid.NewGuid().ToString().Replace("-", "") +  (mediaType == "image" ? ".jpg" : ".mp4");
-                outputUrl = tmpFolder + outputUrl;
-                if (mediaType == "image")
-                {
-                    request = new AnalyzeImageRequest
-                    {
-                        ImageId = body.MediaId,
-                        PipelineId = body.PipelineId
-                    };
-                }
-                else
-                {
-                    request = new AnalyzeVideoRequest()
-                    {
-                        VideoId = body.MediaId,
-                        PipelineId = body.PipelineId
-                    };
-                }
-            }
-            else
-            {
-                LiveAnalysisCommandBody body =
-                    JsonConvert.DeserializeObject<LiveAnalysisCommandBody>(JsonConvert.SerializeObject(command.Body));
-                url = ""; //SDK guys need to get this
-                outputUrl = body.PublishLink;
-                pipelineString = ""; //Backend guy needs to write a function to get this.
-                mediaType = "stream";
-            }
-
-            var runThread = new Thread(delegate()
-            {
-                RunAnalysis(request, url, mediaType, pipelineString, outputUrl);
-            });
-            
-            runThread.Start();
-            runThread.Join();
-        }
-
-        private void RunAnalysis(object request, object url, string mediaType, string pipelineString, string outputUrl)
-        {
-            Console.WriteLine(outputUrl);
             var clientId = "analysisclient001";
             
             //Create a new Kafka producer
@@ -91,38 +35,143 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
             {
                 BootstrapServers = "localhost:9092",
             };
-            TopicPartition partition = new TopicPartition(clientId, 2);
-            var producer = new ProducerBuilder<string, string>(config).Build();
+            _partition = new TopicPartition(clientId, 2);
+            _producer = new ProducerBuilder<string, string>(config).Build();
+        }
+        
+        public void HandleCommand(AnalysisCommand command)
+        {
+            _isDone = false;
 
-            AnalysisObserver analysisObserver;
+            StorageManagerContainer.StorageManager = new StorageManager(command.UserId);
+            _storageManager = new AnalysisStorageManager();
 
-            if (mediaType == "image")
+            string tmpFolder = Path.GetTempPath();
+            
+            
+            var initThread = new Thread(delegate()
             {
-                analysisObserver = new AnalysisObserver((Stream) url, mediaType, pipelineString, outputUrl);
-            }
-            else
-            {
-                analysisObserver = new AnalysisObserver((string)url, mediaType, pipelineString, outputUrl);
-            }
-
-            while (!analysisObserver.Done)
+                if (command.CommandType.Contains("Analyze"))
+                {
+                    StoredMediaCommandBody body =
+                        JsonConvert.DeserializeObject<StoredMediaCommandBody>(JsonConvert.SerializeObject(command.Body));
+                
+                    _mediaType = command.CommandType.Contains("AnalyzeImage") ? "image" : "video";
+                    Debug.Assert(body != null, nameof(body) + " != null");
+                    _pipelineString = _storageManager.GetPipeline(body.PipelineId).Result;
+                    Console.WriteLine(_pipelineString);
+                    _url =_mediaType == "image" ? _storageManager.GetImage(body.MediaId) : _storageManager.GetVideo(body.MediaId);
+                    _outputUrl = "tmp" +  Guid.NewGuid().ToString().Replace("-", "") +  (_mediaType == "image" ? ".jpg" : ".mp4");
+                    _outputUrl = tmpFolder + _outputUrl;
+                    if (_mediaType == "image")
+                    {
+                        _request = new AnalyzeImageRequest
+                        {
+                            ImageId = body.MediaId,
+                            PipelineId = body.PipelineId
+                        };
+                    }
+                    else
+                    {
+                        _request = new AnalyzeVideoRequest()
+                        {
+                            VideoId = body.MediaId,
+                            PipelineId = body.PipelineId
+                        };
+                    }
+                }
+                else
+                {
+                    LiveAnalysisCommandBody body =
+                        JsonConvert.DeserializeObject<LiveAnalysisCommandBody>(JsonConvert.SerializeObject(command.Body));
+                    _url = ""; //SDK guys need to get this
+                    _outputUrl = body.PublishLink;
+                    _pipelineString = ""; //Backend guy needs to write a function to get this.
+                    _mediaType = "stream";
+                }
+                
+                _isDone = true;
+            });
+            
+            initThread.Start();
+            while (!_isDone)
             {
                 //Only send heartbeats if we're analysing stored media.
-                if (mediaType != "stream")
+                if (_mediaType != "stream")
                 {
-                    sendHeartbeat(producer, partition);
+                    SendHeartbeat();
                 }
             }
 
-            if (request != null)
+            initThread.Join();
+            
+            var runThread = new Thread(RunAnalysis);
+            
+            runThread.Start();
+            runThread.Join();
+            
+            _request = null;
+            _mediaType = "";
+            _pipelineString = "";
+            _outputUrl = "";
+        }
+
+        private void RunAnalysis()
+        {
+            _isDone = false;
+
+            AnalysisObserver analysisObserver = null;
+
+            var createObserverThread = new Thread(delegate()
             {
+                if (_mediaType == "image")
+                {
+                    analysisObserver = new AnalysisObserver((Stream) _url, _mediaType, _pipelineString, _outputUrl);
+                }
+                else
+                {
+                    analysisObserver = new AnalysisObserver((string) _url, _mediaType, _pipelineString, _outputUrl);
+                }
+
+                _isDone = true;
+            });
+            
+            createObserverThread.Start();
+
+            while (!_isDone)
+            {
+                //Only send heartbeats if we're analysing stored media.
+                if (_mediaType != "stream")
+                {
+                    SendHeartbeat();
+                }
+            }
+
+            createObserverThread.Join();
+            
+            Console.WriteLine("Analysis Started");
+
+            Debug.Assert(analysisObserver != null, nameof(analysisObserver) + " != null");
+            while (!analysisObserver.Done)
+            {
+                //Only send heartbeats if we're analysing stored media.
+                if (_mediaType != "stream")
+                {
+                    SendHeartbeat();
+                }
+            }
+            
+            Console.WriteLine("Analysis Done!");
+
+            if (_request != null)
+            {
+                _isDone = false;
                 var mediaUploader = new Thread(delegate()
                 {
-                    Thread.Sleep(5000);
-                    if (mediaType == "image")
+                    if (_mediaType == "image")
                     {
                         var analyzedImageMetaData =
-                            _storageManager.StoreImage(outputUrl, (AnalyzeImageRequest) request).Result;
+                            _storageManager.StoreImage(_outputUrl, (AnalyzeImageRequest) _request).Result;
                         JObject returnData = JsonConvert.DeserializeObject<JObject>(analyzedImageMetaData.ToJson());
                         if (returnData != null)
                         {
@@ -137,7 +186,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                     else
                     {
                         var analyzedVideoMetaData =
-                            _storageManager.StoreVideo(outputUrl, (AnalyzeVideoRequest) request).Result;
+                            _storageManager.StoreVideo(_outputUrl, (AnalyzeVideoRequest) _request).Result;
                         JObject returnData = JsonConvert.DeserializeObject<JObject>(analyzedVideoMetaData.ToJson());
                         if (returnData != null)
                         {
@@ -157,9 +206,9 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                 while (!_isDone)
                 {
                     //Only send heartbeats if we're analysing stored media.
-                    if (mediaType != "stream")
+                    if (_mediaType != "stream")
                     {
-                        sendHeartbeat(producer, partition);
+                        SendHeartbeat();
                     }
                 }
                 var returnMessage = new Message<string, string>
@@ -167,14 +216,14 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                     Key = Guid.NewGuid().ToString(),
                     Value = _retString.Replace("\r", "").Replace("\n", "")
                 };
-                producer.Produce(partition, returnMessage);
+                _producer.Produce(_partition, returnMessage);
                 _isDone = false;
                 _retString = "";
                 mediaUploader.Join();
             }
         }
 
-        private void sendHeartbeat(IProducer<string, string> producer, TopicPartition partition)
+        private void SendHeartbeat()
         {
             Thread.Sleep(1000);
 
@@ -184,7 +233,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                 Key = Guid.NewGuid().ToString(),
                 Value = "heartbeat"
             };
-            producer.Produce(partition, msg);
+            _producer.Produce(_partition, msg);
         }
     }
 }

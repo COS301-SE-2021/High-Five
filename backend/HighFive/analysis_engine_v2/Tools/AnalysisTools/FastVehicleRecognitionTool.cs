@@ -18,7 +18,7 @@ namespace analysis_engine
         private InferenceSession _model;
         private string _modelInputLayerName;
         private const double MinScore=0.50;
-        private const long MinClass = 2;
+        private const long MinClass = 1;
         private const long MaxClass = 9;
 
         private static string[] _classes ={
