@@ -49,7 +49,7 @@ public class LiveAnalysisStrategy implements AnalysisStrategy{
 
             //Create new command
             LiveAnalysisRequestBody body = (LiveAnalysisRequestBody) request.getBody();
-            LiveAnalysisCommandBody commandBody = new LiveAnalysisCommandBody("http://192.168.11.153:5080/" + handler.getUserId(connectionId).replace("-","") + "/streams/" + body.getStreamId() + ".m3u8");
+            LiveAnalysisCommandBody commandBody = new LiveAnalysisCommandBody("http://192.168.11.153:5080/" + handler.getUserId(connectionId).replace("-","") + "/streams/" + body.getStreamId() + ".m3u8?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.nqWmKQX1Q1lDJEIgq48gOFK7L-mAuMSaXO-k510lI-o");
             AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getUserId(), commandBody);
             EventLogger.getLogger().info("Sending command to server " + info.getServerId());
 
