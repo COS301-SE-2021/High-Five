@@ -31,6 +31,7 @@ namespace analysis_engine
         private AnalysisObserver _analysisObserver;
         private VideoCapture _streamFrameCapture;
         private Mat _tempFrame;
+        private bool _analysisDone = false;
 
         public Manager(AnalysisObserver analysisObserver)
         {
@@ -41,10 +42,6 @@ namespace analysis_engine
         public void CreatePipeline(string type, string pipelineString, string mediaType, string outputUrl="")
         {
             _outputUrl = outputUrl;
-            if (mediaType == "stream")
-            {
-                _frameEncoder = new StreamFrameEncoder(_outputUrl, new Size(1280, 720));
-            }
             if (type.Equals("linear"))
             {
                 _builderDirector = new PipelineBuilderDirector(new LinearPipelineBuilder());
@@ -109,7 +106,7 @@ namespace analysis_engine
                             new VideoFrameEncoder(_outputUrl, data.Frame.Image.Size);
                         break;
                     case "stream":
-                        //Moved to create pipeline function
+                        _frameEncoder = new VideoFrameEncoder(_outputUrl, data.Frame.Image.Size);
                         break;
                     case "image":
                         _frameEncoder = new ImageFrameEncoder(_outputUrl);
@@ -147,9 +144,17 @@ namespace analysis_engine
             }
             else
             {
+                _analysisDone = false;
                 _streamFrameCapture.ImageGrabbed += LiveFrameProcess;
                 _tempFrame = new Mat();
                 _streamFrameCapture.Start();
+                while (!_analysisDone)
+                {
+                    _analysisDone = true;
+                    Thread.Sleep(2000);
+                }
+                _streamFrameCapture.Stop();
+                _pipeline.Source.Push(null);
             }
 
             Task.Factory.StartNew(() =>
@@ -168,6 +173,7 @@ namespace analysis_engine
 
         private void LiveFrameProcess(object sender, EventArgs e)
         {
+            _analysisDone = false;
             _streamFrameCapture.Retrieve(_tempFrame);
             Data temp = _dataPool.GetData();
             var image=_tempFrame.ToImage<Rgb, byte>();
@@ -179,11 +185,11 @@ namespace analysis_engine
             temp.Frame.FrameID = _frameCount;
             _frameCount++;
             _pipeline.Source.Push(temp);
-            if (_frameCount > 3600)//This is for stopping the stream after a certain amount of time
-            {
-                _streamFrameCapture.Stop();
-                _pipeline.Source.Push(null);
-            }
+            // if (_frameCount > 3600)//This is for stopping the stream after a certain amount of time
+            // {
+            //     _streamFrameCapture.Stop();
+            //     _pipeline.Source.Push(null);
+            // }
         }
 
         private void StopAnalysis()
