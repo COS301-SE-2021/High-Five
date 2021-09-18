@@ -22,9 +22,9 @@ namespace analysis_engine
     {
         public static void Main(string[] args)
         {
-            TestStreamAnalysis();
-            // var client = new BrokerClient.BrokerClient();
-            // client.Run();
+            //TestStreamAnalysis();
+            var client = new BrokerClient.BrokerClient();
+            client.Run();
         }
 
         private static void TestVideoAnalysis()
