@@ -36,7 +36,9 @@ export class AboutPage2Component implements OnInit {
   private explanations = [
     {
       title: 'Streaming the live video to multiple clients',
-      explanation: '',
+      explanation: `Streaming live video to clients isn't easy, however we've found the perfect way to do it! Utilising
+      antmedia and the power of webrtc streaming, we are anble to stream video to any client with access to the correct
+      link and authentication, with relatively low latency`,
     },
     {
       title: 'Flying the drones using our own application',
@@ -68,7 +70,7 @@ export class AboutPage2Component implements OnInit {
     const modal = await this.modalController.create({
       component: MoreInfoComponent,
       showBackdrop: true,
-      cssClass : 'moreInfoModal',
+      cssClass: 'moreInfoModal',
       animated: true,
       backdropDismiss: true,
       componentProps: {
