@@ -7,6 +7,7 @@ export const environment = {
   websocketEndpoint: '',
   clientId: '',
   apiEndpoint: '',
+  streamPlayBaseUrl: '',
   authorityId: '',
   redirectUri: '',
   postLogoutRedirectUri: '',
@@ -24,6 +25,12 @@ export const environment = {
       }
     },
     authorityDomain: ''
+  },
+  oauthConfig: {
+    issuer: '',
+    scope: '',
+    strictDiscoveryDocumentValidation: false,
+    discoveryDoc : ''
   }
 };
 
