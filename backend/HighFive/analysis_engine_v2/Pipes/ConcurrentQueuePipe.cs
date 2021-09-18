@@ -20,11 +20,11 @@ namespace analysis_engine
         public void Push(Data data)
         {
             dataQueue.Add(data);
-            if (dataQueue.Count > _warningSize)
+            /*if (dataQueue.Count > _warningSize)
             {
                 Console.WriteLine("Pipe "+_label+" size: "+dataQueue.Count);
                 _warningSize *= 10;
-            }
+            }*/
         }
 
         public Data Pop()
