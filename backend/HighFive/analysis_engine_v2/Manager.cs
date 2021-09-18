@@ -167,7 +167,7 @@ namespace analysis_engine
                 }
                 
                 _frameEncoder.Dispose();
-                _analysisObserver.AnalysisFinished();
+                _analysisObserver.AnalysisFinished(_frameCount);
             });
         }
 

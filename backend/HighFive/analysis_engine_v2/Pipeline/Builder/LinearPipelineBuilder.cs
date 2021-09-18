@@ -20,13 +20,13 @@ namespace analysis_engine
         public override void BuildSource()
         {
             Pipeline.Source = _pipeFactories[0].GetPipe();
-            Console.WriteLine("Source: "+((ConcurrentQueuePipe)Pipeline.Source)._label );
+            //Console.WriteLine("Source: "+((ConcurrentQueuePipe)Pipeline.Source)._label );
         }
 
         public override void BuildDrain()
         {
             Pipeline.Drain = _pipeFactories[0].GetPipe();
-            Console.WriteLine("Drain: "+((ConcurrentQueuePipe)Pipeline.Drain)._label );
+            //Console.WriteLine("Drain: "+((ConcurrentQueuePipe)Pipeline.Drain)._label );
         }
 
         public override void BuildFilters(string filterString)
