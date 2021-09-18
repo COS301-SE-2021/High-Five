@@ -27,8 +27,9 @@ namespace Org.OpenAPITools.Models
     public class UserRequest : IEquatable<UserRequest>
     {
         /// <summary>
-        /// Gets or Sets PipelineId
+        /// user id
         /// </summary>
+        /// <value>user id</value>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
@@ -67,22 +68,22 @@ namespace Org.OpenAPITools.Models
         }
 
         /// <summary>
-        /// Returns true if RemoveToolsRequest instances are equal
+        /// Returns true if UserRequest instances are equal
         /// </summary>
-        /// <param name="other">Instance of RemoveToolsRequest to be compared</param>
+        /// <param name="other">Instance of UserRequest to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(UserRequest other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return
-
-                Id == other.Id ||
-                Id != null &&
-                Id.Equals(other.Id);
+            return 
+                (
+                    Id == other.Id ||
+                    Id != null &&
+                    Id.Equals(other.Id)
+                );
         }
-
 
         /// <summary>
         /// Gets the hash code
@@ -96,7 +97,7 @@ namespace Org.OpenAPITools.Models
                 // Suitable nullity checks etc, of course :)
                     if (Id != null)
                     hashCode = hashCode * 59 + Id.GetHashCode();
-                    return hashCode;
+                return hashCode;
             }
         }
 
