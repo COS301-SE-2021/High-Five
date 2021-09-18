@@ -95,7 +95,7 @@ namespace analysis_engine
 
         private void ReturnAnalyzedFrame(Data data)
         {
-            _dataPool.ReleaseData(data);
+            
 
             if (_frameEncoder == null)
             {
@@ -118,7 +118,7 @@ namespace analysis_engine
                 }
             }
             _frameEncoder.AddFrame(data);
-
+            _dataPool.ReleaseData(data);
         }
 /*
  * This function calls the pipeline Init function to start all the Tool threads.

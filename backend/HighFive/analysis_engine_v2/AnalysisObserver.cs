@@ -16,7 +16,7 @@ namespace analysis_engine
         public AnalysisObserver(Stream input, string mediaType, string pipelineString, string outputurl)
         {
             var manager = new Manager(this);
-            manager.CreatePipeline("linear", pipelineString, outputurl);
+            manager.CreatePipeline("linear", pipelineString, mediaType, outputurl);
             manager.GiveLinkToFootage(mediaType, "", input);
             manager.StartAnalysis();
             Done = false;
