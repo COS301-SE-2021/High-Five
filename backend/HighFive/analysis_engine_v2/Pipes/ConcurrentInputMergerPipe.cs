@@ -5,7 +5,7 @@ namespace analysis_engine
 {
     /*
          *      Description:
-         * This is a concrete implementation of the Pipe abstract class.
+         * This is a concrete implementation of the Pipe interface.
          * It acts as a buffer which receives frames in no particular order and then
          * outputs the frames in their correct order.
          * It achieves this by using a ring buffer which maps frames to the buffer according to their frameID. 
