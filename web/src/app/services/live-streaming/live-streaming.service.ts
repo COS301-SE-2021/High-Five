@@ -28,9 +28,6 @@ export class LiveStreamingService {
   set streams(val: LiveStream[]) {
     // eslint-disable-next-line no-underscore-dangle
     this._streams.next(val);
-    for (const liveStream of this.streams) {
-      this.setStreamToken(liveStream.streamId);
-    }
   }
 
 
@@ -72,6 +69,7 @@ export class LiveStreamingService {
       }
     });
   }
+
   //
   // public async receivedNewStreamNotification(streamId: string) {
   //   if (!this.streams.find(s => s.streamId === streamId)) {
