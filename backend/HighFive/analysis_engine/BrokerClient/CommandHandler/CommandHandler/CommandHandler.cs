@@ -160,6 +160,10 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                 {
                     SendHeartbeat();
                 }
+                else
+                {
+                    Thread.Sleep(1000);
+                }
             }
             
             Console.WriteLine("Analysis Done!");
@@ -210,6 +214,10 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                     if (_mediaType != "stream")
                     {
                         SendHeartbeat();
+                    }
+                    else
+                    {
+                        Thread.Sleep(1000);
                     }
                 }
                 var returnMessage = new Message<string, string>
