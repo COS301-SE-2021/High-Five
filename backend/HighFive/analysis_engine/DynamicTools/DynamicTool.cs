@@ -7,6 +7,7 @@ using System.Security;
 using System.Security.Permissions;
 using analysis_engine_v2.BrokerClient.Service.Models;
 using Emgu.CV.DepthAI;
+using High5SDK;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -30,32 +31,46 @@ namespace analysis_engine.BrokerClient
             Name = name;
         }
 
-        public void LoadCompiledBytes(byte[] assemblyBytes)
+        public void LoadCompiledBytes(Assembly assembly)
         {
-            var assembly = Assembly.Load(assemblyBytes);
             _dynamicType = assembly.GetType("High5.CustomTool");
             //constructors can be called by passing parameters to Activator.CreateInstance
             _dynamicObject = Activator.CreateInstance(_dynamicType);
-        }
-
-        public override Data Process(Data data)
-        {
-            return (Data) _dynamicType.InvokeMember("Process",
+            _dynamicType.InvokeMember("SetModelPath",
                 BindingFlags.Default | BindingFlags.InvokeMethod,
                 null,
                 _dynamicObject,
-                new[] {data}
-            );
+                new object[] {ConfigStrings.ModelDirectory});
+        }
+        
+        
+        public override Data Process(Data data)
+        {
+            try
+            {
+                return (Data) _dynamicType.InvokeMember("Process",
+                    BindingFlags.Default | BindingFlags.InvokeMethod,
+                    null,
+                    _dynamicObject,
+                    new object[] {data}
+                );
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Process exception:" + e.InnerException);
+            }
+
+            return null;
         }
 
         public override void Init()
         {
             _dynamicType.InvokeMember("Init",
-                BindingFlags.Default | BindingFlags.InvokeMethod,
-                null,
-                _dynamicObject,
-                null
-            );
+                    BindingFlags.Default | BindingFlags.InvokeMethod,
+                    null,
+                    _dynamicObject,
+                    null
+                );
         }
     }
 }

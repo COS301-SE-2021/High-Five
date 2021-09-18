@@ -18,8 +18,8 @@ namespace analysis_engine.BrokerClient.ResourceUsageCollector
                 string externalIpString = new WebClient().DownloadString("http://icanhazip.com")
                     .Replace("\\r\\n", "").Replace("\\n", "").Trim();
                 var externalIp = IPAddress.Parse(externalIpString);
-            
-                var clientId = Environment.GetEnvironmentVariable("ENGINE_CLIENT_ID");
+
+                var clientId = "analysisclient001";
                 
                 //Create a new ServerInformation object
                 ServerInformation info = new ServerInformation
@@ -50,12 +50,7 @@ namespace analysis_engine.BrokerClient.ResourceUsageCollector
 
         private PerformanceInfo GetUsage()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                return new MockResourceCollector().GetPerformance();
-            }
-
-            return null;
+            return new MockResourceCollector().GetPerformance();
         }
     }
 }

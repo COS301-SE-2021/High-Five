@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using analysis_engine.BrokerClient;
 using analysis_engine.Video;
 using analysis_engine.Video.ConcreteFrameEncoder;
-using Autofac;
+using analysis_engine_v2.BrokerClient.Storage;
 using broker_analysis_client.Client;
+using broker_analysis_client.Storage;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
-using Harmonic.Hosting;
+using High5SDK;
 
 namespace analysis_engine
 {
@@ -19,21 +22,9 @@ namespace analysis_engine
     {
         public static void Main(string[] args)
         {
-            //TestVideoAnalysis();
+            TestStreamAnalysis();
             // var client = new BrokerClient.BrokerClient();
             // client.Run();
-
-            var builder = new RtmpServerBuilder()
-                .UseStartup<Startup>()
-                .UseWebSocket(c =>
-                {
-                    c.BindEndPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), 8080);
-                });
-
-
-            RtmpServer server = builder.Build();
-            var tsk = server.StartAsync();
-            tsk.Wait();
         }
 
         private static void TestVideoAnalysis()
@@ -50,7 +41,7 @@ namespace analysis_engine
         {
             Console.WriteLine("Starting Analysis...");
             var url =
-                @"http://192.168.11.153:5080/test5/streams/184949160521935207548503.m3u8?token=009818323712942561669670";
+                @"https://highfiveanalysis.ddns.net:5443/HannesSpecialApplication/streams/623826825957388763860216.m3u8";
             var analysis=new AnalysisObserver(url, "stream", "analysis:fastvehicles,drawing:boxes", @"C:\Users\hanne\RiderProjects\output.mp4");
             while (!analysis.Done) System.Threading.Thread.Sleep(1000);
             Console.WriteLine("Analysis Done!");
@@ -78,19 +69,13 @@ namespace analysis_engine
             Console.WriteLine("Starting Analysis...");
             var url =
                 @"C:\Users\hanne\RiderProjects\1018157F212558009EE97507E4972AF0.jpg";
-            var analysis=new AnalysisObserver(url, "image","analysis:fastvehicles,drawing:boxes", @"C:\Users\hanne\RiderProjects\output.jpg");
+            WebClient client = new WebClient();
+            Stream stream = client.OpenRead(url);
+            var analysis=new AnalysisObserver(stream, "image","analysis:vehicles,drawing:boxes", @"C:\Users\hanne\RiderProjects\output.jpg");
             while (!analysis.Done) System.Threading.Thread.Sleep(1000);
             Console.WriteLine("Analysis Done!");
         }
 
         
-    }
-    
-    class Startup : IStartup
-    {
-        public void ConfigureServices(ContainerBuilder builder)
-        {
-            
-        }
     }
 }

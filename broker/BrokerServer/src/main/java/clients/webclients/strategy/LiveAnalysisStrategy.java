@@ -49,7 +49,7 @@ public class LiveAnalysisStrategy implements AnalysisStrategy{
 
             //Create new command
             LiveAnalysisRequestBody body = (LiveAnalysisRequestBody) request.getBody();
-            LiveAnalysisCommandBody commandBody = new LiveAnalysisCommandBody(body.getStreamId(), body.getPublishLinkAnalysis(), body.getPlayLinkAnalysis());
+            LiveAnalysisCommandBody commandBody = new LiveAnalysisCommandBody("http://192.168.11.153:5080/" + handler.getUserId(connectionId).replace("-","") + "/streams/" + body.getStreamId() + ".m3u8");
             AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getUserId(), commandBody);
             EventLogger.getLogger().info("Sending command to server " + info.getServerId());
 
@@ -57,8 +57,8 @@ public class LiveAnalysisStrategy implements AnalysisStrategy{
             ProducerRecord<String, String> commandToSend = new ProducerRecord<>(info.getServerId(), 1, "Analyze", commandString.toString());
             producer.send(commandToSend);
             producer.close();
+            droneString = "{\"status\":\"success\",\"playLink\":\"" + body.getPublishLinkDrone() + "\",\"streamId\":\"" + body.getStreamId() +  "\"}";
             infoString = "{\"status\":\"success\",\"streamId\":\"" + body.getStreamId() + "\",\"playLink\":\"none\"}";
-            droneString = "{\"status\":\"success\",\"publishLink\":\"" + body.getPublishLinkDrone() + "\",\"streamId\":\"" + body.getStreamId() +  "\",\"playLink\":\"none\"}";
         }
 
 
