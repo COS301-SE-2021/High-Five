@@ -75,9 +75,7 @@ export class AccountComponent implements OnInit {
   }
 
   public editUserProfile() {
-    this.oauthService.initLoginFlowInPopup().then((val) => {
-      console.log(val);
-    });
+    this.oauthService.initLoginFlow();
   }
 
   public getToolName(val: string): string {
