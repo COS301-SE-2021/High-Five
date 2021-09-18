@@ -255,7 +255,7 @@ namespace src.Subsystems.Livestreaming
             ""webRTCViewerLimit"": -1,
             ""toBeDeleted"": false,
             ""jwtSecretKey"": ""J2oSWIqYUijXtvvtSZy637hQBzWMQXlz"",
-            ""jwtControlEnabled"": true,
+            ""jwtControlEnabled"": false,
             ""ipFilterEnabled"": false,
             ""ingestingStreamLimit"": -1,
             ""webRTCKeyframeTime"": 2000,
