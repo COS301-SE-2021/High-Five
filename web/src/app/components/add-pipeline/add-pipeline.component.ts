@@ -26,9 +26,9 @@ export class AddPipelineComponent implements OnInit {
 
   public async dismiss() {
     const newArr = this.pipelineService.pipelines.map((pipeline: Pipeline) => pipeline.name);
-    if (newArr.filter((value) => value === this.pipelineName).length > 0) {
+    if (newArr.filter((value) => value === this.pipelineName).length > 0 || this.pipelineName.replace(/\s/g, '').length <= 0) {
       await this.toastController.create({
-        message: 'Pipelines may not have duplicate names, please choose another name',
+        message: 'Pipelines may not have duplicate names or blank names, please choose another name',
         duration: 2000,
         translucent: true,
         position: 'bottom'
@@ -37,8 +37,8 @@ export class AddPipelineComponent implements OnInit {
       });
       await this.modalController.dismiss();
     } else {
-      if(this.tools.length>0){
-        if (this.userToolsService.drawingToolCount([this.tools[this.tools.length - 1]])>0) {
+      if (this.tools.length > 0) {
+        if (this.userToolsService.drawingToolCount([this.tools[this.tools.length - 1]]) > 0) {
           await this.pipelineService.addPipeline(this.pipelineName, this.tools);
           await this.modalController.dismiss();
         } else {
@@ -51,7 +51,7 @@ export class AddPipelineComponent implements OnInit {
             toast.present();
           });
         }
-      }else{
+      } else {
         await this.toastController.create({
           message: `A pipeline must have at least one tool`,
           duration: 2000,
