@@ -50,7 +50,7 @@ public class LiveAnalysisStrategy implements AnalysisStrategy{
             ProducerRecord<String, String> commandToSend = new ProducerRecord<>(info.getServerId(), 1, "Analyze", commandString.toString());
             producer.send(commandToSend);
             producer.close();
-            droneString = "{\"status\":\"success\",\"playLink\":\"rtmp://192.168.11.153:1945/live/analysis\",\"streamId\":\"" + body.getStreamId() +  "\"}";
+            droneString = "{\"status\":\"success\",\"playLink\":\"rtmp://highfiveanalysis.ddns.net:1945/live/analysis\",\"streamId\":\"" + body.getStreamId() +  "\"}";
             infoString = "{\"status\":\"success\",\"streamId\":\"" + body.getStreamId() + "\",\"playLink\":\"none\"}";
         }
 
@@ -58,8 +58,8 @@ public class LiveAnalysisStrategy implements AnalysisStrategy{
 
         ResponseObject droneResponse = new ResponseObject("DroneResponse", userId, droneString, connectionId);
         if (infoString != null) {
-            ResponseObject webResponse = new ResponseObject(request.getRequestType(), userId, infoString, connectionId);
-            //handler.onNext(webResponse);
+            ResponseObject webResponse = new ResponseObject("DroneResponse", userId, infoString, connectionId);
+            handler.onNext(webResponse);
         }
         handler.onNext(droneResponse);
     }
