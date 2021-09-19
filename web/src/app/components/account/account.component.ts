@@ -77,10 +77,10 @@ export class AccountComponent implements OnInit {
   public editUserProfile() {
     this.oauthService.initLoginFlow();
   }
-
-  public getToolName(val: string): string {
-    return this.userToolsService.userTools.filter((t) => t.toolId === val)[0].toolName;
-  }
+  //
+  // public async getToolName(val: string) {
+  //   return this.userToolsService.userTools.filter((t) => t.toolId === val)[0].toolName;
+  // }
 
   public rejectTool(unapprovedTool: UnreviewedTool) {
     this.usersService.rejectTool(unapprovedTool);

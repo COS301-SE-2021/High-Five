@@ -185,7 +185,7 @@
           <ion-list>
             <ion-list-header>
               <ion-label color="dark">
-                First is the tool name, then the buttons to download the .dll file and .onnx file (if there is one) of
+                First is the tool id, then the buttons to download the .dll file and .onnx file (if there is one) of
                 the tool, lastly are the buttons to approve or deny the tool
               </ion-label>
               <ion-button fill="clear" expand="block" (click)="refreshUnapproved()">
@@ -195,7 +195,7 @@
             <ion-item
               *ngFor="let unapprovedTool of usersService.unreviewedTools$ | async; trackBy: unreviewedToolsTrackFn">
               <ion-label>
-                {{getToolName(unapprovedTool.toolId)}}
+                {{unapprovedTool.toolId}}
               </ion-label>
               <ion-button slot="end" *ngIf="unapprovedTool.toolDll!== undefined" fill="clear" expand="block"
                           color="primary" (click)="downloadDll(unapprovedTool)">
