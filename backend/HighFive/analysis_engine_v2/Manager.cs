@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -32,11 +34,15 @@ namespace analysis_engine
         private VideoCapture _streamFrameCapture;
         private Mat _tempFrame;
         private bool _analysisDone = false;
+        private BlockingCollection<long> _timeQueue;
+        private long _latency;
 
         public Manager(AnalysisObserver analysisObserver)
         {
+            _latency = 0;
             _frameCount = 0;
             _analysisObserver=analysisObserver;
+            _timeQueue = new BlockingCollection<long>(new ConcurrentQueue<long>());
         }
 
         public void CreatePipeline(string type, string pipelineString, string mediaType, string outputUrl="")
@@ -135,6 +141,7 @@ namespace analysis_engine
                     var data = GetNextFrame();
                     while (data != null)
                     {
+                        _timeQueue.Add(DateTimeOffset.Now.ToUnixTimeMilliseconds());
                         _pipeline.Source.Push(data);
                         data = GetNextFrame();
                     }
@@ -164,9 +171,14 @@ namespace analysis_engine
                 {
                     ReturnAnalyzedFrame(data);
                     data = _pipeline.Drain.Pop();
+                    if (data != null)
+                    {
+                        _latency += (DateTimeOffset.Now.ToUnixTimeMilliseconds() - _timeQueue.Take());
+                    }
                 }
                 
                 _frameEncoder.Dispose();
+                Console.WriteLine("Average Pipeline Latency: "+ _latency/Convert.ToDouble(_frameCount)+ "ms");
                 _analysisObserver.AnalysisFinished(_frameCount);
             });
         }
@@ -184,6 +196,7 @@ namespace analysis_engine
             temp.Frame.Image = image;
             temp.Frame.FrameID = _frameCount;
             _frameCount++;
+            _timeQueue.Add(DateTimeOffset.Now.ToUnixTimeMilliseconds());
             _pipeline.Source.Push(temp);
             // if (_frameCount > 3600)//This is for stopping the stream after a certain amount of time
             // {

@@ -31,7 +31,7 @@ namespace analysis_engine
         public void AnalysisFinished(int frameCount)
         {
             _watch.Stop();
-            Console.WriteLine("Average Throughput: "+_watch.ElapsedMilliseconds/Convert.ToDouble(frameCount)+"ms/frame");
+            Console.WriteLine("Average PipeLine Throughput: "+_watch.ElapsedMilliseconds/Convert.ToDouble(frameCount)+"ms/frame");
             Done = true;
         }
     }
