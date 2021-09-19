@@ -1,3 +1,4 @@
+using System.IO;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -11,11 +12,17 @@ namespace analysis_engine.Video
             Capture = new VideoCapture(url);
             Capture.Start();
         }
+        public override void Init(Stream input)
+        {
+        }
 
         public override Image<Rgb, byte> GetNextFrame()
         {
             var frame = Capture.QueryFrame();
-            if (frame == null) return null;
+            if (frame == null)
+            {
+                return null;
+            }
             //while (frame == null) frame = Capture.QueryFrame();
             var image=frame.ToImage<Rgb, byte>();
             if (image.Width % 4 != 0)

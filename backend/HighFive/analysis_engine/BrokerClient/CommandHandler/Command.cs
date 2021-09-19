@@ -12,7 +12,7 @@ namespace analysis_engine.BrokerClient.CommandHandler
     {
         public void Run()
         {
-            var clientId = Environment.GetEnvironmentVariable("ENGINE_CLIENT_ID");
+            var clientId = "analysisclient001";
             
             //Create a new Kafka consumer
             var config = new ConsumerConfig
@@ -26,8 +26,9 @@ namespace analysis_engine.BrokerClient.CommandHandler
             consumer.Assign(partition);
             while (true)
             {
+                Console.WriteLine("Time to start getting commands");
                 var command = consumer.Consume();
-                new MockCommandHandler().HandleCommand(JsonConvert.DeserializeObject<AnalysisCommand>(command.Message.Value));
+                new CommandHandler.CommandHandler().HandleCommand(JsonConvert.DeserializeObject<AnalysisCommand>(command.Message.Value));
             }
         }
     }

@@ -51,14 +51,14 @@ class SplashViewModel private constructor(private val authenticationRepository: 
                 run checkExpired@ {
                     Log.d("Check Expires", "Checking if tokens are expired...")
                     //check if refresh token expired and redirect to login if it has
-                    if (checkTokenExpired(user?.refreshExpires!!)) {
+                    if (checkTokenExpired(user?.refreshExpires)) {
                         intent = Intent(context, LoginActivity::class.java)
                         return@checkExpired
                     }
                     intent = Intent(context, MainActivity::class.java)
                     //check if access token is expired and request a new one if it has
 
-                    if (checkTokenExpired(user.authExpires!!)) {
+                    if (checkTokenExpired(user?.authExpires)) {
                         runBlocking {
                             launch {
                                 authenticationRepository.refreshToken()
@@ -86,7 +86,10 @@ class SplashViewModel private constructor(private val authenticationRepository: 
         }
     }
 
-    private fun checkTokenExpired(tokenTime: Long) : Boolean {
+    private fun checkTokenExpired(tokenTime: Long?) : Boolean {
+        if (tokenTime == null) {
+            return true
+        }
         return (System.currentTimeMillis() / 1000L) > tokenTime
     }
 

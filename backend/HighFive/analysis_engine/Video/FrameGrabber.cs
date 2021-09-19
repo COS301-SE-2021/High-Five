@@ -1,4 +1,5 @@
-﻿using Emgu.CV;
+﻿using System.IO;
+using Emgu.CV;
 using Emgu.CV.Structure;
 
 namespace analysis_engine.Video
@@ -8,6 +9,8 @@ namespace analysis_engine.Video
         protected VideoCapture Capture;
 
         public abstract void Init(string url);
+        
+        public abstract void Init(Stream input);
 
         public abstract Image<Rgb, byte> GetNextFrame();
     }

@@ -1,7 +1,20 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using analysis_engine.BrokerClient;
 using analysis_engine.Video;
 using analysis_engine.Video.ConcreteFrameEncoder;
-
+using analysis_engine_v2.BrokerClient.Storage;
+using broker_analysis_client.Client;
+using broker_analysis_client.Storage;
+using Emgu.CV;
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using High5SDK;
 
 namespace analysis_engine
 {
@@ -9,7 +22,7 @@ namespace analysis_engine
     {
         public static void Main(string[] args)
         {
-            //TestVideoAnalysis();
+            //TestStreamAnalysis();
             var client = new BrokerClient.BrokerClient();
             client.Run();
         }
@@ -28,8 +41,8 @@ namespace analysis_engine
         {
             Console.WriteLine("Starting Analysis...");
             var url =
-                @"http://192.168.11.153:5080/test5/streams/184949160521935207548503.m3u8?token=009818323712942561669670";
-            var analysis=new AnalysisObserver(url, "stream", "analysis:fastvehicles,drawing:boxes", @"C:\Users\hanne\RiderProjects\output.mp4");
+                @"http://192.168.11.153:5080/HannesSpecialApplication/streams/623826825957388763860216.m3u8";
+            var analysis=new AnalysisObserver(url, "stream", "analysis:fastvehicles,drawing:boxes", @"C:\SavedStream\output.mp4");
             while (!analysis.Done) System.Threading.Thread.Sleep(1000);
             Console.WriteLine("Analysis Done!");
         }
@@ -55,8 +68,10 @@ namespace analysis_engine
         {
             Console.WriteLine("Starting Analysis...");
             var url =
-                @"https://high5storage.blob.core.windows.net/31eb910a-c3f4-412c-b641-26ca8c7c38e3/image/1018157F212558009EE97507E4972AF0.img?sv=2015-12-11&sr=b&sig=rM3f2b4SRenhLO5W8yDBATe5l85dJRaVIvGiTSwvths%3D&st=2021-09-14T19%3A47%3A59Z&se=2021-09-14T22%3A47%3A59Z&sp=r";
-            var analysis=new AnalysisObserver(url, "image","analysis:fastvehicles,drawing:boxes", @"C:\Users\hanne\RiderProjects\output.jpg");
+                @"C:\Users\hanne\RiderProjects\1018157F212558009EE97507E4972AF0.jpg";
+            WebClient client = new WebClient();
+            Stream stream = client.OpenRead(url);
+            var analysis=new AnalysisObserver(stream, "image","analysis:vehicles,drawing:boxes", @"C:\Users\hanne\RiderProjects\output.jpg");
             while (!analysis.Done) System.Threading.Thread.Sleep(1000);
             Console.WriteLine("Analysis Done!");
         }

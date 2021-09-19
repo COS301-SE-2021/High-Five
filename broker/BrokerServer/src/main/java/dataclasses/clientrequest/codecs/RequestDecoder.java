@@ -36,10 +36,28 @@ public class RequestDecoder implements JsonDeserializer<AnalysisRequest> {
         }
 
         if (mediaIdName == null) {
-            String publishLink = body.get("PublishLink").getAsString();
-            String playLink = body.get("PlayLink").getAsString();
+            String publishLinkDrone = body.get("PublishLinkDrone").getAsString();
+            String playLinkWeb;
+            String publishLinkAnalysisEngine;
+            String playLinkAnalysisEngine;
+            try {
+                playLinkWeb = body.get("PlayLinkWeb").getAsString();
+            } catch (Exception ignored) {
+                playLinkWeb = "none";
+            }
+            try {
+                publishLinkAnalysisEngine = body.get("PublishLinkAnalysisEngine").getAsString();
+            } catch (Exception ignored) {
+                publishLinkAnalysisEngine = "none";
+            }
+            try {
+                playLinkAnalysisEngine = body.get("PlayLinkAnalysisEngine").getAsString();
+            } catch (Exception ignored) {
+                playLinkAnalysisEngine = "none";
+            }
+
             String streamId = body.get("StreamId").getAsString();
-            requestBody = new LiveAnalysisRequestBody(playLink, publishLink, streamId);
+            requestBody = new LiveAnalysisRequestBody(playLinkWeb, publishLinkDrone, playLinkAnalysisEngine, publishLinkAnalysisEngine, streamId);
         } else {
             String mediaId = body.get(mediaIdName).getAsString();
             String pipelineId = body.get("pipelineId").getAsString();

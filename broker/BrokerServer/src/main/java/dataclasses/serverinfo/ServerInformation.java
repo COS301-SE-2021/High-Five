@@ -2,41 +2,11 @@ package dataclasses.serverinfo;
 
 public class ServerInformation {
 
-    private String address;
-    private String serverId;
-    private String port;
-    private String credentials;
     private long usage;
+    private final String serverId;
 
-    public ServerInformation(String address, String serverId, String port, String credentials) {
-        this.address = address;
+    public ServerInformation(String serverId) {
         this.serverId = serverId;
-        this.port = port;
-        this.credentials = credentials;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPort() {
-        return port;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
-    }
-
-    public String getCredentials() {
-        return credentials;
-    }
-
-    public void setCredentials(String credentials) {
-        this.credentials = credentials;
     }
 
     public long getUsage() {
@@ -51,19 +21,10 @@ public class ServerInformation {
         return serverId;
     }
 
-    public void setServerId(String serverId) {
-        this.serverId = serverId;
-    }
-
-    public String toString() {
-        return "{" +
-                "\"id\": \"" + serverId + "\"," +
-                "\"address\": \"" + address + "\"," +
-                "\"port\": \"" + port + "\"," +
-                "\"credentials\": \"" + credentials + "\"}";
-    }
 
     public ServerInformation clone() {
-        return new ServerInformation(address, serverId, port, credentials);
+        ServerInformation info = new ServerInformation(serverId);
+        info.setUsage(usage);
+        return info;
     }
 }

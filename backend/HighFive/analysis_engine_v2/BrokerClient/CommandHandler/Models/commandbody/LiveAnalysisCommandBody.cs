@@ -4,15 +4,11 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models.commandbody
 {
     public class LiveAnalysisCommandBody : CommandBody
     {
-        /// <summary>
-        /// Gets or Sets StreamId
-        /// </summary>
-        public string StreamId { get; set; }
         
         /// <summary>
         /// Gets or Sets PublishLink
         /// </summary>
-        public string PublishLink { get; set; }
+        public string PlayLink { get; set; }
         
         /// <summary>
         /// Returns the string presentation of the object
@@ -21,9 +17,8 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models.commandbody
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class StoredMediaCommandBody {\n");
-            sb.Append("  StreamId: ").Append(StreamId).Append("\n");
-            sb.Append("  PublishLink: ").Append(PublishLink).Append("\n");
+            sb.Append("class LiveAnalysisCommandBody {\n");
+            sb.Append("  PlayLink: ").Append(PlayLink).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -61,14 +56,9 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models.commandbody
 
             return
                 (
-                    StreamId == other.StreamId ||
-                    StreamId != null &&
-                    StreamId.Equals(other.StreamId)
-                ) &&
-                (
-                    PublishLink == other.PublishLink ||
-                    PublishLink != null &&
-                    PublishLink.Equals(other.PublishLink)
+                    PlayLink == other.PlayLink ||
+                    PlayLink != null &&
+                    PlayLink.Equals(other.PlayLink)
                 );
         }
 
@@ -82,10 +72,8 @@ namespace analysis_engine.BrokerClient.CommandHandler.Models.commandbody
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (PublishLink != null)
-                    hashCode = hashCode * 59 + PublishLink.GetHashCode();
-                    if (StreamId != null)
-                    hashCode = hashCode * 59 + StreamId.GetHashCode();
+                    if (PlayLink != null)
+                    hashCode = hashCode * 59 + PlayLink.GetHashCode();
                     return hashCode;
             }
         }

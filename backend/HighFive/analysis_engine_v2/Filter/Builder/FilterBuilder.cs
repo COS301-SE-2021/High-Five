@@ -1,6 +1,11 @@
 ﻿
 namespace analysis_engine
 {
+    /**
+     * This class is responsible for constructing filter objects that are used in the pipeline.
+     * It constructs the filter and then creates the corresponding tool container builder and starts
+     * the construction process for the toolContainer.
+     */
     public class FilterBuilder
     {
         private Filter _filter;

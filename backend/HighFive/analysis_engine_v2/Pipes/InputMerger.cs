@@ -1,8 +1,15 @@
 ﻿using System.Collections.Concurrent;
 using System.Linq;
+using High5SDK;
 
 namespace analysis_engine
 {
+    /**
+     * This is a concrete implementation of the Pipe Interface.
+     * It is a special purpose Pipe used in parallel pipeline to combine
+     * the outputs of multiple filters running in parallel such that the
+     * analysis output of each filter for a specific frame is aggregated.
+     */
     public class InputMerger : Pipe
     {
         private Pipe _output;

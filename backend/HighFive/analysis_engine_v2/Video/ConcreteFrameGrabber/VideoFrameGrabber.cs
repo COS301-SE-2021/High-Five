@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -10,6 +11,10 @@ namespace analysis_engine.Video
         public override void Init(string url)
         {
             Capture = new VideoCapture(url);
+        }
+        
+        public override void Init(Stream input)
+        {
         }
 
         public override Image<Rgb, byte> GetNextFrame()

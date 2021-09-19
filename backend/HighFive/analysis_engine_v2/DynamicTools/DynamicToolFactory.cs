@@ -5,7 +5,9 @@ using System.Security;
 using System.Security.Permissions;
 using analysis_engine_v2.BrokerClient.Storage;
 using broker_analysis_client.Client.Models;
+using High5SDK;
 using Microsoft.CodeAnalysis;
+using Microsoft.ML.OnnxRuntime;
 
 namespace analysis_engine.BrokerClient
 {
@@ -17,16 +19,17 @@ namespace analysis_engine.BrokerClient
 
         static DynamicToolFactory()
         {
-            var permissions = new PermissionSet(PermissionState.None);
+            /*var permissions = new PermissionSet(PermissionState.Unrestricted);
             permissions.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
-            permissions.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read, ConfigStrings.ModelDirectory));
+            permissions.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read | FileIOPermissionAccess.PathDiscovery, ConfigStrings.ModelDirectory));
+            permissions.AddPermission(new PrincipalPermission(PermissionState.Unrestricted));
             var setup = new AppDomainSetup();
             setup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             
             _restrictedDomain = AppDomain.CreateDomain("restrictedDomain",
                 null,
                 setup,
-                permissions);
+                permissions);*/
 
             _analysisStorageManager = new AnalysisStorageManager();
         }
@@ -40,15 +43,20 @@ namespace analysis_engine.BrokerClient
 
             var toolFiles = _analysisStorageManager.GetAnalysisTool(toolId) ?? new AnalysisToolComposite
             {
-                SourceCode = _analysisStorageManager.GetDrawingTool(toolId)
+                ByteData = _analysisStorageManager.GetDrawingTool(toolId)
             };
 
-            var assemblyBytes = DynamicCompiler.Compile(toolFiles.SourceCode);
-            var dynamicTool = (DynamicTool) _restrictedDomain.CreateInstanceAndUnwrap(
+            var assemblyBytes = toolFiles.ByteData;
+            var asm = Assembly.Load(assemblyBytes);
+            var dynamicTool = new DynamicTool(toolId);
+            dynamicTool.LoadCompiledBytes(asm);
+            return dynamicTool;
+
+            /*var dynamicTool = (DynamicTool) _restrictedDomain.CreateInstanceAndUnwrap(
                 _dynamicToolType.Assembly.FullName, _dynamicToolType.FullName,
                 false, BindingFlags.Default, null, new object[] {toolId}, null, null);
             dynamicTool.LoadCompiledBytes(assemblyBytes);
-            return dynamicTool;
+            return dynamicTool;*/
         }
         
         public void UnloadRestrictedDomain()

@@ -3,6 +3,6 @@
     public class AnalysisToolComposite
     {
         public string ModelPath { get; set; }
-        public string SourceCode { get; set; }
+        public byte[] ByteData { get; set; }
     }
 }

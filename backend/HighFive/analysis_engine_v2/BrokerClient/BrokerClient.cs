@@ -19,7 +19,7 @@ namespace analysis_engine.BrokerClient
         public void Run()
         {
             //Open a SSH tunnel to the remote server. This authenticates the BrokerClient.
-            PrivateKeyFile file = new PrivateKeyFile(@"C:/Users/Marco/Downloads/id_rsa");
+            PrivateKeyFile file = new PrivateKeyFile(@"C:/Users/Administrator/id_rsa");
             using (var client = new SshClient("newideassolutions.com", "root", file))
             {
                 client.Connect();
@@ -27,7 +27,7 @@ namespace analysis_engine.BrokerClient
                 client.AddForwardedPort(port);
                 port.Start();
                 
-                var clientId = Environment.GetEnvironmentVariable("ENGINE_CLIENT_ID");
+                var clientId = "analysisclient001";
                 var timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
 
                 var registrationString = $"{{\"ServerId\":{clientId},\"Timestamp\":{timestamp}}}";
@@ -46,7 +46,7 @@ namespace analysis_engine.BrokerClient
                 producer.Produce(partition, msg);
                 
                 //Give Broker enough time to register the AnalysisEngine
-                Thread.Sleep(30000);
+                Thread.Sleep(15000);
 
                 _commander = new Command();
                 _usageCollector = new ResourceUsageCollector.ResourceUsageCollector();

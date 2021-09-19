@@ -4,6 +4,7 @@ using System.Linq;//TODO Check this import
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
+using High5SDK;
 
 namespace analysis_engine
 {
@@ -28,8 +29,8 @@ namespace analysis_engine
                     CvInvoke.PutText(image, output.Classes[i].ToUpper(), point, FontFace.HersheyTriplex, 2.0, new Bgr(Color.Red).MCvScalar, 5);
                 }
 
-                var textPoint = new Point(image.Width / 445, count*6*image.Height / 229);
-                CvInvoke.PutText(image, "Vehicle Count: "+output.Classes.Count, textPoint, FontFace.HersheyTriplex, 2.0, new Bgr(Color.Red).MCvScalar, 5);
+                var textPoint = new Point(image.Width / 445, count*6*image.Height / 80);
+                CvInvoke.PutText(image, output.Purpose+" Count: "+output.Classes.Count, textPoint, FontFace.HersheyTriplex, 2.0, new Bgr(Color.Red).MCvScalar, 5);
                 count++;
             }
 

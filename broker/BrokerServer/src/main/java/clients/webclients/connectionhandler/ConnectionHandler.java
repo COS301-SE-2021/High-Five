@@ -29,12 +29,14 @@ public class ConnectionHandler implements Observer<ResponseObject> {
                 @Override
                 public boolean test(Connection connection) {
                     boolean isRight;
-                    if (responseObject.requestType.equals("StartLiveAnalysis")) {
-                        isRight = connection.getUserId().contains(responseObject.userId);
+                    if (responseObject.requestType.contains("StartLive")) { // Live analysis or live streaming
+
+                        //Only broadcast to the other clients that did not make the "StartLive" request
+                        isRight = connection.getUserId().contains(responseObject.userId) && !connection.getConnectionId().contains(responseObject.connectionId);
                         if (isRight) {
                             EventLogger.getLogger().info("Broadcasting server information to connections with client id " + responseObject.userId);
                         }
-                    } else {
+                    } else { // Uploaded media
                         isRight = connection.getConnectionId().contains(responseObject.connectionId);
                         if (isRight) {
                             EventLogger.getLogger().info("Broadcasting server information to connections with connection id " + responseObject.connectionId);
@@ -92,6 +94,19 @@ public class ConnectionHandler implements Observer<ResponseObject> {
         lock.lock();
         try {
             _removeConnection(connectionId);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public String getUserId(String connectionId) {
+        lock.lock();
+        try {
+            return connections.stream()
+                    .filter(item -> item.getConnectionId().contains(connectionId))
+                    .findFirst()
+                    .map(Connection::getUserId)
+                    .orElse("");
         } finally {
             lock.unlock();
         }
