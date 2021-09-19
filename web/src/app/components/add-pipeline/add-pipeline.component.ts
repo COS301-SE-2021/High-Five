@@ -35,7 +35,6 @@ export class AddPipelineComponent implements OnInit {
       }).then((toast) => {
         toast.present();
       });
-      await this.modalController.dismiss();
     } else {
       if (this.tools.length > 0) {
         if (this.userToolsService.drawingToolCount([this.tools[this.tools.length - 1]]) > 0) {
