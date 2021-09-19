@@ -1,16 +1,8 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {
-  IonInfiniteScroll,
-  LoadingController,
-  ModalController,
-  PopoverController,
-  ToastController
-} from '@ionic/angular';
-import {VideoStoreConstants} from '../../../constants/pages/videostore-constants';
+import {Component, OnInit} from '@angular/core';
 import {ImagesService} from '../../services/images/images.service';
 import {VideosService} from '../../services/videos/videos.service';
 import {AnalyzedVideosService} from '../../services/analyzed-videos/analyzed-videos.service';
-import {MediaFilterComponent} from '../../components/media-filter/media-filter.component';
+import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
 
 @Component({
   selector: 'app-videostore',
@@ -19,18 +11,9 @@ import {MediaFilterComponent} from '../../components/media-filter/media-filter.c
 })
 export class VideostorePage implements OnInit {
 
-  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
-  public segment: string;
-  public analyzed: boolean;
-
-  constructor(private modal: ModalController,
-              public toastController: ToastController,
-              private loadingController: LoadingController,
-              private constants: VideoStoreConstants, public imagesService: ImagesService,
-              public videosService: VideosService, private popoverController: PopoverController,
-              public analyzedVideosService: AnalyzedVideosService) {
-    this.segment = 'all';
+  constructor(public imagesService: ImagesService, public videosService: VideosService,
+              public analyzedVideosService: AnalyzedVideosService, public userPreferencesService: UserPreferencesService) {
   }
 
   public imagesTrackFn = (i, image) => image.id;
@@ -41,36 +24,5 @@ export class VideostorePage implements OnInit {
 
   }
 
-
-  public async displayFilterPopover(ev: any) {
-    const filterPopover = await this.popoverController.create({
-      component: MediaFilterComponent,
-      cssClass: 'media-filter',
-      animated: true,
-      translucent: true,
-      backdropDismiss: true,
-      event: ev,
-    });
-    await filterPopover.present();
-    await filterPopover.onDidDismiss().then(
-      data => {
-        if (data.data !== undefined) {
-          if (data.data.segment !== undefined) {
-            this.segment = data.data.segment;
-          }
-        }
-      }
-    );
-  }
-
-
-  /**
-   * Sends an uploaded video to the backend using the videosService service.
-   *
-   * @param video
-   */
-  public async uploadVideo(video: any) {
-    await this.videosService.addVideo(video.target.files[0]);
-  }
 
 }

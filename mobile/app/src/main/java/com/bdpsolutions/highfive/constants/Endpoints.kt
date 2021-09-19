@@ -3,6 +3,7 @@ package com.bdpsolutions.highfive.constants
 object Endpoints {
 
     const val BASE_URL = "https://high5api.azurewebsites.net/"
+    const val WEBSOCKET_URL = "wss://high5api.azurewebsites.net/ws"
 
     object VIDEO {
         const val GET_ALL_VIDEOS = "media/getAllVideos"

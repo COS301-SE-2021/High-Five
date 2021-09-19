@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -69,6 +70,17 @@ namespace src.Subsystems.Pipelines
             return StatusCode(200, response);
         }
 
+        public override IActionResult GetLivePipeline()
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+
+            var response = _pipelineService.GetLivePipeline().Result;
+            return StatusCode(200, response);
+        }
+
         public override IActionResult GetPipeline(GetPipelineRequest request)
         {
             if (!_baseContainerSet)
@@ -116,6 +128,21 @@ namespace src.Subsystems.Pipelines
             return StatusCode(400, response);
         }
 
+        public override IActionResult SetLivePipeline(GetPipelineRequest getPipelineRequest)
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            var pipelineSet = _pipelineService.SetLivePipeline(getPipelineRequest).Result;
+            var response = new EmptyObject
+            {
+                Success = pipelineSet,
+                Message = "Live pipeline set."
+            };
+            return StatusCode(200, response);
+        }
+
         private void ConfigureStorageManager()
         {
             var tokenString = HttpContext.GetTokenAsync("access_token").Result;
@@ -125,7 +152,11 @@ namespace src.Subsystems.Pipelines
             }
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
-            _pipelineService.SetBaseContainer(jsonToken.Subject);
+            var alreadyExisted = _pipelineService.SetBaseContainer(jsonToken.Subject);
+            var id = jsonToken.Subject;
+            var displayName = jsonToken.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
+            var email = jsonToken.Claims.FirstOrDefault(x => x.Type == "emails")?.Value;
+            _pipelineService.StoreUserInfo(id,displayName,email);
             _baseContainerSet = true;
         }
     }

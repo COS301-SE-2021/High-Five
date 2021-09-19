@@ -4,9 +4,12 @@ import {HttpClient} from '@angular/common/http';
 
 
 import {AnalysisService} from './apis/analysis.service';
+import {DownloadsService} from './apis/downloads.service';
 import {MediaStorageService} from './apis/mediaStorage.service';
 import {PipelinesService} from './apis/pipelines.service';
 import {TestService} from './apis/test.service';
+import {ToolsService} from './apis/tools.service';
+import {UserService} from './apis/user.service';
 
 @NgModule({
   imports: [],
@@ -14,9 +17,12 @@ import {TestService} from './apis/test.service';
   exports: [],
   providers: [
     AnalysisService,
+    DownloadsService,
     MediaStorageService,
     PipelinesService,
-    TestService]
+    TestService,
+    ToolsService,
+    UserService]
 })
 export class ApiModule {
 
@@ -37,4 +43,5 @@ export class ApiModule {
       providers: [{provide: Configuration, useFactory: configurationFactory}]
     };
   }
+
 }

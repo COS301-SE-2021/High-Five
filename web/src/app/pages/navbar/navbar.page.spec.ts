@@ -38,16 +38,4 @@ describe('NavbarPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should go to videos', () => {
-    const component1 = TestBed.createComponent(NavbarPage).componentInstance;
-    component1.navigateTo('navbar/videos', 'videoLink');
-    expect(routerMock.navigate).toHaveBeenCalledWith(['navbar/videos']);
-  });
-
-  it('should go to analytics', () => {
-    const component2 = TestBed.createComponent(NavbarPage).componentInstance;
-    component2.navigateTo('navbar/analytics', 'videoLink');
-    expect(routerMock.navigate).toHaveBeenCalledWith(['navbar/analytics']);
-  });
 });

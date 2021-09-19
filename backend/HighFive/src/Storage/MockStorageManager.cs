@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Org.OpenAPITools.Models;
+using src.Subsystems.Admin;
 
 namespace src.Storage
 {
@@ -29,9 +31,11 @@ namespace src.Storage
         private readonly Random _random;
         private const string Alphanumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
         private string _baseContainer;
+        private readonly IAdminValidator _adminValidator;
         
-        public MockStorageManager()
+        public MockStorageManager(IAdminValidator adminValidator)
         {
+            _adminValidator = adminValidator;
             /*
              *      Description:
              * The default constructor of the class will instantiate a new mockContainer list that will
@@ -64,8 +68,13 @@ namespace src.Storage
             if (_baseContainer.Equals("public"))
             {
                 var toolsFile = new MockBlobFile(new List<IBlobFile>(), "tools.txt");
-                await toolsFile.UploadText("CarRecognitions\nCarFollowing");
-                return toolsFile;
+                    await toolsFile.UploadText(@"analysis/PeopleRecognition/BoxCoordinates\n\r
+                        analysis/AnimalRecognition/BoxCoordinates\n\r
+                        analysis/VehicleRecognition/BoxCoordinates\n\r
+                        analysis/FastVehicleRecognition/BoxCoordinates\n\r
+                        drawing/BoxDrawingTool/BoxCoordinates");
+                    return toolsFile;
+
             }
             
             IBlobFile file = null;
@@ -140,7 +149,7 @@ namespace src.Storage
             return sb.ToString();
         }
 
-        public bool SetBaseContainer(string container)
+        public async Task<bool> SetBaseContainer(string container)
         {
             /*
              *      Description:
@@ -176,7 +185,45 @@ namespace src.Storage
             return _baseContainer;
         }
 
-        public string RandomString()
+        public void StoreUserInfo(string id, string displayName, string email)
+        {
+            
+        }
+
+        public async Task<List<User>> GetAllUsers()
+        {
+            var mockUserList = new List<User>();
+            mockUserList.Add(new User
+            {
+                Email = "user1@email.com",
+                Id = "U0",
+                DisplayName = "User0",
+                IsAdmin = _adminValidator.IsAdmin("U0")
+            });
+            mockUserList.Add(new User
+            {
+                Email = "user1@email.com",
+                Id = "U1",
+                DisplayName = "User1",
+                IsAdmin = _adminValidator.IsAdmin("U1")
+            });
+            mockUserList.Add(new User
+            {
+                Email = "user2@email.com",
+                Id = "U2",
+                DisplayName = "User2",
+                IsAdmin = _adminValidator.IsAdmin("U3")
+            });
+
+            return mockUserList;
+        }
+
+        public async Task DeleteAllFilesInContainer(string container)
+        {
+            _mockContainer.Clear();
+        }
+
+        public string RandomString(int length=5)
         {
             /*
              *      Description:
@@ -186,7 +233,7 @@ namespace src.Storage
              */
             
             var str = "";
-            for(var i =0; i<5; i++)
+            for(var i =0; i<length; i++)
             {
                 var a = _random.Next(Alphanumeric.Length);
                 str += Alphanumeric.ElementAt(a);

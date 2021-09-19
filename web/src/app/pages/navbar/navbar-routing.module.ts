@@ -19,20 +19,12 @@ const routes: Routes = [
         loadChildren:() => import('../analytics/analytics.module').then(m => m.AnalyticsPageModule),
       },
       {
-        path: 'videos',
-        loadChildren: () => import('../videostore/videostore.module').then( m => m.VideostorePageModule),
+        path: 'media',
+        loadChildren:() => import('../media/media.module').then(m => m.MediaPageModule),
       },
       {
-        path: 'images',
-        loadChildren: () => import('../imagestore/imagestore.module').then( m => m.ImagestorePageModule)
-      },
-      {
-        path: 'all',
-        loadChildren: () => import('../allmedia/allmedia.module').then( m => m.AllmediaPageModule)
-      },
-      {
-        path: 'live',
-        loadChildren: () => import('../live/live.module').then( m => m.LivePageModule)
+        path:'live',
+        loadChildren:() => import('../live/live.module').then(m => m.LivePageModule),
       },
       {
         path:'',

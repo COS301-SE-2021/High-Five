@@ -1,16 +1,21 @@
-<swiper #swiper2 [config]="swiperConfig2">
-  <ng-template swiperSlide>
+<ion-content>
+  <swiper #swiper2 [config]="swiperConfig2">
+    <ng-template swiperSlide>
     <span>
       <ion-title>The Big Picture</ion-title>
     </span>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <span><ng-lottie [options]="lottieScrollDownConfig" ></ng-lottie></span>
-  </ng-template>
-  <ng-template swiperSlide>
-    Full Architecture comes here
-  </ng-template>
-</swiper>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <span><ng-lottie [options]="lottieScrollDownConfig" ></ng-lottie></span>
+    </ng-template>
+    <ng-template swiperSlide>
+      <div style="background: white; color: white">
+        <ion-img style="max-height: 80%" src="assets/images/architecture.svg"></ion-img>
+      </div>
+    </ng-template>
+  </swiper>
+
+</ion-content>

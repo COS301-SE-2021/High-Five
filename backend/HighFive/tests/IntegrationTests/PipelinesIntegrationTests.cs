@@ -12,7 +12,7 @@ using Xunit;
 
 namespace tests.IntegrationTests
 {
-    [Trait("Category","IntegrationTests")]
+    [Trait("Category","IntegrationTests_WIP")]
     public class PipelinesIntegrationTests
     {
         /*
@@ -62,7 +62,7 @@ namespace tests.IntegrationTests
         {
             await GetPipelineId();
 
-            var response = await _client.PostAsync("/pipelines/getPipelines", null!);
+            var response = await _client.GetAsync("/pipelines/getPipelines");
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var responseObject = JsonConvert.DeserializeObject<GetPipelinesResponse>(responseBody);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -72,7 +72,7 @@ namespace tests.IntegrationTests
         [Fact]
         public async Task TestGetAllTools()
         {
-            var response = await _client.PostAsync("/pipelines/getAllTools", null!);
+            var response = await _client.GetAsync("/pipelines/getAllTools");
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var responseObject = JsonConvert.DeserializeObject<List<string>>(responseBody);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -155,7 +155,7 @@ namespace tests.IntegrationTests
         public async Task TestGetPipelineIds()
         {
             await GetPipelineId();
-            var response = await _client.PostAsync("/pipelines/getPipelineIds", null!);
+            var response = await _client.GetAsync("/pipelines/getPipelineIds");
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var responseObject = JsonConvert.DeserializeObject<GetPipelineIdsResponse>(responseBody);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -210,7 +210,7 @@ namespace tests.IntegrationTests
             var response = await _client.PostAsync("/pipelines/createPipeline", ObjectToBytes(request));
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var responseObject = JsonConvert.DeserializeObject<CreatePipelineResponse>(responseBody);
-            return responseObject.PipelineId;
+            return responseObject.Pipeline.Id;
         }
     }
 }

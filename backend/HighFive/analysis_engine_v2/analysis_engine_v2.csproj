@@ -1,0 +1,640 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{2BFA80D5-1103-4D1F-BE12-6C7D1A4A5B01}</ProjectGuid>
+        <OutputType>Exe</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>analysis_engine_v2</RootNamespace>
+        <AssemblyName>analysis_engine_v2</AssemblyName>
+        <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+        <LangVersion>default</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <PlatformTarget>x64</PlatformTarget>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <Prefer32bit>false</Prefer32bit>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <PlatformTarget>x64</PlatformTarget>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <Prefer32bit>false</Prefer32bit>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="Confluent.Kafka, Version=1.6.3.0, Culture=neutral, PublicKeyToken=12c514ca49093d1e">
+            <HintPath>..\..\..\..\..\.nuget\packages\confluent.kafka\1.6.3\lib\netstandard2.0\Confluent.Kafka.dll</HintPath>
+        </Reference>
+        <Reference Include="Confluent.Kafka, Version=1.7.0.0, Culture=neutral, PublicKeyToken=12c514ca49093d1e">
+            <HintPath>..\..\..\..\..\.nuget\packages\confluent.kafka\1.7.0\lib\net46\Confluent.Kafka.dll</HintPath>
+        </Reference>
+        <Reference Include="Emgu.CV.Bitmap, Version=4.5.3.4721, Culture=neutral, PublicKeyToken=7281126722ab4438">
+          <HintPath>..\..\..\..\..\.nuget\packages\emgu.cv.bitmap\4.5.3.4721\lib\netstandard2.0\Emgu.CV.Bitmap.dll</HintPath>
+        </Reference>
+        <Reference Include="Emgu.CV.Platform.NetStandard, Version=4.5.3.4721, Culture=neutral, PublicKeyToken=7281126722ab4438">
+            <HintPath>..\..\..\..\..\.nuget\packages\emgu.cv\4.5.3.4721\lib\netstandard2.0\Emgu.CV.Platform.NetStandard.dll</HintPath>
+        </Reference>
+        <Reference Include="FFMpegCore, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\..\..\..\..\.nuget\packages\ffmpegcore\4.5.0\lib\netstandard2.0\FFMpegCore.dll</HintPath>
+        </Reference>
+        <Reference Include="High5SDK_v1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=efead08a4dac83d5">
+          <HintPath>..\..\..\..\..\.nuget\packages\high5sdk_v1\1.0.2\lib\net48\High5SDK_v1.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.CodeAnalysis, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+            <HintPath>..\..\..\..\..\.nuget\packages\microsoft.codeanalysis.common\2.0.0\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.CodeAnalysis.Analyzers, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+            <HintPath>..\..\..\..\..\.nuget\packages\microsoft.codeanalysis.analyzers\1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+            <HintPath>..\..\..\..\..\.nuget\packages\microsoft.codeanalysis.csharp\2.0.0\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.ML.OnnxRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=f27f157f0a5b7bb6">
+            <HintPath>..\..\..\..\..\.nuget\packages\microsoft.ml.onnxruntime.managed\1.8.1\lib\netstandard1.1\Microsoft.ML.OnnxRuntime.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+            <HintPath>..\..\..\..\..\.nuget\packages\microsoft.windowsazure.configurationmanager\3.2.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+            <HintPath>..\..\..\..\..\.nuget\packages\windowsazure.storage\7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+        </Reference>
+        <Reference Include="mscorlib" />
+        <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+            <HintPath>..\..\..\..\..\.nuget\packages\newtonsoft.json\10.0.3\lib\portable-net45+win8+wp8+wpa81\Newtonsoft.Json.dll</HintPath>
+        </Reference>
+        <Reference Include="NReco.VideoConverter, Version=1.1.4.0, Culture=neutral, PublicKeyToken=395ccb334978a0cd">
+            <HintPath>..\..\..\..\..\.nuget\packages\nreco.videoconverter\1.1.4\lib\net40\NReco.VideoConverter.dll</HintPath>
+        </Reference>
+        <Reference Include="NumSharp, Version=0.30.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+            <HintPath>..\..\..\..\..\.nuget\packages\numsharp\0.30.0\lib\netstandard2.0\NumSharp.dll</HintPath>
+        </Reference>
+        <Reference Include="Renci.SshNet, Version=2020.0.1.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106">
+            <HintPath>..\..\..\..\..\.nuget\packages\ssh.net\2020.0.1\lib\net40\Renci.SshNet.dll</HintPath>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Collections.Immutable, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+            <HintPath>..\..\..\..\..\.nuget\packages\system.collections.immutable\5.0.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+        </Reference>
+        <Reference Include="System.ComponentModel.Composition" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Drawing" />
+        <Reference Include="System.Drawing.Common, Version=4.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+          <HintPath>..\..\..\..\..\.nuget\packages\system.drawing.common\5.0.2\lib\net461\System.Drawing.Common.dll</HintPath>
+        </Reference>
+        <Reference Include="System.IO.Compression.FileSystem" />
+        <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+            <HintPath>..\..\..\..\..\.nuget\packages\system.memory\4.5.4\lib\netstandard2.0\System.Memory.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Memory.Data, Version=1.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+            <HintPath>..\..\..\..\..\.nuget\packages\system.memory.data\1.0.2\lib\netstandard2.0\System.Memory.Data.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Numerics" />
+        <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+            <HintPath>..\..\..\..\..\.nuget\packages\system.runtime.compilerservices.unsafe\5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Xml" />
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="Xabe.FFmpeg, Version=5.0.2.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\..\..\..\..\.nuget\packages\xabe.ffmpeg\5.0.2\lib\netstandard2.0\Xabe.FFmpeg.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="AnalysisObserver.cs" />
+        <Compile Include="BrokerClient\BrokerClient.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Command.cs" />
+        <Compile Include="BrokerClient\CommandHandler\CommandHandler\CommandHandler.cs" />
+        <Compile Include="BrokerClient\CommandHandler\CommandHandler\ICommandHandler.cs" />
+        <Compile Include="BrokerClient\CommandHandler\CommandHandler\MockCommandHandler.cs" />
+        <Compile Include="BrokerClient\CommandHandler\ICommand.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Models\AnalysisCommand.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Models\commandbody\CommandBody.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Models\commandbody\LiveAnalysisCommandBody.cs" />
+        <Compile Include="BrokerClient\CommandHandler\Models\commandbody\StoredMediaCommandBody.cs" />
+        <Compile Include="BrokerClient\IBrokerClient.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\IResourceUsageCollector.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\Models\PerformanceInfo.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\Models\ServerInformation.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\ResourceCollector\IResourceCollector.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\ResourceCollector\MockResourceCollector.cs" />
+        <Compile Include="BrokerClient\ResourceUsageCollector\ResourceUsageCollector.cs" />
+        <Compile Include="BrokerClient\Service\AnalysisClientService.cs" />
+        <Compile Include="BrokerClient\Service\IAnalysisClientService.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalysisToolComposite.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalyzedImageMetaData.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalyzedVideoMetaData.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalyzeImageRequest.cs" />
+        <Compile Include="BrokerClient\Service\Models\AnalyzeVideoRequest.cs" />
+        <Compile Include="BrokerClient\Service\Models\PipelineRequest.cs" />
+        <Compile Include="BrokerClient\Storage\AnalysisStorageManager.cs" />
+        <Compile Include="BrokerClient\Storage\BlobFile.cs" />
+        <Compile Include="BrokerClient\Storage\IAnalysisStorageManager.cs" />
+        <Compile Include="BrokerClient\Storage\IBlobFile.cs" />
+        <Compile Include="BrokerClient\Storage\IStorageManager.cs" />
+        <Compile Include="BrokerClient\Storage\StorageManager.cs" />
+        <Compile Include="BrokerClient\Storage\StorageManagerContainer.cs" />
+        <Compile Include="ConfigStrings.cs" />
+        <Compile Include="Data\ConcurrentMergerRingBuffer.cs" />
+        <Compile Include="Data\RingBuffer.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\Encoders\Encoder.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\Encoders\Encoder.Interop32.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\Encoders\Encoder.Interop64.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\Encoders\FrameEncodedEventArgs.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\ErrorCode.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\PusherException.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\Pushers\Pusher.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\Pushers\Pusher.Interop32.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\Pushers\Pusher.Interop64.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\VideoFrames\VideoFrame.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\VideoFrames\VideoFrame.Interop32.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\VideoFrames\VideoFrame.Interop64.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\VideoPackets\VideoPacket.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\VideoPackets\VideoPacket.Interop32.cs" />
+        <Compile Include="DotNetPusher-master\DotNetPusher\VideoPackets\VideoPacket.Interop64.cs" />
+        <Compile Include="DynamicTools\DynamicToolBuilder.cs" />
+        <Compile Include="DynamicTools\DynamicToolFactory.cs" />
+        <Compile Include="Filter\Builder\FilterBuilder.cs" />
+        <Compile Include="Filter\Filter.cs" />
+        <Compile Include="Filter\FilterManager.cs" />
+        <Compile Include="Manager.cs" />
+        <Compile Include="Pipeline\Builder\LinearPipelineBuilder.cs" />
+        <Compile Include="Pipeline\Builder\ParallelPipelineBuilder.cs" />
+        <Compile Include="Pipeline\Builder\PipelineBuilder.cs" />
+        <Compile Include="Pipeline\Builder\PipelineBuilderDirector.cs" />
+        <Compile Include="Pipeline\LinearPipeline.cs" />
+        <Compile Include="Pipeline\ParallelPipeline.cs" />
+        <Compile Include="Pipeline\Pipeline.cs" />
+        <Compile Include="Pipes\ConcurrentInputMergerPipe.cs" />
+        <Compile Include="Pipes\ConcurrentQueuePipe.cs" />
+        <Compile Include="Pipes\Factories\ConcurrentInputMergerPipeFactory.cs" />
+        <Compile Include="Pipes\Factories\ConcurrentQueuePipeFactory.cs" />
+        <Compile Include="Pipes\Factories\InputMergerPipeFactory.cs" />
+        <Compile Include="Pipes\Factories\InputSplitterPipeFactory.cs" />
+        <Compile Include="Pipes\Factories\PipeFactory.cs" />
+        <Compile Include="Pipes\InputMerger.cs" />
+        <Compile Include="Pipes\InputSplitter.cs" />
+        <Compile Include="Pipes\Pipe.cs" />
+        <Compile Include="Program.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="ToolContainer\AnalysisToolContainer.cs" />
+        <Compile Include="ToolContainer\Builder\AnalysisToolContainerBuilder.cs" />
+        <Compile Include="ToolContainer\Builder\DrawingToolContainerBuilder.cs" />
+        <Compile Include="ToolContainer\Builder\DroneToolContainerBuilder.cs" />
+        <Compile Include="ToolContainer\Builder\DynamicToolContainerBuilder.cs" />
+        <Compile Include="ToolContainer\Builder\ToolContainerbuilder.cs" />
+        <Compile Include="ToolContainer\ConcurrencyManager.cs" />
+        <Compile Include="ToolContainer\DrawingToolContainer.cs" />
+        <Compile Include="ToolContainer\DroneToolContainer.cs" />
+        <Compile Include="ToolContainer\DynamicToolContainer.cs" />
+        <Compile Include="ToolContainer\ToolContainer.cs" />
+        <Compile Include="Tools\AnalysisTools\AnimalRecognitionTool.cs" />
+        <Compile Include="Tools\AnalysisTools\FastVehicleRecognitionTool.cs" />
+        <Compile Include="Tools\AnalysisTools\PersonRecognitionTool.cs" />
+        <Compile Include="Tools\AnalysisTools\SelfDrawingAnimalRecognitionTool.cs" />
+        <Compile Include="Tools\AnalysisTools\SelfDrawingPersonRecognitionTool.cs" />
+        <Compile Include="Tools\AnalysisTools\SelfDrawingVehicleRecognitionTool.cs" />
+        <Compile Include="Tools\AnalysisTools\VehicleRecognitionTool.cs" />
+        <Compile Include="Tools\Builders\AnalysisToolBuilder.cs" />
+        <Compile Include="Tools\Builders\DrawingToolBuilder.cs" />
+        <Compile Include="Tools\Builders\DroneToolBuilder.cs" />
+        <Compile Include="Tools\Builders\ToolBuilder.cs" />
+        <Compile Include="Tools\DrawingTools\BoxDrawingTool.cs" />
+        <Compile Include="DynamicTools\DynamicTool.cs" />
+        <Compile Include="DynamicTools\DynamicCompiler.cs" />
+        <Compile Include="Video\ConcreteFrameEncoder\ImageFrameEncoder.cs" />
+        <Compile Include="Video\ConcreteFrameEncoder\VideoFrameEncoder.cs" />
+        <Compile Include="Video\ConcreteFrameGrabber\ImageFrameGrabber.cs" />
+        <Compile Include="Video\ConcreteFrameGrabber\StreamFrameGrabber.cs" />
+        <Compile Include="Video\ConcreteFrameGrabber\VideoFrameGrabber.cs" />
+        <Compile Include="Video\FrameEncoder.cs" />
+        <Compile Include="Video\FrameGrabber.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="appsettings.Development.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Include="bin\Debug\NativePusher.x64.dll" />
+      <Content Include="bin\Debug\NativePusher.x64.pdb" />
+      <Content Include="DotNetPusher-master\.vs\dotNetPusher\v16\.suo" />
+      <Content Include="DotNetPusher-master\.vs\dotNetPusher\v16\Browse.VC.db" />
+      <Content Include="DotNetPusher-master\.vs\dotNetPusher\v16\Browse.VC.db-shm" />
+      <Content Include="DotNetPusher-master\.vs\dotNetPusher\v16\Browse.VC.db-wal" />
+      <Content Include="DotNetPusher-master\.vs\dotNetPusher\v16\Browse.VC.opendb" />
+      <Content Include="DotNetPusher-master\.vs\dotNetPusher\v16\Solution.VC.db" />
+      <Content Include="DotNetPusher-master\.vs\dotNetPusher\v16\Solution.VC.db-shm" />
+      <Content Include="DotNetPusher-master\.vs\dotNetPusher\v16\Solution.VC.db-wal" />
+      <Content Include="DotNetPusher-master\Bin\x64\avcodec-57.dll" />
+      <Content Include="DotNetPusher-master\Bin\x64\avdevice-57.dll" />
+      <Content Include="DotNetPusher-master\Bin\x64\avfilter-6.dll" />
+      <Content Include="DotNetPusher-master\Bin\x64\avformat-57.dll" />
+      <Content Include="DotNetPusher-master\Bin\x64\avutil-55.dll" />
+      <Content Include="DotNetPusher-master\Bin\x64\NativePusher.x64.dll" />
+      <Content Include="DotNetPusher-master\Bin\x64\postproc-54.dll" />
+      <Content Include="DotNetPusher-master\Bin\x64\swresample-2.dll" />
+      <Content Include="DotNetPusher-master\Bin\x64\swscale-4.dll" />
+      <Content Include="DotNetPusher-master\Bin\x86\avcodec-57.dll" />
+      <Content Include="DotNetPusher-master\Bin\x86\avdevice-57.dll" />
+      <Content Include="DotNetPusher-master\Bin\x86\avfilter-6.dll" />
+      <Content Include="DotNetPusher-master\Bin\x86\avformat-57.dll" />
+      <Content Include="DotNetPusher-master\Bin\x86\avutil-55.dll" />
+      <Content Include="DotNetPusher-master\Bin\x86\postproc-54.dll" />
+      <Content Include="DotNetPusher-master\Bin\x86\swresample-2.dll" />
+      <Content Include="DotNetPusher-master\Bin\x86\swscale-4.dll" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\dllmain.cpp" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\Encoder.cpp" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\Encoder.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\ErrorCode.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\avcodec-57.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\avcodec.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\avdevice-57.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\avdevice.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\avfilter-6.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\avfilter.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\avformat-57.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\avformat.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\avutil-55.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\avutil.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\avcodec.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\avdct.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\avfft.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\d3d11va.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\dirac.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\dv_profile.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\dxva2.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\jni.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\mediacodec.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\qsv.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\vaapi.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\vda.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\vdpau.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\videotoolbox.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\vorbis_parser.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavcodec\xvmc.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavdevice\avdevice.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavdevice\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavfilter\avfilter.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavfilter\avfiltergraph.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavfilter\buffersink.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavfilter\buffersrc.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavfilter\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavformat\avformat.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavformat\avio.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavformat\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\adler32.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\aes.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\aes_ctr.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\attributes.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\audio_fifo.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\avassert.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\avconfig.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\avstring.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\avutil.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\base64.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\blowfish.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\bprint.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\bswap.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\buffer.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\camellia.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\cast5.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\channel_layout.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\common.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\cpu.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\crc.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\des.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\dict.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\display.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\downmix_info.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\error.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\eval.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\ffversion.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\fifo.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\file.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\frame.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\hash.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\hmac.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\hwcontext.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\hwcontext_cuda.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\hwcontext_dxva2.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\hwcontext_qsv.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\hwcontext_vaapi.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\hwcontext_vdpau.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\imgutils.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\intfloat.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\intreadwrite.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\lfg.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\log.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\lzo.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\macros.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\mastering_display_metadata.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\mathematics.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\md5.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\mem.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\motion_vector.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\murmur3.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\opt.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\parseutils.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\pixdesc.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\pixelutils.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\pixfmt.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\random_seed.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\rational.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\rc4.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\replaygain.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\ripemd.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\samplefmt.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\sha.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\sha512.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\stereo3d.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\tea.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\threadmessage.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\time.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\timecode.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\timestamp.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\tree.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\twofish.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libavutil\xtea.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libpostproc\postprocess.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libpostproc\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libswresample\swresample.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libswresample\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libswscale\swscale.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\libswscale\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\postproc-54.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\postproc.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\swresample-2.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\swresample.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\swscale-4.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x64\swscale.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\avcodec-57.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\avcodec.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\avdevice-57.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\avdevice.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\avfilter-6.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\avfilter.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\avformat-57.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\avformat.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\avutil-55.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\avutil.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\avcodec.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\avdct.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\avfft.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\d3d11va.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\dirac.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\dv_profile.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\dxva2.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\jni.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\mediacodec.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\qsv.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\vaapi.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\vda.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\vdpau.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\videotoolbox.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\vorbis_parser.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavcodec\xvmc.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavdevice\avdevice.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavdevice\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavfilter\avfilter.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavfilter\avfiltergraph.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavfilter\buffersink.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavfilter\buffersrc.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavfilter\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavformat\avformat.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavformat\avio.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavformat\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\adler32.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\aes.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\aes_ctr.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\attributes.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\audio_fifo.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\avassert.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\avconfig.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\avstring.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\avutil.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\base64.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\blowfish.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\bprint.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\bswap.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\buffer.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\camellia.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\cast5.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\channel_layout.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\common.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\cpu.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\crc.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\des.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\dict.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\display.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\downmix_info.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\error.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\eval.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\ffversion.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\fifo.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\file.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\frame.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\hash.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\hmac.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\hwcontext.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\hwcontext_cuda.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\hwcontext_dxva2.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\hwcontext_qsv.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\hwcontext_vaapi.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\hwcontext_vdpau.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\imgutils.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\intfloat.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\intreadwrite.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\lfg.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\log.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\lzo.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\macros.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\mastering_display_metadata.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\mathematics.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\md5.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\mem.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\motion_vector.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\murmur3.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\opt.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\parseutils.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\pixdesc.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\pixelutils.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\pixfmt.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\random_seed.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\rational.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\rc4.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\replaygain.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\ripemd.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\samplefmt.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\sha.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\sha512.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\stereo3d.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\tea.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\threadmessage.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\time.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\timecode.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\timestamp.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\tree.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\twofish.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libavutil\xtea.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libpostproc\postprocess.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libpostproc\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libswresample\swresample.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libswresample\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libswscale\swscale.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\libswscale\version.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\postproc-54.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\postproc.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\swresample-2.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\swresample.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\swscale-4.def" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\include\x86\swscale.lib" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\MediaUtil.x64.vcxproj" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\MediaUtil.x64.vcxproj.filters" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\MediaUtil.x64.vcxproj.user" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\MediaUtil.x86.vcxproj" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\MediaUtil.x86.vcxproj.filters" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\MediaUtil.x86.vcxproj.user" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\NativePusher.cpp" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\NativePusher.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\Pusher.cpp" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\Pusher.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\stdafx.cpp" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\stdafx.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\targetver.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\Utils.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\VideoFrame.cpp" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\VideoFrame.h" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\VideoPacket.cpp" />
+      <Content Include="DotNetPusher-master\DotNetPusher.Native\VideoPacket.h" />
+      <Content Include="DotNetPusher-master\dotNetPusher.sln" />
+      <Content Include="DotNetPusher-master\DotNetPusher\DotNetPusher.csproj" />
+      <Content Include="DotNetPusher-master\LICENSE" />
+      <Content Include="DotNetPusher-master\README.md" />
+      <Content Include="DynamicTools\SampleCode.txt" />
+      <Content Include="DynamicTools\SampleMetadata.txt" />
+      <Content Include="Properties\launchSettings.json" />
+        <Content Include="appsettings.Development.json">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Include="DynamicTools\SampleCode.txt" />
+        <Content Include="Properties\launchSettings.json" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Confluent.Kafka" Version="1.6.3" />
+        <PackageReference Include="Emgu.CV" Version="4.5.3.4721" />
+        <PackageReference Include="Emgu.CV.Bitmap" Version="4.5.3.4721" />
+        <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721" />
+        <PackageReference Include="FFMpegCore" Version="4.5.0" />
+        <PackageReference Include="SDK_v1" Version="1.0.2" />
+        <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="1.0.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.0.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.0.0" />
+        <PackageReference Include="Microsoft.Data.Edm" Version="5.6.4" />
+        <PackageReference Include="Microsoft.Data.OData" Version="5.6.4" />
+        <PackageReference Include="Microsoft.Data.Services.Client" Version="5.6.4" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.8.1" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.8.1" />
+        <PackageReference Include="Microsoft.NETCore.Platforms" Version="1.1.0" />
+        <PackageReference Include="Microsoft.Win32.Primitives" Version="4.3.0" />
+        <PackageReference Include="NETStandard.Library" Version="1.6.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="6.0.8" />
+        <PackageReference Include="NReco.VideoConverter" Version="1.1.4" />
+        <PackageReference Include="NumSharp" Version="0.30.0" />
+        <PackageReference Include="SSH.NET" Version="2020.0.1" />
+        <PackageReference Include="System.AppContext" Version="4.3.0" />
+        <PackageReference Include="System.Buffers" Version="4.5.1" />
+        <PackageReference Include="System.Collections" Version="4.3.0" />
+        <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
+        <PackageReference Include="System.Collections.Immutable" Version="1.2.0" />
+        <PackageReference Include="System.Console" Version="4.3.0" />
+        <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
+        <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.3.0" />
+        <PackageReference Include="System.Diagnostics.FileVersionInfo" Version="4.0.0" />
+        <PackageReference Include="System.Diagnostics.StackTrace" Version="4.0.1" />
+        <PackageReference Include="System.Diagnostics.Tools" Version="4.3.0" />
+        <PackageReference Include="System.Diagnostics.Tracing" Version="4.3.0" />
+        <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
+        <PackageReference Include="System.Dynamic.Runtime" Version="4.0.11" />
+        <PackageReference Include="System.Globalization" Version="4.3.0" />
+        <PackageReference Include="System.Globalization.Calendars" Version="4.3.0" />
+        <PackageReference Include="System.IO" Version="4.3.0" />
+        <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+        <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
+        <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+        <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
+        <PackageReference Include="System.Linq" Version="4.3.0" />
+        <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
+        <PackageReference Include="System.Memory" Version="4.5.4" />
+        <PackageReference Include="System.Net.Http" Version="4.3.0" />
+        <PackageReference Include="System.Net.Primitives" Version="4.3.0" />
+        <PackageReference Include="System.Net.Sockets" Version="4.3.0" />
+        <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+        <PackageReference Include="System.ObjectModel" Version="4.3.0" />
+        <PackageReference Include="System.Reflection" Version="4.3.0" />
+        <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
+        <PackageReference Include="System.Reflection.Metadata" Version="1.4.1-beta-24430-01" />
+        <PackageReference Include="System.Reflection.Primitives" Version="4.3.0" />
+        <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
+        <PackageReference Include="System.Runtime" Version="4.3.1" />
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
+        <PackageReference Include="System.Runtime.Extensions" Version="4.3.0" />
+        <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
+        <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
+        <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+        <PackageReference Include="System.Runtime.Numerics" Version="4.3.0" />
+        <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.0" />
+        <PackageReference Include="System.Security.Cryptography.Encoding" Version="4.3.0" />
+        <PackageReference Include="System.Security.Cryptography.Primitives" Version="4.3.0" />
+        <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.0" />
+        <PackageReference Include="System.Spatial" Version="5.6.4" />
+        <PackageReference Include="System.Text.Encoding" Version="4.3.0" />
+        <PackageReference Include="System.Text.Encoding.CodePages" Version="4.0.1" />
+        <PackageReference Include="System.Text.Encoding.Extensions" Version="4.3.0" />
+        <PackageReference Include="System.Text.RegularExpressions" Version="4.3.0" />
+        <PackageReference Include="System.Threading" Version="4.3.0" />
+        <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
+        <PackageReference Include="System.Threading.Tasks.Parallel" Version="4.0.1" />
+        <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
+        <PackageReference Include="System.Threading.Timer" Version="4.3.0" />
+        <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.0" />
+        <PackageReference Include="System.Xml.XDocument" Version="4.3.0" />
+        <PackageReference Include="System.Xml.XmlDocument" Version="4.0.1" />
+        <PackageReference Include="System.Xml.XPath" Version="4.0.1" />
+        <PackageReference Include="System.Xml.XPath.XDocument" Version="4.0.1" />
+        <PackageReference Include="WindowsAzure.Storage" Version="7.2.1" />
+        <PackageReference Include="Xabe.FFmpeg" Version="5.0.2" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Models" />
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+
+</Project>

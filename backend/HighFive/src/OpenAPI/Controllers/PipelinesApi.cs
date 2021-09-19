@@ -69,11 +69,22 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get All Tools use case</remarks>
         /// <response code="200">All existing tools have been returned</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/pipelines/getAllTools")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(List<string>))]
         public abstract IActionResult GetAllTools();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Get Live Pipeline use case</remarks>
+        /// <response code="200">Returns current live pipeline</response>
+        [HttpGet]
+        [Route("/pipelines/getLivePipeline")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(Pipeline))]
+        public abstract IActionResult GetLivePipeline();
 
         /// <summary>
         /// 
@@ -93,7 +104,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get Pipeline Ids use case</remarks>
         /// <response code="200">All pipeline Id&#39;s have been returned</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/pipelines/getPipelineIds")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetPipelineIdsResponse))]
@@ -104,7 +115,7 @@ namespace Org.OpenAPITools.Controllers
         /// </summary>
         /// <remarks>Endpoint for Get Pipelines use case</remarks>
         /// <response code="200">All pipelines have been returned</response>
-        [HttpPost]
+        [HttpGet]
         [Route("/pipelines/getPipelines")]
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(GetPipelinesResponse))]
@@ -122,5 +133,18 @@ namespace Org.OpenAPITools.Controllers
         [ValidateModelState]
         [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
         public abstract IActionResult RemoveTools([FromBody]RemoveToolsRequest removeToolsRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Set Live Pipeline use case</remarks>
+        /// <param name="getPipelineRequest"></param>
+        /// <response code="200">Tools have been removed from pipeline</response>
+        [HttpPost]
+        [Route("/pipelines/setLivePipeline")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult SetLivePipeline([FromBody]GetPipelineRequest getPipelineRequest);
     }
 }

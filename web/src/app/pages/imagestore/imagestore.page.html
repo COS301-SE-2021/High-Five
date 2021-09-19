@@ -1,18 +1,5 @@
-<ion-header>
-  <ion-grid>
-    <ion-row>
-      <ion-col size-xl="1" size-lg="1">
-        <ion-button fill="outline" color="tertiary" shape="round" mode="md" (click)="displayFilterPopover($event)">
-          <ion-label color="dark">Filter : {{segment}}</ion-label>
-          <ion-icon color="dark" name="filter-outline"></ion-icon>
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-header>
-
 <ion-content>
-  <div [ngSwitch]="segment">
+  <div [ngSwitch]=userPreferencesService.mediaFilter>
     <div *ngSwitchCase="'un-analyzed'">
       <ion-grid>
         <ion-row>
@@ -44,16 +31,4 @@
       </ion-grid>
     </div>
   </div>
-
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end" style="margin-right: 2%; margin-bottom: 2%">
-    <ion-fab-button>
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="top">
-      <ion-fab-button color="tertiary" (click)="imageUpload.click()">
-        <ion-icon name="image-outline"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
-  <input hidden type="file" accept=".png, .jpeg, .jpg" #imageUpload (change)="uploadImage($event)">
 </ion-content>

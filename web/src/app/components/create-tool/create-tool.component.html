@@ -1,0 +1,45 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Create Tool</ion-card-title>
+  </ion-card-header>
+  <ion-card-content class="ion-justify-content-start ion-align-items-center ion-text-center">
+    <ion-grid class="ion-align-items-center ion-text-center ion-justify-content-center">
+      <ion-row class="ion-align-items-center ion-text-center ion-justify-content-center">
+        <ion-col>
+          <ion-item class="ion-align-items-center  ion-justify-content-center">
+            <ion-label position="floating">Tool Name</ion-label>
+            <ion-input [(ngModel)]="toolName"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <br>
+      <ion-row class="ion-align-items-center ion-justify-content-center">
+        <ion-col class="ion-align-items-center ion-justify-content-center">
+          <ion-item>
+            <ion-label>Tool Type</ion-label>
+            <ion-select [(ngModel)]="toolType" placeholder="Select Type">
+              <ion-select-option *ngFor="let toolType of userToolsService.toolTypes$ | async; trackBy: toolTypeTrackFn" value="{{toolType}}">{{toolType}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <br>
+      <ion-row>
+        <ion-col>
+          Upload Tool Class File
+          <ion-input type="file" accept=".dll" (change)="uploadClassFile($event)"></ion-input>
+        </ion-col>
+        <ion-col>
+          Upload Tool Model File
+          <ion-input [disabled]="toolType === 'drawing'" type="file" accept=".onnx" (change)="uploadModel($event)"></ion-input>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <br>
+    <br>
+    <ion-buttons class="ion-text-center ion-align-items-center ion-justify-content-center">
+      <ion-button color="danger" (click)="cancel()">Cancel</ion-button>
+      <ion-button color="success" (click)="createTool()">Confirm</ion-button>
+    </ion-buttons>
+  </ion-card-content>
+</ion-card>

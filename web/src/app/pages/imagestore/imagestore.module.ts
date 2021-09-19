@@ -7,8 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { ImagestorePageRoutingModule } from './imagestore-routing.module';
 
 import { ImagestorePage } from './imagestore.page';
-import {VideostorePageModule} from "../videostore/videostore.module";
-import {CustomComponentsModule} from "../../components/components.module";
+import {VideostorePageModule} from '../videostore/videostore.module';
+import {CustomComponentsModule} from '../../components/components.module';
 
 @NgModule({
   imports: [

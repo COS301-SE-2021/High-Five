@@ -34,4 +34,7 @@
     <string name="video">Video</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="drone">Drone</string>
+    <string name="live_stream">Live Stream</string>
+    <string name="live_analysis">Live Analysis</string>
 </resources>

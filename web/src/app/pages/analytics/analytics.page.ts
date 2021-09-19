@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
 import {ModalController, ToastController} from '@ionic/angular';
 import {AddPipelineComponent} from '../../components/add-pipeline/add-pipeline.component';
 import {PipelineService} from '../../services/pipeline/pipeline.service';
@@ -11,13 +10,8 @@ import {PipelineService} from '../../services/pipeline/pipeline.service';
 })
 export class AnalyticsPage implements OnInit {
 
-  public isDesktop: boolean;
 
-  constructor(private screenSizeService: ScreenSizeServiceService,
-              private toastController: ToastController, private modalController: ModalController, public pipelineService: PipelineService) {
-    this.screenSizeService.isDesktopView().subscribe(isDesktop => {
-      this.isDesktop = isDesktop;
-    });
+  constructor(private toastController: ToastController, private modalController: ModalController, public pipelineService: PipelineService) {
   }
 
   public pipelinesTrackFn = (i, pipeline) => pipeline.id;

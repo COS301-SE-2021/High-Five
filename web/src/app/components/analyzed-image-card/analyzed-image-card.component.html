@@ -1,14 +1,18 @@
 <ion-card>
   <ion-item>
-    <ion-img src="{{analyzedImage.url}}" alt="preview"></ion-img>
   </ion-item>
   <ion-card-content>
+    <img src="{{analyzedImage.url}}" alt="preview">
+
     <ion-card-title class="ion-text-center">
       Analyzed Image
     </ion-card-title>
     <ion-buttons class="ion-justify-content-center">
       <ion-button color="primary" (click)="viewImageFullScreen()">
-        <ion-icon name="expand-outline"  slot="icon-only"></ion-icon>
+        <ion-icon name="expand-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button (click)="onDeleteAnalyzedImage()" color="danger">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-card-content>

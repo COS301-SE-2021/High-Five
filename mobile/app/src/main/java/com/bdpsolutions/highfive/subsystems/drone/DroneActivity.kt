@@ -43,10 +43,38 @@ import java.util.ArrayList
 
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
+import android.os.Bundle
+import com.bdpsolutions.highfive.utils.ConcurrencyExecutor
+import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.disposables.Disposable
+
 
 class DroneActivity : AppCompatActivity() {
     private val TAG: String = DroneActivity::class.java.getName()
     private lateinit var binding: ActivityDroneBinding
+    private var requestType: String? = null
+    private val toastObserver: Observer<String>
+
+    init {
+        toastObserver = object :Observer<String> {
+            override fun onSubscribe(d: Disposable) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onNext(t: String) {
+                showToast(t)
+            }
+
+            override fun onError(e: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onComplete() {
+                TODO("Not yet implemented")
+            }
+
+        }
+    }
 
 
     private var btnLive: ToggleButton? = null
@@ -76,7 +104,7 @@ class DroneActivity : AppCompatActivity() {
     }
     private fun startSDKRegistration() {
         if (isRegistrationInProgress.compareAndSet(false, true)) {
-            AsyncTask.execute {
+            ConcurrencyExecutor.execute {
                 showToast("registering, pls wait...")
                 DJISDKManager.getInstance().registerApp(applicationContext, object : SDKManagerCallback {
                         override fun onRegister(djiError: DJIError) {
@@ -114,16 +142,14 @@ class DroneActivity : AppCompatActivity() {
 
                         override fun onProductChanged(baseProduct: BaseProduct) {}
                         override fun onComponentChange(
-                            componentKey: ComponentKey, oldComponent: BaseComponent,
-                            newComponent: BaseComponent
+                            componentKey: ComponentKey?, oldComponent: BaseComponent?,
+                            newComponent: BaseComponent?
                         ) {
-                            if (newComponent != null) {
-                                newComponent.setComponentListener { isConnected ->
-                                    Log.d(
-                                        TAG,
-                                        "onComponentConnectivityChanged: $isConnected"
-                                    )
-                                }
+                            newComponent?.setComponentListener { isConnected ->
+                                Log.d(
+                                    TAG,
+                                    "onComponentConnectivityChanged: $isConnected"
+                                )
                             }
                             Log.d(
                                 TAG, String.format(
@@ -195,17 +221,20 @@ class DroneActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkAndRequestPermissions()
+        val extras = intent.extras
+        requestType = extras?.getString("requestType")
+
         // When the compile and target version is higher than 22, please request the
         // following permissions at runtime to ensure the
         // SDK work well.
-        var djiStreamer : DjiStreamer = DjiStreamer()
+        val djiStreamer = DjiStreamer(toastObserver)
         binding = ActivityDroneBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // Hiding status bars, since this is the splash screen
         btnLive = binding.toggleLive
         binding.toggleLive.setOnClickListener{
             if(binding.toggleLive.isChecked){
-                djiStreamer.setupLiveStream()
+                djiStreamer.setupLiveStream(requestType)
             }
         }
 

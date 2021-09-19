@@ -99,7 +99,7 @@ namespace tests.IntegrationTests
         public async Task TestGetAllVideos()
         {
             await UploadVideo();
-            var response = await _client.PostAsync("/media/getAllVideos", null!);
+            var response = await _client.GetAsync("/media/getAllVideos");
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var responseObject = JsonConvert.DeserializeObject<GetAllVideosResponse>(responseBody);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -110,7 +110,7 @@ namespace tests.IntegrationTests
         public async Task TestGetAllImages()
         {
             await UploadImage();
-            var response = await _client.PostAsync("/media/getAllImages", null!);
+            var response = await _client.GetAsync("/media/getAllImages");
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var responseObject = JsonConvert.DeserializeObject<GetAllImagesResponse>(responseBody);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -201,7 +201,7 @@ namespace tests.IntegrationTests
             var storeRequest = new MultipartFormDataContent {{streamContent, "file", "MockVideo"}};
             await _client.PostAsync("/media/storeVideo", storeRequest);
             
-            var response = await _client.PostAsync("/media/getAllVideos", null!);
+            var response = await _client.GetAsync("/media/getAllVideos");
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var responseObject = JsonConvert.DeserializeObject<GetAllVideosResponse>(responseBody);
             var validId = responseObject.Videos[0].Id;
@@ -217,7 +217,7 @@ namespace tests.IntegrationTests
             var storeRequest = new MultipartFormDataContent {{streamContent, "file", "MockImage.jpeg"}};
             await _client.PostAsync("/media/storeImage", storeRequest);
             
-            var response = await _client.PostAsync("/media/getAllImages", null!);
+            var response = await _client.GetAsync("/media/getAllImages");
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var responseObject = JsonConvert.DeserializeObject<GetAllImagesResponse>(responseBody);
             var validId = responseObject.Images[0].Id;
