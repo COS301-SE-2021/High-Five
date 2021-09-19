@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
+using System.Net.Sockets;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Accord.Math;
 using AzureFunctionsToolkit.Portable.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Org.OpenAPITools.Models;
-using src.AnalysisTools;
-using src.AnalysisTools.VideoDecoder;
 using src.Storage;
+using src.Subsystems.Livestreaming;
 using src.Subsystems.MediaStorage;
 using src.Subsystems.Pipelines;
 using src.Websockets;
@@ -39,17 +38,22 @@ namespace src.Subsystems.Analysis
         private readonly IMediaStorageService _mediaStorageService;
         private readonly IPipelineService _pipelineService;
         private readonly IConfiguration _configuration;
-        private readonly IWebSocketClient _analysisSocket;
+        public readonly IWebSocketClient AnalysisSocket;
+        private readonly ILivestreamingService _livestreamingService;
+        private string _brokerToken;
+        private string _userId;
+        private bool _brokerConnection;
 
         public AnalysisService(IStorageManager storageManager, IMediaStorageService mediaStorageService,
-            IPipelineService pipelineService, IConfiguration configuration)
+            IPipelineService pipelineService, IConfiguration configuration, ILivestreamingService livestreamingService)
         {
             _storageManager = storageManager;
             _mediaStorageService = mediaStorageService;
+            _livestreamingService = livestreamingService;
             _pipelineService = pipelineService;
             _configuration = configuration;
-            _analysisSocket = new WebSocketClient();
-            _analysisSocket.Connect(_configuration["BrokerUri"]);
+            AnalysisSocket = new WebSocketClient();
+            _brokerConnection = false;
         }
 
         public async Task<AnalyzedImageMetaData> AnalyzeImage(SocketRequest fullRequest)
@@ -70,8 +74,8 @@ namespace src.Subsystems.Analysis
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/image";
             const string fileExtension = ".img";
-            var analyzedMediaName = _storageManager.HashMd5(request.ImageId + "|" + string.Join(",",analysisPipeline.Tools)) + fileExtension;
-            var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
+            var analyzedMediaName = _storageManager.HashMd5(request.ImageId + "|" + analysisPipeline.Id);
+            var testFile = _storageManager.GetFile(analyzedMediaName+ fileExtension, storageContainer).Result;
             var response = new AnalyzedImageMetaData
             {
                 ImageId = request.ImageId,
@@ -86,22 +90,12 @@ namespace src.Subsystems.Analysis
                 return response;
             }
 
-            await _analysisSocket.Send(JsonConvert.SerializeObject(fullRequest));
-            var responseString = _analysisSocket.Receive().Result;
+            var brokerRequest = new BrokerSocketRequest(fullRequest, _userId) {Authorization = _brokerToken};
+            await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
+            var responseString = AnalysisSocket.Receive().Result;
             response = JsonConvert.DeserializeObject<AnalyzedImageMetaData>(responseString);
 
             return response;
-            
-            /*var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
-            analyzedFile.AddMetadata("imageId", request.ImageId);
-            analyzedFile.AddMetadata("pipelineId", request.PipelineId);
-            const string contentType = "image/jpg";
-            await analyzedFile.UploadFileFromByteArray(analyzedImageData, contentType);
-
-            if (analyzedFile.Properties.LastModified != null)
-                response.DateAnalyzed = analyzedFile.Properties.LastModified.Value.DateTime;
-            response.Id = analyzedMediaName.Replace(fileExtension, "");
-            response.Url = analyzedFile.GetUrl();*/
         }
 
         public async Task<AnalyzedVideoMetaData> AnalyzeVideo(SocketRequest fullRequest)
@@ -121,7 +115,7 @@ namespace src.Subsystems.Analysis
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/video";
             const string fileExtension = ".mp4";
-            var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + string.Join(",",analysisPipeline.Tools)) + fileExtension;
+            var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + request.PipelineId) + fileExtension;
             var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
             var response = new AnalyzedVideoMetaData
             {
@@ -139,40 +133,12 @@ namespace src.Subsystems.Analysis
                 return response;
             }
             
-            await _analysisSocket.Send(JsonConvert.SerializeObject(fullRequest));
-            var responseString = _analysisSocket.Receive().Result;
+            var brokerRequest = new BrokerSocketRequest(fullRequest, _userId) {Authorization = _brokerToken};
+            await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
+            var responseString = AnalysisSocket.Receive().Result;
             response = JsonConvert.DeserializeObject<AnalyzedVideoMetaData>(responseString);
             
             return response;
-            
-            /*rawVideoStream.Seek(0, SeekOrigin.Begin);
-            watch.Reset();
-            watch.Start();
-            var analyzedVideoData = _videoDecoder.EncodeVideoFromFrames(analyzedFrameData, rawVideoStream);
-            watch.Stop();
-            Console.WriteLine("Convert from frames to video: " + watch.ElapsedMilliseconds + "ms");
-
-            watch.Reset();
-            watch.Start();
-            //create thumbnail from analyzed video
-            var thumbnail =
-                _storageManager.CreateNewFile(analyzedMediaName.Replace(fileExtension, "") + "-thumbnail.jpg",
-                    storageContainer).Result;
-            await thumbnail.UploadFileFromByteArray(analyzedFrameData[0], "image/jpg");//uploads synchronously
-
-            var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
-            analyzedFile.AddMetadata("videoId", request.VideoId);
-            analyzedFile.AddMetadata("pipelineId", request.PipelineId);
-            const string contentType = "video/mp4";
-            await analyzedFile.UploadFileFromByteArray(analyzedVideoData, contentType);
-            watch.Stop();
-            Console.WriteLine("Store video & thumbnail to cloud: " + watch.ElapsedMilliseconds + " ms");
-
-            if (analyzedFile.Properties.LastModified != null)
-                response.DateAnalyzed = analyzedFile.Properties.LastModified.Value.DateTime;
-            response.Id = analyzedMediaName.Replace(fileExtension, "");
-            response.Url = analyzedFile.GetUrl();
-            response.Thumbnail = thumbnail.GetUrl();*/
         }
 
         public void SetBaseContainer(string containerName)
@@ -195,10 +161,12 @@ namespace src.Subsystems.Analysis
             _mediaStorageService.SetBaseContainer(containerName);
         }
 
-        public GetLiveAnalysisTokenResponse GetLiveAnalysisToken(string userId)
+        public void SetBrokerToken(string userId)
         {
-            var key = _configuration["JWTSecret"];
-            const string issuer = "localhost:5001";//TODO: change this to analysis engine server ip
+            _userId = userId;
+            ConnectToBroker();
+            var key = _configuration["BrokerJWTSecret"];
+            const string issuer = "https://high5api.azurewebsites.net";
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));    
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
@@ -212,31 +180,91 @@ namespace src.Subsystems.Analysis
                 permClaims,    
                 expires: DateTime.Now.AddDays(1),    
                 signingCredentials: credentials);    
-            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token); 
-            
-            //TODO: Send token over socket to analysis engine
-            return new GetLiveAnalysisTokenResponse {Token = jwtToken};
+            _brokerToken = new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-    }
-}
-
-/*
- * -----------------------------------LEGACY ANALYSIS FUNCTIONS-------------------------------
- *
- *   public async Task<AnalyzedImageMetaData> AnalyzeImage(AnalyzeImageRequest request)
+        public void CloseBrokerSocket()
         {
+            AnalysisSocket.Close();
+        }
+
+        public async Task<bool> StartLiveAnalysis(string userId)
+        {
+            await _livestreamingService.AuthenticateUser();
+            var appName = _livestreamingService.CreateApplication(userId).Result;
+            await _livestreamingService.UpdateApplicationSettings(appName);
+            var droneStreamingId = _livestreamingService.CreateStreamingUrl(appName).Result;
+            var dronePublishToken = _livestreamingService.CreateOneTimeToken(appName, droneStreamingId, "publish").Result;
+            var dronePlayToken = _livestreamingService.CreateOneTimeToken(appName, droneStreamingId, "play").Result;
+
+            var analysedStreamId = _livestreamingService.CreateStreamingUrl(appName).Result;
+            var analysedStreamPublishToken = _livestreamingService.CreateOneTimeToken(appName, analysedStreamId, "publish").Result;
+            var response = new LiveAnalysisLinks
+            {
+                PublishLinkDrone = _configuration["LivestreamUri"].Replace("https", "rtmp") +
+                                   "/" + appName + "/" + droneStreamingId + "?token=" + dronePublishToken,
+                PlayLinkAnalysisEngine = _configuration["LivestreamUri"] + ":5443/" + appName + "/play.html?name=" +
+                                         droneStreamingId + "&token=" + dronePlayToken,
+                PublishLinkAnalysisEngine = _configuration["LivestreamUri"].Replace("https", "rtmp") +
+                                            "/" + appName + "/" + analysedStreamId + "?token=" + analysedStreamPublishToken,
+                StreamId = analysedStreamId
+            };
+            
+            var brokerRequest = new BrokerSocketRequest
+            {
+                Authorization = _brokerToken,
+                UserId = _userId,
+                Request = "StartLiveAnalysis",
+                Body = response
+            };
+            await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
+            var socketResponse = AnalysisSocket.Receive().Result;
+            return true;
+        }
+
+        public async Task<string> StartLiveStream(string userId)
+        {
+            await _livestreamingService.AuthenticateUser();
+            var appName = _livestreamingService.CreateApplication(userId).Result;
+            await _livestreamingService.UpdateApplicationSettings(appName);
+            var droneStreamingId = _livestreamingService.CreateStreamingUrl(appName).Result;
+            var dronePublishToken = _livestreamingService.CreateOneTimeToken(appName, droneStreamingId, "publish").Result;
+
+            var streamId = _livestreamingService.CreateStreamingUrl(appName).Result;
+            var response = new LiveStreamLinks
+            {
+                PublishLinkDrone = _configuration["LivestreamUri"].Replace("https", "rtmp") +
+                                   "/" + appName + "/" + droneStreamingId + "?token=" + dronePublishToken,
+                StreamId = streamId
+            };
+            
+            var brokerRequest = new BrokerSocketRequest
+            {
+                Authorization = _brokerToken,
+                UserId = _userId,
+                Request = "StartLiveStream",
+                Body = response
+            };
+            await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
+            var socketResponse = AnalysisSocket.Receive().Result;
+            return socketResponse;
+        }
+
+        public async Task<bool> Synchronise(SocketRequest fullRequest)
+        {
+            var request = new AnalyzeImageRequest {ImageId = "", PipelineId = ""};
+            fullRequest.Body = request;
             var pipelineSearchRequest = new GetPipelineRequest {PipelineId = request.PipelineId};
             var analysisPipeline = _pipelineService.GetPipeline(pipelineSearchRequest).Result;
             if (analysisPipeline == null)
             {
-                return null; //invalid pipelineId provided
+                return false; //invalid pipelineId provided
             }
 
             /* First, check if the Media and Pipeline combination has already been analyzed and stored before.
              * If this is the case, no analysis needs to be done. Simply return the already analyzed
              * media
-             
+             */
             
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/image";
@@ -254,130 +282,25 @@ namespace src.Subsystems.Analysis
                     response.DateAnalyzed = testFile.Properties.LastModified.Value.DateTime;
                 response.Id = testFile.Name;
                 response.Url = testFile.GetUrl();
-                return response;
-            }
-            
-            var rawImage = _mediaStorageService.GetImage(request.ImageId);
-            if (rawImage == null)
-            {
-                return null;//Invalid imageId provided
+                return true;
             }
 
-            var rawImageByteArray = rawImage.ToByteArray().Result;
+            var brokerRequest = new BrokerSocketRequest(fullRequest, _userId) {Authorization = _brokerToken};
+            await AnalysisSocket.Send(JsonConvert.SerializeObject(brokerRequest));
+            /*var responseString = AnalysisSocket.Receive().Result;
+            response = JsonConvert.DeserializeObject<AnalyzedImageMetaData>(responseString);*/
 
-            //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
-            var analyser = new AnalyserImpl();
-            analyser.StartAnalysis(analysisPipeline,_analysisModels);
-            analyser.FeedFrame(rawImageByteArray);
-            analyser.EndAnalysis();
-            var analyzedImageData = analyser.GetFrames()[0][0];//TODO add functionality to save multiple images:analyser.GetFrames()[i][0]
-            //---------------------------------------------------------------------------------------
-
-            var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
-            analyzedFile.AddMetadata("imageId", request.ImageId);
-            analyzedFile.AddMetadata("pipelineId", request.PipelineId);
-            const string contentType = "image/jpg";
-            await analyzedFile.UploadFileFromByteArray(analyzedImageData, contentType);
-
-            if (analyzedFile.Properties.LastModified != null)
-                response.DateAnalyzed = analyzedFile.Properties.LastModified.Value.DateTime;
-            response.Id = analyzedMediaName.Replace(fileExtension, "");
-            response.Url = analyzedFile.GetUrl();
-            return response;
+            return true;
         }
 
-        public async Task<AnalyzedVideoMetaData> AnalyzeVideo(AnalyzeVideoRequest request)
+        private void ConnectToBroker()
         {
-            var pipelineSearchRequest = new GetPipelineRequest {PipelineId = request.PipelineId};
-            var analysisPipeline = _pipelineService.GetPipeline(pipelineSearchRequest).Result;
-            if (analysisPipeline == null)
+            if (!_brokerConnection)
             {
-                return null; //invalid pipelineId provided
+                AnalysisSocket.Connect(_configuration["BrokerUri"], _userId);
+                _brokerConnection = true;
             }
-
-            /* First, check if the Media and Pipeline combination has already been analyzed and stored before.
-             * If this is the case, no analysis needs to be done. Simply return the already analyzed
-             * media
-             
-            analysisPipeline.Tools.Sort();
-            const string storageContainer = "analyzed/video";
-            const string fileExtension = ".mp4";
-            var analyzedMediaName = _storageManager.HashMd5(request.VideoId + "|" + string.Join(",",analysisPipeline.Tools)) + fileExtension;
-            var testFile = _storageManager.GetFile(analyzedMediaName, storageContainer).Result;
-            var response = new AnalyzedVideoMetaData
-            {
-                VideoId = request.VideoId,
-                PipelineId = request.PipelineId
-            };
-            if (testFile != null) //This means the media has already been analyzed with this pipeline combination
-            {
-                if (testFile.Properties is {LastModified: { }})
-                    response.DateAnalyzed = testFile.Properties.LastModified.Value.DateTime;
-                response.Id = analyzedMediaName.Replace(fileExtension, "");
-                response.Url = testFile.GetUrl();
-                var thumbnailFile = _storageManager.GetFile(analyzedMediaName.Replace(".mp4", "-thumbnail.jpg"), storageContainer).Result;
-                response.Thumbnail = thumbnailFile.GetUrl();
-                return response;
-            }
-            
-            var rawVideo = _mediaStorageService.GetVideo(request.VideoId);
-            if (rawVideo == null)
-            {
-                return null;//Invalid videoId provided
-            }
-            var rawVideoStream = rawVideo.ToStream().Result;
-            var watch = new Stopwatch();
-            watch.Reset();
-            watch.Start();
-            var frameList = _videoDecoder.GetFramesFromVideo(rawVideoStream);
-            watch.Stop();
-            Console.WriteLine("-------------------------------------------------------------------------");
-            Console.WriteLine("Convert video to frames: " + watch.ElapsedMilliseconds + "ms");
-
-            //-----------------------------ANALYSIS IS DONE HERE HERE--------------------------------
-            var analyser = new AnalyserImpl();
-            watch.Reset();
-            watch.Start();
-            analyser.StartAnalysis(analysisPipeline,_analysisModels);
-            foreach (var frameStream in frameList)
-            {
-                var bytes = ((MemoryStream) frameStream).ToArray();
-                analyser.FeedFrame(bytes);
-            }
-            analyser.EndAnalysis();
-            var analyzedFrameData = analyser.GetFrames()[0];
-            watch.Stop();
-            Console.WriteLine("From StartAnalysis to GetFrames: " + watch.ElapsedMilliseconds + "ms");
-            //---------------------------------------------------------------------------------------
-
-            rawVideoStream.Seek(0, SeekOrigin.Begin);
-            watch.Reset();
-            watch.Start();
-            var analyzedVideoData = _videoDecoder.EncodeVideoFromFrames(analyzedFrameData, rawVideoStream);
-            watch.Stop();
-            Console.WriteLine("Convert from frames to video: " + watch.ElapsedMilliseconds + "ms");
-
-            watch.Reset();
-            watch.Start();
-            //create thumbnail from analyzed video
-            var thumbnail =
-                _storageManager.CreateNewFile(analyzedMediaName.Replace(fileExtension, "") + "-thumbnail.jpg",
-                    storageContainer).Result;
-            await thumbnail.UploadFileFromByteArray(analyzedFrameData[0], "image/jpg");//uploads synchronously
-
-            var analyzedFile = _storageManager.CreateNewFile(analyzedMediaName, storageContainer).Result;
-            analyzedFile.AddMetadata("videoId", request.VideoId);
-            analyzedFile.AddMetadata("pipelineId", request.PipelineId);
-            const string contentType = "video/mp4";
-            await analyzedFile.UploadFileFromByteArray(analyzedVideoData, contentType);
-            watch.Stop();
-            Console.WriteLine("Store video & thumbnail to cloud: " + watch.ElapsedMilliseconds + " ms");
-
-            if (analyzedFile.Properties.LastModified != null)
-                response.DateAnalyzed = analyzedFile.Properties.LastModified.Value.DateTime;
-            response.Id = analyzedMediaName.Replace(fileExtension, "");
-            response.Url = analyzedFile.GetUrl();
-            response.Thumbnail = thumbnail.GetUrl();
-            return response;
         }
- */
+        
+    }
+}

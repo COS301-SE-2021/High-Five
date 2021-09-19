@@ -1,21 +1,15 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using AzureFunctionsToolkit.Portable.Extensions;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using Org.OpenAPITools.Models;
 using src.Subsystems.Analysis;
 
 namespace src.Websockets
@@ -25,11 +19,13 @@ namespace src.Websockets
         private readonly IAnalysisService _analysisService;
         private readonly IConfiguration _configuration;
         private bool _baseContainerSet;
+        private string _userId;
+        private bool _listeningForBroadcast;
 
         public WebsocketController(IAnalysisService analysisService, IConfiguration configuration)
         {
-            _analysisService = analysisService;
             _configuration = configuration;
+            _analysisService = analysisService;
             _baseContainerSet = false;
         }
         
@@ -39,25 +35,32 @@ namespace src.Websockets
             {
                 using var webSocket = await 
                     HttpContext.WebSockets.AcceptWebSocketAsync();
-                await SendMessage("Connected", "You have connected to the socket server.", "info", webSocket);
                 while (webSocket.State == WebSocketState.Open)
                 {
-                    string responseTitle;
-                    string responseBody;
-                    string responseType;
+                    var responseTitle = string.Empty;
+                    var responseBody = string.Empty;
+                    var responseType= string.Empty;
                     try
                     {
                         var request = ReceiveMessage(webSocket).Result;
                         ConfigureStorageManager(request);
+                        if (!_listeningForBroadcast)
+                        {
+                            Task.Run(() => ListenForBrokerMessage(webSocket));
+                            _listeningForBroadcast = true;
+                        }
                         if (request == null)
                         {
-                            await SendMessage("Invalid Format", "Request is not structured correctly.", "error",
+                            await SendMessage("Invalid Format", "Request is null", "error",
                                 webSocket);
-                            continue;
+                            break;
                         }
-
+                        
                         switch (request.Request)
                         {
+                            case "Synchronize":
+                                await SendMessage("Connected", "You have connected to the socket server.", "info", webSocket);
+                                break;
                             case "AnalyzeImage":
                                 var analyzedImage = _analysisService.AnalyzeImage(request).Result;
                                 if (analyzedImage == null)
@@ -68,11 +71,9 @@ namespace src.Websockets
                                 }
                                 else
                                 {
-                                    responseTitle = "Image Analyzed";
-                                    responseBody = JsonConvert.SerializeObject(analyzedImage);
-                                    responseType = "success";
+                                    await SendMessage("Image Analysed", analyzedImage,
+                                        "success", webSocket);
                                 }
-
                                 break;
                             case "AnalyzeVideo":
                                 var analyzedVideo = _analysisService.AnalyzeVideo(request).Result;
@@ -84,11 +85,16 @@ namespace src.Websockets
                                 }
                                 else
                                 {
-                                    responseTitle = "Video Analyzed";
-                                    responseBody = JsonConvert.SerializeObject(analyzedVideo);
-                                    responseType = "success";
+                                    await SendMessage("Video Analysed", analyzedVideo,
+                                        "success", webSocket);
                                 }
-
+                                break;
+                            case "StartLiveStream":   //This use case must be called by the application
+                                var response = _analysisService.StartLiveStream(_userId).Result;
+                                await SendMessage("Publish Link Received", JsonConvert.DeserializeObject(response), "info", webSocket);
+                                break;
+                            case "StartLiveAnalysis":   //This use case must be called by the application
+                                await _analysisService.StartLiveAnalysis(_userId);
                                 break;
                             case "Exit":
                                 await SendMessage("Socket Closed", "Connection to the socket was closed.", "info",
@@ -114,22 +120,33 @@ namespace src.Websockets
                     }
                     catch (Exception e)
                     {
-                        await SendMessage("Internal Error", e.StackTrace, "error", webSocket);
+                        await SendMessage("Internal Error", e.Message, "error", webSocket);
                         continue;
                     }
 
-                    await SendMessage(responseTitle, responseBody, responseType, webSocket);
+                    if (!responseTitle.Equals(string.Empty))// This means an error has occurred
+                    {
+                        await SendMessage(responseTitle, responseBody, responseType, webSocket);
+                    }
                 }
             }
             else
             {
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             }
+            _analysisService.CloseBrokerSocket();
         }
         
         private static async Task SendMessage(string title, string message, string type, WebSocket webSocket)
         {
-            var payload = "{\"title\": \"" + title + "\",\"message\": \"" + message + "\",\"type\": \"" + type + "\"}";
+            var payload = "{\"title\": \"" + title + "\",\"message\": \"" + message.TrimStart('\"').TrimEnd('\"') + "\",\"type\": \"" + type + "\"}";
+            var buffer = Encoding.Default.GetBytes(payload);
+            await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+        }
+
+        private static async Task SendMessage(string title, object message, string type, WebSocket webSocket)
+        {
+            var payload = "{\"title\": \"" + title + "\",\"message\":" + JsonConvert.SerializeObject(message) + ",\"type\": \"" + type + "\"}";
             var buffer = Encoding.Default.GetBytes(payload);
             await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
         }
@@ -149,14 +166,33 @@ namespace src.Websockets
                 return null;
             }
         }
-        
+
+        private async Task ListenForBrokerMessage(WebSocket webClientSocket)
+        {
+            /*
+             * Listens for messages from the Broker.
+             */
+            
+            var socket = new WebSocketClient();
+            await socket.Connect(_configuration["BrokerUri"], _userId);
+            while (webClientSocket.State != WebSocketState.Closed)
+            {
+                var message = socket.Receive().Result;
+                if (!message.Contains("playLink"))
+                {
+                    continue;
+                }
+                await SendMessage("Livestream Started", JsonConvert.DeserializeObject(message) , "info", webClientSocket);
+            }
+            socket.Close();
+        }
+
         private void ConfigureStorageManager(SocketRequest request)
         {
             if (_baseContainerSet)
             {
                 return;
             }
-
             _baseContainerSet = true;
             var tokenString = request.Authorization;
             if (tokenString == null)    //this means a mock instance is currently being run (integration tests)
@@ -175,6 +211,7 @@ namespace src.Websockets
         private async Task<bool> IsJwtValid(JwtSecurityTokenHandler handler, string tokenString)
         {
             var token = handler.ReadJwtToken(tokenString);
+            _userId = token.Subject;
             var iss = token.Issuer;
             var tfp = token.Payload["tfp"].ToString(); // Sign-in policy name
             var metadataEndpoint = $"{iss}.well-known/openid-configuration?p={tfp}";
@@ -206,6 +243,7 @@ namespace src.Websockets
                 return false;
             }
 
+            _analysisService.SetBrokerToken(token.Subject);
             return true;
         }
         

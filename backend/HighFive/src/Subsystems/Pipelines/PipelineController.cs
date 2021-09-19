@@ -70,6 +70,17 @@ namespace src.Subsystems.Pipelines
             return StatusCode(200, response);
         }
 
+        public override IActionResult GetLivePipeline()
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+
+            var response = _pipelineService.GetLivePipeline().Result;
+            return StatusCode(200, response);
+        }
+
         public override IActionResult GetPipeline(GetPipelineRequest request)
         {
             if (!_baseContainerSet)
@@ -115,6 +126,21 @@ namespace src.Subsystems.Pipelines
             response.Success = false;
             response.Message = "Removal of tools from pipeline failed";
             return StatusCode(400, response);
+        }
+
+        public override IActionResult SetLivePipeline(GetPipelineRequest getPipelineRequest)
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            var pipelineSet = _pipelineService.SetLivePipeline(getPipelineRequest).Result;
+            var response = new EmptyObject
+            {
+                Success = pipelineSet,
+                Message = "Live pipeline set."
+            };
+            return StatusCode(200, response);
         }
 
         private void ConfigureStorageManager()

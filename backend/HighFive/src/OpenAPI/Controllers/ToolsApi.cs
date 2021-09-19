@@ -28,6 +28,19 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Approve Tool use case</remarks>
+        /// <param name="reviewToolRequest"></param>
+        /// <response code="200">Tool has been approved by and admin and uploaded</response>
+        [HttpPost]
+        [Route("/tools/approveTool")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult ApproveTool([FromBody]ReviewToolRequest reviewToolRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Create Meta Data Type use case</remarks>
         /// <param name="name"></param>
         /// <param name="file"></param>
@@ -66,6 +79,19 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Get Tool Files use case</remarks>
+        /// <param name="getToolFilesRequest"></param>
+        /// <response code="200">All tool types have been returned</response>
+        [HttpPost]
+        [Route("/tools/getToolFiles")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetToolFilesResponse))]
+        public abstract IActionResult GetToolFiles([FromBody]GetToolFilesRequest getToolFilesRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Get Tool Types use case</remarks>
         /// <response code="200">All tool types have been returned</response>
         [HttpGet]
@@ -88,6 +114,30 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Endpoint for Get Unreviewed Tools use case</remarks>
+        /// <response code="200">Returns all tools that has yet to be reviewed</response>
+        [HttpGet]
+        [Route("/tools/getUnreviewedTools")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(GetUnreviewedToolsResponse))]
+        public abstract IActionResult GetUnreviewedTools();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Endpoint for Reject Tool use case</remarks>
+        /// <param name="reviewToolRequest"></param>
+        /// <response code="200">Tool has been rejected by and admin and removed from storage</response>
+        [HttpPost]
+        [Route("/tools/rejectTool")]
+        [Consumes("application/json")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        public abstract IActionResult RejectTool([FromBody]ReviewToolRequest reviewToolRequest);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Endpoint for Upload Analysis Tool use case</remarks>
         /// <param name="sourceCode"></param>
         /// <param name="model"></param>
@@ -98,7 +148,7 @@ namespace Org.OpenAPITools.Controllers
         [Route("/tools/uploadAnalysisTool")]
         [Consumes("multipart/form-data")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        [ProducesResponseType(statusCode: 200, type: typeof(Tool))]
         public abstract IActionResult UploadAnalysisTool(IFormFile sourceCode, IFormFile model, [FromForm (Name = "metadataType")]string metadataType, [FromForm (Name = "toolName")]string toolName);
 
         /// <summary>
@@ -113,7 +163,7 @@ namespace Org.OpenAPITools.Controllers
         [Route("/tools/uploadDrawingTool")]
         [Consumes("multipart/form-data")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(EmptyObject))]
+        [ProducesResponseType(statusCode: 200, type: typeof(Tool))]
         public abstract IActionResult UploadDrawingTool(IFormFile sourceCode, [FromForm (Name = "metadataType")]string metadataType, [FromForm (Name = "toolName")]string toolName);
     }
 }

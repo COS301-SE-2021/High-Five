@@ -12,7 +12,7 @@ using Xunit;
 
 namespace tests.IntegrationTests
 {
-    [Trait("Category","IntegrationTests")]
+    [Trait("Category","IntegrationTests_WIP")]
     public class PipelinesIntegrationTests
     {
         /*

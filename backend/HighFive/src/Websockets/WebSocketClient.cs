@@ -4,23 +4,32 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
 
 namespace src.Websockets
 {
     public class WebSocketClient: IWebSocketClient
     {
         private ClientWebSocket _socket = null;
+        private static int _id = 0;
+        private int _myId;
 
-        public async Task Connect(string uri)
+        public async Task Connect(string uri, string userId)
         {
             if (_socket == null)
             {
+                _myId = GetId();
                 _socket = new ClientWebSocket();
                 await _socket.ConnectAsync(new Uri(uri), CancellationToken.None);
+                await Send(userId);
+                var ack = Receive().Result;
             }
         }
 
+        private static int GetId()
+        {
+            return _id++;
+        }
+        
         public async Task Send(string data)
         {
             await _socket.SendAsync(Encoding.UTF8.GetBytes(data), WebSocketMessageType.Text, true, CancellationToken.None);
@@ -28,6 +37,10 @@ namespace src.Websockets
 
         public async Task<string> Receive()
         {
+            while (_socket == null)
+            {
+            }
+
             var buffer = new ArraySegment<byte>(new byte[2048]);
             var received = string.Empty;
             while (received == string.Empty)
@@ -53,7 +66,7 @@ namespace src.Websockets
 
         public void Close()
         {
-            _socket.CloseAsync(WebSocketCloseStatus.Empty, "Websocket closed.", CancellationToken.None);
+            _socket.CloseAsync(WebSocketCloseStatus.Empty, null, CancellationToken.None);
         }
     }
 }

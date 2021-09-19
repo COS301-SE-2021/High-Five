@@ -7,8 +7,8 @@ namespace src.Subsystems.Tools
 {
     public interface IToolService
     {
-        public Task<bool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataType, string toolName);
-        public Task<bool> UploadDrawingTool(IFormFile sourceCode, string metadataType, string toolName);
+        public Task<Tool> UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataType, string toolName, string userId);
+        public Task<Tool> UploadDrawingTool(IFormFile sourceCode, string metadataType, string toolName, string userId);
         public Task<bool> DeleteTool(DeleteToolRequest request);
         public List<Tool> GetAllTools();
         public void StoreUserInfo(string id, string displayName, string email);
@@ -16,5 +16,9 @@ namespace src.Subsystems.Tools
         public List<string> GetToolTypes();
         public Task<bool> CreateMetaDataType(IFormFile file, string name);
         public GetToolMetaDataTypes GetMetaDataTypes();
+        public GetToolFilesResponse GetToolFiles(GetToolFilesRequest request);
+        public GetUnreviewedToolsResponse GetUnreviewedTools();
+        public bool RejectToolUploadRequest(ReviewToolRequest request);
+        public bool ApproveToolUploadRequest(ReviewToolRequest request);
     }
 }

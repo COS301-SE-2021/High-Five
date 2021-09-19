@@ -201,7 +201,7 @@ namespace src.Subsystems.MediaStorage
             }
 
             //upload to Azure Blob Storage
-            await imageBlob.UploadFile(image);
+            await imageBlob.UploadFile(image, "image/" + extension);
             var response = new ImageMetaData
             {
                 Id = generatedName,

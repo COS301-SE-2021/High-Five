@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -14,6 +15,7 @@ namespace src.Subsystems.Tools
     {
         private readonly IToolService _toolService;
         private bool _baseContainerSet;
+        private string _userId;
 
         public ToolController(IToolService toolService)
         {
@@ -21,21 +23,30 @@ namespace src.Subsystems.Tools
             _baseContainerSet = false;
         }
 
+        [Authorize(Policy = "Admin")]
+        public override IActionResult ApproveTool(ReviewToolRequest reviewToolRequest)
+        {
+            var status = _toolService.ApproveToolUploadRequest(reviewToolRequest);
+            var response = new EmptyObject {Success = status};
+            return StatusCode(200, response);
+        }
+
         public override IActionResult CreateMetaDataType(string name, IFormFile file)
         {
-            if (!_baseContainerSet)
-            {
-                ConfigureStorageManager();
-            }
-            var response = new EmptyObject
-            {
-                Success = _toolService.CreateMetaDataType(file, name).Result
-            };
-            if (!response.Success)
-            {
-                response.Message = "A metadata object with that name already exists.";
-            }
-            return StatusCode(200, response);
+            return StatusCode(503, null);
+            /* if (!_baseContainerSet)
+             {
+                 ConfigureStorageManager();
+             }
+             var response = new EmptyObject
+             {
+                 Success = _toolService.CreateMetaDataType(file, name).Result
+             };
+             if (!response.Success)
+             {
+                 response.Message = "A metadata object with that name already exists.";
+             }
+             return StatusCode(200, response);*/
         }
 
 
@@ -52,7 +63,6 @@ namespace src.Subsystems.Tools
             {
                 response.Message = "That tool does not exist.";
             }
-
             return StatusCode(200, response);
         }
 
@@ -62,8 +72,26 @@ namespace src.Subsystems.Tools
             {
                 ConfigureStorageManager();
             }
-
             var response = _toolService.GetMetaDataTypes();
+            return StatusCode(200, response);
+        }
+
+        public override IActionResult GetToolFiles(GetToolFilesRequest getToolFilesRequest)
+        {
+            if (!_baseContainerSet)
+            {
+                ConfigureStorageManager();
+            }
+            GetToolFilesResponse response;
+            try
+            {
+                response = _toolService.GetToolFiles(getToolFilesRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(400, null);
+            }
+
             return StatusCode(200, response);
         }
 
@@ -92,19 +120,43 @@ namespace src.Subsystems.Tools
             return StatusCode(200, response);
         }
 
+        [Authorize(Policy = "Admin")]
+        public override IActionResult GetUnreviewedTools()
+        {
+            var response = _toolService.GetUnreviewedTools();
+            return StatusCode(200, response);
+        }
+
+        [Authorize(Policy = "Admin")]
+        public override IActionResult RejectTool(ReviewToolRequest reviewToolRequest)
+        {
+            var status = _toolService.RejectToolUploadRequest(reviewToolRequest);
+            var response = new EmptyObject {Success = status};
+            return StatusCode(200, response);
+        }
+
         public override IActionResult UploadAnalysisTool(IFormFile sourceCode, IFormFile model, string metadataType, string toolName)
         {
             if (!_baseContainerSet)
             {
                 ConfigureStorageManager();
             }
-            var status =_toolService.UploadAnalysisTool(sourceCode, model, metadataType, toolName).Result;
-            var response = new EmptyObject {Success = status};
-            if (!status)
+
+            Tool tool;
+            try
             {
-                response.Message = "A tool with that name already exists.";
+                tool = _toolService.UploadAnalysisTool(sourceCode, model, metadataType, toolName, _userId).Result;
             }
-            return StatusCode(200, response);
+            catch (Exception e)
+            {
+                return StatusCode(400, new EmptyObject {Success = false, Message = "Your uploaded dll has errors."});
+            }
+
+            if (tool == null)
+            {
+                return StatusCode(400, new EmptyObject{Success = false, Message = "A tool with that name already exists."});
+            }
+            return StatusCode(200, tool);
         }
 
         public override IActionResult UploadDrawingTool(IFormFile sourceCode, string metadataType, string toolName)
@@ -113,13 +165,22 @@ namespace src.Subsystems.Tools
             {
                 ConfigureStorageManager();
             }
-            var status =_toolService.UploadDrawingTool(sourceCode, metadataType, toolName).Result;
-            var response = new EmptyObject {Success = status};
-            if (!status)
+
+            Tool tool;
+            try
             {
-                response.Message = "A tool with that name already exists.";
+                tool = _toolService.UploadDrawingTool(sourceCode, metadataType, toolName, _userId).Result;
             }
-            return StatusCode(200, response);
+            catch (Exception e)
+            {
+                return StatusCode(400, new EmptyObject {Success = false, Message = "Your uploaded dll has errors."});
+            }
+
+            if (tool == null)
+            {
+                return StatusCode(400, new EmptyObject{Success = false, Message = "A tool with that name already exists."});
+            }
+            return StatusCode(200, tool);
         }
         
         private void ConfigureStorageManager()
@@ -131,6 +192,7 @@ namespace src.Subsystems.Tools
             }
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = (JwtSecurityToken) handler.ReadToken(tokenString);
+            _userId = jsonToken.Subject;
             var alreadyExisted = _toolService.SetBaseContainer(jsonToken.Subject);
             var id = jsonToken.Subject;
             var displayName = jsonToken.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
