@@ -1,14 +1,14 @@
-<ion-card>
-  <ion-item>
-    <ion-img src="{{image.url}}" alt="{{alt}}"></ion-img>
-  </ion-item>
+<ion-card class="ion-text-center ion-align-items-center ion-justify-content-center">
+<!--  <ion-item class="center ion-justify-content-center ion-align-items-center ion-text-center" style="margin-top: 0; padding-top: 0; top: 0; max-height: 20vh">-->
+<!--  </ion-item>-->
   <ion-card-content>
+    <img  src="{{image.url}}" alt="{{alt}}"/>
     <ion-card-title class="ion-text-center">
       {{image.name}}
     </ion-card-title>
     <ion-buttons class="ion-justify-content-center">
       <ion-button color="primary" (click)="viewImageFullScreen()">
-        <ion-icon name="expand-outline"  slot="icon-only"></ion-icon>
+        <ion-icon name="expand-outline" slot="icon-only"></ion-icon>
       </ion-button>
       <ion-button color="primary" (click)="showAnalyseImagePopover($event)">
         <ion-icon name="eye-outline" slot="icon-only"></ion-icon>
