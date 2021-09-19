@@ -26,9 +26,20 @@ export class AddPipelineComponent implements OnInit {
 
   public async dismiss() {
     const newArr = this.pipelineService.pipelines.map((pipeline: Pipeline) => pipeline.name);
-    if (newArr.filter((value) => value === this.pipelineName).length > 0 || this.pipelineName.replace(/\s/g, '').length <= 0) {
+    if(this.pipelineName.replace(/\s/g, '').length <= 0){
       await this.toastController.create({
-        message: 'Pipelines may not have duplicate names or blank names, please choose another name',
+        message: 'Pipelines may not have blank names, please choose another name',
+        duration: 2000,
+        translucent: true,
+        position: 'bottom'
+      }).then((toast) => {
+        toast.present();
+      });
+      return;
+    }
+    if (newArr.filter((value) => value === this.pipelineName).length > 0 ) {
+      await this.toastController.create({
+        message: 'Pipelines may not have duplicate names, please choose another name',
         duration: 2000,
         translucent: true,
         position: 'bottom'
