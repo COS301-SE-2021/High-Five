@@ -2,13 +2,12 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {Pipeline} from '../../models/pipeline';
 import {PipelinesService} from '../../apis/pipelines.service';
-
+import {SnotifyService} from 'ng-snotify';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PipelineService {
-
   private readonly _pipelines = new BehaviorSubject<Pipeline[]>([]);
   // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly pipelines$ = this._pipelines.asObservable();
@@ -16,7 +15,7 @@ export class PipelineService {
   // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly tools$ = this._tools.asObservable();
 
-  constructor(private pipelinesService: PipelinesService) {
+  constructor(private pipelinesService: PipelinesService, private snotifyService: SnotifyService) {
     this.fetchAllPipelines();
     this.fetchAllTools();
   }
@@ -49,9 +48,16 @@ export class PipelineService {
    */
   async addPipeline(name: string, tools: string[]) {
     try {
-      await this.pipelinesService.createPipeline({pipeline: {name, tools}}).toPromise();
-      await this.fetchAllPipelines();
+      this.pipelinesService.createPipeline({pipeline: {name, tools}}, 'response').subscribe((res) => {
+        if (res.ok) {
+          this.snotifyService.success('Successfully created pipeline', 'Pipeline Creation');
+          this.pipelines = this.pipelines.concat(res.body.pipeline);
+        } else {
+          this.snotifyService.error('Error occurred while creating pipeline, contact an admin', 'Pipeline Creation');
+        }
+      });
     } catch (e) {
+      this.snotifyService.error('Error occurred while creating pipeline, contact an admin', 'Pipeline Creation');
       console.log(e);
     }
   }
@@ -67,8 +73,16 @@ export class PipelineService {
     this.pipelines = this.pipelines.filter(p => p.id !== pipelineId);
     if (serverRemove) {
       try {
-        await this.pipelinesService.deletePipeline({pipelineId}).toPromise();
+        this.pipelinesService.deletePipeline({pipelineId}, 'response').subscribe((res) => {
+          if (res.ok) {
+            this.snotifyService.success('Successfully deleted pipeline : ' + pipeline.name, 'Pipeline Deletion');
+          } else {
+            this.snotifyService.error('Could not delete pipeline : ' + pipeline.name + ' please contact an admin', 'Pipeline Deletion');
+            this.pipelines = [...this.pipelines, pipeline];
+          }
+        });
       } catch (e) {
+        this.snotifyService.error('Could not delete pipeline : ' + pipeline.name + ' please contact an admin', 'Pipeline Deletion');
         console.error(e);
         this.pipelines = [...this.pipelines, pipeline];
       }
@@ -77,10 +91,8 @@ export class PipelineService {
 
   public async addTool(id: string, tools: string[]) {
     const pipeline = this.pipelines.find(p => p.id === id);
-    console.log('Old ');
     if (pipeline) {
       const index = this.pipelines.indexOf(pipeline);
-
       this.pipelines[index] = {
         ...pipeline,
         tools: pipeline.tools.concat(tools)
@@ -89,8 +101,19 @@ export class PipelineService {
       this.pipelines = [...this.pipelines];
 
       try {
-        await this.pipelinesService.addTools({pipelineId: id, tools}).toPromise();
+        this.pipelinesService.addTools({pipelineId: id, tools}, 'response').subscribe((res) => {
+          if (res.ok) {
+            this.snotifyService.success('Successfully added tools : ' + tools, 'Tool Addition');
+          } else {
+            this.snotifyService.error('Could not add tools : ' + tools + ' please contact an admin', 'Tool Addition');
+            this.pipelines[index] = {
+              ...pipeline,
+              tools: pipeline.tools
+            };
+          }
+        });
       } catch (e) {
+        this.snotifyService.error('Could not add tools : ' + tools + ' please contact an admin', 'Tool Addition');
         console.error(e);
         this.pipelines[index] = {
           ...pipeline,
@@ -109,12 +132,21 @@ export class PipelineService {
         ...pipeline,
         tools: pipeline.tools.filter((e) => tools.some((f) => e !== f))
       };
-
       this.pipelines = [...this.pipelines];
-
       try {
-        await this.pipelinesService.removeTools({pipelineId: id, tools}).toPromise();
+        this.pipelinesService.removeTools({pipelineId: id, tools}, 'response').subscribe((res) => {
+          if (res.ok) {
+            this.snotifyService.success('Successfully removed tools : ' + tools, 'Tool Removal');
+          } else {
+            this.snotifyService.error('Could not remove tools : ' + tools + ' please contact an admin', 'Tool Removal');
+            this.pipelines[index] = {
+              ...pipeline,
+              tools: pipeline.tools
+            };
+          }
+        });
       } catch (e) {
+        this.snotifyService.error('Could not remove tools : ' + tools + ' please contact an admin', 'Tool Removal');
         console.error(e);
         this.pipelines[index] = {
           ...pipeline,

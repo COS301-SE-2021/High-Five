@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {AnalyzedVideoMetaData} from '../../models/analyzedVideoMetaData';
 import {VideostreamCardComponent} from '../videostream-card/videostream-card.component';
 import {ModalController} from '@ionic/angular';
+import {AnalyzedVideosService} from '../../services/analyzed-videos/analyzed-videos.service';
 
 @Component({
   selector: 'app-analyzed-videostore-card',
@@ -11,7 +12,7 @@ import {ModalController} from '@ionic/angular';
 export class AnalyzedVideostoreCardComponent implements OnInit {
   @Input() analyzedVideo: AnalyzedVideoMetaData;
 
-  constructor(private modalController: ModalController) {
+  constructor(private modalController: ModalController, private analyzedVideoService: AnalyzedVideosService) {
   }
 
   ngOnInit() {
@@ -31,5 +32,10 @@ export class AnalyzedVideostoreCardComponent implements OnInit {
     });
     videoModal.style.backgroundColor = 'rgba(0,0,0,0.85)'; //make the background for the modal darker.
     await videoModal.present();
+  }
+
+
+  public async onDeleteAnalyzedVideo() {
+    await this.analyzedVideoService.deleteAnalyzedVideo(this.analyzedVideo.id);
   }
 }

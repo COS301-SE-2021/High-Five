@@ -1,47 +1,40 @@
 
-<ion-tabs *ngIf="!isDesktop">
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="landing">
-      <ion-icon name="home-outline"></ion-icon>
-    </ion-tab-button>
-    <ion-tab-button tab="controls">
-      <ion-icon name="game-controller-outline"></ion-icon>
-    </ion-tab-button>
-    <ion-tab-button tab="analytics">
-      <ion-icon name="stats-chart-outline"></ion-icon>
-    </ion-tab-button>
-    <ion-tab-button tab="videos">
-      <ion-icon name="videocam-outline"></ion-icon>
-    </ion-tab-button>
-  </ion-tab-bar>
-</ion-tabs>
-
-<div *ngIf="isDesktop" class="desktop">
   <ion-header>
-    <ion-toolbar >
+    <ion-toolbar>
       <ion-row class="ion-align-items-center">
         <ion-col size="2">
           <img alt="" src="assets/logos/logo2_2.svg" class="logo ion-text-left">
         </ion-col>
-        <ion-col size="8">
+        <ion-col size="9">
           <div class="ion-text-left desktop-navbar">
-            <ion-button (click)="navigateTo('navbar/landing', 'homeNav')" #homeNav fill="clear" [class]="homeLink[0]">Home</ion-button>
-            <ion-button (click)="navigateTo('navbar/analytics', 'analyticsNav')" #analyticsNav fill="clear" [class]="analyticsLink[0]">Analytics</ion-button>
-            <ion-button (click)="displayMediaPopover($event)" fill="clear" [class]="mediaLink[0]">Media</ion-button>
-            <ion-button (click)="navigateTo('navbar/live', 'liveNav')" #analyticsNav fill="clear" [class]="liveLink[0]">Live</ion-button>
-            <ion-button *ngIf="!isDesktop"  (click)="navigateTo('navbar/controls', 'controlsNav')" #controlsNav fill="clear" [class]="controlsLink[0]">Controls</ion-button>
+            <ion-button fill="clear" routerLink="/navbar/landing" routerDirection="root" class="link"
+                        routerLinkActive="active-link">
+              Home
+            </ion-button>
+            <ion-button fill="clear" routerLink="/navbar/analytics" routerDirection="root" class="link"
+                        routerLinkActive="active-link">Pipelines
+            </ion-button>
+            <ion-button routerDirection="root" routerLink="/navbar/media" class="link" routerLinkActive="active-link" fill="clear">Media</ion-button>
+            <ion-button routerDirection="root" routerLink="/navbar/live" class="link" routerLinkActive="active-link" fill="clear">Live</ion-button>
           </div>
         </ion-col>
-        <ion-col>
-          <ion-button fill="clear" (click)="logout()">Logout</ion-button>
+        <ion-col size="1" id="accountCol">
+          <ion-avatar id="accountAvatar" (click)="displayAccountPopover($event)">
+            <lord-icon id="accountIcon"
+                       src="https://cdn.lordicon.com/dxjqoygy.json"
+                       trigger="hover"
+                       colors="primary:#00000,secondary:#259ad0"
+                       style="width:auto;height:100%;"
+                       aria-label="account-menu">
+            </lord-icon>
+          </ion-avatar>
         </ion-col>
       </ion-row>
     </ion-toolbar>
   </ion-header>
-</div>
-<ion-content *ngIf="isDesktop" >
-  <ion-router-outlet class="desktop-wrapper" ></ion-router-outlet>
+<ion-content >
+  <ion-router-outlet class="desktop-wrapper"></ion-router-outlet>
 </ion-content>
-<ion-footer *ngIf="isDesktop">
+<ion-footer>
 
 </ion-footer>

@@ -9,7 +9,9 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import {FileDownload} from './fileDownload';
 
-export interface RetrieveVideosResponse {
-    fileName?: string;
+export interface GetToolFilesResponse {
+  toolSourceCode?: FileDownload;
+  model?: FileDownload;
 }

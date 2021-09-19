@@ -19,6 +19,11 @@ const routes: Routes = [
     loadChildren: () => import('./pages/navbar/navbar.module').then(m => m.NavbarPageModule),
     canLoad: [MsalGuard]
   },
+  {
+    path: 'media',
+    loadChildren: () => import('./pages/media/media.module').then( m => m.MediaPageModule)
+  },
+
 
 ];
 const isIframe = window !== window.parent && !window.opener;

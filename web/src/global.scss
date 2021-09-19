@@ -25,7 +25,65 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 @import '~swiper/swiper-bundle';
+/**
+ When deploying, the custom style from the custom ng-snotify library will be used, if not, the dark style is used
+ */
+//@import "~ng-snotify/styles/custom"; <- The custom style
+@import "~ng-snotify/styles/dark";
+//.modal-wrapper {
+//  background: transparent !important;
+//}
 
-.modal-wrapper{
-  background: transparent !important;
+
+.accountPreferencesModal {
+  app-account{
+    width: 99%;
+  }
+  .modal-wrapper {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+    justify-items: center;
+    justify-content: center;
+    text-align: center;
+    align-content: center;
+    align-items: center;
+  }
+}
+
+.moreInfoModal{
+  .modal-wrapper{
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+    justify-items: center;
+    justify-content: center;
+    text-align: center;
+    align-content: center;
+    align-items: center;
+  }
+}
+.add-pipeline-modal{
+  .modal-wrapper{
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+  }
+}
+
+.accountOptionsPopover {
+  app-account-popover{
+    width: 100%;
+  }
+  .popover-content {
+    background:rgba(255,255,255);
+    --max-width: 8vw;
+  }
+}
+
+.navBarMediaPopover {
+  app-navbar-media-popover {
+    width: 100%;
+  }
+  .popover-content {
+    background:rgba(255,255,255);
+    --max-width: 10vw;
+  }
 }

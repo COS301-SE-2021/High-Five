@@ -1,8 +1,6 @@
 <ion-card>
-  <ion-item class="ion-justify-content-center ion-align-items-center">
-    <ion-img src="{{video.thumbnail}}" alt="preview"></ion-img>
-  </ion-item>
   <ion-card-content>
+    <img src="{{video.thumbnail}}" alt="preview"/>
     <ion-card-title class="ion-text-center">
       {{video.name}}
     </ion-card-title>
@@ -21,5 +19,6 @@
       </ion-button>
     </ion-buttons>
   </ion-card-content>
+<!--  <ion-progress-bar color="tertiary" [value]="0.20"></ion-progress-bar>-->
 </ion-card>
 

@@ -1,9 +1,9 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {LoadingController, Platform} from '@ionic/angular';
-import {ScreenSizeServiceService} from './services/screen-size-service.service';
 import {MsalService} from '@azure/msal-angular';
 import {NavigationEnd, NavigationStart, Router, RouterEvent} from '@angular/router';
 import {environment} from '../environments/environment';
+import {SnotifyPosition, SnotifyService} from 'ng-snotify';
 
 @Component({
   selector: 'app-root',
@@ -14,9 +14,19 @@ export class AppComponent implements OnInit {
   public isIframe = false;
   private loading;
 
-  constructor(private platform: Platform, private screenSizeService: ScreenSizeServiceService, private msalService: MsalService,
-              private router: Router, private loadingController: LoadingController) {
-    this.initializeApp();
+  constructor(private platform: Platform, private msalService: MsalService,
+              private router: Router, private loadingController: LoadingController, private snotifyService: SnotifyService) {
+    this.snotifyService.setDefaults({
+      toast: {
+        timeout: 3000,
+        bodyMaxLength: 200,
+        titleMaxLength: 50,
+        position: SnotifyPosition.leftBottom
+      },
+      global: {
+        maxOnScreen: 5
+      }
+    });
     this.loadingController.create({
       animated: true,
       spinner: 'circles',
@@ -39,18 +49,6 @@ export class AppComponent implements OnInit {
 
   }
 
-  //TODO : Look into better way to change platform, other than resizing
-  //Source for idea : https://youtu.be/FVwuCO5vJxI
-  @HostListener('window:resize', ['$event'])
-  private onResize(event) {
-    this.screenSizeService.onResize(event.target.innerWidth);
-  }
-
-  initializeApp() {
-    this.platform.ready().then(() => {
-      this.screenSizeService.onPlatformChange(this.platform);
-    });
-  }
 
   ngOnInit(): void {
     this.isIframe = window !== window.parent && !window.opener;
@@ -63,7 +61,6 @@ export class AppComponent implements OnInit {
         if (res != null && res.account != null) {
           this.loading.present();
           this.msalService.instance.setActiveAccount(res.account);
-          localStorage.setItem('jwt', res.idToken);
           if (!environment.production) {
             console.log(res);
           }

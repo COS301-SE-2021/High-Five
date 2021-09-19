@@ -1,14 +1,17 @@
 <ion-card>
   <ion-item>
-    <ion-img src="{{analyzedVideo.url}}" alt="preview"></ion-img>
   </ion-item>
   <ion-card-content>
+    <img src="{{analyzedVideo.thumbnail}}" alt="preview">
     <ion-card-title class="ion-text-center">
       Analyzed Video
     </ion-card-title>
     <ion-buttons class="ion-justify-content-center">
       <ion-button color="primary" (click)="playVideo()">
         <ion-icon name="play-outline"  slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button (click)="onDeleteAnalyzedVideo()" color="danger">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-card-content>

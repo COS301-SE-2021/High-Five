@@ -3,6 +3,7 @@ import {ModalController, PopoverController, ToastController} from '@ionic/angula
 import {AddItemComponent} from '../add-item/add-item.component';
 import {PipelineService} from '../../services/pipeline/pipeline.service';
 import {Pipeline} from '../../models/pipeline';
+import {UserToolsService} from '../../services/user-tools/user-tools.service';
 
 @Component({
   selector: 'app-add-pipeline',
@@ -18,7 +19,8 @@ export class AddPipelineComponent implements OnInit {
   tools: string[] = [];
 
   constructor(private modalController: ModalController, private popoverController: PopoverController,
-              public pipelineService: PipelineService, private toastController: ToastController) {
+              public pipelineService: PipelineService, private toastController: ToastController,
+              private userToolsService: UserToolsService) {
     // Nothing added here
   }
 
@@ -35,8 +37,32 @@ export class AddPipelineComponent implements OnInit {
       });
       await this.modalController.dismiss();
     } else {
-      await this.pipelineService.addPipeline(this.pipelineName, this.tools);
-      await this.modalController.dismiss();
+      if(this.tools.length>0){
+        if (this.userToolsService.drawingToolCount([this.tools[this.tools.length - 1]])>0) {
+          await this.pipelineService.addPipeline(this.pipelineName, this.tools);
+          await this.modalController.dismiss();
+        } else {
+          await this.toastController.create({
+            message: `A pipeline's last tool must be a drawing tool`,
+            duration: 2000,
+            translucent: true,
+            position: 'bottom'
+          }).then((toast) => {
+            toast.present();
+          });
+        }
+      }else{
+        await this.toastController.create({
+          message: `A pipeline must have at least one tool`,
+          duration: 2000,
+          translucent: true,
+          position: 'bottom'
+        }).then((toast) => {
+          toast.present();
+        });
+      }
+
+
     }
 
   }
@@ -54,7 +80,8 @@ export class AddPipelineComponent implements OnInit {
       event: ev,
       translucent: true,
       componentProps: {
-        availableItems: this.pipelineService.tools.filter(tool => !this.tools.includes(tool))
+        // eslint-disable-next-line max-len
+        availableItems: this.userToolsService.userTools.filter(t => t.isApproved).map(t => t.toolName).filter(tool => !this.tools.includes(tool))
       }
     });
     await addToolPopover.present();
@@ -84,4 +111,7 @@ export class AddPipelineComponent implements OnInit {
   public removeTool(tool: string) {
     this.tools = this.tools.filter(t => t !== tool);
   }
+
+
 }
+
