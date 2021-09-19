@@ -40,7 +40,9 @@ public class LiveAnalysisStrategy implements AnalysisStrategy{
 
             //Create new command
             LiveAnalysisRequestBody body = (LiveAnalysisRequestBody) request.getBody();
-            LiveAnalysisCommandBody commandBody = new LiveAnalysisCommandBody("http://192.168.11.153:5080/" + handler.getUserId(connectionId).replace("-","") + "/streams/" + body.getStreamId() + ".m3u8");
+            String playLink = "https://highfiveanalysis.ddns.net:5443/" + handler.getUserId(connectionId).replace("-","") + "/streams/" + body.getStreamId() + ".m3u8";
+            EventLogger.getLogger().info(playLink);
+            LiveAnalysisCommandBody commandBody = new LiveAnalysisCommandBody(playLink);
             AnalysisCommand commandString = new AnalysisCommand(request.getRequestType(), request.getUserId(), commandBody);
             EventLogger.getLogger().info("Sending command to server " + info.getServerId());
 
@@ -48,7 +50,7 @@ public class LiveAnalysisStrategy implements AnalysisStrategy{
             ProducerRecord<String, String> commandToSend = new ProducerRecord<>(info.getServerId(), 1, "Analyze", commandString.toString());
             producer.send(commandToSend);
             producer.close();
-            droneString = "{\"status\":\"success\",\"playLink\":\"" + body.getPublishLinkDrone() + "\",\"streamId\":\"" + body.getStreamId() +  "\"}";
+            droneString = "{\"status\":\"success\",\"playLink\":\"rtmp://192.168.11.153:1935/live/analysis\",\"streamId\":\"" + body.getStreamId() +  "\"}";
             infoString = "{\"status\":\"success\",\"streamId\":\"" + body.getStreamId() + "\",\"playLink\":\"none\"}";
         }
 
@@ -57,7 +59,7 @@ public class LiveAnalysisStrategy implements AnalysisStrategy{
         ResponseObject droneResponse = new ResponseObject("DroneResponse", userId, droneString, connectionId);
         if (infoString != null) {
             ResponseObject webResponse = new ResponseObject(request.getRequestType(), userId, infoString, connectionId);
-            handler.onNext(webResponse);
+            //handler.onNext(webResponse);
         }
         handler.onNext(droneResponse);
     }

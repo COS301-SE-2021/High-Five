@@ -128,7 +128,7 @@ public class ClientParticipant extends WebClient{
                         new LiveAnalysisStrategy().processRequest(request, informationHolder, connectionHandler, connection.getConnectionId());
                     } else {
                         EventLogger.getLogger().info("Performing live stream request");
-                        new LiveAnalysisStrategy().processRequest(request, informationHolder, connectionHandler, connection.getConnectionId());
+                        new LiveStreamStrategy().processRequest(request, informationHolder, connectionHandler, connection.getConnectionId());
                     }
 
                 } catch (Exception e) {
