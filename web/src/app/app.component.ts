@@ -1,6 +1,5 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {LoadingController, Platform} from '@ionic/angular';
-import {ScreenSizeServiceService} from './services/screen-size-service.service';
 import {MsalService} from '@azure/msal-angular';
 import {NavigationEnd, NavigationStart, Router, RouterEvent} from '@angular/router';
 import {environment} from '../environments/environment';
@@ -15,9 +14,8 @@ export class AppComponent implements OnInit {
   public isIframe = false;
   private loading;
 
-  constructor(private platform: Platform, private screenSizeService: ScreenSizeServiceService, private msalService: MsalService,
+  constructor(private platform: Platform, private msalService: MsalService,
               private router: Router, private loadingController: LoadingController, private snotifyService: SnotifyService) {
-    this.initializeApp();
     this.snotifyService.setDefaults({
       toast: {
         timeout: 3000,
@@ -51,17 +49,6 @@ export class AppComponent implements OnInit {
 
   }
 
-  //Source for idea : https://youtu.be/FVwuCO5vJxI
-  @HostListener('window:resize', ['$event'])
-  private onResize(event) {
-    this.screenSizeService.onResize(event.target.innerWidth);
-  }
-
-  initializeApp() {
-    this.platform.ready().then(() => {
-      this.screenSizeService.onPlatformChange(this.platform);
-    });
-  }
 
   ngOnInit(): void {
     this.isIframe = window !== window.parent && !window.opener;

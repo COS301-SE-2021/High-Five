@@ -1,21 +1,4 @@
-<ion-tabs *ngIf="!isDesktop">
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="landing">
-      <ion-icon name="home-outline"></ion-icon>
-    </ion-tab-button>
-    <ion-tab-button tab="controls">
-      <ion-icon name="game-controller-outline"></ion-icon>
-    </ion-tab-button>
-    <ion-tab-button tab="analytics">
-      <ion-icon name="stats-chart-outline"></ion-icon>
-    </ion-tab-button>
-    <ion-tab-button tab="videos">
-      <ion-icon name="videocam-outline"></ion-icon>
-    </ion-tab-button>
-  </ion-tab-bar>
-</ion-tabs>
 
-<div *ngIf="isDesktop" class="desktop">
   <ion-header>
     <ion-toolbar>
       <ion-row class="ion-align-items-center">
@@ -49,10 +32,9 @@
       </ion-row>
     </ion-toolbar>
   </ion-header>
-</div>
-<ion-content *ngIf="isDesktop">
+<ion-content >
   <ion-router-outlet class="desktop-wrapper"></ion-router-outlet>
 </ion-content>
-<ion-footer *ngIf="isDesktop">
+<ion-footer>
 
 </ion-footer>

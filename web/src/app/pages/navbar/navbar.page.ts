@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {ScreenSizeServiceService} from '../../services/screen-size-service.service';
 import {Router} from '@angular/router';
 import {MsalService} from '@azure/msal-angular';
 import {PopoverController} from '@ionic/angular';
@@ -22,14 +21,10 @@ const oauthConfig: AuthConfig = {
   styleUrls: ['./navbar.page.scss'],
 })
 export class NavbarPage implements OnInit {
-  isDesktop: boolean;
 
-  constructor(private screenSizeService: ScreenSizeServiceService, private router: Router,
+  constructor(private router: Router,
               private msalService: MsalService, private popoverController: PopoverController,
               private oauthService: OAuthService) {
-    this.screenSizeService.isDesktopView().subscribe(isDesktop => {
-      this.isDesktop = isDesktop;
-    });
     this.oauthService.configure(oauthConfig);
     this.oauthService.loadDiscoveryDocument(environment.oauthConfig.discoveryDoc);
 
