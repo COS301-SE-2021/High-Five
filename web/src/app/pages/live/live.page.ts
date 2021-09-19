@@ -23,13 +23,10 @@ export class LivePage implements OnInit, OnDestroy {
 
   constructor(public liveStreamingService: LiveStreamingService, public userPreferencesService: UserPreferencesService,
               private popoverController: PopoverController, public pipelineService: PipelineService) {
-    this.liveStreamingService.streams=[];
-  }
-
-  ngOnInit() {
-    this.liveStreamingService.streams=[];
     this.liveStreamingService.fetchAll();
   }
+
+  ngOnInit() {}
 
 
   public async displaySelectPipelinePopover(ev: any) {
@@ -57,8 +54,6 @@ export class LivePage implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {
-    this.liveStreamingService.streams = [];
-  }
+  ngOnDestroy(): void {}
 
 }

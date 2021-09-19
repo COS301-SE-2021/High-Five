@@ -88,7 +88,9 @@ export class WebsocketService {
         // @ts-ignore
         // this.liveStreamingService.addStream({streamId: msg.message.streamId, oneTimeToken: null, baseUrl: null}).then((r) => {
         // @ts-ignore
-        this.ngSnotify.info('Live Stream Started, refresh the live page', 'Live Stream Started');
+        this.liveStreamingService.fetchAll().then(() => {
+          this.ngSnotify.info('Live Stream Started, refresh the live page', 'Live Stream Started');
+        });
       } else {
         // @ts-ignore
         this.ngSnotify.info(msg.message, msg.title);
