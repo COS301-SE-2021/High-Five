@@ -3,6 +3,7 @@ import {MsalService} from '@azure/msal-angular';
 import {Router} from '@angular/router';
 import {ModalController} from '@ionic/angular';
 import {AccountComponent} from '../account/account.component';
+import {UserToolsService} from '../../services/user-tools/user-tools.service';
 
 @Component({
   selector: 'app-account-popover',
@@ -11,13 +12,15 @@ import {AccountComponent} from '../account/account.component';
 })
 export class AccountPopoverComponent implements OnInit {
 
-  constructor(private msalService: MsalService, private router: Router, private modalController: ModalController) {
+  constructor(private msalService: MsalService, private router: Router, private modalController: ModalController,
+              private userToolsService: UserToolsService) {
   }
 
   @Input() onClick = () => {
   };
 
   ngOnInit() {
+    this.userToolsService.fetchAllTools();
   }
 
   public logout() {
