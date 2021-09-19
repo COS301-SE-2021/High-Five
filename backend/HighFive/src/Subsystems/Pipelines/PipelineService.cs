@@ -362,7 +362,7 @@ namespace src.Subsystems.Pipelines
                 "PeopleRecognition" => "D0",
                 "AnimalRecognition" => "D1",
                 "VehicleRecognition" => "D2",
-                "FastVehicleRecognition" => "D3",
+                "FastObjectRecognition" => "D3",
                 "BoxDrawingTool" => "D4",
                 _ => FindToolByName(toolName)
             };
