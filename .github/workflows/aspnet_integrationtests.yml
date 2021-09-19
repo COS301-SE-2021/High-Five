@@ -24,10 +24,10 @@ jobs:
           dotnet-version: 5.x
           
       - name: Build
-        working-directory: ./backend/HighFive
+        working-directory: ./backend/HighFive/src
         run: dotnet build
         #Note to developer, this --no-restore flag was added later and might cause problems.
           
       - name: Run dotnet unit tests
-        working-directory: ./backend/HighFive
+        working-directory: ./backend/HighFive/src
         run: dotnet test --filter Category=IntegrationTests
