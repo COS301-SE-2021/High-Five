@@ -59,6 +59,7 @@ public class ClientParticipant extends WebClient{
                 String requestData = reader.readLine();
 
                 if (requestData == null) {
+                    Thread.sleep(1000L);
                     continue;
                 }
 
@@ -116,6 +117,7 @@ public class ClientParticipant extends WebClient{
                         EventLogger.getLogger().info("Synchronising with client " + connection.getUserId());
                         ResponseObject responseObject = new ResponseObject("none", null, "ACK", connection.getConnectionId());
                         connectionHandler.onNext(responseObject);
+                        Thread.sleep(1000);
                         continue;
                     }
 
@@ -154,6 +156,7 @@ public class ClientParticipant extends WebClient{
                 connectionHandler.removeConnection(connection.getConnectionId());
                 return;
             }
+            Thread.sleep(1000);
         }
     }
 }
