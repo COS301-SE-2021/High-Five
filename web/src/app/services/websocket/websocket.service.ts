@@ -37,7 +37,7 @@ export class WebsocketService {
   }
 
   public sendMessage(message: JsonObject) {
-    message.Authorization = JSON.parse(sessionStorage.getItem(sessionStorage.key(0))).secret;
+    message.Authorization = sessionStorage.getItem('jwt');
     this.socket.next(message);
   }
 

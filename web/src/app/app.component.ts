@@ -61,6 +61,8 @@ export class AppComponent implements OnInit {
         if (res != null && res.account != null) {
           this.loading.present();
           this.msalService.instance.setActiveAccount(res.account);
+          // @ts-ignore
+          sessionStorage.setItem('jwt', res.idToken);
           if (!environment.production) {
             console.log(res);
           }

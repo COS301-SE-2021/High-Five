@@ -27,7 +27,7 @@ export class AccountPopoverComponent implements OnInit {
     this.onClick();
     this.msalService.logoutPopup();
     this.router.navigate(['/welcome']).then(() => {
-      localStorage.clear();
+      sessionStorage.clear();
     });
   }
 
