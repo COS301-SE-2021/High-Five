@@ -11,6 +11,9 @@ namespace analysis_engine
                 case "boxes":
                     Tool = new BoxDrawingTool();
                     break;
+                case "labels":
+                    Tool = new LabelDrawingTool();
+                    break;
             }
         }
 

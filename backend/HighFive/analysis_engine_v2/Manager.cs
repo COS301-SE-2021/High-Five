@@ -75,8 +75,17 @@ namespace analysis_engine
                     _streamFrameCapture = new VideoCapture(url);
                     break;
                 case "image":
-                    _frameGrabber = new ImageFrameGrabber();
-                    _frameGrabber.Init(input);
+                    if (url == "")
+                    {
+                        _frameGrabber = new ImageFrameGrabber();
+                        _frameGrabber.Init(input);
+                    }
+                    else
+                    {
+                        _frameGrabber = new LocalImageFrameGrabber();
+                        _frameGrabber.Init(url);
+                    }
+
                     break;
                 default:
                     _frameGrabber = new VideoFrameGrabber();

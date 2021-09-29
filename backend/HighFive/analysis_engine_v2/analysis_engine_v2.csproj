@@ -201,12 +201,15 @@
         <Compile Include="ToolContainer\DroneToolContainer.cs" />
         <Compile Include="ToolContainer\DynamicToolContainer.cs" />
         <Compile Include="ToolContainer\ToolContainer.cs" />
+        <Compile Include="Tools\AnalysisTools\GenderDetectionTool.cs" />
         <Compile Include="Tools\AnalysisTools\AnimalRecognitionTool.cs" />
         <Compile Include="Tools\AnalysisTools\FastVehicleRecognitionTool.cs" />
+        <Compile Include="Tools\AnalysisTools\ImageSegmentationTool.cs" />
         <Compile Include="Tools\AnalysisTools\PersonRecognitionTool.cs" />
         <Compile Include="Tools\AnalysisTools\SelfDrawingAnimalRecognitionTool.cs" />
         <Compile Include="Tools\AnalysisTools\SelfDrawingPersonRecognitionTool.cs" />
         <Compile Include="Tools\AnalysisTools\SelfDrawingVehicleRecognitionTool.cs" />
+        <Compile Include="Tools\AnalysisTools\UpscaleImageTool.cs" />
         <Compile Include="Tools\AnalysisTools\VehicleRecognitionTool.cs" />
         <Compile Include="Tools\Builders\AnalysisToolBuilder.cs" />
         <Compile Include="Tools\Builders\DrawingToolBuilder.cs" />
@@ -215,9 +218,11 @@
         <Compile Include="Tools\DrawingTools\BoxDrawingTool.cs" />
         <Compile Include="DynamicTools\DynamicTool.cs" />
         <Compile Include="DynamicTools\DynamicCompiler.cs" />
+        <Compile Include="Tools\DrawingTools\LabelDrawingTool.cs" />
         <Compile Include="Video\ConcreteFrameEncoder\ImageFrameEncoder.cs" />
         <Compile Include="Video\ConcreteFrameEncoder\VideoFrameEncoder.cs" />
         <Compile Include="Video\ConcreteFrameGrabber\ImageFrameGrabber.cs" />
+        <Compile Include="Video\ConcreteFrameGrabber\LocalImageFrameGrabber.cs" />
         <Compile Include="Video\ConcreteFrameGrabber\StreamFrameGrabber.cs" />
         <Compile Include="Video\ConcreteFrameGrabber\VideoFrameGrabber.cs" />
         <Compile Include="Video\FrameEncoder.cs" />

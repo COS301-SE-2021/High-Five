@@ -32,6 +32,15 @@ namespace analysis_engine
                 case "fastpeople":
                     Tool = null;
                     break;
+                case "gender":
+                    Tool = new GenderDetectionTool();
+                    break;
+                case "segmentation":
+                    Tool = new ImageSegmentationTool();
+                    break;
+                case "upscale":
+                    Tool = new UpscaleImageTool();
+                    break;
             }
         }
 
