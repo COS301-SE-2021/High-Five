@@ -35,6 +35,9 @@ namespace analysis_engine
                 case "gender":
                     Tool = new GenderDetectionTool();
                     break;
+                case "age":
+                    Tool = new AgeDetectionTool();
+                    break;
                 case "segmentation":
                     Tool = new ImageSegmentationTool();
                     break;

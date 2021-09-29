@@ -201,6 +201,7 @@
         <Compile Include="ToolContainer\DroneToolContainer.cs" />
         <Compile Include="ToolContainer\DynamicToolContainer.cs" />
         <Compile Include="ToolContainer\ToolContainer.cs" />
+        <Compile Include="Tools\AnalysisTools\AgeDetectionTool.cs" />
         <Compile Include="Tools\AnalysisTools\GenderDetectionTool.cs" />
         <Compile Include="Tools\AnalysisTools\AnimalRecognitionTool.cs" />
         <Compile Include="Tools\AnalysisTools\FastVehicleRecognitionTool.cs" />
