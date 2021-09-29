@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -33,35 +34,45 @@ namespace analysis_engine
         
         public override Data Process(Data data)
         {
-            var image = Resize(data.Frame.Image);
-            
-            image = np.transpose(image, new[] { 2, 0, 1 });
-            (image[0], image[2]) = (image[2], image[0]);
-            image = np.expand_dims(image, 0);
-            
-            float[] mean = { 0.485f, 0.456f, 0.406f };
-            float[] std = { 0.229f, 0.224f, 0.225f };
-            var input = image/1.0f;///255.0f;
-            // input[0][0] = input[0][0] - mean[0];
-            // input[0][1] = input[0][1] - mean[1];
-            // input[0][2] = input[0][2] - mean[2];
-            // input[0][0] = input[0][0] / std[0];
-            // input[0][1] = input[0][1] / std[1];
-            // input[0][2] = input[0][2] / std[2];
-
-            int[] dimensions = { 1, 3, 800, 800 };
-            var inputTensor = new DenseTensor<float>(input.reshape(1*800*800*3).ToArray<float>(),dimensions);
-            
-            var modelInput = new List<NamedOnnxValue>
+            try
             {
-                NamedOnnxValue.CreateFromTensor(_modelInputLayerName, inputTensor)
-            };
-            
-            var predictions = _model.Run(modelInput);
-            
-            var output=((DenseTensor<float>) predictions.ElementAtOrDefault(0).Value).ToArray();
-            
-            return PostProcessFrame(data, output);
+                var image = Resize(data.Frame.Image);
+
+                image = np.transpose(image, new[] { 2, 0, 1 });
+                (image[0], image[2]) = (image[2], image[0]);
+                image = np.expand_dims(image, 0);
+
+                float[] mean = { 0.485f, 0.456f, 0.406f };
+                float[] std = { 0.229f, 0.224f, 0.225f };
+                var input = image / 1.0f; ///255.0f;
+                // input[0][0] = input[0][0] - mean[0];
+                // input[0][1] = input[0][1] - mean[1];
+                // input[0][2] = input[0][2] - mean[2];
+                // input[0][0] = input[0][0] / std[0];
+                // input[0][1] = input[0][1] / std[1];
+                // input[0][2] = input[0][2] / std[2];
+
+                int[] dimensions = { 1, 3, 800, 800 };
+                var inputTensor = new DenseTensor<float>(input.reshape(1 * 800 * 800 * 3).ToArray<float>(), dimensions);
+
+                var modelInput = new List<NamedOnnxValue>
+                {
+                    NamedOnnxValue.CreateFromTensor(_modelInputLayerName, inputTensor)
+                };
+
+                var predictions = _model.Run(modelInput);
+
+                var output = ((DenseTensor<float>)predictions.ElementAtOrDefault(0).Value).ToArray();
+
+                return PostProcessFrame(data, output);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return data;
+
         }
         
         private Data PostProcessFrame(Data data, IReadOnlyList<float> result)
