@@ -33,6 +33,8 @@ namespace analysis_engine
         public override Data Process(Data data)
         {
             var image = data.Frame.Image;
+            data.Frame.Image = image.Resize(image.Width * 3, image.Height * 3, Inter.Area);
+            return data;
             // var watch = new Stopwatch();
             // watch.Reset();
             // watch.Start();
