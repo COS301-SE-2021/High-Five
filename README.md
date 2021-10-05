@@ -197,19 +197,3 @@ of concerns. Feature branches are used for both front-end and back-end to develo
 <br>
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Android%20Unit%20Tests/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/android_unittests.yml)
 <br>
-
-#### Monitoring
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/COS301-SE-2021/High-Five.svg?style=for-the-badge
-[contributors-url]: https://github.com/COS301-SE-2021/High-Five/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/COS301-SE-2021/High-Five.svg?style=for-the-badge
-[forks-url]: https://github.com/COS301-SE-2021/High-Five/network/members
-[stars-shield]: https://img.shields.io/github/stars/COS301-SE-2021/High-Five.svg?style=for-the-badge
-[stars-url]: https://github.com/COS301-SE-2021/High-Five/stargazers
-[issues-shield]: https://img.shields.io/github/issues/COS301-SE-2021/High-Five.svg?style=for-the-badge
-[issues-url]: hhttps://github.com/COS301-SE-2021/High-Five/issues
-[license-shield]: https://img.shields.io/github/license/COS301-SE-2021/High-Five.svg?style=for-the-badge
-[license-url]: https://github.com/COS301-SE-2021/High-Five/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/github_username
