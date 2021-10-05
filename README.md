@@ -1,24 +1,11 @@
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-
-<!-- PROJECT LOGO -->
-
-
 <br />
 <div style="background: #ffffff">
 <p align="center">
   <a href="https://github.com/COS301-SE-2021/High-Five">
-    <img src="https://cdn.discordapp.com/attachments/841566124087705625/848994647472209990/logo1.PNG" alt="Logo" width="300" height="300">
+    <img src="https://cdn.discordapp.com/attachments/841566124087705625/848994647472209990/logo1.PNG" alt="Logo" width="300" height="400">
   </a>
 </div>
-<h1 align="center">High Five</h1>
+<!--<h1 align="center">High Five</h1> -->
 <h2 align="center">BDP Solutions</h2>
 
 
