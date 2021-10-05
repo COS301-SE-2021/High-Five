@@ -15,7 +15,7 @@
 <div style="background: #ffffff">
 <p align="center">
   <a href="https://github.com/COS301-SE-2021/High-Five">
-    <img src="https://www.agilebridge.co.za/wp-content/uploads/2019/04/logo-head.png" alt="Logo" width="150" height="80">
+    <img src="https://cdn.discordapp.com/attachments/841566124087705625/848994647472209990/logo1.PNG" alt="Logo" width="150" height="80">
   </a>
 </div>
 <h1 align="center">High Five</h1>
