@@ -41,6 +41,15 @@ public class ServerInformationHolder {
         }
     }
 
+    public boolean isEmpty() {
+        lock.lock();
+        try {
+            return serverPerformanceInfo.isEmpty();
+        } finally {
+            lock.unlock();
+        }
+    }
+
     /**
      * Fetches the server information with the least usage as determined by the TelemetryBuilder
      * passed in.

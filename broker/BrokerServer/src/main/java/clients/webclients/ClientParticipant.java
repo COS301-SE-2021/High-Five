@@ -6,11 +6,13 @@ import clients.webclients.connectionhandler.ResponseObject;
 import clients.webclients.strategy.*;
 import com.google.gson.*;
 import dataclasses.clientrequest.AnalysisRequest;
+import dataclasses.clientrequest.RequestQueueItem;
 import dataclasses.clientrequest.codecs.RequestDecoder;
 import dataclasses.serverinfo.*;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.DefaultJwtSignatureValidator;
 import logger.EventLogger;
+import managers.requestqueue.RequestQueue;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
@@ -28,6 +30,9 @@ public class ClientParticipant extends WebClient{
     private final ServerInformationHolder informationHolder;
     private static final String CLOSECONNECTION = "closeconnection";
     public static final String SYN = "Syn";
+    private static final int MAX_NULL_COUNT = 10;
+    private int nullCounter = 0;
+    private volatile boolean isRunning = true;
 
     public ClientParticipant(Connection connection, ConnectionHandler handler, ServerInformationHolder informationHolder) {
         EventLogger.getLogger().info("Starting ClientParticipant session");
@@ -46,12 +51,10 @@ public class ClientParticipant extends WebClient{
      */
     @Override
     public void listen() throws InterruptedException {
-        while (true) {
+        while (isRunning) {
             try {
                 if (connection.isClosed()) {
-                    EventLogger.getLogger().info("Client has disconnected");
-                    connection.close();
-                    connectionHandler.removeConnection(connection.getConnectionId());
+                    commitSuicide();
                     return;
                 }
                 //Fetch the request from the client
@@ -60,6 +63,10 @@ public class ClientParticipant extends WebClient{
 
                 if (requestData == null) {
                     Thread.sleep(1000L);
+                    if (++nullCounter == MAX_NULL_COUNT) {
+                        commitSuicide();
+                        return;
+                    }
                     continue;
                 }
 
@@ -67,9 +74,7 @@ public class ClientParticipant extends WebClient{
                 //to remove the connection and exit this function
                 if (requestData.length() >= CLOSECONNECTION.length() &&
                         requestData.substring(0, CLOSECONNECTION.length()).contains(CLOSECONNECTION)) {
-                    EventLogger.getLogger().info("Client has disconnected");
-                    connection.close();
-                    connectionHandler.removeConnection(connection.getConnectionId());
+                    commitSuicide();
                     return;
                 }
 
@@ -82,10 +87,8 @@ public class ClientParticipant extends WebClient{
                     AnalysisRequest request;
                     JsonElement element = new Gson().fromJson(requestData, JsonElement.class);
                     if (element == null) {
-                        if (connection.isClosed()) {
-                            EventLogger.getLogger().info("Client has disconnected");
-                            connection.close();
-                            connectionHandler.removeConnection(connection.getConnectionId());
+                        if (connection.isClosed() || ++nullCounter == MAX_NULL_COUNT) {
+                            commitSuicide();
                         }
                         return;
                     }
@@ -109,6 +112,7 @@ public class ClientParticipant extends WebClient{
                         String response = "{\"status\":\"error\",\"reason\":\"Could not verify JWT token!\"}";
                         ResponseObject responseObject = new ResponseObject(request.getRequestType(), null, response, connection.getConnectionId());
                         connectionHandler.onNext(responseObject);
+                        commitSuicide();
                         return;
                     }
 
@@ -121,42 +125,37 @@ public class ClientParticipant extends WebClient{
                         continue;
                     }
 
-                    //Process request based on analysis type
-                    if (request.getRequestType().contains("Analyze")) {
-                        EventLogger.getLogger().info("Performing analysis on uploaded media");
-                        new StoredMediaAnalysisStrategy().processRequest(request, informationHolder, connectionHandler, connection.getConnectionId());
-                    } else if (request.getRequestType().contains("StartLiveAnalysis")){
-                        EventLogger.getLogger().info("Performing live analysis request");
-                        new LiveAnalysisStrategy().processRequest(request, informationHolder, connectionHandler, connection.getConnectionId());
-                    } else {
-                        EventLogger.getLogger().info("Performing live stream request");
-                        new LiveStreamStrategy().processRequest(request, informationHolder, connectionHandler, connection.getConnectionId());
-                    }
+                    RequestQueue.getInstance().addToQueue(new RequestQueueItem(request, informationHolder, connection, connectionHandler,this));
+
 
                 } catch (Exception e) {
                     EventLogger.getLogger().logException(e);
                     out.append(e.getMessage()).flush();
+                    commitSuicide();
+                    return;
                 }
-            } catch (SocketException socketException) {
-                EventLogger.getLogger().info("Client has disconnected");
-                try {
-                    connection.close();
-                } catch (IOException e) {
-                    EventLogger.getLogger().logException(e);
-                }
-                connectionHandler.removeConnection(connection.getConnectionId());
-                return;
-            } catch (IOException | NullPointerException exception) {
-                EventLogger.getLogger().logException(exception);
-                try {
-                    connection.close();
-                } catch (IOException e) {
-                    EventLogger.getLogger().logException(e);
-                }
-                connectionHandler.removeConnection(connection.getConnectionId());
+            } catch (IOException | NullPointerException socketException) {
+                EventLogger.getLogger().logException(socketException);
+                commitSuicide();
                 return;
             }
             Thread.sleep(1000);
         }
+        commitSuicide();
+    }
+
+    @Override
+    public void terminate() {
+        isRunning = false;
+    }
+
+    private void commitSuicide() {
+        EventLogger.getLogger().info("Client has disconnected");
+        try {
+            connection.close();
+        } catch (Exception e) {
+            EventLogger.getLogger().logException(e);
+        }
+        connectionHandler.removeConnection(connection.getConnectionId());
     }
 }
