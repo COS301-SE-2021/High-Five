@@ -89,6 +89,11 @@ public class KafkaServerParticipant extends ServerParticipant {
         }
     }
 
+    @Override
+    public void terminate() {
+
+    }
+
     /**
      * Retrieve the time the message was sent.
      * @param message The message to fetch the time from.
