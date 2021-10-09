@@ -41,6 +41,15 @@ public class ServerInformationHolder {
         }
     }
 
+    public void remove(ServerInformation info) {
+        lock.lock();
+        try {
+            serverPerformanceInfo.entrySet().removeIf(item -> item.getKey().getServerId().equals(info.getServerId()));
+        } finally {
+            lock.unlock();
+        }
+    }
+
     public boolean isEmpty() {
         lock.lock();
         try {
