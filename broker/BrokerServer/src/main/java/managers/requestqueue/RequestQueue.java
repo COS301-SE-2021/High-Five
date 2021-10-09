@@ -18,7 +18,7 @@ public class RequestQueue {
     private final ReentrantLock requestLock = new ReentrantLock();
     private final LinkedList<RequestQueueItem> analysisRequests = new LinkedList<>();
     private static RequestQueue _instance;
-    private static final int MAX_RETRIES = 10;
+    private static final int MAX_RETRIES = 1800;
 
     /**
      * Private constructor for the RequestQueue class. This constructor creates a thread
@@ -44,11 +44,12 @@ public class RequestQueue {
                             new LiveStreamStrategy().processRequest(request.request, request.informationHolder, request.handler, request.connection.getConnectionId());
                         }
                     } catch (IOException e) {
-                        EventLogger.getLogger().logException(e);
                         //increase retry and if the retries have not exceeded the limit,
                         //add back to list to try again.
                         if (++request.retries != MAX_RETRIES) {
                             _addToQueue(request);
+                        } else {
+                            EventLogger.getLogger().logException(e);
                         }
                     }
                 }
