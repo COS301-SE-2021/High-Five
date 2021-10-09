@@ -46,13 +46,13 @@ public class RequestQueue {
                     } catch (IOException e) {
                         //increase retry and if the retries have not exceeded the limit,
                         //add back to list to try again.
-                        if (++request.retries != MAX_RETRIES) {
+                        if (request.expires < System.currentTimeMillis()) {
                             _addToQueue(request);
                         } else {
                             EventLogger.getLogger().logException(e);
                         }
                     }
-                } else if (request != null){
+                } else if (request != null && request.expires < System.currentTimeMillis()){
                     _addToQueue(request);
                 }
                 try {
