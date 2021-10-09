@@ -52,6 +52,8 @@ public class RequestQueue {
                             EventLogger.getLogger().logException(e);
                         }
                     }
+                } else if (request != null){
+                    _addToQueue(request);
                 }
                 try {
                     Thread.sleep(1000L);
