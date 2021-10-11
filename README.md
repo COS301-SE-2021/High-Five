@@ -137,6 +137,10 @@ master ( build )
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− mobile−development ( build )
 </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− mobile-feature-feature_name
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− web−development ( build )
+</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− web-feature-feature_name
+</br>
 
 Development of the back-end and front-end has been divided into seperate branches for separation
 of concerns. Feature branches are used for both front-end and back-end to develop certain features before they are propagated into the appropriate development branches. Before merging, all branches must go through a mandatory Pull Request procedure in which the branch will be reviewed by another team member, who did not make the pull request, and - if approved - merged into the branch immediately above the requested branch in the hierarchy as defined above.
