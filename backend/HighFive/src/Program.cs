@@ -4,10 +4,9 @@ using src;
 
 namespace Org.OpenAPITools
 {
-
     public class Program
     {
-        private const bool Deployed = false;
+        private const bool Deployed = true;
         public static void Main(string[] args)
         {
             if (Deployed)
@@ -18,7 +17,6 @@ namespace Org.OpenAPITools
             {
                 CreateHostBuilderDevelop(args).Build().Run();
             }
-
         }
         public static IHostBuilder CreateHostBuilderDeploy(string[] args) =>
             Host.CreateDefaultBuilder(args)

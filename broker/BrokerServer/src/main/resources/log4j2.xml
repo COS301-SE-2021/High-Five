@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <File name="LogFile" fileName="/var/log/BrokerServer.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd'T'HH:mm:ss} [%t] %-5level %msg%n"/>
+        </File>
+        <Async name="Async">
+            <AppenderRef ref="LogFile"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Logger name="foo" level="error" additivity="false">
+            <AppenderRef ref="LogFile"/>
+        </Logger>
+        <Logger name="foo" level="warn" additivity="false">
+            <AppenderRef ref="LogFile"/>
+        </Logger>
+        <Logger name="foo" level="debug" additivity="false">
+            <AppenderRef ref="LogFile"/>
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="LogFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

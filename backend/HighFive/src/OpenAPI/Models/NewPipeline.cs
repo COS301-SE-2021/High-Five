@@ -33,6 +33,12 @@ namespace Org.OpenAPITools.Models
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or Sets MetadataType
+        /// </summary>
+        [DataMember(Name="metadataType", EmitDefaultValue=false)]
+        public string MetadataType { get; set; }
+
+        /// <summary>
         /// Gets or Sets Tools
         /// </summary>
         [DataMember(Name="tools", EmitDefaultValue=false)]
@@ -47,6 +53,7 @@ namespace Org.OpenAPITools.Models
             var sb = new StringBuilder();
             sb.Append("class NewPipeline {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  MetadataType: ").Append(MetadataType).Append("\n");
             sb.Append("  Tools: ").Append(Tools).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -90,6 +97,11 @@ namespace Org.OpenAPITools.Models
                     Name.Equals(other.Name)
                 ) && 
                 (
+                    MetadataType == other.MetadataType ||
+                    MetadataType != null &&
+                    MetadataType.Equals(other.MetadataType)
+                ) && 
+                (
                     Tools == other.Tools ||
                     Tools != null &&
                     other.Tools != null &&
@@ -109,6 +121,8 @@ namespace Org.OpenAPITools.Models
                 // Suitable nullity checks etc, of course :)
                     if (Name != null)
                     hashCode = hashCode * 59 + Name.GetHashCode();
+                    if (MetadataType != null)
+                    hashCode = hashCode * 59 + MetadataType.GetHashCode();
                     if (Tools != null)
                     hashCode = hashCode * 59 + Tools.GetHashCode();
                 return hashCode;

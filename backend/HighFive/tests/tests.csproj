@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <PackageReference Include="Azure.Storage.Blobs" Version="12.9.0-beta.4" />
+        <PackageReference Include="High5SDK_v1" Version="1.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.0.7" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
         <PackageReference Include="Moq" Version="4.16.1" />
