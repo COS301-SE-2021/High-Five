@@ -29,9 +29,9 @@ public class RequestQueue {
             while (true) {
                 RequestQueueItem request = nextRequest();
 
-                ConcurrencyManager.getInstance().execute(() -> {
-                    //Check if there is a request and an available analysis engine to handle the request
-                    if (request != null && !request.informationHolder.isEmpty()) {
+                //Check if there is a request and an available analysis engine to handle the request
+                if (request != null && !request.informationHolder.isEmpty()) {
+                    ConcurrencyManager.getInstance().execute(() -> {
                         try {
                             //Process request based on analysis type
                             if (request.request.getRequestType().contains("Analyze")) {
@@ -45,18 +45,18 @@ public class RequestQueue {
                                 new LiveStreamStrategy().processRequest(request.request, request.informationHolder, request.handler, request.connection.getConnectionId());
                             }
                         } catch (IOException e) {
-                            //increase retry and if the retries have not exceeded the limit,
-                            //add back to list to try again.
+                            //check if the request has expired and add back to list if not expired
                             if (request.expires > System.currentTimeMillis()) {
                                 _addToQueue(request);
                             } else {
                                 EventLogger.getLogger().logException(e);
                             }
                         }
-                    } else if (request != null && request.expires < System.currentTimeMillis()){
-                        _addToQueue(request);
-                    }
-                });
+                    });
+
+                } else if (request != null && request.expires > System.currentTimeMillis()){
+                    _addToQueue(request);
+                }
                 try {
                     Thread.sleep(1000L);
                 } catch (InterruptedException e) {
