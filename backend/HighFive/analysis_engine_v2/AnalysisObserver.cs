@@ -24,6 +24,9 @@ namespace analysis_engine
             var manager = new Manager(this);
             manager.CreatePipeline("linear", pipelineString, mediaType, outputurl);
             manager.GiveLinkToFootage(mediaType, "", input);
+            _watch = new Stopwatch();
+            _watch.Reset();
+            _watch.Start();
             manager.StartAnalysis();
             Done = false;
         }

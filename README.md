@@ -1,24 +1,11 @@
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-
-<!-- PROJECT LOGO -->
-
-
 <br />
 <div style="background: #ffffff">
 <p align="center">
   <a href="https://github.com/COS301-SE-2021/High-Five">
-    <img src="https://www.agilebridge.co.za/wp-content/uploads/2019/04/logo-head.png" alt="Logo" width="150" height="80">
+    <img src="https://cdn.discordapp.com/attachments/841566124087705625/848994647472209990/logo1.PNG" alt="Logo" width="400" height="300">
   </a>
 </div>
-<h1 align="center">High Five</h1>
+<!--<h1 align="center">High Five</h1> -->
 <h2 align="center">BDP Solutions</h2>
 
 
@@ -85,46 +72,43 @@ High Five is a real-time image analysis platform for images and videos taken by 
 ### Project Links
 * []()[GitHub Project Board](https://github.com/COS301-SE-2021/High-Five/projects/1)
 * []()[High Five Web App](https://high5app.azurewebsites.net)
+* []()[High Five Mobile App](https://github.com/COS301-SE-2021/High-Five/releases/download/v1.0/HighFive.apk)
+* []()[High Five API](https://high5api.azurewebsites.net)
 
-#### Demo 1
-* []()[BDP Solutions - Demo1](https://drive.google.com/file/d/1eK1aoB-zd5L3d2GkG10BPtbhP_gGUUHX/view?usp=sharing)
-* []()[Software Requirements Specification - Demo1](https://drive.google.com/file/d/1BYFmZhJphzAOLJm7mU-x7vVI2vvxT8V4/view?usp=sharing)
+### Documentation
+* []()[Software Requirements Specification](https://drive.google.com/file/d/12OQoSu9KelslLW-ezWm9j8r7d2rwmSqq/view?usp=sharing)
+* []()[Architectural Requirements Document](https://drive.google.com/file/d/1VbJE3kQRl5sZtt-DIuTd9KQMwJRGZwJH/view?usp=sharing)
+* []()[User Manual](https://drive.google.com/file/d/16x35Kz8_cxwhi3jYEo_C8KTR6zM9sk6n/view?usp=sharing)
+* []()[Coding Standards](https://drive.google.com/file/d/1nJEpt9iKSFayj-KGouJXDplLRqWuu3Bv/view?usp=sharing)
+* []()[Technical Installations Manual](https://drive.google.com/file/d/1no8aLtfmCTsktcLfcj46okJnvMbE--XN/view?usp=sharing)
+* []()[Testing Policy Document](https://drive.google.com/file/d/1Cp9B3u3nK5mYaF3V3XUcjeHPcCnPgM24/view?usp=sharing)
 
-#### Demo 2
-* []()[BDP Solutions - Demo2](https://drive.google.com/file/d/1K5mNdgFBeGa1tp_Fl8Fh_CcXkf_9zz-h/view?usp=sharing)
-* []()[Software Requirements Specification - Demo2](https://drive.google.com/file/d/1pA2TqDQkoDK0Kvq6weMCwAaWwQO4EX78/view?usp=sharing)
-* []()[Architectural Requirements Document - Demo2](https://drive.google.com/file/d/1x4INlpjzYA9-NPKbc0kl0ijKud58cmGo/view?usp=sharing)
-* []()[User Manual - Demo2](https://drive.google.com/file/d/1AjHnnmrIYHzJ_tqd5kKdCd7cyxjT9Zpw/view?usp=sharing)
-* []()[Coding Standards - Demo2](https://drive.google.com/file/d/1tvIkCgz74yAf9RBsicJtToGem8FsMj5i/view?usp=sharing)
+#### Legacy Documentation
+* []()[Demo 1 (2021/06/04)](https://drive.google.com/drive/folders/1V4vp62uHegeeINPAz2WpAIin2ktGwdUF?usp=sharing)
+* []()[Demo 2 (2021/06/21)](https://drive.google.com/drive/folders/1Rla0xLhnU47Eo3MraKVAKi467o5LCXK9?usp=sharing)
+* []()[Demo 3 (2021/08/20)](https://drive.google.com/drive/folders/1_d7UQK1n-MQeq6rq6YKyY3ymsjF08tH2?usp=sharing)
+* []()[Demo 4 (2021/09/24)](https://drive.google.com/drive/folders/1GV09Kq9nBWRcek_OkQfpnmZQWTUaf96t?usp=sharing)
 
-#### Demo 3
-* []()[BDP Solutions - Demo3](https://drive.google.com/file/d/1T439SdW1anhN5ABBCeN3TUSaYCtRAUYf/view?usp=sharing)
-* []()[Software Requirements Specification - Demo3](https://drive.google.com/file/d/1uLGZ6yso0EESTOSO0BwXLwre_7U83pQq/view?usp=sharing)
-* []()[Architectural Requirements Document - Demo3](https://drive.google.com/file/d/1865YDaMbVFa22zk9fvqJ3EPl5Junztco/view?usp=sharing)
-* []()[User Manual - Demo3](https://drive.google.com/file/d/1NcWNqmqXlfQ9QIWWSMWXryCidAUOc_1p/view?usp=sharing)
-* []()[Coding Standards - Demo3](https://drive.google.com/file/d/1e1-PX2OBPiQ1S_2w70eEDOxTWvQDhU5l/view?usp=sharing)
-* []()[Technical Installations Manual - Demo3](https://drive.google.com/file/d/1AsGNJ7Lewy66ocaAaJBX8hny2qk_xgIF/view?usp=sharing)
-
-#### Demo 4
-* []()[BDP Solutions - Demo4](https://drive.google.com/file/d/1ZGpIr0bTu2Z9JlB2hSfJF3823wvulW4Z/view?usp=sharing)
-* []()[Software Requirements Specification - Demo4](https://drive.google.com/file/d/12OQoSu9KelslLW-ezWm9j8r7d2rwmSqq/view?usp=sharing)
-* []()[Architectural Requirements Document - Demo4](https://drive.google.com/file/d/1VbJE3kQRl5sZtt-DIuTd9KQMwJRGZwJH/view?usp=sharing)
-* []()[User Manual - Demo4](https://drive.google.com/file/d/16x35Kz8_cxwhi3jYEo_C8KTR6zM9sk6n/view?usp=sharing)
-* []()[Coding Standards - Demo4](https://drive.google.com/file/d/1nJEpt9iKSFayj-KGouJXDplLRqWuu3Bv/view?usp=sharing)
-* []()[Technical Installations Manual - Demo4](https://drive.google.com/file/d/1no8aLtfmCTsktcLfcj46okJnvMbE--XN/view?usp=sharing)
-* []()[Testing Policy Document - Demo4](https://drive.google.com/file/d/1Cp9B3u3nK5mYaF3V3XUcjeHPcCnPgM24/view?usp=sharing)
 
 
 ### Technology Stack
 * []()Backend
     * []()[.NET Core](https://dotnet.microsoft.com/download)
-* []()Web and Mobile Application
+    * []()[Azure AD B2C](https://azure.microsoft.com/en-us/services/active-directory/external-identities/b2c/)
+    * []()[Azure Blob Storage](https://azure.microsoft.com/en-us/services/storage/blobs/)
+    * []()[Microsoft Azure App Services](https://azure.microsoft.com/en-us/)
+* []()Web Application
   * []()[Angular](https://angular.io/)
   * []()[Ionic](https://ionicframework.com/)
-* []()Deployment
-  * []()[Microsoft Azure](https://azure.microsoft.com/en-us/)
-* []()Database
-  * []()[Microsoft Azure Blob Storage](https://azure.microsoft.com/en-us/services/storage/blobs/)
+* []()Mobile Application
+  * []()[Kotlin](https://kotlinlang.org/docs/android-overview.html)
+  * []()[DJI-Drone Mobile SDK](https://developer.dji.com/mobile-sdk/)
+* []()Broker Server
+  * []()[Java](https://www.java.com/en/)
+  * []()[Apache Kafka](https://kafka.apache.org/)
+* []()Analysis Engine
+  * []()[.NET Framework](https://dotnet.microsoft.com/download/dotnet-framework)
+
 
 ## Team Members
 
@@ -153,15 +137,16 @@ master ( build )
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− mobile−development ( build )
 </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− mobile-feature-feature_name
+</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− web−development ( build )
+</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− web-feature-feature_name
+</br>
 
 Development of the back-end and front-end has been divided into seperate branches for separation
 of concerns. Feature branches are used for both front-end and back-end to develop certain features before they are propagated into the appropriate development branches. Before merging, all branches must go through a mandatory Pull Request procedure in which the branch will be reviewed by another team member, who did not make the pull request, and - if approved - merged into the branch immediately above the requested branch in the hierarchy as defined above.
 
-### Code Quality Badges
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]<br><br>
+## Code Quality Badges
 
 ### Sonar Cloud
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_High-Five&metric=bugs)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_High-Five)
@@ -200,20 +185,3 @@ of concerns. Feature branches are used for both front-end and back-end to develo
 <br>
 [![Actions Status](https://github.com/COS301-SE-2021/High-Five/workflows/Android%20Unit%20Tests/badge.svg)](https://github.com/COS301-SE-2021/High-Five/actions/workflows/android_unittests.yml)
 <br>
-#### Monitoring
-[![Website](https://img.shields.io/website?url=https%3A%2F%2Fdiscord.com%2Fchannels%2F841566124087705620%2F841566124087705625%2F848982894759641118)](https://high5app.azurewebsites.net/)
-<br>
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/COS301-SE-2021/High-Five.svg?style=for-the-badge
-[contributors-url]: https://github.com/COS301-SE-2021/High-Five/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/COS301-SE-2021/High-Five.svg?style=for-the-badge
-[forks-url]: https://github.com/COS301-SE-2021/High-Five/network/members
-[stars-shield]: https://img.shields.io/github/stars/COS301-SE-2021/High-Five.svg?style=for-the-badge
-[stars-url]: https://github.com/COS301-SE-2021/High-Five/stargazers
-[issues-shield]: https://img.shields.io/github/issues/COS301-SE-2021/High-Five.svg?style=for-the-badge
-[issues-url]: hhttps://github.com/COS301-SE-2021/High-Five/issues
-[license-shield]: https://img.shields.io/github/license/COS301-SE-2021/High-Five.svg?style=for-the-badge
-[license-url]: https://github.com/COS301-SE-2021/High-Five/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/github_username
