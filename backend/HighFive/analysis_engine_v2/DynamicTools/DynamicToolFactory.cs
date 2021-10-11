@@ -16,6 +16,7 @@ namespace analysis_engine.BrokerClient
         private static AppDomain _restrictedDomain;
         private readonly Type _dynamicToolType = typeof(DynamicTool);
         private static readonly IAnalysisStorageManager _analysisStorageManager;
+        private readonly DynamicCompiler _compiler;
 
         static DynamicToolFactory()
         {
@@ -34,6 +35,11 @@ namespace analysis_engine.BrokerClient
             _analysisStorageManager = new AnalysisStorageManager();
         }
 
+        public DynamicToolFactory()
+        {
+            _compiler = new DynamicCompiler();
+        }
+
         public Tool CreateDynamicTool(string toolId)
         {
             /*
@@ -41,7 +47,7 @@ namespace analysis_engine.BrokerClient
              * error within the user's uploaded code.
              */
 
-            var toolFiles = _analysisStorageManager.GetAnalysisTool(toolId) ?? new AnalysisToolComposite
+            var toolFiles = _analysisStorageManager.GetAnalysisTool(toolId).Result ?? new AnalysisToolComposite
             {
                 ByteData = _analysisStorageManager.GetDrawingTool(toolId)
             };

@@ -23,22 +23,30 @@ namespace analysis_engine_v2.BrokerClient.Storage
             var analysisPipeline = JsonConvert.DeserializeObject<PipelineRequest>(GetPipeline(request.PipelineId, false).Result);
             analysisPipeline.Tools.Sort();
             const string storageContainer = "analyzed/image";
-            const string fileExtension = ".img";
+            const string fileExtension = ".jpg";
             var analyzedMediaName = _storageManager.HashMd5(request.ImageId + "|" + analysisPipeline.Id);
-            var testFile = _storageManager.CreateNewFile(analyzedMediaName+ fileExtension, storageContainer).Result;
-            testFile.AddMetadata("imageId", request.ImageId);
-            testFile.AddMetadata("pipelineId", request.PipelineId);
-            await testFile.UploadFileFromByteArray(image, "image/jpg");
-
-            var response = new AnalyzedImageMetaData
+            try
             {
-                Id = analyzedMediaName,
-                ImageId = request.ImageId,
-                PipelineId = request.PipelineId,
-                Url = testFile.GetUrl(),
-                DateAnalyzed = testFile.Properties.LastModified.Value.DateTime
-            };
-            return response;
+                var testFile = _storageManager.CreateNewFile(analyzedMediaName + fileExtension, storageContainer)
+                    .Result;
+                testFile.AddMetadata("imageId", request.ImageId);
+                testFile.AddMetadata("pipelineId", request.PipelineId);
+                await testFile.UploadFileFromByteArray(image, "image/jpg");
+                
+                var response = new AnalyzedImageMetaData
+                {
+                    Id = analyzedMediaName,
+                    ImageId = request.ImageId,
+                    PipelineId = request.PipelineId,
+                    Url = testFile.GetUrl(),
+                    DateAnalyzed = testFile.Properties.LastModified.Value.DateTime
+                };
+                return response;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public async Task<AnalyzedVideoMetaData> StoreVideo(string videoPath, AnalyzeVideoRequest request)
@@ -95,7 +103,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
             return image?.ToStream().Result;
         }
 
-        public AnalysisToolComposite GetAnalysisTool(string toolId)
+        public async Task<AnalysisToolComposite> GetAnalysisTool(string toolId)
         {
             /*
              * Writes Model to disk and returns analysis source code
@@ -132,7 +140,7 @@ namespace analysis_engine_v2.BrokerClient.Storage
                 using var ms = modelFile.ToStream().Result;
                 var bytes = new byte[ms.Length];
                 ms.Read(bytes, 0, (int) ms.Length);
-                model.Write(bytes, 0, bytes.Length);
+                await model.WriteAsync(bytes, 0, bytes.Length);
                 ms.Close();
             }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using analysis_engine.BrokerClient.ResourceUsageCollector.Models;
@@ -10,6 +11,7 @@ namespace analysis_engine.BrokerClient.ResourceUsageCollector
 {
     public class ResourceUsageCollector : IResourceUsageCollector
     {
+        [HandleProcessCorruptedStateExceptions]
         public void Run()
         {
             while (true)
@@ -19,7 +21,7 @@ namespace analysis_engine.BrokerClient.ResourceUsageCollector
                     .Replace("\\r\\n", "").Replace("\\n", "").Trim();
                 var externalIp = IPAddress.Parse(externalIpString);
 
-                var clientId = "analysisclient001";
+                var clientId = System.IO.File.ReadAllText(@"clientid.txt").Replace("\r", "").Replace("\n", "");
                 
                 //Create a new ServerInformation object
                 ServerInformation info = new ServerInformation
@@ -38,12 +40,29 @@ namespace analysis_engine.BrokerClient.ResourceUsageCollector
                     BootstrapServers = "localhost:9092",
                 };
                 TopicPartition partition = new TopicPartition(clientId, 0);
-                var producer = new ProducerBuilder<Null, string>(config).Build();
+                var producer = new ProducerBuilder<Null, string>(config).SetErrorHandler((prod, _) =>
+                {
+                    prod.AbortTransaction();
+                    prod.Dispose();
+                    BrokerClient.isConnected = false;
+                }).Build();
             
                 //Send information to Broker
                 Message<Null, string> msg = new Message<Null, string>();
                 msg.Value = info.ToJson();
-                producer.Produce(partition, msg);
+                try
+                {
+                    producer.Produce(partition, msg);
+                }
+                catch (AccessViolationException ignored)
+                {
+                    // ignored
+                }
+                catch
+                {
+                    // ignored
+                }
+
                 Thread.Sleep(10000);
             }
         }

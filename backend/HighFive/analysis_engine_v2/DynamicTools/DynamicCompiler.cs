@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using High5SDK;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.ML.OnnxRuntime;
+using Microsoft.ML.OnnxRuntime.Tensors;
+using NumSharp;
+using Buffer = High5SDK.Buffer;
 
 namespace analysis_engine.BrokerClient
 {
@@ -17,11 +22,11 @@ namespace analysis_engine.BrokerClient
          * a compiled assembly if the source code is error-free. Otherwise the errors
          * will be logged in the console and null will be returned.
          */
-        public static readonly List<MetadataReference> AssemblyReferences;
+        private readonly List<MetadataReference> _assemblyReferences;
         
-        static DynamicCompiler()
+        public DynamicCompiler()
         {
-            AssemblyReferences = new List<MetadataReference>
+            _assemblyReferences = new List<MetadataReference>
             {
                 /*
                  * TODO: in the references variable, all data types that are not in system must be
@@ -35,15 +40,25 @@ namespace analysis_engine.BrokerClient
                 MetadataReference.CreateFromFile(typeof(DrawingTool).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Data).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(FileMode).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(BoxCoordinateData).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(BoxCoordinateData).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(MetaData).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(DataPool).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(DataFactory).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(Buffer).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(Frame).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(InferenceSession).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(NDArray).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(Image).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(DenseTensor<>).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(NamedOnnxValue).Assembly.Location)
             };
             Assembly.GetEntryAssembly()
                 ?.GetReferencedAssemblies()
                 .ToList()
-                .ForEach(a => AssemblyReferences.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
+                .ForEach(a => _assemblyReferences.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
         }
         
-        public static byte[] Compile(string sourceCode)
+        public byte[] Compile(string sourceCode)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
             var assemblyName = Path.GetRandomFileName();
@@ -51,7 +66,7 @@ namespace analysis_engine.BrokerClient
             var compilation = CSharpCompilation.Create(
                 assemblyName,
                 new []{syntaxTree},
-                AssemblyReferences,
+                _assemblyReferences,
                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
             
             using var ms = new MemoryStream();

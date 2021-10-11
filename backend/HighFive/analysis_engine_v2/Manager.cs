@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using analysis_engine.Video;
 using analysis_engine.Video.ConcreteFrameEncoder;
+using Confluent.Kafka;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -173,6 +174,7 @@ namespace analysis_engine
                     data = _pipeline.Drain.Pop();
                     if (data != null)
                     {
+                        //GC.Collect();
                         _latency += (DateTimeOffset.Now.ToUnixTimeMilliseconds() - _timeQueue.Take());
                     }
                 }
@@ -208,6 +210,8 @@ namespace analysis_engine
         private void StopAnalysis()
         {
             _pipeline.Source.Push(null);
+            _pipeline = null;
+            _dataPool = null;
         }
     }
 }

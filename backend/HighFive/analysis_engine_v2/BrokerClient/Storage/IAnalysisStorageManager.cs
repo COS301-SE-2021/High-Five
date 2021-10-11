@@ -11,7 +11,8 @@ namespace analysis_engine_v2.BrokerClient.Storage
         public string GetVideo(string videoId);
         public Stream GetImage(string imageId);
 
-        public AnalysisToolComposite GetAnalysisTool(string toolId);
+        public Task<AnalysisToolComposite> GetAnalysisTool(string toolId);
+        //public byte[] GetDrawingTool(string toolId);
         public byte[] GetDrawingTool(string toolId);
         public void UnloadAnalysisModel(string modelPath);
 

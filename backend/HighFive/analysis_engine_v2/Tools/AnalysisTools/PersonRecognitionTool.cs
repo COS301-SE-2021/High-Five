@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Emgu.CV;
+using Emgu.CV.Aruco;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using High5SDK;
@@ -13,7 +15,7 @@ namespace analysis_engine
 {
     public class PersonRecognitionTool : AnalysisTool
     {
-        private const string ModelPath = "../../Models/ssd-10.onnx";
+        private const string ModelPath = "Models/ssd-10.onnx";
         private InferenceSession _model;
         private string _modelInputLayerName;
         private const double MinScore=0.5;
@@ -71,7 +73,7 @@ namespace analysis_engine
             var boxes=((DenseTensor<float>) predictions.ElementAtOrDefault(0).Value).ToArray();
             var labels=((DenseTensor<long>) predictions.ElementAtOrDefault(1).Value).ToArray();
             var scores=((DenseTensor<float>) predictions.ElementAtOrDefault(2).Value).ToArray();
-            
+            predictions.Dispose();
             return PostProcessFrame(data, boxes, labels, scores);
 
         }
@@ -107,7 +109,7 @@ namespace analysis_engine
             
 
             var result = np.array(resized.Data).reshape(resized.Height, resized.Width, 3);
-        
+            
             return result;
         }
     }

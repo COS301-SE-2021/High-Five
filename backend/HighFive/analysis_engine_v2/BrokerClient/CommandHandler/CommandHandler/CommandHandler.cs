@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using analysis_engine_v2.BrokerClient.Storage;
 using analysis_engine.BrokerClient.CommandHandler.Models;
@@ -28,7 +29,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
 
         public CommandHandler()
         {
-            var clientId = "analysisclient001";
+            var clientId = System.IO.File.ReadAllText(@"clientid.txt").Replace("\r", "").Replace("\n", "");
             
             //Create a new Kafka producer
             var config = new ProducerConfig
@@ -36,7 +37,12 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                 BootstrapServers = "localhost:9092",
             };
             _partition = new TopicPartition(clientId, 2);
-            _producer = new ProducerBuilder<string, string>(config).Build();
+            _producer = new ProducerBuilder<string, string>(config).SetErrorHandler((prod,_)=>
+            {
+                prod.AbortTransaction();
+                prod.Dispose();
+                BrokerClient.isConnected = false;
+            }).Build();
         }
         
         public void HandleCommand(AnalysisCommand command)
@@ -117,6 +123,7 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
             _outputUrl = "";
         }
 
+        [HandleProcessCorruptedStateExceptions]
         private void RunAnalysis()
         {
             _isDone = false;
@@ -217,13 +224,25 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                     Key = Guid.NewGuid().ToString(),
                     Value = _retString.Replace("\r", "").Replace("\n", "")
                 };
-                _producer.Produce(_partition, returnMessage);
+                try
+                {
+                    _producer.Produce(_partition, returnMessage);
+                }
+                catch (AccessViolationException ignored)
+                {
+                }
+                catch (Exception ignored)
+                {
+                    // s
+                }
+
                 _isDone = false;
                 _retString = "";
                 mediaUploader.Join();
             }
         }
-
+        
+        [HandleProcessCorruptedStateExceptions]
         private void SendHeartbeat()
         {
             Thread.Sleep(1000);
@@ -234,7 +253,17 @@ namespace analysis_engine.BrokerClient.CommandHandler.CommandHandler
                 Key = Guid.NewGuid().ToString(),
                 Value = "heartbeat"
             };
-            _producer.Produce(_partition, msg);
+            try
+            {
+                _producer.Produce(_partition, msg);
+            }
+            catch (AccessViolationException ignored)
+            {
+            }
+            catch
+            {
+                // ignored
+            }
         }
     }
 }

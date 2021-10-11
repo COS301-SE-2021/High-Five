@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using Emgu.CV;
@@ -14,7 +15,7 @@ namespace analysis_engine
 {
     public class FastVehicleRecognitionTool : AnalysisTool
     {
-        private const string ModelPath = @"../../Models/ssd_mobilenet_v1_10.onnx";
+        private const string ModelPath = @"Models/ssd_mobilenet_v1_10.onnx";
         private InferenceSession _model;
         private string _modelInputLayerName;
         private const double MinScore=0.50;
@@ -44,6 +45,7 @@ namespace analysis_engine
         }
         public override Data Process(Data data)
         {
+            
             var image = data.Frame.Image;
             var input = np.array(image.Bytes);
 
@@ -62,7 +64,7 @@ namespace analysis_engine
             var labels=((DenseTensor<float>) predictions.ElementAtOrDefault(1).Value).ToArray();
             var scores=((DenseTensor<float>) predictions.ElementAtOrDefault(2).Value).ToArray();
             var numDetections=((DenseTensor<float>) predictions.ElementAtOrDefault(3).Value).ToArray();
-            
+            predictions.Dispose();
             return PostProcessFrame(data, boxes, labels, scores, numDetections);
 
         }
@@ -87,6 +89,7 @@ namespace analysis_engine
                 }
             }
             data.Meta.Add(output);
+            
             return data;//DrawBoxes(data, output);
         }
         

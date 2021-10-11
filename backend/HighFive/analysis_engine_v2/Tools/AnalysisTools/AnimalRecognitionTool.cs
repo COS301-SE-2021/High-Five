@@ -13,7 +13,7 @@ namespace analysis_engine
 {
     public class AnimalRecognitionTool : AnalysisTool
     {
-        private const string ModelPath = @"../../Models/ssd-10.onnx";
+        private const string ModelPath = @"Models/ssd-10.onnx";
         private InferenceSession _model;
         private string _modelInputLayerName;
         private const double MinScore=0.5;
@@ -71,7 +71,7 @@ namespace analysis_engine
             var boxes=((DenseTensor<float>) predictions.ElementAtOrDefault(0).Value).ToArray();
             var labels=((DenseTensor<long>) predictions.ElementAtOrDefault(1).Value).ToArray();
             var scores=((DenseTensor<float>) predictions.ElementAtOrDefault(2).Value).ToArray();
-            
+            predictions.Dispose();
             return PostProcessFrame(data, boxes, labels, scores);
 
         }

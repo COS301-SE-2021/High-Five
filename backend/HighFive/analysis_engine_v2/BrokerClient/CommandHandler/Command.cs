@@ -1,18 +1,17 @@
 using System;
-using System.Threading;
-using analysis_engine.BrokerClient.CommandHandler.CommandHandler;
+using System.Runtime.ExceptionServices;
 using analysis_engine.BrokerClient.CommandHandler.Models;
 using Confluent.Kafka;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace analysis_engine.BrokerClient.CommandHandler
 {
     public class Command : ICommand
     {
+        [HandleProcessCorruptedStateExceptions]
         public void Run()
         {
-            var clientId = "analysisclient001";
+            var clientId = System.IO.File.ReadAllText(@"clientid.txt").Replace("\r", "").Replace("\n", "");
             
             //Create a new Kafka consumer
             var config = new ConsumerConfig
@@ -22,13 +21,27 @@ namespace analysis_engine.BrokerClient.CommandHandler
                 AutoOffsetReset = AutoOffsetReset.Latest
             };
             TopicPartition partition = new TopicPartition(clientId, 1);
-            var consumer = new ConsumerBuilder<String, string>(config).Build();
-            consumer.Assign(partition);
-            while (true)
+            var consumer = new ConsumerBuilder<String, string>(config).SetErrorHandler((prod, _) => {
+                prod.Dispose();
+                BrokerClient.isConnected = false;
+            }).Build();
+            try
             {
-                Console.WriteLine("Time to start getting commands");
-                var command = consumer.Consume();
-                new CommandHandler.CommandHandler().HandleCommand(JsonConvert.DeserializeObject<AnalysisCommand>(command.Message.Value));
+                consumer.Assign(partition);
+                while (true)
+                {
+                    Console.WriteLine("Time to start getting commands");
+                    var command = consumer.Consume();
+                    new CommandHandler.CommandHandler().HandleCommand(
+                        JsonConvert.DeserializeObject<AnalysisCommand>(command.Message.Value));
+                }
+            }
+            catch (AccessViolationException ignored)
+            {
+            }
+            catch
+            {
+                // ignored
             }
         }
     }

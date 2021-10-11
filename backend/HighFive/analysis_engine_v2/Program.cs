@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using analysis_engine.BrokerClient;
 using analysis_engine.Video;
@@ -24,7 +25,17 @@ namespace analysis_engine
         {
             //TestStreamAnalysis();
             var client = new BrokerClient.BrokerClient();
-            client.Run();
+            while (true)
+            {
+                try
+                {
+                    client.Run();
+                }
+                catch (Exception e)
+                {
+                    Thread.Sleep(1000);
+                }
+            }
         }
 
         private static void TestVideoAnalysis()

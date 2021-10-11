@@ -73,8 +73,8 @@
             <HintPath>..\..\..\..\..\.nuget\packages\windowsazure.storage\7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
         </Reference>
         <Reference Include="mscorlib" />
-        <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-            <HintPath>..\..\..\..\..\.nuget\packages\newtonsoft.json\10.0.3\lib\portable-net45+win8+wp8+wpa81\Newtonsoft.Json.dll</HintPath>
+        <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+          <HintPath>..\..\..\..\..\.nuget\packages\newtonsoft.json\13.0.1\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
         </Reference>
         <Reference Include="NReco.VideoConverter, Version=1.1.4.0, Culture=neutral, PublicKeyToken=395ccb334978a0cd">
             <HintPath>..\..\..\..\..\.nuget\packages\nreco.videoconverter\1.1.4\lib\net40\NReco.VideoConverter.dll</HintPath>
@@ -112,6 +112,7 @@
         <Reference Include="Xabe.FFmpeg, Version=5.0.2.0, Culture=neutral, PublicKeyToken=null">
             <HintPath>..\..\..\..\..\.nuget\packages\xabe.ffmpeg\5.0.2\lib\netstandard2.0\Xabe.FFmpeg.dll</HintPath>
         </Reference>
+        <Reference Include="netstandard" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="AnalysisObserver.cs" />
@@ -216,6 +217,7 @@
         <Compile Include="DynamicTools\DynamicTool.cs" />
         <Compile Include="DynamicTools\DynamicCompiler.cs" />
         <Compile Include="Video\ConcreteFrameEncoder\ImageFrameEncoder.cs" />
+        <Compile Include="Video\ConcreteFrameEncoder\LiveStreamEncoder.cs" />
         <Compile Include="Video\ConcreteFrameEncoder\VideoFrameEncoder.cs" />
         <Compile Include="Video\ConcreteFrameGrabber\ImageFrameGrabber.cs" />
         <Compile Include="Video\ConcreteFrameGrabber\StreamFrameGrabber.cs" />
@@ -566,7 +568,6 @@
         <PackageReference Include="System.Buffers" Version="4.5.1" />
         <PackageReference Include="System.Collections" Version="4.3.0" />
         <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
-        <PackageReference Include="System.Collections.Immutable" Version="1.2.0" />
         <PackageReference Include="System.Console" Version="4.3.0" />
         <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
         <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.3.0" />
@@ -592,8 +593,8 @@
         <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
         <PackageReference Include="System.ObjectModel" Version="4.3.0" />
         <PackageReference Include="System.Reflection" Version="4.3.0" />
-        <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
         <PackageReference Include="System.Reflection.Metadata" Version="1.4.1-beta-24430-01" />
+        <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
         <PackageReference Include="System.Reflection.Primitives" Version="4.3.0" />
         <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
         <PackageReference Include="System.Runtime" Version="4.3.1" />
