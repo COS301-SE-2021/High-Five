@@ -10,6 +10,7 @@ import com.bdpsolutions.highfive.subsystems.login.model.AuthenticationRepository
 import com.bdpsolutions.highfive.subsystems.login.model.source.APILogin
 import com.bdpsolutions.highfive.subsystems.login.model.source.APIRefreshToken
 import com.bdpsolutions.highfive.subsystems.login.viewmodel.LoginViewModel
+import com.bdpsolutions.highfive.subsystems.main.viewmodel.MainActivityViewModel
 import com.bdpsolutions.highfive.subsystems.media.viewmodel.MediaViewModel
 import com.bdpsolutions.highfive.subsystems.splash.viewmodel.SplashViewModel
 import com.bdpsolutions.highfive.subsystems.video.model.repository.VideoDataRepository
@@ -55,6 +56,9 @@ class ViewModelProviderFactory @Inject constructor(): ViewModelProvider.Factory 
                 return ImageViewModel.create(
                     repo = repoFactory.createRepository(RepositoryTypes.IMAGE_REPOSITORY) as ImageRepository
                 ) as T
+            }
+            modelClass.isAssignableFrom(MainActivityViewModel::class.java) -> {
+                return MainActivityViewModel.create() as T
             }
             else -> throw IllegalArgumentException(vmf.UNKNOWN_VIEWMODEL)
         }
