@@ -52,7 +52,8 @@ export class AnalyzedImagesService {
 
     if (serverRemove) {
       try {
-        this.mediaStorageService.deleteAnalyzedImage({id: imageId}, 'response').subscribe((res) => {
+        const iid = imageId.replace('.jpg','');
+        this.mediaStorageService.deleteAnalyzedImage({id: iid}, 'response').subscribe((res) => {
           if (res.ok) {
             this.snotifyService.success('Successfully removed analyzed image', 'Analyzed Image Removal');
           } else {

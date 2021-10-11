@@ -1,44 +1,45 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
-import { NavbarPage } from './navbar.page';
-import {MsalGuard} from '@azure/msal-angular';
+import {NavbarPage} from './navbar.page';
+import {AuthGuard} from '../../guards/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: NavbarPage,
-    canActivateChild : [MsalGuard],
+    canLoad: [AuthGuard],
     children: [
       {
-        path:'landing',
-        loadChildren:() => import('../landing/landing.module').then(m=>m.LandingPageModule),
+        path: 'landing',
+        loadChildren: () => import('../landing/landing.module').then(m => m.LandingPageModule),
       },
       {
-        path:'analytics',
-        loadChildren:() => import('../analytics/analytics.module').then(m => m.AnalyticsPageModule),
+        path: 'analytics',
+        loadChildren: () => import('../analytics/analytics.module').then(m => m.AnalyticsPageModule),
       },
       {
         path: 'media',
-        loadChildren:() => import('../media/media.module').then(m => m.MediaPageModule),
+        loadChildren: () => import('../media/media.module').then(m => m.MediaPageModule),
       },
       {
-        path:'live',
-        loadChildren:() => import('../live/live.module').then(m => m.LivePageModule),
+        path: 'live',
+        loadChildren: () => import('../live/live.module').then(m => m.LivePageModule),
       },
       {
-        path:'',
-        redirectTo : 'landing',
-        pathMatch:'full',
-        canActivate: [MsalGuard]
+        path: '',
+        redirectTo: 'landing',
+        pathMatch: 'full',
+        canActivate: [AuthGuard]
+
       },
     ]
   },
   {
-    path:'',
-    redirectTo:'navbar/landing',
-    pathMatch:'full',
-    canActivate: [MsalGuard]
+    path: '',
+    redirectTo: 'navbar/landing',
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
   }
 ];
 
@@ -46,4 +47,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class NavbarPageRoutingModule {}
+export class NavbarPageRoutingModule {
+}

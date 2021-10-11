@@ -47,7 +47,7 @@
                   <ion-text>First Name :</ion-text>
                 </ion-col>
                 <ion-col class="ion-text-start ion-align-items-start ion-align-items-start" size="6">
-                  <ion-text>{{msalService.instance.getActiveAccount().idTokenClaims['given_name']}}</ion-text>
+                  <ion-text>{{oauthService.getIdentityClaims()['given_name']}}</ion-text>
                 </ion-col>
               </ion-row>
             </ion-grid>
@@ -59,7 +59,7 @@
                   <ion-text>Last Name :</ion-text>
                 </ion-col>
                 <ion-col class="ion-text-start ion-align-items-start ion-align-items-start" size="6">
-                  <ion-text>{{msalService.instance.getActiveAccount().idTokenClaims['family_name']}}</ion-text>
+                  <ion-text>{{oauthService.getIdentityClaims()['family_name']}}</ion-text>
                 </ion-col>
               </ion-row>
             </ion-grid>
@@ -71,7 +71,7 @@
                   <ion-text>Username :</ion-text>
                 </ion-col>
                 <ion-col class="ion-text-start ion-align-items-start ion-align-items-start" size="6">
-                  <ion-text>{{msalService.instance.getActiveAccount().idTokenClaims['name']}}</ion-text>
+                  <ion-text>{{oauthService.getIdentityClaims()['name']}}</ion-text>
                 </ion-col>
               </ion-row>
             </ion-grid>
@@ -83,7 +83,7 @@
                   <ion-text>Email :</ion-text>
                 </ion-col>
                 <ion-col class="ion-text-start ion-align-items-start ion-align-items-start" size="6">
-                  <ion-text>{{msalService.instance.getActiveAccount().idTokenClaims['emails'][0]}}</ion-text>
+                  <ion-text>{{oauthService.getIdentityClaims()['emails'][0]}}</ion-text>
                 </ion-col>
               </ion-row>
             </ion-grid>
@@ -142,7 +142,7 @@
                 <ion-icon [name]="'checkmark-outline'"></ion-icon>
               </ion-chip>
               <ion-button slot="end" fill="clear" expand="block" color="danger" [disabled]="userTool.isDefaultTool"
-                          (click)="userToolsService.removeTool(userTool.toolId,userTool.toolType)">
+                          (click)="onRemoveTool(userTool.toolId, userTool.toolType)">
                 <ion-icon name="trash-outline"></ion-icon>
               </ion-button>
             </ion-item>
@@ -200,7 +200,7 @@
               <ion-button slot="end" *ngIf="unapprovedTool.toolDll!== undefined" fill="clear" expand="block"
                           color="primary" (click)="downloadDll(unapprovedTool)">
                 <ion-icon name="download-outline"></ion-icon>
-                <ion-label>DLL</ion-label>
+                <ion-label>Source Code</ion-label>
               </ion-button>
               <ion-button slot="end" *ngIf="unapprovedTool.toolModel!== undefined" fill="clear" expand="block"
                           color="primary" (click)="downloadOnnx(unapprovedTool)">

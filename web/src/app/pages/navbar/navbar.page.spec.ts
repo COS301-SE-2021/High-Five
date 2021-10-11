@@ -3,13 +3,26 @@ import {AngularDelegate, IonicModule, PopoverController} from '@ionic/angular';
 
 import {NavbarPage} from './navbar.page';
 import {Router} from '@angular/router';
-import {MsalService} from '@azure/msal-angular';
+import {DateTimeProvider, OAuthLogger, OAuthService, UrlHelperService} from 'angular-oauth2-oidc';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {UserService} from '../../apis/user.service';
+import {SnotifyService, ToastDefaults} from 'ng-snotify';
+import {PipelinesService} from '../../apis/pipelines.service';
+import {MediaStorageService} from '../../apis/mediaStorage.service';
+import {AnalysisService} from '../../apis/analysis.service';
+import {ToolsService} from '../../apis/tools.service';
+import {LivestreamService} from '../../apis/livestream.service';
 
 
 describe('NavbarPage', () => {
   let component: NavbarPage;
   let fixture: ComponentFixture<NavbarPage>;
 
+  class MockOAuthService extends OAuthService {
+    getIdentityClaims() {
+      return {oid: ''};
+    }
+  }
 
   const routerMock = {
     navigate: jasmine.createSpy('navigate')
@@ -22,11 +35,15 @@ describe('NavbarPage', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [NavbarPage],
-      imports: [],
+      imports: [HttpClientTestingModule],
       providers: [
         {provide: Router, useValue: routerMock},
-        {provide: MsalService, useValue: msalServiceMock},
-        PopoverController, AngularDelegate
+        PopoverController, AngularDelegate, {provide: OAuthService, useClass: MockOAuthService},
+        UrlHelperService, OAuthLogger, DateTimeProvider, UserService,
+        SnotifyService, {
+          provide: 'SnotifyToastConfig',
+          useValue: ToastDefaults
+        }, PipelinesService, MediaStorageService, AnalysisService, ToolsService, LivestreamService
       ]
     }).compileComponents();
 

@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {ModalController, ToastController} from '@ionic/angular';
-import {MsalService} from '@azure/msal-angular';
+import {AlertController, ModalController, ToastController} from '@ionic/angular';
 import {UsersService} from '../../services/users/users.service';
 import {User} from '../../models/user';
 import {UserToolsService} from '../../services/user-tools/user-tools.service';
 import {CreateToolComponent} from '../create-tool/create-tool.component';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {UnreviewedTool} from '../../models/unreviewedTool';
+import {environment} from '../../../environments/environment';
 
 
 @Component({
@@ -18,9 +18,10 @@ export class AccountComponent implements OnInit {
   public option: string;
 
 
-  constructor(private modalController: ModalController, public msalService: MsalService,
+  constructor(private modalController: ModalController,
               public usersService: UsersService, public userToolsService: UserToolsService,
-              private oauthService: OAuthService, private toastController: ToastController) {
+              public oauthService: OAuthService, private toastController: ToastController,
+              private alertController: AlertController) {
 
     this.option = 'details';
   }
@@ -75,8 +76,11 @@ export class AccountComponent implements OnInit {
   }
 
   public editUserProfile() {
-    this.oauthService.initLoginFlow();
+    this.oauthService.loadDiscoveryDocument(environment.oauthConfig.action.editDiscoveryDoc).then(() => {
+      this.oauthService.initLoginFlow();
+    });
   }
+
   //
   // public async getToolName(val: string) {
   //   return this.userToolsService.userTools.filter((t) => t.toolId === val)[0].toolName;
@@ -110,5 +114,28 @@ export class AccountComponent implements OnInit {
   downloadDll(unapprovedTool: UnreviewedTool) {
     window.open(unapprovedTool.toolDll);
 
+  }
+
+  public async onRemoveTool(toolId: string, toolType: string) {
+    const alert = await this.alertController.create({
+      header: 'Tool Deletion',
+      message: `Are you sure you want to delete this tool ?`,
+      animated: true,
+      translucent: true,
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => {
+          }
+        }, {
+          text: `I'm Sure`,
+          handler: () => {
+            this.userToolsService.removeTool(toolId, toolType);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }

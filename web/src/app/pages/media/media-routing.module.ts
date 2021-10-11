@@ -1,14 +1,14 @@
 import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 
 import {MediaPage} from './media.page';
-import {MsalGuard} from '@azure/msal-angular';
+import {AuthGuard} from '../../guards/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: MediaPage,
-    canActivateChild: [MsalGuard],
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: 'videos',
@@ -30,7 +30,7 @@ const routes: Routes = [
         path: '',
         redirectTo: 'all',
         pathMatch: 'full',
-        canActivate: [MsalGuard]
+        canActivate: [AuthGuard]
       }
     ],
   },
@@ -38,7 +38,7 @@ const routes: Routes = [
     path: '',
     redirectTo: 'media/all',
     pathMatch: 'full',
-    canActivate: [MsalGuard]
+    canActivate: [AuthGuard]
   }
 ];
 

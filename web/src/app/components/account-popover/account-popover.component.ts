@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {MsalService} from '@azure/msal-angular';
 import {Router} from '@angular/router';
 import {ModalController} from '@ionic/angular';
 import {AccountComponent} from '../account/account.component';
 import {UserToolsService} from '../../services/user-tools/user-tools.service';
+import {OAuthService} from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-account-popover',
@@ -12,8 +12,8 @@ import {UserToolsService} from '../../services/user-tools/user-tools.service';
 })
 export class AccountPopoverComponent implements OnInit {
 
-  constructor(private msalService: MsalService, private router: Router, private modalController: ModalController,
-              private userToolsService: UserToolsService) {
+  constructor(private router: Router, private modalController: ModalController,
+              private userToolsService: UserToolsService, private oauthService: OAuthService) {
   }
 
   @Input() onClick = () => {
@@ -25,10 +25,13 @@ export class AccountPopoverComponent implements OnInit {
 
   public logout() {
     this.onClick();
-    this.msalService.logoutPopup();
-    this.router.navigate(['/welcome']).then(() => {
-      sessionStorage.clear();
-    });
+    // this.msalService.logoutPopup();
+    this.oauthService.postLogoutRedirectUri = window.location.origin;
+    this.oauthService.logOut();
+    // this.router.navigate(['/welcome']).then(() => {
+    //   sessionStorage.clear();
+    // });
+    // this.
   }
 
   /**

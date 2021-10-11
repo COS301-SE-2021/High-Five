@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Pipeline} from '../../models/pipeline';
-import {LoadingController, Platform, PopoverController, ToastController} from '@ionic/angular';
+import {AlertController, LoadingController, Platform, PopoverController, ToastController} from '@ionic/angular';
 import {AddItemComponent} from '../add-item/add-item.component';
 import {PipelineService} from '../../services/pipeline/pipeline.service';
 import {UserToolsService} from '../../services/user-tools/user-tools.service';
@@ -15,7 +15,7 @@ export class PipelineComponent implements OnInit {
 
   constructor(private platform: Platform, private loadingController: LoadingController, private toastController: ToastController,
               private popoverController: PopoverController, private pipelineService: PipelineService,
-              private userToolsService: UserToolsService) {
+              private userToolsService: UserToolsService, private alertController: AlertController) {
   }
 
   ngOnInit() {
@@ -36,7 +36,7 @@ export class PipelineComponent implements OnInit {
    */
   public async onRemoveTool(tool: string) {
     if (this.pipeline.tools.indexOf(tool) === this.pipeline.tools.length - 1) {
-      if (this.userToolsService.drawingToolCount([tool])>0 ) {
+      if (this.userToolsService.drawingToolCount([tool]) > 0) {
         await this.toastController.create({
           message: `A pipeline's last tool must be a drawing tool, cannot remove tool`,
           duration: 2000,
@@ -73,7 +73,26 @@ export class PipelineComponent implements OnInit {
    * case the analytics page
    */
   public async onDeletePipeline() {
-    await this.pipelineService.removePipeline(this.pipeline.id);
+    const alert = await this.alertController.create({
+      header: 'Pipeline Deletion',
+      message: `Are you sure you want to delete this pipeline ?`,
+      animated: true,
+      translucent: true,
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => {
+          }
+        }, {
+          text: `I'm Sure`,
+          handler: () => {
+            this.pipelineService.removePipeline(this.pipeline.id);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   public async presentAddToolPopover(ev: any) {
@@ -89,6 +108,7 @@ export class PipelineComponent implements OnInit {
        * frontend (backend validation also exists)
        */
       componentProps: {
+        // eslint-disable-next-line max-len
         availableItems: this.userToolsService.userTools.filter(t => t.isApproved).map(t => t.toolName).filter(tool => !this.pipeline.tools.includes(tool)),
         title: 'Add Tool'
       }

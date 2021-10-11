@@ -5,6 +5,8 @@ import {UserPreferencesService} from '../../services/user-preferences/user-prefe
 import {PopoverController} from '@ionic/angular';
 import {LiveAnalysisFilterComponent} from '../../components/live-analysis-filter/live-analysis-filter.component';
 import {PipelineService} from '../../services/pipeline/pipeline.service';
+import {DomSanitizer} from '@angular/platform-browser';
+import {environment} from '../../../environments/environment';
 
 
 @Component({
@@ -13,6 +15,7 @@ import {PipelineService} from '../../services/pipeline/pipeline.service';
   styleUrls: ['./live.page.scss'],
 })
 export class LivePage implements OnInit, OnDestroy {
+  public baseUrl: string;
 
   /**
    * The configuration of the lottie animation on this page (not present currently)
@@ -22,11 +25,13 @@ export class LivePage implements OnInit, OnDestroy {
   };
 
   constructor(public liveStreamingService: LiveStreamingService, public userPreferencesService: UserPreferencesService,
-              private popoverController: PopoverController, public pipelineService: PipelineService) {
-    this.liveStreamingService.fetchAll();
+              private popoverController: PopoverController, public pipelineService: PipelineService,
+              public domSanitizer: DomSanitizer) {
+    this.baseUrl = environment.streamPlayBaseUrl;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
 
   public async displaySelectPipelinePopover(ev: any) {
@@ -54,6 +59,15 @@ export class LivePage implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+  }
 
+  public getLink(id: string) {
+    return this.domSanitizer.bypassSecurityTrustResourceUrl(environment.streamPlayBaseUrl +
+      this.liveStreamingService.appName + '/play.html?name=' + id);
+  }
+
+  refreshLive() {
+    this.liveStreamingService.fetchAll();
+  }
 }

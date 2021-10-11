@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ModalController, Platform, PopoverController} from '@ionic/angular';
+import {AlertController, ModalController, Platform, PopoverController} from '@ionic/angular';
 import {VideostreamCardComponent} from '../videostream-card/videostream-card.component';
 import {VideoMetaData} from '../../models/videoMetaData';
 import {VideosService} from '../../services/videos/videos.service';
@@ -19,7 +19,7 @@ export class VideostoreCardComponent implements OnInit {
 
   constructor(public platform: Platform, private modalController: ModalController, private videoService: VideosService,
               private popoverController: PopoverController, private pipelineService: PipelineService,
-              private webSocketService: WebsocketService) {
+              private webSocketService: WebsocketService, private alertController: AlertController) {
   }
 
   ngOnInit() {
@@ -48,7 +48,26 @@ export class VideostoreCardComponent implements OnInit {
    * Deletes this video by emitting the deleteVideo event
    */
   async onDeleteVideo() {
-    await this.videoService.removeVideo(this.video.id);
+    const alert = await this.alertController.create({
+      header: 'Video Deletion',
+      message: `Are you sure you want to delete this video ?`,
+      animated: true,
+      translucent: true,
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => {
+          }
+        }, {
+          text: `I'm Sure`,
+          handler: () => {
+            this.videoService.removeVideo(this.video.id);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   public async showAnalyseVideoPopover(ev: any) {
