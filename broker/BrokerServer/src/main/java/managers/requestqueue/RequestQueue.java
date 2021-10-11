@@ -29,32 +29,34 @@ public class RequestQueue {
             while (true) {
                 RequestQueueItem request = nextRequest();
 
-                //Check if there is a request and an available analysis engine to handle the request
-                if (request != null && !request.informationHolder.isEmpty()) {
-                    try {
-                        //Process request based on analysis type
-                        if (request.request.getRequestType().contains("Analyze")) {
-                            EventLogger.getLogger().info("Performing analysis on uploaded media");
-                            new StoredMediaAnalysisStrategy().processRequest(request.request, request.informationHolder, request.handler, request.connection.getConnectionId());
-                        } else if (request.request.getRequestType().contains("StartLiveAnalysis")){
-                            EventLogger.getLogger().info("Performing live analysis request");
-                            new LiveAnalysisStrategy().processRequest(request.request, request.informationHolder, request.handler, request.connection.getConnectionId());
-                        } else {
-                            EventLogger.getLogger().info("Performing live stream request");
-                            new LiveStreamStrategy().processRequest(request.request, request.informationHolder, request.handler, request.connection.getConnectionId());
+                ConcurrencyManager.getInstance().execute(() -> {
+                    //Check if there is a request and an available analysis engine to handle the request
+                    if (request != null && !request.informationHolder.isEmpty()) {
+                        try {
+                            //Process request based on analysis type
+                            if (request.request.getRequestType().contains("Analyze")) {
+                                EventLogger.getLogger().info("Performing analysis on uploaded media");
+                                new StoredMediaAnalysisStrategy().processRequest(request.request, request.informationHolder, request.handler, request.connection.getConnectionId());
+                            } else if (request.request.getRequestType().contains("StartLiveAnalysis")){
+                                EventLogger.getLogger().info("Performing live analysis request");
+                                new LiveAnalysisStrategy().processRequest(request.request, request.informationHolder, request.handler, request.connection.getConnectionId());
+                            } else {
+                                EventLogger.getLogger().info("Performing live stream request");
+                                new LiveStreamStrategy().processRequest(request.request, request.informationHolder, request.handler, request.connection.getConnectionId());
+                            }
+                        } catch (IOException e) {
+                            //increase retry and if the retries have not exceeded the limit,
+                            //add back to list to try again.
+                            if (request.expires > System.currentTimeMillis()) {
+                                _addToQueue(request);
+                            } else {
+                                EventLogger.getLogger().logException(e);
+                            }
                         }
-                    } catch (IOException e) {
-                        //increase retry and if the retries have not exceeded the limit,
-                        //add back to list to try again.
-                        if (request.expires > System.currentTimeMillis()) {
-                            _addToQueue(request);
-                        } else {
-                            EventLogger.getLogger().logException(e);
-                        }
+                    } else if (request != null && request.expires < System.currentTimeMillis()){
+                        _addToQueue(request);
                     }
-                } else if (request != null && request.expires < System.currentTimeMillis()){
-                    _addToQueue(request);
-                }
+                });
                 try {
                     Thread.sleep(1000L);
                 } catch (InterruptedException e) {

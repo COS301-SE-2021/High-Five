@@ -45,6 +45,7 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
         //Uploaded media analysis doesn't require any hardware priority
         TelemetryBuilder builder = new TelemetryBuilder().setCollector(TelemetryCollector.ALL);
         ServerInformation info = information.get(builder);
+        info.setBusy(true);
 
         //Create new command
         StoredMediaRequestBody body = (StoredMediaRequestBody) request.getBody();
@@ -59,11 +60,17 @@ public class StoredMediaAnalysisStrategy implements AnalysisStrategy{
 
 
         //Get response from server
-        String response = readResponse(info.getServerId());
+        try {
+            String response = readResponse(info.getServerId());
 
-        //Send response to client
-        ResponseObject responseObject = new ResponseObject(request.getRequestType(), null, response, connectionId);
-        handler.onNext(responseObject);
+            //Send response to client
+            ResponseObject responseObject = new ResponseObject(request.getRequestType(), null, response, connectionId);
+            handler.onNext(responseObject);
+        } catch (IOException e) {
+            throw e;
+        } finally {
+            info.setBusy(false);
+        }
     }
 
     /**
