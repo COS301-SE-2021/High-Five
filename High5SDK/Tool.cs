@@ -7,5 +7,7 @@ namespace High5SDK
         public static Buffer Buffer;
         public abstract Data Process(Data data);
         public abstract void Init();
+
+        public abstract void Dispose();
     }
 }

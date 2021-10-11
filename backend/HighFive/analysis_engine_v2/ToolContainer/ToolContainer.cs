@@ -44,6 +44,7 @@ namespace analysis_engine
                         else
                         {
                             Output.Push(null);
+                            //Tool.Dispose();
                             break;
                         }
                     }
