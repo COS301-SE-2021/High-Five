@@ -141,11 +141,7 @@ master ( build )
 Development of the back-end and front-end has been divided into seperate branches for separation
 of concerns. Feature branches are used for both front-end and back-end to develop certain features before they are propagated into the appropriate development branches. Before merging, all branches must go through a mandatory Pull Request procedure in which the branch will be reviewed by another team member, who did not make the pull request, and - if approved - merged into the branch immediately above the requested branch in the hierarchy as defined above.
 
-### Code Quality Badges
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]<br><br>
+## Code Quality Badges
 
 ### Sonar Cloud
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_High-Five&metric=bugs)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_High-Five)
