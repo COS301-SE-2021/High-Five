@@ -75,6 +75,11 @@ High Five is a real-time image analysis platform for images and videos taken by 
 * []()[High Five Mobile App](https://github.com/COS301-SE-2021/High-Five/releases/download/v1.0/HighFive.apk)
 * []()[High Five API](https://high5api.azurewebsites.net)
 
+### Diagrams
+* []()[Architecture Diagram](https://drive.google.com/file/d/1u2QGgjaRB3me4w9igwO6DNK-G7NKAtET/view?usp=sharing)
+* []()[Deployment Diagram](https://drive.google.com/file/d/1KR0C8Y1gS0xXfRICNfZJRmG7eViqwcDT/view?usp=sharing)
+* []()[Analysis Engine UML](https://drive.google.com/file/d/12QF1gNrhhxuhKnyefngL-WsJdLExVIEG/view?usp=sharing)
+
 ### Documentation
 * []()[Software Requirements Specification](https://drive.google.com/file/d/12OQoSu9KelslLW-ezWm9j8r7d2rwmSqq/view?usp=sharing)
 * []()[Architectural Requirements Document](https://drive.google.com/file/d/1VbJE3kQRl5sZtt-DIuTd9KQMwJRGZwJH/view?usp=sharing)
