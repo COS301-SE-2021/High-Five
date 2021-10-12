@@ -28,6 +28,10 @@ describe('LiveStreamComponent', () => {
 
     fixture = TestBed.createComponent(LiveStreamComponent);
     component = fixture.componentInstance;
+    component.stream = {
+      streamId: '',
+      baseUrl: ''
+    };
     fixture.detectChanges();
   }));
 
