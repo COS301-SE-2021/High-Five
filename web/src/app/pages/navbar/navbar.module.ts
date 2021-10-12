@@ -9,7 +9,6 @@ import {NavbarPageRoutingModule} from './navbar-routing.module';
 import {NavbarPage} from './navbar.page';
 import {defineLordIconElement} from 'lord-icon-element';
 import {WebsocketService} from '../../services/websocket/websocket.service';
-import {CreateToolComponent} from '../../components/create-tool/create-tool.component';
 
 @NgModule({
   imports: [
@@ -19,7 +18,7 @@ import {CreateToolComponent} from '../../components/create-tool/create-tool.comp
     NavbarPageRoutingModule,
   ],
   providers: [WebsocketService,],
-  declarations: [NavbarPage, CreateToolComponent],
+  declarations: [NavbarPage],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class NavbarPageModule {

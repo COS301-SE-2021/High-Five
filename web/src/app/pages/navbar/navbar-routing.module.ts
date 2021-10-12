@@ -27,6 +27,10 @@ const routes: Routes = [
         loadChildren: () => import('../live/live.module').then(m => m.LivePageModule),
       },
       {
+        path: 'tools',
+        loadChildren: () => import('../tools/tools.module').then(m => m.ToolsPageModule)
+      },
+      {
         path: '',
         redirectTo: 'landing',
         pathMatch: 'full',

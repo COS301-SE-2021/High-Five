@@ -21,16 +21,6 @@
           Details
         </ion-label>
       </ion-segment-button>
-      <ion-segment-button value="tools">
-        <ion-label>
-          Uploaded Tools
-        </ion-label>
-      </ion-segment-button>
-      <ion-segment-button *ngIf="usersService.getIsAdmin()" value="unapprovedtools">
-        <ion-label>
-          Unapproved Tools
-        </ion-label>
-      </ion-segment-button>
       <ion-segment-button *ngIf="usersService.getIsAdmin()" value="admin">
         <ion-label>
           Admin
@@ -115,45 +105,6 @@
           </ion-row>
         </ion-grid>
       </div>
-      <div *ngSwitchCase="'tools'" style="height: 100%;">
-        <ion-content>
-          <ion-list>
-            <ion-list-header>
-              <ion-label color="dark">
-                First is the tool name, then the status of whether the tool has been approved or not, then the whether
-                the tools contains the .onnx file and/or the .dll file (Class File), lastly is the button to delete the
-                tool
-              </ion-label>
-            </ion-list-header>
-            <ion-item *ngFor="let userTool of userToolsService.userTools$ | async; trackBy: userToolsTrackFn">
-              <ion-label>
-                {{userTool.toolName}}
-              </ion-label>
-              <ion-button [disabled]="true" [shape]="'round'">
-                <ion-icon *ngIf="userTool.isApproved" name="checkmark-outline"></ion-icon>
-                <ion-icon *ngIf="!userTool.isApproved" name="close-outline"></ion-icon>
-              </ion-button>
-              <ion-chip [color]="'success'" [disabled]="true" *ngIf="userTool.toolType==='analysis'">
-                <ion-label>ONNX Model</ion-label>
-                <ion-icon [name]="'checkmark-outline'"></ion-icon>
-              </ion-chip>
-              <ion-chip [color]="'success'" [disabled]="true">
-                <ion-label>Tool Class File</ion-label>
-                <ion-icon [name]="'checkmark-outline'"></ion-icon>
-              </ion-chip>
-              <ion-button slot="end" fill="clear" expand="block" color="danger" [disabled]="userTool.isDefaultTool"
-                          (click)="onRemoveTool(userTool.toolId, userTool.toolType)">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-          </ion-list>
-        </ion-content>
-        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-          <ion-fab-button (click)="addUserTool()">
-            <ion-icon name="add"></ion-icon>
-          </ion-fab-button>
-        </ion-fab>
-      </div>
       <div *ngSwitchCase="'admin'" style="height: 100%;">
         <ion-content>
           <ion-list>
@@ -175,45 +126,6 @@
               </ion-button>
               <ion-button slot="end" fill="clear" expand="block" color="danger" (click)="requestToRemoveUser(user);">
                 <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-          </ion-list>
-        </ion-content>
-      </div>
-      <div *ngSwitchCase="'unapprovedtools'" style="height: 100%;">
-        <ion-content>
-          <ion-list>
-            <ion-list-header>
-              <ion-label color="dark">
-                First is the tool id, then the buttons to download the .dll file and .onnx file (if there is one) of
-                the tool, lastly are the buttons to approve or deny the tool
-              </ion-label>
-              <ion-button fill="clear" expand="block" (click)="refreshUnapproved()">
-                Refresh
-              </ion-button>
-            </ion-list-header>
-            <ion-item
-              *ngFor="let unapprovedTool of usersService.unreviewedTools$ | async; trackBy: unreviewedToolsTrackFn">
-              <ion-label>
-                {{unapprovedTool.toolId}}
-              </ion-label>
-              <ion-label>User ID : {{unapprovedTool.userId}}</ion-label>
-              <ion-label>Tool ID : {{unapprovedTool.toolId}}</ion-label>
-              <ion-button slot="end" *ngIf="unapprovedTool.toolDll!== undefined" fill="clear" expand="block"
-                          color="primary" (click)="downloadDll(unapprovedTool)">
-                <ion-icon name="download-outline"></ion-icon>
-                <ion-label>Source Code</ion-label>
-              </ion-button>
-              <ion-button slot="end" *ngIf="unapprovedTool.toolModel!== undefined" fill="clear" expand="block"
-                          color="primary" (click)="downloadOnnx(unapprovedTool)">
-                <ion-icon name="download-outline"></ion-icon>
-                <ion-label>ONNX Model</ion-label>
-              </ion-button>
-              <ion-button slot="end" fill="clear" expand="block" color="danger" (click)="rejectTool(unapprovedTool)">
-                <ion-icon name="close-outline"></ion-icon>
-              </ion-button>
-              <ion-button slot="end" fill="clear" expand="block" color="success" (click)="approveTool(unapprovedTool)">
-                <ion-icon name="checkmark-outline"></ion-icon>
               </ion-button>
             </ion-item>
           </ion-list>

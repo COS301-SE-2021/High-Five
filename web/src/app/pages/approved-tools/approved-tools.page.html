@@ -1,0 +1,37 @@
+<ion-content>
+  <ion-list>
+    <ion-list-header>
+      <ion-label class="ion-text-center ion-align-items-center ion-justify-content-center" color="dark">
+        First is the tool name, then the status of whether the tool has been approved or not, then the whether
+        the tools contains the .onnx file and/or the .dll file (Class File), lastly is the button to delete the
+        tool
+      </ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let userTool of userToolsService.userTools$ | async; trackBy: userToolsTrackFn">
+      <ion-label>
+        {{userTool.toolName}}
+      </ion-label>
+      <ion-button [disabled]="true" [shape]="'round'">
+        <ion-icon *ngIf="userTool.isApproved" name="checkmark-outline"></ion-icon>
+        <ion-icon *ngIf="!userTool.isApproved" name="close-outline"></ion-icon>
+      </ion-button>
+      <ion-chip [color]="'success'" [disabled]="true" *ngIf="userTool.toolType==='analysis'">
+        <ion-label>ONNX Model</ion-label>
+        <ion-icon [name]="'checkmark-outline'"></ion-icon>
+      </ion-chip>
+      <ion-chip [color]="'success'" [disabled]="true">
+        <ion-label>Tool Class File</ion-label>
+        <ion-icon [name]="'checkmark-outline'"></ion-icon>
+      </ion-chip>
+      <ion-button slot="end" fill="clear" expand="block" color="danger" [disabled]="userTool.isDefaultTool"
+                  (click)="onRemoveTool(userTool.toolId, userTool.toolType)">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="addUserTool()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
