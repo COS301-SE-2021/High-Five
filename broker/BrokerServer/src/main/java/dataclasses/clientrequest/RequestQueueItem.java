@@ -11,7 +11,7 @@ public class RequestQueueItem {
     public Connection connection;
     public ConnectionHandler handler;
     public ClientBase client;
-    public final long expires = System.currentTimeMillis() + 1800000; //Expires in 30 minutes
+    public final long expires = System.currentTimeMillis() + 300000; //Expires in 5 minutes
 
     public RequestQueueItem(AnalysisRequest request, ServerInformationHolder informationHolder, Connection connection, ConnectionHandler handler, ClientBase client) {
         this.connection = connection;

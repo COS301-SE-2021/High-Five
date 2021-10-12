@@ -6,6 +6,7 @@ import com.bdpsolutions.highfive.utils.DatabaseHandler
 import com.bdpsolutions.highfive.utils.ToastUtils
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import io.reactivex.rxjava3.core.Observer
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.lang.Exception
@@ -14,6 +15,7 @@ import java.util.concurrent.locks.ReentrantLock
 
 class LiveStreamSocket(private val requestType: String,
                        endpoint: URI,
+                       private val toastObserver: Observer<String>,
                        private val callback: (String) -> Unit) : WebSocketClient(endpoint)
 {
 
@@ -74,6 +76,7 @@ class LiveStreamSocket(private val requestType: String,
                     }
                 } else {
                     Log.d("LiveStreamSocket", "${response.message}")
+                    toastObserver.onNext("Error: ${response.message}")
                     ToastUtils.showToast(response.message)
                 }
             }
