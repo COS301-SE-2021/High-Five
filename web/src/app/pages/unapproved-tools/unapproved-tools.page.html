@@ -8,7 +8,7 @@
     </ion-list-header>
     <ion-item
       *ngFor="let unapprovedTool of usersService.unreviewedTools$ | async; trackBy: unreviewedToolsTrackFn">
-      <ion-label text-wrap>Tool ID:{{unapprovedTool.toolId}}</ion-label>
+      <ion-label text-wrap>Tool ID: {{unapprovedTool.toolId}}</ion-label>
       <ion-label text-wrap >User ID: {{unapprovedTool.userId}}</ion-label>
       <ion-button slot="end" *ngIf="unapprovedTool.toolDll!== undefined" fill="clear" expand="block"
                   color="primary" (click)="downloadDll(unapprovedTool)">
