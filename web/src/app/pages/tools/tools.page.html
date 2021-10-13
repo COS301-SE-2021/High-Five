@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-segment [(ngModel)]="page" (ionChange)="segmentChange($event)">
+            <ion-segment-button layout="icon-end" value="approved">
+              <ion-label>
+                Approved Tools
+              </ion-label>
+            </ion-segment-button>
+            <ion-segment-button *ngIf="usersService.getIsAdmin()" layout="icon-end" value="unapproved">
+              <ion-label>
+                Un-approved Tools
+              </ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+<ion-router-outlet></ion-router-outlet>
+</ion-content>

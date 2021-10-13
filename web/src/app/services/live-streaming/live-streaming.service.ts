@@ -3,7 +3,7 @@ import {BehaviorSubject} from 'rxjs';
 import {SnotifyService} from 'ng-snotify';
 import {LiveStream} from '../../models/liveStream';
 import {LivestreamService} from '../../apis/livestream.service';
-import {MsalService} from '@azure/msal-angular';
+import {OAuthService} from 'angular-oauth2-oidc';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +14,11 @@ export class LiveStreamingService {
   // eslint-disable-next-line @typescript-eslint/member-ordering,no-underscore-dangle
   readonly streams$ = this._streams.asObservable();
 
-  constructor(private liveStreamService: LivestreamService, private snotifyService: SnotifyService, private msalService: MsalService) {
+  constructor(private liveStreamService: LivestreamService, private snotifyService: SnotifyService,
+              private oauthService: OAuthService) {
     this.fetchAll();
-    this.appName = msalService.instance.getActiveAccount().localAccountId;
+    // @ts-ignore
+    this.appName = this.oauthService.getIdentityClaims().oid;
     this.appName = this.appName.replace(/-/g, '');
   }
 
@@ -49,6 +51,7 @@ export class LiveStreamingService {
    * Makes a request to retrieve all images
    */
   public async fetchAll() {
+    this.streams= [];
     this.liveStreamService.returnAllLiveStreams().subscribe((res) => {
       for (const stream of JSON.parse(res.message)) {
         this.streams = this.streams.concat({streamId: stream.name});
@@ -68,6 +71,11 @@ export class LiveStreamingService {
         };
       }
     });
+  }
+
+  async addLiveStream(id: string) {
+    this.streams = this.streams.concat({streamId: id});
+    console.log(this.streams);
   }
 
   //

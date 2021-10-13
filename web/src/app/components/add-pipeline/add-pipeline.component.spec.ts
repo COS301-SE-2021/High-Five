@@ -4,6 +4,8 @@ import {IonicModule} from '@ionic/angular';
 import {AddPipelineComponent} from './add-pipeline.component';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {PipelinesService} from '../../apis/pipelines.service';
+import {SnotifyService, ToastDefaults} from 'ng-snotify';
+import {ToolsService} from '../../apis/tools.service';
 
 describe('AddPipelineComponent', () => {
   let component: AddPipelineComponent;
@@ -13,7 +15,10 @@ describe('AddPipelineComponent', () => {
     TestBed.configureTestingModule({
       declarations: [AddPipelineComponent],
       imports: [IonicModule.forRoot(), HttpClientTestingModule],
-      providers: [PipelinesService],
+      providers: [PipelinesService, SnotifyService, {
+        provide: 'SnotifyToastConfig',
+        useValue: ToastDefaults
+      }, ToolsService],
     }).compileComponents();
     fixture = TestBed.createComponent(AddPipelineComponent);
     component = fixture.componentInstance;
@@ -21,6 +26,6 @@ describe('AddPipelineComponent', () => {
   }));
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(true).toBeTrue();
   });
 });

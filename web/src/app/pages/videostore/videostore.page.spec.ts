@@ -7,6 +7,8 @@ import {BehaviorSubject} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
 import {AnalysisService} from '../../apis/analysis.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {SnotifyService, ToastDefaults} from 'ng-snotify';
+import {PipelinesService} from '../../apis/pipelines.service';
 
 const mockMediaStorageService = jasmine.createSpyObj('MediaStorageService',
   ['deleteImage', 'deleteVideo', 'getAllImages', 'getAllVideos', 'storeImageForm', 'storeVideoForm']);
@@ -44,7 +46,10 @@ describe('VideostorePage', () => {
       TestBed.configureTestingModule({
         declarations: [VideostorePage],
         imports: [IonicModule.forRoot(), HttpClientTestingModule],
-        providers: [MediaStorageService, AnalysisService]
+        providers: [MediaStorageService, AnalysisService, SnotifyService, {
+          provide: 'SnotifyToastConfig',
+          useValue: ToastDefaults
+        }, PipelinesService]
       }).compileComponents();
 
       fixture = TestBed.createComponent(VideostorePage);

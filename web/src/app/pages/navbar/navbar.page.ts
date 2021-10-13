@@ -1,19 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {MsalService} from '@azure/msal-angular';
 import {PopoverController} from '@ionic/angular';
 import {NavbarMediaPopoverComponent} from '../../components/navbar-media-popover/navbar-media-popover.component';
 import {AccountPopoverComponent} from '../../components/account-popover/account-popover.component';
-import {AuthConfig, OAuthService} from 'angular-oauth2-oidc';
-import {environment} from '../../../environments/environment';
+import {OAuthService} from 'angular-oauth2-oidc';
+import {UsersService} from '../../services/users/users.service';
+import {WebsocketService} from '../../services/websocket/websocket.service';
+import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
 
-const oauthConfig: AuthConfig = {
-  issuer: environment.oauthConfig.issuer,
-  redirectUri: window.location.origin,
-  clientId: environment.clientId,
-  scope: environment.oauthConfig.scope,
-  strictDiscoveryDocumentValidation: false
-};
 
 @Component({
   selector: 'app-navbar',
@@ -22,12 +16,11 @@ const oauthConfig: AuthConfig = {
 })
 export class NavbarPage implements OnInit {
 
-  constructor(private router: Router,
-              private msalService: MsalService, private popoverController: PopoverController,
-              private oauthService: OAuthService) {
-    this.oauthService.configure(oauthConfig);
-    this.oauthService.loadDiscoveryDocument(environment.oauthConfig.discoveryDoc);
-
+  constructor(private router: Router, private popoverController: PopoverController,
+              private oauthService: OAuthService,
+              private usersService: UsersService, private websocketService: WebsocketService,
+              private userPreferences: UserPreferencesService) {
+    this.oauthService.setupAutomaticSilentRefresh();
 
   }
 
@@ -39,7 +32,7 @@ export class NavbarPage implements OnInit {
    * Function that calls the MSAL service's logout method to logout and then clears the localstorage
    */
   logout() {
-    this.msalService.logout();
+    // this.msalService.logout();
   }
 
 

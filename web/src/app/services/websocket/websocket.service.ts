@@ -7,6 +7,7 @@ import {SnotifyService} from 'ng-snotify';
 import {AnalyzedVideosService} from '../analyzed-videos/analyzed-videos.service';
 import {AnalyzedImagesService} from '../analyzed-images/analyzed-images.service';
 import {LiveStreamingService} from '../live-streaming/live-streaming.service';
+import {OAuthService} from 'angular-oauth2-oidc';
 
 
 @Injectable({
@@ -17,7 +18,8 @@ export class WebsocketService {
 
 
   constructor(private ngSnotify: SnotifyService, private analyzedVideosService: AnalyzedVideosService,
-              private analyzedImagesService: AnalyzedImagesService, private liveStreamingService: LiveStreamingService) {
+              private analyzedImagesService: AnalyzedImagesService, private liveStreamingService: LiveStreamingService,
+              private oauthService: OAuthService) {
     this.socket = webSocket({
       url: environment.websocketEndpoint, closeObserver: {
         // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
@@ -37,7 +39,7 @@ export class WebsocketService {
   }
 
   public sendMessage(message: JsonObject) {
-    message.Authorization = JSON.parse(sessionStorage.getItem(sessionStorage.key(0))).secret;
+    message.Authorization = this.oauthService.getAccessToken();
     this.socket.next(message);
   }
 
@@ -85,12 +87,7 @@ export class WebsocketService {
     if (msg.type === 'info') {
       // @ts-ignore
       if (msg.title === 'Livestream Started') {
-        // @ts-ignore
-        // this.liveStreamingService.addStream({streamId: msg.message.streamId, oneTimeToken: null, baseUrl: null}).then((r) => {
-        // @ts-ignore
-        this.liveStreamingService.fetchAll().then(() => {
-          this.ngSnotify.info('Live Stream Started, refresh the live page', 'Live Stream Started');
-        });
+        this.ngSnotify.info('Live Stream Started, refresh the live page', 'Live Stream Started');
       } else {
         // @ts-ignore
         this.ngSnotify.info(msg.message, msg.title);

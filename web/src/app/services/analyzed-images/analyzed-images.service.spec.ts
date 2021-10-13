@@ -4,6 +4,7 @@ import {AnalyzedImagesService} from './analyzed-images.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {MediaStorageService} from '../../apis/mediaStorage.service';
 import {AnalysisService} from '../../apis/analysis.service';
+import {SnotifyService, ToastDefaults} from 'ng-snotify';
 
 describe('AnalyzedImagesService', () => {
   let service: AnalyzedImagesService;
@@ -11,7 +12,7 @@ describe('AnalyzedImagesService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [MediaStorageService, AnalysisService]
+      providers: [MediaStorageService, AnalysisService, SnotifyService, {provide: 'SnotifyToastConfig', useValue: ToastDefaults}]
     });
     service = TestBed.inject(AnalyzedImagesService);
   });

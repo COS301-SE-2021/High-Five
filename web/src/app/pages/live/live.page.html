@@ -1,10 +1,15 @@
 <ion-header>
   <ion-grid>
     <ion-row>
-      <ion-col>
+      <ion-col size="11">
         <ion-button [disabled]="true" fill="outline" color="tertiary" shape="round" mode="md" (click)="displaySelectPipelinePopover($event)">
           <ion-label color="dark">Pipeline : Live Pipeline</ion-label>
           <ion-icon color="dark" name="filter-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col size="1">
+        <ion-button fill="clear" (click)="refreshLive()">
+          <ion-icon name="sync-outline"></ion-icon>
         </ion-button>
       </ion-col>
     </ion-row>
@@ -14,7 +19,14 @@
   <ion-grid class="ion-justify-content-center ion-align-items-center">
     <ion-row class="ion-justify-content-center ion-align-items-center">
       <ion-col *ngFor="let live of liveStreamingService.streams$ | async ;" class="ion-justify-content-center ion-align-items-center">
-       <app-live-stream [stream]="live"></app-live-stream>
+        <ion-card class="ion-justify-content-center ion-align-items-center" style="width: fit-content">
+          <ion-card-content>
+            <div class="ion-justify-content-center ion-text-center ion-align-items-center ion-align-self-center">
+              <iframe width="560" height="315" [src]="domSanitizer.bypassSecurityTrustResourceUrl(baseUrl +
+      this.liveStreamingService.appName + '/play.html?name=' + live.streamId)" frameborder="0" allowfullscreen></iframe>
+            </div>
+          </ion-card-content>
+        </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>

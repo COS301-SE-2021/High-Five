@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
-import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
-import {MsalGuard} from '@azure/msal-angular';
+import {RouterModule, Routes} from '@angular/router';
 
 const routes: Routes = [
 
@@ -17,21 +16,18 @@ const routes: Routes = [
 
     path: 'navbar',
     loadChildren: () => import('./pages/navbar/navbar.module').then(m => m.NavbarPageModule),
-    canLoad: [MsalGuard]
   },
-  {
-    path: 'media',
-    loadChildren: () => import('./pages/media/media.module').then( m => m.MediaPageModule)
-  },
+
+
 
 
 ];
-const isIframe = window !== window.parent && !window.opener;
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules, initialNavigation: !isIframe ? 'enabled' : 'disabled'})
+    RouterModule.forRoot(routes)
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

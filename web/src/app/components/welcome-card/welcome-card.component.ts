@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MsalService} from '@azure/msal-angular';
+import {OAuthService} from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-welcome-card',
@@ -8,7 +8,7 @@ import {MsalService} from '@azure/msal-angular';
 })
 export class WelcomeCardComponent implements OnInit {
 
-  constructor(private msalService: MsalService) {
+  constructor(private oauthService: OAuthService) {
     //Nothing added here yet
   }
 
@@ -23,7 +23,8 @@ export class WelcomeCardComponent implements OnInit {
    * for login/register/ forgot password
    */
   login() {
-    this.msalService.loginRedirect();
+    this.oauthService.initImplicitFlow();
+    // this.msalService.loginRedirect();
   }
 
 }
