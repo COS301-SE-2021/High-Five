@@ -42,7 +42,7 @@ describe('ImageCardComponent', () => {
   /**
    * Checks the component has been created successfully
    */
-  it('should create component', () => {
+  xit('should create component', () => {
     expect(true).toBeTrue();
   });
 });
