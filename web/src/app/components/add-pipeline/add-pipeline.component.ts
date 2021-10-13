@@ -35,10 +35,27 @@ export class AddPipelineComponent implements OnInit {
       }).then((toast) => {
         toast.present();
       });
-      await this.modalController.dismiss();
+    } else if (this.pipelineName === undefined) {
+      await this.toastController.create({
+        message: 'Pipelines mut have a name',
+        duration: 2000,
+        translucent: true,
+        position: 'bottom'
+      }).then((toast) => {
+        toast.present();
+      });
+    } else if (this.pipelineName == '' || this.pipelineName.length <= 0) {
+      await this.toastController.create({
+        message: 'Pipelines mut have a name',
+        duration: 2000,
+        translucent: true,
+        position: 'bottom'
+      }).then((toast) => {
+        toast.present();
+      });
     } else {
-      if(this.tools.length>0){
-        if (this.userToolsService.drawingToolCount([this.tools[this.tools.length - 1]])>0) {
+      if (this.tools.length > 0) {
+        if (this.userToolsService.drawingToolCount([this.tools[this.tools.length - 1]]) > 0) {
           await this.pipelineService.addPipeline(this.pipelineName, this.tools);
           await this.modalController.dismiss();
         } else {
@@ -51,7 +68,7 @@ export class AddPipelineComponent implements OnInit {
             toast.present();
           });
         }
-      }else{
+      } else {
         await this.toastController.create({
           message: `A pipeline must have at least one tool`,
           duration: 2000,
