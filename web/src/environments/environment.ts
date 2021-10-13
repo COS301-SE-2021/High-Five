@@ -30,7 +30,10 @@ export const environment = {
     issuer: '',
     scope: '',
     strictDiscoveryDocumentValidation: false,
-    discoveryDoc : ''
+    action:{
+      loginDiscoveryDoc :  '',
+      editDiscoveryDoc :  '',
+    }
   }
 };
 
