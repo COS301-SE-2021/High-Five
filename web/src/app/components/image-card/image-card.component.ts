@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ImageMetaData} from '../../models/imageMetaData';
-import {PopoverController} from '@ionic/angular';
+import {AlertController, PopoverController} from '@ionic/angular';
 import {AddItemComponent} from '../add-item/add-item.component';
 import {PipelineService} from '../../services/pipeline/pipeline.service';
 import {ImagesService} from '../../services/images/images.service';
@@ -17,7 +17,8 @@ export class ImageCardComponent implements OnInit {
   public alt = 'assets/images/defaultprofile.svg';
 
   constructor(private popoverController: PopoverController, private pipelineService: PipelineService,
-              private imagesService: ImagesService, private webSocketService: WebsocketService) {
+              private imagesService: ImagesService, private webSocketService: WebsocketService,
+              private alertController: AlertController) {
     // No constructor body needed as properties are retrieved from angular input
   }
 
@@ -28,8 +29,27 @@ export class ImageCardComponent implements OnInit {
   /**
    * Function that deletes the image from the user's account
    */
-  public onDeleteImage() {
-    this.imagesService.removeImage(this.image.id);
+  public async onDeleteImage() {
+    const alert = await this.alertController.create({
+      header: 'Image Deletion',
+      message : `Are you sure you want to delete this image ?`,
+      animated: true,
+      translucent: true,
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => {
+          }
+        }, {
+          text: `I'm Sure`,
+          handler: () => {
+            this.imagesService.removeImage(this.image.id);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
 

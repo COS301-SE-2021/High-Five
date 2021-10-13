@@ -41,6 +41,24 @@ public class ServerInformationHolder {
         }
     }
 
+    public void remove(ServerInformation info) {
+        lock.lock();
+        try {
+            serverPerformanceInfo.entrySet().removeIf(item -> item.getKey().getServerId().equals(info.getServerId()));
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean isEmpty() {
+        lock.lock();
+        try {
+            return serverPerformanceInfo.isEmpty();
+        } finally {
+            lock.unlock();
+        }
+    }
+
     /**
      * Fetches the server information with the least usage as determined by the TelemetryBuilder
      * passed in.
@@ -65,11 +83,16 @@ public class ServerInformationHolder {
                 item.getKey().setUsage(usage);
             }
 
-            //Sort the keys in the map (the one with the least usage should be first)
-            List<ServerInformation> list = tmp.keySet()
-                    .stream().sorted(Comparator.comparing(ServerInformation::getUsage)).collect(Collectors.toList());
+            List<ServerInformation> list = tmp.keySet().stream().filter(item -> !item.isBusy()).collect(Collectors.toList());
 
-            return list.get(0); // Return first item
+            if (list.size() == 0) {
+                return null;
+            }
+
+            //Sort the keys in the map (the one with the least usage should be first)
+            list = list.stream().sorted(Comparator.comparing(ServerInformation::getUsage)).collect(Collectors.toList());
+
+            return list.get(0);
         } finally {
             lock.unlock();
         }

@@ -2,6 +2,7 @@ package managers.server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import dataclasses.TopicAction.TopicAction;
 import dataclasses.serverinfo.*;
 import dataclasses.serverinfo.codecs.ServerUsageDecoder;
 import dataclasses.telemetry.Telemetry;
@@ -59,7 +60,7 @@ public class ServerManagerImpl extends Manager {
         and adds it to a list of server information. A listener will poll for updated information
         and use this class to add the information to the list.
          */
-        Observer<String> serverParticipantObserver = new Observer<>() {
+        Observer<TopicAction> serverParticipantObserver = new Observer<>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
 
@@ -71,18 +72,23 @@ public class ServerManagerImpl extends Manager {
              * @param message JSON string containing server information.
              */
             @Override
-            public void onNext(@NonNull String message) {
+            public void onNext(@NonNull TopicAction message) {
 
                 //Decodes the JSON message
                 ServerInformation information;
                 try {
-                    JsonElement element = new Gson().fromJson(message, JsonElement.class);
+                    JsonElement element = new Gson().fromJson(message.message, JsonElement.class);
                     information = ServerInformationWrapper.get().deserialize(element, null, null);
 
-                    //Extracts usage information from the message and calculates the usage of the server
-                    ServerUsage usage = new ServerUsageDecoder().deserialize(element, null, null);
+                    if (message.action == TopicAction.Action.ADD_TOPIC) {
 
-                    serverInformationHolder.add(information, usage);
+                        //Extracts usage information from the message and calculates the usage of the server
+                        ServerUsage usage = new ServerUsageDecoder().deserialize(element, null, null);
+
+                        serverInformationHolder.add(information, usage);
+                    } else {
+                        serverInformationHolder.remove(information);
+                    }
                 } catch (Exception e) {
                     EventLogger.getLogger().logException(e);
                 }

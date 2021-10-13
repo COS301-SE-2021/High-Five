@@ -1,0 +1,31 @@
+<ion-content>
+  <ion-list>
+    <ion-list-header>
+      <ion-label class="ion-text-center ion-align-items-center ion-justify-content-center" color="dark">
+        First is the tool id, then the buttons to download the .dll file and .onnx file (if there is one) of
+        the tool, lastly are the buttons to approve or deny the tool
+      </ion-label>
+    </ion-list-header>
+    <ion-item
+      *ngFor="let unapprovedTool of usersService.unreviewedTools$ | async; trackBy: unreviewedToolsTrackFn">
+      <ion-label text-wrap>Tool ID: {{unapprovedTool.toolId}}</ion-label>
+      <ion-label text-wrap >User ID: {{unapprovedTool.userId}}</ion-label>
+      <ion-button slot="end" *ngIf="unapprovedTool.toolDll!== undefined" fill="clear" expand="block"
+                  color="primary" (click)="downloadDll(unapprovedTool)">
+        <ion-icon name="download-outline"></ion-icon>
+        <ion-label>Source Code</ion-label>
+      </ion-button>
+      <ion-button slot="end" *ngIf="unapprovedTool.toolModel!== undefined" fill="clear" expand="block"
+                  color="primary" (click)="downloadOnnx(unapprovedTool)">
+        <ion-icon name="download-outline"></ion-icon>
+        <ion-label>ONNX Model</ion-label>
+      </ion-button>
+      <ion-button slot="end" fill="clear" expand="block" color="danger" (click)="rejectTool(unapprovedTool)">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+      <ion-button slot="end" fill="clear" expand="block" color="success" (click)="approveTool(unapprovedTool)">
+        <ion-icon name="checkmark-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -46,7 +46,7 @@ class DjiStreamer(private val toastObserver: Observer<String>){
             toastObserver.onNext("Cannot start stream: Publish URL not received!")
         }
 
-        val webSocket = LiveStreamSocket(requestType!!, URI(Endpoints.WEBSOCKET_URL)) {
+        val webSocket = LiveStreamSocket(requestType!!, URI(Endpoints.WEBSOCKET_URL), toastObserver) {
             ConcurrencyExecutor.execute {
                 ConcurrencyExecutor.execute {
                     initListener()

@@ -1,5 +1,6 @@
 package clients.servers;
 
+import dataclasses.TopicAction.TopicAction;
 import dataclasses.serverinfo.ServerTopics;
 import io.reactivex.rxjava3.core.Observer;
 import logger.EventLogger;
@@ -19,7 +20,7 @@ public class KafkaServerParticipant extends ServerParticipant {
 
     private final ServerTopics topics;
 
-    public KafkaServerParticipant(Observer<String> observable, ServerTopics topics) {
+    public KafkaServerParticipant(Observer<TopicAction> observable, ServerTopics topics) {
         super(observable);
         EventLogger.getLogger().info("Creating new KafkaServerParticipant");
         this.topics = topics;
@@ -78,8 +79,9 @@ public class KafkaServerParticipant extends ServerParticipant {
                     TopicManager.getInstance().deleteTopic(msg.topic());
                     TopicManager.getInstance().unlockTopic();
                     topics.deleteTopic(msg.topic());
+                    notify(new TopicAction(TopicAction.Action.DELETE_TOPIC, msg.value()));
                 } else {
-                    notify(msg.value());
+                    notify(new TopicAction(TopicAction.Action.ADD_TOPIC, msg.value()));
                 }
             }
 
@@ -87,6 +89,11 @@ public class KafkaServerParticipant extends ServerParticipant {
           
             Thread.sleep(1000L);
         }
+    }
+
+    @Override
+    public void terminate() {
+
     }
 
     /**

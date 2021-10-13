@@ -35,6 +35,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="drone">Drone</string>
+    <string name="register_string">Registering app with DJI. Do not connect drone until registration is successful.</string>
+    <string name="register_success">Registration successful! You may now connect the drone.</string>
+    <string name="register_failed">Registration failed! Please try again later.</string>
+    <string name="drone_connected">Drone connected</string>
+    <string name="drone_disconnected">Drone disconnected</string>
     <string name="live_stream">Live Stream</string>
     <string name="live_analysis">Live Analysis</string>
 </resources>

@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {AnalyzedVideoMetaData} from '../../models/analyzedVideoMetaData';
 import {VideostreamCardComponent} from '../videostream-card/videostream-card.component';
-import {ModalController} from '@ionic/angular';
+import {AlertController, ModalController} from '@ionic/angular';
 import {AnalyzedVideosService} from '../../services/analyzed-videos/analyzed-videos.service';
 
 @Component({
@@ -12,7 +12,8 @@ import {AnalyzedVideosService} from '../../services/analyzed-videos/analyzed-vid
 export class AnalyzedVideostoreCardComponent implements OnInit {
   @Input() analyzedVideo: AnalyzedVideoMetaData;
 
-  constructor(private modalController: ModalController, private analyzedVideoService: AnalyzedVideosService) {
+  constructor(private modalController: ModalController, private analyzedVideoService: AnalyzedVideosService,
+              private alertController: AlertController) {
   }
 
   ngOnInit() {
@@ -36,6 +37,25 @@ export class AnalyzedVideostoreCardComponent implements OnInit {
 
 
   public async onDeleteAnalyzedVideo() {
-    await this.analyzedVideoService.deleteAnalyzedVideo(this.analyzedVideo.id);
+    const alert = await this.alertController.create({
+      header: 'Analysed Video Deletion',
+      message : `Are you sure you want to delete this analysed video ?`,
+      animated: true,
+      translucent: true,
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => {
+          }
+        }, {
+          text: `I'm Sure`,
+          handler: () => {
+            this.analyzedVideoService.deleteAnalyzedVideo(this.analyzedVideo.id);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }

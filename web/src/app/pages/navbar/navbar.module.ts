@@ -8,12 +8,7 @@ import {NavbarPageRoutingModule} from './navbar-routing.module';
 
 import {NavbarPage} from './navbar.page';
 import {defineLordIconElement} from 'lord-icon-element';
-import {UsersService} from '../../services/users/users.service';
 import {WebsocketService} from '../../services/websocket/websocket.service';
-import {CreateToolComponent} from '../../components/create-tool/create-tool.component';
-import {OAuthModule} from 'angular-oauth2-oidc';
-import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
-
 
 @NgModule({
   imports: [
@@ -21,15 +16,13 @@ import {UserPreferencesService} from '../../services/user-preferences/user-prefe
     FormsModule,
     IonicModule,
     NavbarPageRoutingModule,
-    OAuthModule.forRoot(),
   ],
-  providers: [WebsocketService],
-  declarations: [NavbarPage, CreateToolComponent],
+  providers: [WebsocketService,],
+  declarations: [NavbarPage],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class NavbarPageModule {
-  constructor(private usersService: UsersService, private websocketService: WebsocketService,
-              private userPreferences: UserPreferencesService) {
+  constructor() {
     defineLordIconElement(lottie.loadAnimation);
 
   }

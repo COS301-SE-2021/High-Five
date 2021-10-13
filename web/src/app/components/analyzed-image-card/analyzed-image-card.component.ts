@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {AnalyzedImageMetaData} from '../../models/analyzedImageMetaData';
 import {AnalyzedImagesService} from '../../services/analyzed-images/analyzed-images.service';
+import {AlertController} from '@ionic/angular';
 
 @Component({
   selector: 'app-analyzed-image-card',
@@ -14,7 +15,7 @@ export class AnalyzedImageCardComponent implements OnInit {
    */
   @Input() analyzedImage: AnalyzedImageMetaData;
 
-  constructor(private analyzedImagesService: AnalyzedImagesService) {
+  constructor(private analyzedImagesService: AnalyzedImagesService, private alertController: AlertController) {
   }
 
   ngOnInit() {
@@ -29,6 +30,25 @@ export class AnalyzedImageCardComponent implements OnInit {
   }
 
   public async onDeleteAnalyzedImage() {
-    await this.analyzedImagesService.deleteAnalyzedImage(this.analyzedImage.id);
+    const alert = await this.alertController.create({
+      header: 'Analysed Image Deletion',
+      message: `Are you sure you want to delete this analysed image ?`,
+      animated: true,
+      translucent: true,
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => {
+          }
+        }, {
+          text: `I'm Sure`,
+          handler: () => {
+            this.analyzedImagesService.deleteAnalyzedImage(this.analyzedImage.id);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }
