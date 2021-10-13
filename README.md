@@ -85,7 +85,7 @@ High Five is a real-time image analysis platform for images and videos taken by 
 * []()[Architectural Requirements Document](https://drive.google.com/file/d/1VbJE3kQRl5sZtt-DIuTd9KQMwJRGZwJH/view?usp=sharing)
 * []()[User Manual](https://drive.google.com/file/d/16x35Kz8_cxwhi3jYEo_C8KTR6zM9sk6n/view?usp=sharing)
 * []()[Coding Standards](https://drive.google.com/file/d/1nJEpt9iKSFayj-KGouJXDplLRqWuu3Bv/view?usp=sharing)
-* []()[Technical Installations Manual](https://drive.google.com/file/d/1no8aLtfmCTsktcLfcj46okJnvMbE--XN/view?usp=sharing)
+* []()[Technical Installations Manual](https://drive.google.com/file/d/149znGeTOUpCOkRpu7CCMTbuhgO18mPJX/view?usp=sharing)
 * []()[Testing Policy Document](https://drive.google.com/file/d/1Cp9B3u3nK5mYaF3V3XUcjeHPcCnPgM24/view?usp=sharing)
 
 #### Legacy Documentation
