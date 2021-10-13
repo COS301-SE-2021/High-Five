@@ -4,7 +4,7 @@
 
 export const environment = {
   production: true,
-  websocketEndpoint: '',
+  websocketEndpoint: 'ws://temp.com',
   clientId: '',
   apiEndpoint: '',
   streamPlayBaseUrl: '',
